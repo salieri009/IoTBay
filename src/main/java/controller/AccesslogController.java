@@ -57,7 +57,8 @@ public class AccesslogController extends HttpServlet {
         LocalDate startDate = null, endDate = null;
         LocalDate today = LocalDate.now();
 
-        // 날짜 파싱
+
+        //date parsing with error handling
         try {
             if (startDateStr != null && !startDateStr.isEmpty()) {
                 startDate = LocalDate.parse(startDateStr);
@@ -71,33 +72,33 @@ public class AccesslogController extends HttpServlet {
             return;
         }
 
-        // 미래 날짜 검색 방지 (시작일 또는 종료일이 미래면 안 됨)
+        // 3. Date validation
         if ((startDate != null && startDate.isAfter(today)) || (endDate != null && endDate.isAfter(today))) {
             request.setAttribute("error", "You cannot search for access logs in the future.");
             request.getRequestDispatcher("/WEB-INF/views/accessLog.jsp").forward(request, response);
             return;
         }
 
-        // 종료일만 입력된 경우: 시작일도 필요
+      //the start date is null and end date is not null
         if (startDate == null && endDate != null) {
             request.setAttribute("error", "Please select a start date when searching with an end date.");
             request.getRequestDispatcher("/WEB-INF/views/accessLog.jsp").forward(request, response);
             return;
         }
 
-        // 시작일만 입력된 경우: 오늘까지로 자동 확장
+        //if the start date is null and end date is null
         if (startDate != null && endDate == null) {
             endDate = today;
         }
 
-        // 종료일이 시작일보다 빠른 경우
+        // if end date is ealier than start date
         if (startDate != null && endDate != null && endDate.isBefore(startDate)) {
             request.setAttribute("error", "End date cannot be before start date.");
             request.getRequestDispatcher("/WEB-INF/views/accessLog.jsp").forward(request, response);
             return;
         }
 
-        // 1년 초과 범위 방지
+        // preventing the date range from being too large
         if (startDate != null && endDate != null && startDate.plusYears(1).isBefore(endDate)) {
             request.setAttribute("error", "Date range is too large. Please select a range within 1 year.");
             request.getRequestDispatcher("/WEB-INF/views/accessLog.jsp").forward(request, response);
