@@ -112,7 +112,7 @@ public class RegisterController extends HttpServlet {
             User newUser = new User(
                 0, // id (auto-increment)
                 email,
-                password,
+                hashedPassword,  // Use hashed password instead of plain text
                 firstName,
                 lastName,
                 phone,

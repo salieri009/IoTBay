@@ -19,6 +19,7 @@ import dao.interfaces.UserDAO;
 import db.DBConnection;
 import model.AccessLog;
 import model.User;
+import utils.PasswordUtil;
 
 @WebServlet("/login")
 public class LoginController extends HttpServlet {
@@ -52,7 +53,8 @@ public class LoginController extends HttpServlet {
             return;
             }
 
-            if (!user.getPassword().equals(password)) {
+            // Use secure password verification instead of plain text comparison
+            if (!PasswordUtil.verifyPassword(password, user.getPassword())) {
             request.setAttribute("errorMessage", "Incorrect password");
             request.getRequestDispatcher("/login.jsp").forward(request, response);
             return;
