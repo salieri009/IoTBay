@@ -6,8 +6,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.code.gson.Gson;
-import com.google.code.gson.GsonBuilder;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * 최신 트렌드: 일관된 API 응답 유틸리티

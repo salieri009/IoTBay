@@ -15,7 +15,7 @@ import config.AppConfig;
 public class ConnectionPool {
     private static final int POOL_SIZE = 10;
     private static ConnectionPool instance;
-    private BlockingQueue<Connection> connectionQueue;
+    private final BlockingQueue<Connection> connectionQueue;
     
     private ConnectionPool() throws SQLException, ClassNotFoundException {
         String url = AppConfig.getProperty("db.url", "jdbc:sqlite:iotbay.db");

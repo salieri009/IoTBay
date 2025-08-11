@@ -63,7 +63,7 @@ public class UpdateProductController extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/manage/products");
 
         } catch (SQLException | NumberFormatException e) {
-            e.printStackTrace();
+            System.err.println("Update product error: " + e.getMessage());
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             response.getWriter().write("{\"error\": \"Failed to update product: " + e.getMessage() + "\"}");
         }

@@ -56,7 +56,7 @@ public class OrderHistoryController extends HttpServlet {
             orders = orderDAO.searchOrders(user.getId(), orderId, orderDate);
         } catch (SQLException e) {
             // Handle exception
-            e.printStackTrace();
+            System.err.println("Order history error: " + e.getMessage());
         }
 
         // Pass results and original search parameters back to JSP

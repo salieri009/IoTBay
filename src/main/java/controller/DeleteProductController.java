@@ -55,7 +55,7 @@ public class DeleteProductController extends HttpServlet {
             productDAO.deleteProduct(id);
             response.sendRedirect(request.getContextPath() + "/manage/products");
         } catch (NumberFormatException | SQLException e) {
-            e.printStackTrace();
+            System.err.println("Delete product error: " + e.getMessage());
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             response.getWriter().write("{\"error\":\"Failed to delete product: " + e.getMessage() + "\"}");
         }

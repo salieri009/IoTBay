@@ -75,7 +75,7 @@ public class CartController extends HttpServlet {
             response.sendRedirect("product?productId=" + productId);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Cart error: " + e.getMessage());
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().write("Failed to process cart operation.");
         }
@@ -98,7 +98,7 @@ public class CartController extends HttpServlet {
             request.setAttribute("cartItems", cartItems);
             request.getRequestDispatcher("/cart.jsp").forward(request, response);
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Cart error: " + e.getMessage());
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unable to load cart items");
         }
     }

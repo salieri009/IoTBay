@@ -72,7 +72,7 @@ public class CheckoutController extends HttpServlet{
             response.sendRedirect("index.jsp");
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Checkout error: " + e.getMessage());
             response.sendRedirect("cart.jsp?error=Checkout failed");
         }
     }

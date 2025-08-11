@@ -134,7 +134,7 @@ public class RegisterController extends HttpServlet {
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Register error: " + e.getMessage());
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             response.getWriter().write("Registration failed: " + e.getMessage());
         }

@@ -126,7 +126,7 @@ public class LoginController extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/index.jsp");
         } catch (SQLException e) {
             // Log error (optional)
-            e.printStackTrace();
+            System.err.println("Login error: " + e.getMessage());
             // Redirect to index.jsp on error (with context path)
             response.sendRedirect(request.getContextPath() + "/index.jsp");
         }

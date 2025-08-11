@@ -82,7 +82,7 @@ public class ManageProductController extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/manage/products");
 
         } catch (SQLException | NumberFormatException e) {
-            e.printStackTrace();
+            System.err.println("Manage product error: " + e.getMessage());
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             response.getWriter().write("{\"error\":\"Failed to create product: " + e.getMessage() + "\"}");
         }

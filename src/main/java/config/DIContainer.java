@@ -4,8 +4,14 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.concurrent.ConcurrentHashMap;
 
-import dao.*;
-import dao.interfaces.*;
+import dao.AccessLogDAOImpl;
+import dao.CartItemDAO;
+import dao.OrderDAO;
+import dao.ProductDAOImpl;
+import dao.UserDAOImpl;
+import dao.interfaces.AccessLogDAO;
+import dao.interfaces.ProductDAO;
+import dao.interfaces.UserDAO;
 import db.DBConnection;
 
 /**

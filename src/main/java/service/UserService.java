@@ -107,8 +107,8 @@ public class UserService {
         return userDAO.getUserById(userId);
     }
     
-    public void updateUser(User user) throws SQLException {
-        userDAO.updateUser(user);
+    public void updateUser(int userId, User user) throws SQLException {
+        userDAO.updateUser(userId, user);
     }
     
     public void deleteUser(int userId) throws SQLException {
