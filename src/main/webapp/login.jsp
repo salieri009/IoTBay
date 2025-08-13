@@ -3,28 +3,64 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="<%=request.getContextPath()%>/css/styles.css" />
-    <title>IoT Bay - Register</title>
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/css/modern-theme.css" />
+    <title>IoT Bay - Sign In</title>
 </head>
 <body>
     <jsp:include page="components/header.jsp" />
 
-    <section class="login__container">
-        <h2 class="login__title">Log In</h2>
-        <% String errorMessage = (String) request.getAttribute("errorMessage"); %>
-        <% if (errorMessage != null) { %>
-        <div class="error-message" style="color:red; margin-bottom:10px;">
-            <%= errorMessage %>
+    <main class="auth-page">
+        <div class="container">
+            <div class="auth-card">
+                <div class="auth-card__header">
+                    <h1 class="auth-card__title">Welcome Back</h1>
+                    <p class="auth-card__subtitle">Sign in to your IoT Bay account</p>
+                </div>
+                
+                <% String errorMessage = (String) request.getAttribute("errorMessage"); %>
+                <% if (errorMessage != null) { %>
+                <div class="alert alert--error">
+                    <svg class="alert__icon" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                    </svg>
+                    <span><%= errorMessage %></span>
+                </div>
+                <% } %>
+                
+                <form class="auth-form" method="post" action="<%=request.getContextPath()%>/api/login">
+                    <div class="form__group">
+                        <label for="email" class="form__label">Email Address</label>
+                        <input type="email" id="email" name="email" class="form__input" 
+                               placeholder="Enter your email" required />
+                    </div>
+                    
+                    <div class="form__group">
+                        <label for="password" class="form__label">Password</label>
+                        <input type="password" id="password" name="password" class="form__input" 
+                               placeholder="Enter your password" required />
+                    </div>
+                    
+                    <div class="form__options">
+                        <label class="checkbox">
+                            <input type="checkbox" name="remember">
+                            <span class="checkbox__mark"></span>
+                            <span class="checkbox__label">Remember me</span>
+                        </label>
+                        <a href="forgot-password.jsp" class="link">Forgot password?</a>
+                    </div>
+                    
+                    <input type="hidden" name="source" value="logins" />
+                    <button type="submit" class="btn btn--primary btn--full">Sign In</button>
+                </form>
+                
+                <div class="auth-card__footer">
+                    <p>Don't have an account? <a href="register.jsp" class="link link--primary">Sign up</a></p>
+                </div>
+            </div>
         </div>
-        <% } %>
-        <form class="login__form" method="post" action="<%=request.getContextPath()%>/api/login">
-            <input type="email" id="email" name="email" class="register__input" placeholder="Email" required />
-            <input type="password" id="password" name="password" class="register__input" placeholder="Password" required />
-            <button type="submit" class="register__button">Log In</button>
-            <input type="hidden" name="source" value="logins" />
-        </form>
-    </section>
+    </main>
 
     <jsp:include page="components/footer.jsp" />
+    <script src="js/main.js"></script>
 </body>
 </html>

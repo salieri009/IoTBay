@@ -41,23 +41,32 @@ public class LoginController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            String email = request.getParameter("email");
-            String password = request.getParameter("password");
+            String email = utils.SecurityUtil.getValidatedStringParameter(request, "email", 100);
+            String password = utils.SecurityUtil.getValidatedStringParameter(request, "password", 255);
+            
+            // Validate email format
+            if (!utils.SecurityUtil.isValidEmail(email)) {
+                request.setAttribute("errorMessage", "Invalid login credentials");
+                request.getRequestDispatcher("/login.jsp").forward(request, response);
+                return;
+            }
+            
             User user = userDAO.getUserByEmail(email);
 
-            //if user is not in the database
+            // Generic error message to prevent user enumeration
+            String genericError = "Invalid login credentials";
 
             if (user == null) {
-            request.setAttribute("errorMessage", "User not found");
-            request.getRequestDispatcher("/login.jsp").forward(request, response);
-            return;
+                request.setAttribute("errorMessage", genericError);
+                request.getRequestDispatcher("/login.jsp").forward(request, response);
+                return;
             }
 
-            // Use secure password verification instead of plain text comparison
+            // Use secure password verification
             if (!PasswordUtil.verifyPassword(password, user.getPassword())) {
-            request.setAttribute("errorMessage", "Incorrect password");
-            request.getRequestDispatcher("/login.jsp").forward(request, response);
-            return;
+                request.setAttribute("errorMessage", genericError);
+                request.getRequestDispatcher("/login.jsp").forward(request, response);
+                return;
             }
 
 

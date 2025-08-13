@@ -9,7 +9,10 @@ import java.util.Random;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import dao.CartItemDAO;
 import db.DBConnection;
@@ -56,10 +59,18 @@ public class CartController extends HttpServlet {
                 return;
             }
 
-            // Existing add to cart logic
-            int productId = Integer.parseInt(request.getParameter("productId"));
-            int quantity = Integer.parseInt(request.getParameter("quantity"));
-            double price = Double.parseDouble(request.getParameter("productPrice"));
+            // Secure input validation
+            int productId = utils.SecurityUtil.getValidatedIntParameter(request, "productId");
+            int quantity = utils.SecurityUtil.getValidatedIntParameter(request, "quantity");
+            double price = utils.SecurityUtil.getValidatedDoubleParameter(request, "productPrice");
+            
+            // Additional business logic validation
+            if (quantity <= 0 || quantity > 100) {
+                throw new IllegalArgumentException("Quantity must be between 1 and 100");
+            }
+            if (price <= 0) {
+                throw new IllegalArgumentException("Price must be greater than zero");
+            }
 
             CartItem existingItem = cartItemDAO.getCartItem(userId, productId);
 

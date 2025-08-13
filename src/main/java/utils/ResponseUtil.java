@@ -57,4 +57,13 @@ public class ResponseUtil {
         
         response.getWriter().write(gson.toJson(successResponse));
     }
+    
+    // Alias methods for backward compatibility
+    public static void sendJsonResponse(HttpServletResponse response, Object data) throws IOException {
+        sendJson(response, data);
+    }
+    
+    public static void sendErrorResponse(HttpServletResponse response, int statusCode, String message) throws IOException {
+        sendError(response, statusCode, message);
+    }
 }

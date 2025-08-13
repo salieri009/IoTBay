@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class User implements Serializable {
-    private final int id;
+    private int id;
     private String email;
     private String firstName;
     private String lastName;
@@ -24,6 +24,10 @@ public class User implements Serializable {
     private LocalDateTime updatedAt;
     private String role;
     private boolean isActive;
+
+    // Default constructor
+    public User() {
+    }
 
     public User(int id, String email, String password, String firstName, String lastName,
                 String phone, String postalCode, String addressLine1, String addressLine2,
@@ -83,6 +87,23 @@ public class User implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    // Alias methods for compatibility
+    public String getPhoneNumber() {
+        return phone;
+    }
+
+    public void setPhoneNumber(String phone) {
+        this.phone = phone;
     }
 
     // public String getGender() {
@@ -157,11 +178,6 @@ public class User implements Serializable {
         return postalCode;
     }
 
-    public String getPhone() {
-        return phone;
-    }
-
-
     public String getAddressLine1() {
         return addressLine1;
     }
@@ -172,9 +188,6 @@ public class User implements Serializable {
 
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
-    }
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
     public void setAddressLine1(String addressLine1) {
         this.addressLine1 = addressLine1;

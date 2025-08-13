@@ -5,6 +5,11 @@ import java.time.format.DateTimeParseException;
 
 public class ValidationUtil {
 
+    // String validation method
+    public static boolean isValidString(String str) {
+        return str != null && !str.trim().isEmpty();
+    }
+
     // Name validation (English, Korean, spaces, hyphens allowed)
     public static String validateName(String name, String fieldName) {
         if (name == null || name.trim().isEmpty()) {

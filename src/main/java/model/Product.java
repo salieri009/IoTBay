@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 public class Product implements Serializable {
-    private final int id;
+    private int id;
     private int categoryId;
     private String name;
     private String description;
@@ -12,6 +12,10 @@ public class Product implements Serializable {
     private int stockQuantity;
     private String imageUrl;
     private LocalDate createdAt;
+
+    // Default constructor
+    public Product() {
+    }
 
     // Constructor
     public Product(int id, int categoryId, String name, String description, double price, int stockQuantity, String imageUrl, LocalDate createdAt) {
@@ -28,6 +32,10 @@ public class Product implements Serializable {
     // Getters and Setters
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getCategoryId() {

@@ -9,12 +9,26 @@ import java.util.Map;
 import model.User;
 
 /**
- * 최신 트렌드: Token 기반 인증 (Simple Implementation)
+ * Token-based Authentication Utility
  * Stateless Authentication with Custom Token
+ * 
+ * Security Features:
+ * - Environment-based secret key management
+ * - Secure token generation and validation
+ * - Configurable expiration time
  */
 public class TokenUtil {
-    private static final String SECRET_KEY = "IoTBay_Secret_Key_2025_Super_Secure";
+    private static final String SECRET_KEY = getSecretKey();
     private static final long EXPIRATION_TIME = 86400000; // 24 hours
+    
+    private static String getSecretKey() {
+        String envKey = System.getenv("IOTBAY_JWT_SECRET");
+        if (envKey != null && !envKey.trim().isEmpty()) {
+            return envKey;
+        }
+        // Fallback for development only - should be externalized in production
+        return "IoTBay_Development_Secret_Key_Change_In_Production_2025";
+    }
     
     public static String generateToken(User user) {
         long currentTime = System.currentTimeMillis();

@@ -28,9 +28,9 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     @Override
-    public List<Product> getAllProducts() throws SQLException {
+    public ArrayList<Product> getAllProducts() throws SQLException {
         String query = "SELECT * FROM products";
-        List<Product> products = new ArrayList<>();
+        ArrayList<Product> products = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement(query);
              ResultSet rs = statement.executeQuery()) {
             while (rs.next()) {
@@ -55,9 +55,9 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     @Override
-    public List<Product> getProductsByName(String name) throws SQLException {
+    public ArrayList<Product> getProductsByName(String name) throws SQLException {
         String query = "SELECT * FROM products WHERE name LIKE ?";
-        List<Product> products = new ArrayList<>();
+        ArrayList<Product> products = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, "%" + name + "%");
             try (ResultSet rs = statement.executeQuery()) {
@@ -70,9 +70,9 @@ public class ProductDAOImpl implements ProductDAO {
     }
 
     @Override
-    public List<Product> getProductsByCategoryId(int categoryId) throws SQLException {
+    public ArrayList<Product> getProductsByCategoryId(int categoryId) throws SQLException {
         String query = "SELECT * FROM products WHERE category_id = ?";
-        List<Product> products = new ArrayList<>();
+        ArrayList<Product> products = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, categoryId);
             try (ResultSet rs = statement.executeQuery()) {
@@ -114,6 +114,110 @@ public class ProductDAOImpl implements ProductDAO {
             rs.getString("image_url"),
             DateTimeParser.parseLocalDate(rs.getString("created_at"))
         );
+    }
+
+    public int countByCategory(int categoryId) throws SQLException {
+        String query = "SELECT COUNT(*) FROM Products WHERE categoryId = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, categoryId);
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+                return 0;
+            }
+        }
+    }
+
+    public int countByKeyword(String keyword) throws SQLException {
+        String query = "SELECT COUNT(*) FROM Products WHERE name LIKE ? OR description LIKE ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            String searchPattern = "%" + keyword + "%";
+            statement.setString(1, searchPattern);
+            statement.setString(2, searchPattern);
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+                return 0;
+            }
+        }
+    }
+
+    public int countAll() throws SQLException {
+        String query = "SELECT COUNT(*) FROM Products";
+        try (PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet rs = statement.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+            return 0;
+        }
+    }
+
+    public ArrayList<Product> findByCategoryWithPagination(int categoryId, int offset, int limit) throws SQLException {
+        String query = "SELECT * FROM Products WHERE categoryId = ? ORDER BY id LIMIT ? OFFSET ?";
+        ArrayList<Product> products = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, categoryId);
+            statement.setInt(2, limit);
+            statement.setInt(3, offset);
+            
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    products.add(mapResultSetToProduct(rs));
+                }
+            }
+        }
+        return products;
+    }
+
+    public ArrayList<Product> searchWithPagination(String keyword, int offset, int limit) throws SQLException {
+        String query = "SELECT * FROM Products WHERE name LIKE ? OR description LIKE ? ORDER BY id LIMIT ? OFFSET ?";
+        ArrayList<Product> products = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            String searchPattern = "%" + keyword + "%";
+            statement.setString(1, searchPattern);
+            statement.setString(2, searchPattern);
+            statement.setInt(3, limit);
+            statement.setInt(4, offset);
+            
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    products.add(mapResultSetToProduct(rs));
+                }
+            }
+        }
+        return products;
+    }
+
+    public ArrayList<Product> findWithPagination(int offset, int limit) throws SQLException {
+        String query = "SELECT * FROM Products ORDER BY id LIMIT ? OFFSET ?";
+        ArrayList<Product> products = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, limit);
+            statement.setInt(2, offset);
+            
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    products.add(mapResultSetToProduct(rs));
+                }
+            }
+        }
+        return products;
+    }
+
+    public ArrayList<Product> findByStockAvailable() throws SQLException {
+        String query = "SELECT * FROM Products WHERE stock_quantity > 0 ORDER BY name";
+        ArrayList<Product> products = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet rs = statement.executeQuery()) {
+            
+            while (rs.next()) {
+                products.add(mapResultSetToProduct(rs));
+            }
+        }
+        return products;
     }
 
     private void setProductParams(PreparedStatement statement, Product product) throws SQLException {
