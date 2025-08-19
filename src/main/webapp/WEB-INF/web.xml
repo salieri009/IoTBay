@@ -128,49 +128,7 @@
         <url-pattern>/orderhistory</url-pattern>
     </servlet-mapping>
 
-    <!-- New Servlet Mappings for Missing Features -->
-    <servlet>
-        <servlet-name>ManageSupplierController</servlet-name>
-        <servlet-class>controller.ManageSupplierController</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>ManageSupplierController</servlet-name>
-        <url-pattern>/manage/suppliers</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ManageSupplierController</servlet-name>
-        <url-pattern>/api/manage/suppliers</url-pattern>
-    </servlet-mapping>
 
-    <servlet>
-        <servlet-name>DataManagementController</servlet-name>
-        <servlet-class>controller.DataManagementController</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>DataManagementController</servlet-name>
-        <url-pattern>/manage/data</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>DataManagementController</servlet-name>
-        <url-pattern>/api/manage/data/*</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>ReportsController</servlet-name>
-        <servlet-class>controller.ReportsController</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>ReportsController</servlet-name>
-        <url-pattern>/reports</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ReportsController</servlet-name>
-        <url-pattern>/reports/*</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>ReportsController</servlet-name>
-        <url-pattern>/api/reports/*</url-pattern>
-    </servlet-mapping>
 
     <error-page>
     <error-code>400</error-code>
