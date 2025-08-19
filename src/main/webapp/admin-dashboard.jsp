@@ -481,6 +481,9 @@
                             <a href="<%=request.getContextPath()%>/reports-dashboard.jsp" class="btn btn--primary action-btn">
                                 View Reports
                             </a>
+                            <a href="<%=request.getContextPath()%>/admin-statistics.jsp" class="btn btn--secondary action-btn">
+                                Statistics & Analytics
+                            </a>
                             <a href="<%=request.getContextPath()%>/reports-dashboard.jsp#create" class="btn btn--outline action-btn">
                                 Create Report
                             </a>

@@ -82,9 +82,9 @@
     </section>
 
     <!-- Main Content -->
-    <main class="container py-16">
+    <main class="container py-12">
         <!-- Breadcrumb -->
-        <nav class="mb-8">
+        <nav class="mb-6">
             <ol class="flex items-center gap-2 text-sm text-neutral-600">
                 <li><a href="<%=request.getContextPath()%>/index.jsp" class="hover:text-primary">Home</a></li>
                 <li>/</li>
@@ -95,8 +95,8 @@
         </nav>
 
         <!-- Smart Home Benefits -->
-        <section class="mb-16">
-            <div class="text-center mb-12">
+        <section class="mb-12">
+            <div class="text-center mb-8">
                 <h2 class="text-display-sm font-bold text-neutral-900 mb-4">Why Choose Smart Home Technology?</h2>
                 <p class="text-lg text-neutral-600 max-w-3xl mx-auto">
                     Experience the convenience, security, and efficiency of a truly connected home that adapts to your lifestyle.
@@ -105,8 +105,8 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div class="text-center">
-                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                         </svg>
                     </div>

@@ -13,4 +13,5 @@ public interface AccessLogDAO {
     List<AccessLog> getAllAccessLogs() throws SQLException;
     void deleteAccessLog(int id) throws SQLException;
     List<AccessLog> getAccessLogsByUserIdAndDateRange(int userId, LocalDate startDate, LocalDate endDate) throws SQLException;
+    List<AccessLog> getAccessLogsByDateRange(LocalDate startDate, LocalDate endDate) throws SQLException;
 }

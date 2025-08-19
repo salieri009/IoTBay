@@ -5,11 +5,13 @@ import java.sql.SQLException;
 import java.util.concurrent.ConcurrentHashMap;
 
 import dao.AccessLogDAOImpl;
-import dao.CartItemDAO;
-import dao.OrderDAO;
+import dao.CartItemDAOImpl;
+import dao.OrderDAOImpl;
 import dao.ProductDAOImpl;
 import dao.UserDAOImpl;
 import dao.interfaces.AccessLogDAO;
+import dao.interfaces.CartItemDAO;
+import dao.interfaces.OrderDAO;
 import dao.interfaces.ProductDAO;
 import dao.interfaces.UserDAO;
 import db.DBConnection;
@@ -36,8 +38,8 @@ public class DIContainer {
         register(UserDAO.class, new UserDAOImpl(connection));
         register(ProductDAO.class, new ProductDAOImpl(connection));
         register(AccessLogDAO.class, new AccessLogDAOImpl(connection));
-        register(OrderDAO.class, new OrderDAO(connection));
-        register(CartItemDAO.class, new CartItemDAO(connection));
+        register(OrderDAO.class, new OrderDAOImpl(connection));
+        register(CartItemDAO.class, new CartItemDAOImpl(connection));
     }
     
     @SuppressWarnings("unchecked")

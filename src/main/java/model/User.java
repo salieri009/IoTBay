@@ -52,9 +52,45 @@ public class User implements Serializable {
         this.role = role;
         this.isActive = isActive;
     }
-
-    public int getId() {
-        return id;
+    
+    // Constructor with Timestamp parameters (for compatibility)
+    public User(int id, String email, String passwordHash, String firstName, 
+               String lastName, String phone, String dob, boolean isActive,
+               java.sql.Timestamp createdAt, java.sql.Timestamp updatedAt, String role) {
+        this.id = id;
+        this.email = email;
+        this.password = passwordHash;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+        if (dob != null) {
+            this.dateOfBirth = LocalDate.parse(dob);
+        }
+        this.isActive = isActive;
+        if (createdAt != null) {
+            this.createdAt = createdAt.toLocalDateTime();
+        }
+        if (updatedAt != null) {
+            this.updatedAt = updatedAt.toLocalDateTime();
+        }
+        this.role = role;
+    }
+    
+    // Constructor without ID (for new users)
+    public User(String email, String passwordHash, String firstName, 
+               String lastName, String phone, String dob, String role) {
+        this.email = email;
+        this.password = passwordHash;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+        if (dob != null) {
+            this.dateOfBirth = LocalDate.parse(dob);
+        }
+        this.role = role;
+        this.isActive = true;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
     public String getEmail() {
@@ -87,6 +123,22 @@ public class User implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+    
+    public int getId() {
+        return id;
+    }
+    
+    public void setId(int id) {
+        this.id = id;
+    }
+    
+    public int getUserId() {
+        return id;
+    }
+    
+    public void setUserId(int id) {
+        this.id = id;
     }
 
     public String getPhone() {
@@ -130,22 +182,6 @@ public class User implements Serializable {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
     public String getRole() {
         return role;
     }
@@ -160,6 +196,33 @@ public class User implements Serializable {
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+    
+    // Additional methods for compatibility
+    public String getDob() {
+        return dateOfBirth != null ? dateOfBirth.toString() : null;
+    }
+    
+    public void setDob(String dob) {
+        if (dob != null && !dob.trim().isEmpty()) {
+            this.dateOfBirth = LocalDate.parse(dob);
+        }
+    }
+    
+    public java.sql.Timestamp getCreatedAt() {
+        return createdAt != null ? java.sql.Timestamp.valueOf(createdAt) : null;
+    }
+    
+    public void setCreatedAt(java.sql.Timestamp createdAt) {
+        this.createdAt = createdAt != null ? createdAt.toLocalDateTime() : null;
+    }
+    
+    public java.sql.Timestamp getUpdatedAt() {
+        return updatedAt != null ? java.sql.Timestamp.valueOf(updatedAt) : null;
+    }
+    
+    public void setUpdatedAt(java.sql.Timestamp updatedAt) {
+        this.updatedAt = updatedAt != null ? updatedAt.toLocalDateTime() : null;
     }
 
     public void deactivate() {

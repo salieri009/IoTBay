@@ -245,6 +245,26 @@ public class SupplierDAOImpl implements SupplierDAO {
         }
     }
 
+    public List<Supplier> getInactiveSuppliers() throws SQLException {
+        logger.info("Retrieving inactive suppliers");
+        
+        String query = "SELECT * FROM suppliers WHERE is_active = false ORDER BY company_name, contact_name";
+        List<Supplier> suppliers = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet rs = statement.executeQuery()) {
+            
+            while (rs.next()) {
+                suppliers.add(mapResultSetToSupplier(rs));
+            }
+            
+            logger.info("Retrieved " + suppliers.size() + " inactive suppliers");
+            return suppliers;
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error retrieving inactive suppliers", e);
+            throw e;
+        }
+    }
+
     @Override
     public List<Supplier> searchSuppliers(String keyword) throws SQLException {
         logger.info("Searching suppliers with keyword: " + keyword);
@@ -488,5 +508,133 @@ public class SupplierDAOImpl implements SupplierDAO {
             rs.getTimestamp("created_at").toLocalDateTime(),
             rs.getTimestamp("updated_at").toLocalDateTime()
         );
+    }
+
+    // Compatibility methods for controller
+    public Supplier findByEmail(String email) throws SQLException {
+        String query = "SELECT * FROM suppliers WHERE email = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, email);
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    return mapResultSetToSupplier(rs);
+                }
+            }
+        }
+        return null;
+    }
+
+    public Supplier create(Supplier supplier) throws SQLException {
+        return createSupplier(supplier);
+    }
+
+    public Supplier findById(Integer id) throws SQLException {
+        return getSupplierById(id);
+    }
+
+    public boolean update(Supplier supplier) throws SQLException {
+        return updateSupplier(supplier);
+    }
+
+    public boolean delete(Integer id) throws SQLException {
+        return deleteSupplier(id);
+    }
+
+    public List<Supplier> findAll() throws SQLException {
+        return getAllSuppliers();
+    }
+
+    public List<Supplier> findActiveSuppliers() throws SQLException {
+        return getActiveSuppliers();
+    }
+
+    public List<Supplier> findInactiveSuppliers() throws SQLException {
+        return getInactiveSuppliers();
+    }
+
+    public boolean hasAssociatedProducts(Integer supplierId) throws SQLException {
+        // Simple implementation - check if supplier has products
+        String query = "SELECT COUNT(*) FROM products WHERE supplier_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, supplierId);
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        }
+        return false;
+    }
+
+    public int getProductCount(Integer supplierId) throws SQLException {
+        String query = "SELECT COUNT(*) FROM products WHERE supplier_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, supplierId);
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        }
+        return 0;
+    }
+
+    public int getActiveProductCount(Integer supplierId) throws SQLException {
+        String query = "SELECT COUNT(*) FROM products WHERE supplier_id = ? AND is_active = true";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, supplierId);
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        }
+        return 0;
+    }
+
+    public List<Supplier> findByContactName(String contactName) throws SQLException {
+        return getSuppliersByContactName(contactName);
+    }
+
+    public List<Supplier> findByCompanyName(String companyName) throws SQLException {
+        String query = "SELECT * FROM suppliers WHERE LOWER(company_name) LIKE LOWER(?) ORDER BY company_name";
+        List<Supplier> suppliers = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, "%" + companyName + "%");
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    suppliers.add(mapResultSetToSupplier(rs));
+                }
+            }
+        }
+        return suppliers;
+    }
+
+    public List<Supplier> findByCity(String city) throws SQLException {
+        String query = "SELECT * FROM suppliers WHERE LOWER(city) LIKE LOWER(?) ORDER BY company_name";
+        List<Supplier> suppliers = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, "%" + city + "%");
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    suppliers.add(mapResultSetToSupplier(rs));
+                }
+            }
+        }
+        return suppliers;
+    }
+
+    public List<Supplier> findByCountry(String country) throws SQLException {
+        String query = "SELECT * FROM suppliers WHERE LOWER(country) LIKE LOWER(?) ORDER BY company_name";
+        List<Supplier> suppliers = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, "%" + country + "%");
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    suppliers.add(mapResultSetToSupplier(rs));
+                }
+            }
+        }
+        return suppliers;
     }
 }

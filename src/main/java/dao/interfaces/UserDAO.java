@@ -14,5 +14,5 @@ public interface UserDAO {
     void updateUser(int id, User user) throws SQLException;
     void deleteUser(int id) throws SQLException;
     boolean isEmailExists(String email) throws SQLException;
-
+    int getTotalUserCount() throws SQLException;
 }

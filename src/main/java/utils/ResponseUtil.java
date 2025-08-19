@@ -31,6 +31,34 @@ public class ResponseUtil {
         response.getWriter().write(gson.toJson(responseBody));
     }
     
+    public static void sendJsonResponse(HttpServletResponse response, Object data) throws IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        
+        if (data instanceof String && (((String) data).startsWith("{") || ((String) data).startsWith("["))) {
+            // Already JSON string
+            response.getWriter().write((String) data);
+        } else {
+            // Convert object to JSON
+            String json = gson.toJson(data);
+            response.getWriter().write(json);
+        }
+    }
+
+    public static void sendJsonError(HttpServletResponse response, int statusCode, String message) throws IOException {
+        response.setStatus(statusCode);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        
+        Map<String, Object> errorResponse = new HashMap<>();
+        errorResponse.put("error", true);
+        errorResponse.put("message", message);
+        errorResponse.put("status", statusCode);
+        errorResponse.put("timestamp", System.currentTimeMillis());
+        
+        response.getWriter().write(gson.toJson(errorResponse));
+    }
+    
     public static void sendError(HttpServletResponse response, int statusCode, String message) throws IOException {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
@@ -44,6 +72,10 @@ public class ResponseUtil {
         
         response.getWriter().write(gson.toJson(errorResponse));
     }
+
+    public static String toJson(Object obj) {
+        return gson.toJson(obj);
+    }
     
     public static void sendSuccess(HttpServletResponse response, String message) throws IOException {
         response.setContentType("application/json");
@@ -56,14 +88,5 @@ public class ResponseUtil {
         successResponse.put("timestamp", System.currentTimeMillis());
         
         response.getWriter().write(gson.toJson(successResponse));
-    }
-    
-    // Alias methods for backward compatibility
-    public static void sendJsonResponse(HttpServletResponse response, Object data) throws IOException {
-        sendJson(response, data);
-    }
-    
-    public static void sendErrorResponse(HttpServletResponse response, int statusCode, String message) throws IOException {
-        sendError(response, statusCode, message);
     }
 }

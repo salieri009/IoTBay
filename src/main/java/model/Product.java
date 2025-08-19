@@ -12,6 +12,7 @@ public class Product implements Serializable {
     private int stockQuantity;
     private String imageUrl;
     private LocalDate createdAt;
+    private String category; // Category name for display
 
     // Default constructor
     public Product() {
@@ -92,6 +93,14 @@ public class Product implements Serializable {
 
     public void setCreatedAt(LocalDate createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     // Method to check availability

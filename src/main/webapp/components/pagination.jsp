@@ -156,13 +156,13 @@ function changeItemsPerPage(value) {
 // Keyboard navigation for pagination
 document.addEventListener('keydown', function(e) {
     if (e.ctrlKey || e.metaKey) {
-        const currentPage = ${currentPage};
-        const totalPages = ${totalPages};
+        var paginationCurrentPage = parseInt('${currentPage}');
+        var paginationTotalPages = parseInt('${totalPages}');
         
-        if (e.key === 'ArrowLeft' && currentPage > 1) {
+        if (e.key === 'ArrowLeft' && paginationCurrentPage > 1) {
             e.preventDefault();
             window.location.href = '${baseUrl}?page=${currentPage - 1}${param.queryString != null ? "&".concat(param.queryString) : ""}';
-        } else if (e.key === 'ArrowRight' && currentPage < totalPages) {
+        } else if (e.key === 'ArrowRight' && paginationCurrentPage < paginationTotalPages) {
             e.preventDefault();
             window.location.href = '${baseUrl}?page=${currentPage + 1}${param.queryString != null ? "&".concat(param.queryString) : ""}';
         }

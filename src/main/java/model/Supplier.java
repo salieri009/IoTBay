@@ -242,6 +242,61 @@ public class Supplier implements Serializable {
         return contactName;
     }
 
+    // Legacy compatibility methods for controllers
+    public void setPhone(String phone) {
+        setPhoneNumber(phone);
+    }
+
+    public String getPhone() {
+        return getPhoneNumber();
+    }
+
+    public void setAddress(String address) {
+        setAddressLine1(address);
+    }
+
+    public String getAddress() {
+        return getAddressLine1();
+    }
+
+    public void setZipCode(String zipCode) {
+        setPostalCode(zipCode);
+    }
+
+    public String getZipCode() {
+        return getPostalCode();
+    }
+
+    public void setDescription(String description) {
+        // For compatibility - using supplier type as description
+        setSupplierType(description);
+    }
+
+    public String getDescription() {
+        return getSupplierType();
+    }
+
+    // Additional compatibility methods for controller
+    public int getSupplierId() {
+        return getId();
+    }
+
+    public void setSupplierId(int supplierId) {
+        setId(supplierId);
+    }
+
+    public void setCreatedDate(java.sql.Timestamp createdDate) {
+        if (createdDate != null) {
+            setCreatedAt(createdDate.toLocalDateTime());
+        }
+    }
+
+    public void setUpdatedDate(java.sql.Timestamp updatedDate) {
+        if (updatedDate != null) {
+            setUpdatedAt(updatedDate.toLocalDateTime());
+        }
+    }
+
     @Override
     public String toString() {
         return "Supplier{" +

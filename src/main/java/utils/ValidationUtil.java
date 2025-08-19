@@ -1,7 +1,9 @@
 package utils;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.regex.Pattern;
 
 public class ValidationUtil {
 
@@ -189,5 +191,117 @@ public class ValidationUtil {
         if (statusError != null) return statusError;
 
         return null;
+    }
+
+    // Payment validation
+    public static String validatePayment(String amount, String paymentMethod,
+                                       String cardNumber, String expiryDate, String cvv) {
+        if (!isValidAmount(amount)) {
+            return "Invalid payment amount";
+        }
+
+        if (paymentMethod == null || paymentMethod.trim().isEmpty()) {
+            return "Payment method is required";
+        }
+
+        if ("CREDIT_CARD".equals(paymentMethod) || "DEBIT_CARD".equals(paymentMethod)) {
+            if (!isValidCardNumber(cardNumber)) {
+                return "Invalid card number";
+            }
+            if (!isValidExpiryDate(expiryDate)) {
+                return "Invalid expiry date";
+            }
+            if (!isValidCVV(cvv)) {
+                return "Invalid CVV";
+            }
+        }
+
+        return null; // Valid
+    }
+
+    // Shipment validation
+    public static String validateShipment(String shipmentMethod, String address, String shipmentDate) {
+        if (shipmentMethod == null || shipmentMethod.trim().isEmpty()) {
+            return "Shipment method is required";
+        }
+
+        if (address == null || address.trim().length() < 10) {
+            return "Valid address is required (minimum 10 characters)";
+        }
+
+        if (shipmentDate != null && !shipmentDate.trim().isEmpty()) {
+            try {
+                LocalDate.parse(shipmentDate);
+            } catch (DateTimeParseException e) {
+                return "Invalid shipment date format";
+            }
+        }
+
+        return null; // Valid
+    }
+
+    // Review validation
+    public static String validateReview(String rating, String comment, String title) {
+        if (rating == null || rating.trim().isEmpty()) {
+            return "Rating is required";
+        }
+
+        try {
+            int ratingValue = Integer.parseInt(rating);
+            if (ratingValue < 1 || ratingValue > 5) {
+                return "Rating must be between 1 and 5";
+            }
+        } catch (NumberFormatException e) {
+            return "Invalid rating format";
+        }
+
+        if (comment != null && comment.trim().length() > 1000) {
+            return "Comment must be less than 1000 characters";
+        }
+
+        if (title != null && title.trim().length() > 100) {
+            return "Title must be less than 100 characters";
+        }
+
+        return null; // Valid
+    }
+
+    // Utility validation methods
+    public static boolean isValidAmount(String amount) {
+        if (amount == null || amount.trim().isEmpty()) {
+            return false;
+        }
+
+        try {
+            BigDecimal value = new BigDecimal(amount);
+            return value.compareTo(BigDecimal.ZERO) > 0;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    public static boolean isValidCardNumber(String cardNumber) {
+        if (cardNumber == null) return false;
+
+        // Remove spaces and dashes
+        String cleaned = cardNumber.replaceAll("[\\s-]", "");
+
+        // Check if it's all digits and appropriate length
+        return cleaned.matches("\\d{13,19}");
+    }
+
+    public static boolean isValidExpiryDate(String expiryDate) {
+        if (expiryDate == null) return false;
+
+        // Expect MM/YY or MM/YYYY format
+        Pattern pattern = Pattern.compile("^(0[1-9]|1[0-2])/([0-9]{2}|[0-9]{4})$");
+        return pattern.matcher(expiryDate).matches();
+    }
+
+    public static boolean isValidCVV(String cvv) {
+        if (cvv == null) return false;
+
+        // CVV should be 3 or 4 digits
+        return cvv.matches("\\d{3,4}");
     }
 }

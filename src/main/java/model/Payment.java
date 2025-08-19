@@ -1,36 +1,63 @@
 package model;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class Payment implements Serializable{
-    private final int id;
-    private final int userId;
-    private final int orderId;
+    private int id;
+    private Integer userId;
+    private Integer orderId;
     private LocalDateTime paymentDate;
-    private double amount;
-    private final int detailId;
-    private String paymentStatus;
+    private BigDecimal amount;
+    private String paymentMethod;
+    private String status;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 
-    public Payment(int id, int userId, int orderId, LocalDateTime paymentDate, double amount, int detailId, String paymentStatus) {
+    // Default constructor
+    public Payment() {
+        this.paymentDate = LocalDateTime.now();
+        this.status = "PENDING";
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    // Full constructor
+    public Payment(int id, Integer userId, Integer orderId, LocalDateTime paymentDate, 
+                   BigDecimal amount, String paymentMethod, String status) {
         this.id = id;
         this.userId = userId;
         this.orderId = orderId;
         this.paymentDate = paymentDate != null ? paymentDate : LocalDateTime.now(); 
         this.amount = amount;
-        this.detailId = detailId;
-        this.paymentStatus = paymentStatus != null ? paymentStatus : "PENDING";
+        this.paymentMethod = paymentMethod;
+        this.status = status != null ? status : "PENDING";
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
     public int getId() {
         return id;
     }
 
-    public int getUserId() {
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Integer getUserId() {
         return userId;
     }
 
-    public int getOrderId() {
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public Integer getOrderId() {
         return orderId;
+    }
+
+    public void setOrderId(Integer orderId) {
+        this.orderId = orderId;
     }
 
     public LocalDateTime getPaymentDate() {
@@ -39,29 +66,68 @@ public class Payment implements Serializable{
 
     public void setPaymentDate(LocalDateTime paymentDate) {
         this.paymentDate = paymentDate;
+        this.updatedAt = LocalDateTime.now();
     }
 
-    public double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
+        this.updatedAt = LocalDateTime.now();
     }
 
-    public int getPaymentMethod() {
-        return detailId;
+    public String getPaymentMethod() {
+        return paymentMethod;
     }
 
-    public String getPaymentStatus() {
-        return paymentStatus;
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+        this.updatedAt = LocalDateTime.now();
     }
 
-    public void setPaymentStatus(String paymentStatus) {
-        this.paymentStatus = paymentStatus;
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     public boolean isPaymentSuccessful() {
-        return "SUCCESS".equalsIgnoreCase(paymentStatus);
+        return "SUCCESS".equalsIgnoreCase(status);
+    }
+
+    @Override
+    public String toString() {
+        return "Payment{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", orderId=" + orderId +
+                ", paymentDate=" + paymentDate +
+                ", amount=" + amount +
+                ", paymentMethod='" + paymentMethod + '\'' +
+                ", status='" + status + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
     }
 }

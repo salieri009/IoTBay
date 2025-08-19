@@ -7,12 +7,25 @@ public class AccessLog implements Serializable {
     private int id;
     private int userId;
     private String action;
+    private String ipAddress;
+    private String userAgent;
     private LocalDateTime timestamp;
 
     public AccessLog(int id, int userId, String action, LocalDateTime timestamp) {
         this.id = id;
         this.userId = userId;
         this.action = action;
+        this.timestamp = timestamp;
+        this.ipAddress = null;
+        this.userAgent = null;
+    }
+
+    public AccessLog(int id, int userId, String action, String ipAddress, String userAgent, LocalDateTime timestamp) {
+        this.id = id;
+        this.userId = userId;
+        this.action = action;
+        this.ipAddress = ipAddress;
+        this.userAgent = userAgent;
         this.timestamp = timestamp;
     }
 
@@ -40,6 +53,22 @@ public class AccessLog implements Serializable {
         this.timestamp = timestamp;
     }
 
+    public String getIpAddress() {
+        return ipAddress;
+    }
+
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
+    }
+
+    public String getUserAgent() {
+        return userAgent;
+    }
+
+    public void setUserAgent(String userAgent) {
+        this.userAgent = userAgent;
+    }
+
     public String getFormattedTimestamp() {
         return timestamp.toString();
     }
@@ -50,6 +79,8 @@ public class AccessLog implements Serializable {
                 "id=" + id +
                 ", userId=" + userId +
                 ", action='" + action + '\'' +
+                ", ipAddress='" + ipAddress + '\'' +
+                ", userAgent='" + userAgent + '\'' +
                 ", timestamp='" + timestamp + '\'' +
                 '}';
     }

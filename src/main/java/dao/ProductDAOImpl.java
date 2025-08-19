@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
+
 import dao.interfaces.ProductDAO;
 import model.Product;
 import utils.DateTimeParser;
@@ -219,6 +219,18 @@ public class ProductDAOImpl implements ProductDAO {
         }
         return products;
     }
+    
+    @Override
+    public int getTotalProductCount() throws SQLException {
+        String query = "SELECT COUNT(*) FROM products";
+        try (PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet rs = statement.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+            return 0;
+        }
+    }
 
     private void setProductParams(PreparedStatement statement, Product product) throws SQLException {
         statement.setInt(1, product.getCategoryId());
@@ -228,5 +240,15 @@ public class ProductDAOImpl implements ProductDAO {
         statement.setInt(5, product.getStockQuantity());
         statement.setString(6, product.getImageUrl());
         statement.setString(7, DateTimeParser.toText(product.getCreatedAt()));
+    }
+
+    @Override
+    public Product findById(int id) throws SQLException {
+        return getProductById(id);
+    }
+
+    @Override
+    public Product findById(Integer id) throws SQLException {
+        return id != null ? getProductById(id) : null;
     }
 }

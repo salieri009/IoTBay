@@ -81,11 +81,22 @@
     <!-- Progress Bar (for auto-hide) -->
     <c:if test="${autoHide}">
         <div class="toast__progress absolute bottom-0 left-0 right-0 h-1 bg-neutral-200 rounded-b-lg overflow-hidden">
-            <div class="toast__progress-bar h-full bg-current opacity-30 transition-all duration-linear" 
-                 style="animation: toast-progress ${duration}ms linear"></div>
+            <div class="toast__progress-bar h-full bg-current opacity-30 transition-all" 
+                 id="toast-progress-${id}"></div>
         </div>
     </c:if>
 </div>
+
+<c:if test="${autoHide}">
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const progressBar = document.getElementById('toast-progress-${id}');
+    if (progressBar) {
+        progressBar.style.animation = 'toast-progress ${duration}ms linear';
+    }
+});
+</script>
+</c:if>
 
 <style>
 @keyframes toast-progress {

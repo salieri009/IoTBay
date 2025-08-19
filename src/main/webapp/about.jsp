@@ -22,27 +22,33 @@
     
     <!-- Header -->
     <jsp:include page="components/header.jsp" />
+
+    <!-- Masthead (global hero under header) -->
+    <jsp:include page="components/masthead.jsp">
+        <jsp:param name="title" value="About IoT Bay" />
+        <jsp:param name="subtitle" value="Connecting the future with elegant, reliable IoT solutions for everyone" />
+        <jsp:param name="image" value="${pageContext.request.contextPath}/images/hero.png" />
+        <jsp:param name="size" value="md" />
+        <jsp:param name="align" value="left" />
+    </jsp:include>
+
+    <!-- Page-specific CTAs under masthead -->
+    <section class="py-6">
+        <div class="container">
+            <div class="flex flex-wrap gap-3">
+                <a href="#our-story" class="btn btn--primary btn--md">
+                    Our Story
+                </a>
+                <a href="#our-team" class="btn btn--outline btn--md">
+                    Meet the Team
+                </a>
+            </div>
+        </div>
+    </section>
     
     <!-- Main Content -->
     <main class="flex-1">
-        <!-- Hero Section -->
-        <section class="hero-section bg-gradient-to-br from-brand-primary to-brand-secondary text-white py-20">
-            <div class="container">
-                <div class="max-w-4xl mx-auto text-center">
-                    <h1 class="text-4xl md:text-6xl font-bold mb-6">
-                        Connecting the Future
-                    </h1>
-                    <p class="text-xl md:text-2xl text-blue-100 mb-8">
-                        We're pioneering the next generation of Internet of Things technology, 
-                        making smart solutions accessible to everyone.
-                    </p>
-                    <div class="flex flex-wrap gap-4 justify-center">
-                        <a href="#our-story" class="btn btn--white btn--lg">Our Story</a>
-                        <a href="#our-team" class="btn btn--outline-white btn--lg">Meet the Team</a>
-                    </div>
-                </div>
-            </div>
-        </section>
+    <!-- Page content starts after masthead -->
         
         <!-- Our Story Section -->
         <section id="our-story" class="story-section py-20">
@@ -100,7 +106,7 @@
                     <!-- Mission -->
                     <div class="mission-card">
                         <div class="mission-card__icon">
-                            <svg class="w-12 h-12 text-brand-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-8 h-8 text-brand-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                                       d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                             </svg>
@@ -118,7 +124,7 @@
                     <!-- Vision -->
                     <div class="mission-card">
                         <div class="mission-card__icon">
-                            <svg class="w-12 h-12 text-brand-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-8 h-8 text-brand-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                                       d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
@@ -154,7 +160,7 @@
                     <!-- Innovation -->
                     <div class="value-card">
                         <div class="value-card__icon">
-                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                                       d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
                             </svg>
@@ -168,7 +174,7 @@
                     <!-- Quality -->
                     <div class="value-card">
                         <div class="value-card__icon">
-                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                                       d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
@@ -182,7 +188,7 @@
                     <!-- Accessibility -->
                     <div class="value-card">
                         <div class="value-card__icon">
-                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                                       d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
                             </svg>
@@ -196,7 +202,7 @@
                     <!-- Sustainability -->
                     <div class="value-card">
                         <div class="value-card__icon">
-                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
                                       d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
                             </svg>
@@ -211,7 +217,7 @@
         </section>
         
         <!-- Stats Section -->
-        <section class="stats-section bg-brand-primary text-white py-16">
+        <section class="stats-section bg-brand-primary text-white py-12">
             <div class="container">
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
                     <div class="stat-item text-center">
@@ -419,7 +425,7 @@
         </section>
         
         <!-- CTA Section -->
-        <section class="cta-section bg-gradient-to-r from-brand-primary to-brand-secondary text-white py-16">
+        <section class="cta-section bg-gradient-to-r from-brand-primary to-brand-secondary text-white py-12">
             <div class="container">
                 <div class="max-w-3xl mx-auto text-center">
                     <h2 class="text-3xl md:text-4xl font-bold mb-6">

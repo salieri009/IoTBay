@@ -1,5 +1,6 @@
 package dao.stub;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import dao.interfaces.ProductDAO;
@@ -142,5 +143,20 @@ public class ProductDAOStub implements ProductDAO {
             }
         }
         return result;
+    }
+
+    @Override
+    public int getTotalProductCount() throws SQLException {
+        return products.size();
+    }
+
+    @Override
+    public Product findById(int id) throws SQLException {
+        return getProductById(id);
+    }
+
+    @Override
+    public Product findById(Integer id) throws SQLException {
+        return id != null ? getProductById(id) : null;
     }
 }

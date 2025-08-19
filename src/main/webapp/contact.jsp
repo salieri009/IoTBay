@@ -360,7 +360,7 @@
             // Form validation
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
-                ++
+                
                 if (validateForm()) {
                     submitForm();
                 }

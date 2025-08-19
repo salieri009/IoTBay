@@ -18,6 +18,10 @@
             <a href="browse.jsp" class="nav__link">Products</a>
             <a href="about.jsp" class="nav__link">About</a>
             <a href="contact.jsp" class="nav__link">Contact</a>
+            <% if (user == null) { %>
+                <!-- Sign Up prominently displayed in main navigation for guests -->
+                <a href="register.jsp" class="nav__link nav__link--highlight">Sign Up</a>
+            <% } %>
         </nav>
         
         <div class="nav__actions">
@@ -93,19 +97,12 @@
             <% } else { %>
                 <!-- Guest user actions -->
                 <div class="flex gap-2">
-                    <a href="login.jsp" class="btn btn--outline btn--sm">Sign In</a>
-                    <a href="register.jsp" class="btn btn--primary btn--sm">Sign Up</a>
+                    <a href="login.jsp" class="btn btn--primary btn--sm">Sign In</a>
                 </div>
             <% } %>
             
-            <!-- Cart, Search, and Theme -->
+            <!-- Cart and Theme -->
             <div class="flex items-center gap-3 ml-4">
-                <button class="btn btn--ghost btn--icon" onclick="toggleSearch()" aria-label="Search">
-                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
-                    </svg>
-                </button>
-                
                 <!-- Theme Toggle -->
                 <button class="theme-toggle btn btn--ghost btn--icon" onclick="toggleTheme()" aria-label="Toggle dark mode">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -128,30 +125,5 @@
             <span></span>
             <span></span>
         </button>
-    </div>
-    
-    <!-- Search overlay -->
-    <div class="overlay" id="searchOverlay">
-        <div class="overlay__content">
-            <div class="container">
-                <form action="search" method="get" class="w-full max-w-lg mx-auto">
-                    <div class="search-form">
-                        <input type="text" name="query" placeholder="Search products..." 
-                               class="search-form__input" id="searchInput" maxlength="35" />
-                        <button type="submit" class="search-form__submit">
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
-                            </svg>
-                        </button>
-                        <button type="button" class="search-form__close" onclick="toggleSearch()">
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-                            </svg>
-                        </button>
-                    </div>
-                </form>
-                <div id="suggestions" class="mt-4"></div>
-            </div>
-        </div>
     </div>
 </header>

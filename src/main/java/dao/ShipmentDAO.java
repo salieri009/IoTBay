@@ -85,4 +85,102 @@ public class ShipmentDAO {
         }
         return shipments;
     }
+
+    // Additional methods required by controller
+    public void delete(Integer id) throws SQLException {
+        deleteShipment(id);
+    }
+
+    public Shipment findById(Integer id) throws SQLException {
+        return getShipmentById(id);
+    }
+
+    public void update(Shipment shipment) throws SQLException {
+        updateShipment(shipment);
+    }
+
+    public void create(Shipment shipment) throws SQLException {
+        createShipment(shipment);
+    }
+
+    public List<Shipment> findAll() throws SQLException {
+        String query = "SELECT * FROM shipment";
+        List<Shipment> shipments = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    shipments.add(new Shipment(
+                        rs.getInt("shipment_id"),
+                        rs.getInt("order_id"),
+                        rs.getInt("address_id"),
+                        rs.getObject("shipping_date", LocalDateTime.class),
+                        rs.getString("shipping_status")
+                    ));
+                }
+            }
+        }
+        return shipments;
+    }
+
+    public List<Shipment> findByUserId(int userId) throws SQLException {
+        String query = "SELECT s.* FROM shipment s JOIN orders o ON s.order_id = o.order_id WHERE o.user_id = ?";
+        List<Shipment> shipments = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, userId);
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    shipments.add(new Shipment(
+                        rs.getInt("shipment_id"),
+                        rs.getInt("order_id"),
+                        rs.getInt("address_id"),
+                        rs.getObject("shipping_date", LocalDateTime.class),
+                        rs.getString("shipping_status")
+                    ));
+                }
+            }
+        }
+        return shipments;
+    }
+
+    public Shipment findByTrackingNumber(String trackingNumber) throws SQLException {
+        // For now, return null as tracking number field needs to be added to database
+        return null;
+    }
+
+    public List<Shipment> searchShipments(Integer userId, String status, String startDate, String endDate) throws SQLException {
+        StringBuilder query = new StringBuilder("SELECT s.* FROM shipment s");
+        if (userId != null) {
+            query.append(" JOIN orders o ON s.order_id = o.order_id WHERE o.user_id = ?");
+        } else {
+            query.append(" WHERE 1=1");
+        }
+        
+        if (status != null && !status.isEmpty()) {
+            query.append(" AND s.shipping_status = ?");
+        }
+        
+        List<Shipment> shipments = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement(query.toString())) {
+            int paramIndex = 1;
+            if (userId != null) {
+                statement.setInt(paramIndex++, userId);
+            }
+            if (status != null && !status.isEmpty()) {
+                statement.setString(paramIndex++, status);
+            }
+            
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    shipments.add(new Shipment(
+                        rs.getInt("shipment_id"),
+                        rs.getInt("order_id"),
+                        rs.getInt("address_id"),
+                        rs.getObject("shipping_date", LocalDateTime.class),
+                        rs.getString("shipping_status")
+                    ));
+                }
+            }
+        }
+        return shipments;
+    }
 }
