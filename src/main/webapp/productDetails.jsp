@@ -1,6 +1,7 @@
 <%@ page import="model.Product, model.User" %>
-<%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ page contentType="text/html; charset=UTF-8" language="java" isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
 <%
     Product product = (Product) request.getAttribute("product");
     User currentUser = (User) session.getAttribute("user");
@@ -26,23 +27,16 @@
             // 메소드 호출 실패 시 기본값 사용
         }
     }
+    // Expose for EL
+    pageContext.setAttribute("pd_name", productName);
+    pageContext.setAttribute("pd_desc", productDescription);
+    pageContext.setAttribute("pd_price", productPrice);
+    pageContext.setAttribute("pd_stock", productStock);
+    pageContext.setAttribute("pd_id", productId);
+    pageContext.setAttribute("pd_image", productImage);
 %>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= productName %> - IoT Bay</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/modern-theme.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-</head>
-<body class="bg-neutral-50 min-h-screen flex flex-col">
-    <jsp:include page="components/header.jsp" />
-
-    <main class="flex-1 py-8">
+<t:base title="${pd_name} - IoT Bay" description="Product details">
+    <main class="py-8">
         <div class="container">
             <!-- Breadcrumb Navigation -->
             <nav class="mb-8">
@@ -51,7 +45,7 @@
                     <li>/</li>
                     <li><a href="${pageContext.request.contextPath}/browse" class="hover:text-brand-primary">Products</a></li>
                     <li>/</li>
-                    <li class="text-neutral-900 font-medium"><%= productName %></li>
+                    <li class="text-neutral-900 font-medium">${pd_name}</li>
                 </ol>
             </nav>
 
@@ -59,8 +53,8 @@
                 <!-- Product Images Section -->
                     <div class="product-gallery">
                     <div class="aspect-square bg-white rounded-lg shadow-lg overflow-hidden mb-4">
-                        <img src="${pageContext.request.contextPath}/<%= productImage %>" 
-                             alt="<%= productName %>" 
+                        <img src="${pageContext.request.contextPath}/${pd_image}" 
+                             alt="${pd_name}" 
                              class="w-full h-full object-cover"
                                  id="mainProductImage"
                              onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/sample1.png';"/>
@@ -69,13 +63,13 @@
                     <!-- Thumbnail Gallery -->
                     <div class="grid grid-cols-4 gap-2">
                         <div class="aspect-square bg-white rounded border-2 border-brand-primary overflow-hidden cursor-pointer">
-                            <img src="${pageContext.request.contextPath}/<%= productImage %>" 
-                                 alt="<%= productName %>" 
+                            <img src="${pageContext.request.contextPath}/${pd_image}" 
+                                 alt="${pd_name}" 
                                  class="w-full h-full object-cover">
                         </div>
                         <div class="aspect-square bg-neutral-100 rounded border overflow-hidden cursor-pointer">
                             <img src="${pageContext.request.contextPath}/images/sample2.png" 
-                                 alt="<%= productName %> view 2" 
+                                 alt="${pd_name} view 2" 
                                  class="w-full h-full object-cover">
                         </div>
                         <div class="aspect-square bg-neutral-100 rounded border overflow-hidden cursor-pointer">
@@ -165,7 +159,7 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
                                     </svg>
                                 </button>
-                                <input type="number" id="quantity" value="1" min="1" max="<%= productStock %>" 
+                                <input type="number" id="quantity" value="1" min="1" max="${pd_stock}" 
                                        class="w-20 h-10 text-center border rounded focus:outline-none focus:ring-2 focus:ring-brand-primary">
                                 <button type="button" onclick="increaseQuantity()" class="w-10 h-10 bg-neutral-100 rounded border flex items-center justify-center hover:bg-neutral-200">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -177,7 +171,7 @@
 
                         <div class="space-y-3">
                             <% if (productStock > 0) { %>
-                                <button onclick="addToCart(<%= productId %>)" 
+                                <button data-product-id="${pd_id}" onclick="addToCart(this.dataset.productId)" 
                                         class="w-full btn btn--primary btn--lg">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m0 0H17"></path>

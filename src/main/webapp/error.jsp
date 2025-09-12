@@ -1,30 +1,10 @@
-<%@ page contentType="text/html; charset=UTF-8" language="java" isErrorPage="true" %>
+<%@ page contentType="text/html; charset=UTF-8" language="java" isErrorPage="true" isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
 
-<!DOCTYPE html>
-<html lang="en" data-theme="light">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oops! Something went wrong - IoT Bay</title>
-    <meta name="description" content="Error page for IoT Bay - Smart Technology Store">
-    
-    <!-- CSS -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/modern-theme.css">
-    
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-</head>
-<body class="antialiased bg-neutral-50 text-neutral-900 min-h-screen flex flex-col">
-    
-    <!-- Header -->
-    <jsp:include page="components/header.jsp" />
-    
-    <!-- Error Page Content -->
-    <main class="flex-1 flex items-center justify-center py-20">
+<t:base title="Oops! Something went wrong" description="Error page for IoT Bay">
+    <main class="flex items-center justify-center py-20">
         <div class="container">
             <div class="max-w-2xl mx-auto text-center">
                 <!-- Error Icon -->
@@ -120,14 +100,8 @@
                     </div>
                 </div>
             </div>
-                </div>
+        </div>
     </main>
-    
-    <!-- Footer -->
-    <jsp:include page="components/footer.jsp" />
-    
-    <!-- JavaScript -->
-    <script src="${pageContext.request.contextPath}/js/core.js"></script>
     
     <script>
         // Analytics tracking for error pages
@@ -149,8 +123,8 @@
             }, 30000);
         }
     </script>
-</body>
-</html>
+    
+</t:base>
                 
                 <div class="error-actions">
                     <a href="javascript:history.back()" class="btn btn--outline">
@@ -176,9 +150,4 @@
                 </div>
             </div>
         </div>
-    </main>
     
-    <jsp:include page="components/footer.jsp" />
-    <script src="js/main.js"></script>
-</body>
-</html>

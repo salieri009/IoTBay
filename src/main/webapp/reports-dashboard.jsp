@@ -1,6 +1,7 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
 <%@ page import="java.util.*" %>
 <%@ page import="model.User" %>
+<%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
 
 <%
     // Admin authorization check
@@ -11,16 +12,8 @@
     }
 %>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BI & Analytics Dashboard - IoT Bay Admin</title>
-    <link rel="stylesheet" href="<%=request.getContextPath()%>/css/modern-theme.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<t:base title="BI & Analytics Dashboard - IoT Bay Admin" description="Analytics and reporting for IoT Bay Admin">
+    <main class="admin-layout">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         .admin-layout {
@@ -474,8 +467,7 @@
             }
         }
     </style>
-</head>
-<body>
+    
     <jsp:include page="components/header.jsp" />
     
     <main class="admin-layout">
@@ -1012,5 +1004,5 @@
         `;
         document.head.appendChild(style);
     </script>
-</body>
-</html>
+    </main>
+</t:base>

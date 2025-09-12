@@ -1,30 +1,10 @@
-<%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ page contentType="text/html; charset=UTF-8" language="java" isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
 
-<!DOCTYPE html>
-<html lang="en" data-theme="light">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Browse IoT device categories - Smart Home, Industrial, Agricultural, and Warehouse solutions">
-    <title>Categories | IoT Bay - Smart Technology Store</title>
-    
-    <!-- CSS -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/modern-theme.css">
-    
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-</head>
-<body class="antialiased bg-neutral-50 text-neutral-900 min-h-screen flex flex-col">
-    
-    <!-- Header -->
-    <jsp:include page="components/header.jsp" />
-    
-    <!-- Main Content -->
-    <main class="flex-1">
+<t:base title="Categories | IoT Bay" description="Browse IoT device categories - Smart Home, Industrial, Agricultural, and Warehouse">
+    <main>
         <!-- Hero Section -->
         <section class="hero-section bg-gradient-to-br from-brand-primary to-brand-secondary text-white py-16">
             <div class="container">
@@ -280,12 +260,6 @@
         
     </main>
     
-    <!-- Footer -->
-    <jsp:include page="components/footer.jsp" />
-    
-    <!-- JavaScript -->
-    <script src="${pageContext.request.contextPath}/js/core.js"></script>
-    
     <script>
         // Smooth scrolling for category links
         document.addEventListener('DOMContentLoaded', function() {
@@ -330,5 +304,4 @@
             });
         });
     </script>
-</body>
-</html>
+</t:base>

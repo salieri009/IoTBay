@@ -2,6 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ page import="model.User" %>
+<%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
 
 <%
     User user = (User) session.getAttribute("user");
@@ -11,29 +12,20 @@
     }
 %>
 
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Account - IoT Bay</title>
-    <link rel="stylesheet" href="<%=request.getContextPath()%>/css/modern-theme.css" />
-</head>
-<body>
-    <jsp:include page="components/header.jsp" />
-    
+<t:base title="My Account - IoT Bay" description="Manage your profile settings and history">
     <main class="profile-page">
         <div class="container">
             <!-- Profile Header -->
             <div class="profile-header">
                 <div class="profile-avatar">
                     <div class="avatar-placeholder">
-                        <%= user.getFirstName().substring(0, 1).toUpperCase() %><%= user.getLastName().substring(0, 1).toUpperCase() %>
+                        ${fn:toUpperCase(user.firstName.substring(0,1))}${fn:toUpperCase(user.lastName.substring(0,1))}
                     </div>
                 </div>
                 <div class="profile-info">
-                    <h1 class="profile-name"><%= user.getFirstName() %> <%= user.getLastName() %></h1>
-                    <p class="profile-email"><%= user.getEmail() %></p>
-                    <span class="profile-badge">Member since <%= user.getCreatedAt() != null ? user.getCreatedAt().toString().substring(0, 10) : "2024" %></span>
+                    <h1 class="profile-name">${user.firstName} ${user.lastName}</h1>
+                    <p class="profile-email">${user.email}</p>
+                    <span class="profile-badge">Member since ${user.createdAt != null ? user.createdAt : '2024'}</span>
                 </div>
             </div>
             
@@ -81,31 +73,31 @@
                                 <div class="form__group">
                                     <label for="firstName" class="form__label">First Name</label>
                                     <input type="text" id="firstName" name="firstName" class="form__input" 
-                                           value="<%= user.getFirstName() %>" required>
+                                           value="${user.firstName}" required>
                                 </div>
                                 <div class="form__group">
                                     <label for="lastName" class="form__label">Last Name</label>
                                     <input type="text" id="lastName" name="lastName" class="form__input" 
-                                           value="<%= user.getLastName() %>" required>
+                                           value="${user.lastName}" required>
                                 </div>
                             </div>
                             
                             <div class="form__group">
                                 <label for="email" class="form__label">Email Address</label>
                                 <input type="email" id="email" name="email" class="form__input" 
-                                       value="<%= user.getEmail() %>" required>
+                                       value="${user.email}" required>
                             </div>
                             
                             <div class="form__group">
                                 <label for="phone" class="form__label">Phone Number</label>
                                 <input type="tel" id="phone" name="phone" class="form__input" 
-                                       value="<%= user.getPhone() != null ? user.getPhone() : "" %>">
+                                       value="${empty user.phone ? '' : user.phone}">
                             </div>
                             
                             <div class="form__group">
                                 <label for="dateOfBirth" class="form__label">Date of Birth</label>
                                 <input type="date" id="dateOfBirth" name="dateOfBirth" class="form__input" 
-                                       value="<%= user.getDateOfBirth() != null ? user.getDateOfBirth().toString() : "" %>">
+                                       value="${empty user.dateOfBirth ? '' : user.dateOfBirth}">
                             </div>
                             
                             <div class="form__section">
@@ -113,17 +105,17 @@
                                 <div class="form__group">
                                     <label for="addressLine1" class="form__label">Address Line 1</label>
                                     <input type="text" id="addressLine1" name="addressLine1" class="form__input" 
-                                           value="<%= user.getAddressLine1() != null ? user.getAddressLine1() : "" %>">
+                                           value="${empty user.addressLine1 ? '' : user.addressLine1}">
                                 </div>
                                 <div class="form__group">
                                     <label for="addressLine2" class="form__label">Address Line 2</label>
                                     <input type="text" id="addressLine2" name="addressLine2" class="form__input" 
-                                           value="<%= user.getAddressLine2() != null ? user.getAddressLine2() : "" %>">
+                                           value="${empty user.addressLine2 ? '' : user.addressLine2}">
                                 </div>
                                 <div class="form__group">
                                     <label for="postalCode" class="form__label">Postal Code</label>
                                     <input type="text" id="postalCode" name="postalCode" class="form__input" 
-                                           value="<%= user.getPostalCode() != null ? user.getPostalCode() : "" %>">
+                                           value="${empty user.postalCode ? '' : user.postalCode}">
                                 </div>
                             </div>
                             
@@ -152,9 +144,9 @@
                                         <div class="form__group">
                                             <label for="paymentMethod" class="form__label">Preferred Payment Method</label>
                                             <select id="paymentMethod" name="paymentMethod" class="form__select">
-                                                <option value="CreditCard" <%= "CreditCard".equals(user.getPaymentMethod()) ? "selected" : "" %>>Credit Card</option>
-                                                <option value="PayPal" <%= "PayPal".equals(user.getPaymentMethod()) ? "selected" : "" %>>PayPal</option>
-                                                <option value="BankTransfer" <%= "BankTransfer".equals(user.getPaymentMethod()) ? "selected" : "" %>>Bank Transfer</option>
+                                                <option value="CreditCard" ${user.paymentMethod == 'CreditCard' ? 'selected' : ''}>Credit Card</option>
+                                                <option value="PayPal" ${user.paymentMethod == 'PayPal' ? 'selected' : ''}>PayPal</option>
+                                                <option value="BankTransfer" ${user.paymentMethod == 'BankTransfer' ? 'selected' : ''}>Bank Transfer</option>
                                             </select>
                                         </div>
                                         <button type="submit" class="btn btn--primary btn--sm">Update Payment Method</button>
@@ -264,8 +256,7 @@
         </div>
     </main>
     
-    <jsp:include page="components/footer.jsp" />
-    <script src="js/main.js"></script>
+    <script src="${pageContext.request.contextPath}/js/main.js"></script>
     <script>
         function showSection(sectionId) {
             // Hide all sections
@@ -337,5 +328,4 @@
             });
         });
     </script>
-</body>
-</html>
+</t:base>

@@ -1,5 +1,8 @@
-<%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ page contentType="text/html; charset=UTF-8" language="java" isELIgnored="false" %>
 <%@ page import="java.util.*, model.*" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
 
 <%
     User user = (User) session.getAttribute("user");
@@ -18,35 +21,28 @@
     
     String error = (String) request.getAttribute("error");
     String success = (String) request.getAttribute("success");
+
+    // Expose values for EL/JSTL inside the layout body
+    request.setAttribute("cartItems", cartItems);
+    request.setAttribute("totalAmount", totalAmount);
 %>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Checkout - IoT Bay</title>
-    <link rel="stylesheet" href="<%=request.getContextPath()%>/css/modern-theme.css">
-</head>
-<body>
-    <!-- Include Header -->
-    <jsp:include page="components/header.jsp" />
-    
+<t:base title="Checkout - IoT Bay" description="Secure checkout and order review">
     <!-- Include Navigation -->
     <nav class="nav__container">
         <div class="container">
             <ul class="nav__list">
                 <li class="nav__item">
-                    <a href="<%=request.getContextPath()%>/index.jsp" class="nav__link">Home</a>
+                    <a href="${pageContext.request.contextPath}/index.jsp" class="nav__link">Home</a>
                 </li>
                 <li class="nav__item">
-                    <a href="<%=request.getContextPath()%>/browse" class="nav__link">Browse</a>
+                    <a href="${pageContext.request.contextPath}/browse" class="nav__link">Browse</a>
                 </li>
                 <li class="nav__item">
-                    <a href="<%=request.getContextPath()%>/cart" class="nav__link">Cart</a>
+                    <a href="${pageContext.request.contextPath}/cart" class="nav__link">Cart</a>
                 </li>
                 <li class="nav__item">
-                    <a href="<%=request.getContextPath()%>/checkout" class="nav__link nav__link--active">Checkout</a>
+                    <a href="${pageContext.request.contextPath}/checkout" class="nav__link nav__link--active">Checkout</a>
                 </li>
             </ul>
         </div>
@@ -57,9 +53,9 @@
         <!-- Breadcrumb -->
         <nav class="mb-6">
             <ol class="flex items-center gap-2 text-sm text-neutral-600">
-                <li><a href="<%=request.getContextPath()%>/index.jsp" class="hover:text-primary">Home</a></li>
+                <li><a href="${pageContext.request.contextPath}/index.jsp" class="hover:text-primary">Home</a></li>
                 <li>/</li>
-                <li><a href="<%=request.getContextPath()%>/cart" class="hover:text-primary">Cart</a></li>
+                <li><a href="${pageContext.request.contextPath}/cart" class="hover:text-primary">Cart</a></li>
                 <li>/</li>
                 <li class="text-neutral-900 font-medium">Checkout</li>
             </ol>
@@ -102,7 +98,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <!-- Checkout Form -->
             <div class="lg:col-span-2">
-                <form action="<%=request.getContextPath()%>/checkout" method="post" class="space-y-8">
+                <form action="${pageContext.request.contextPath}/checkout" method="post" class="space-y-8">
                     <!-- Shipping Information -->
                     <div class="card">
                         <div class="card__header">
@@ -117,34 +113,34 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div class="form-group">
                                     <label for="firstName" class="form-label form-label--required">First Name</label>
-                                    <input type="text" id="firstName" name="firstName" value="<%= user.getFirstName() %>" 
+                                    <input type="text" id="firstName" name="firstName" value="${user.firstName}" 
                                            class="form-input" required>
                                 </div>
                                 <div class="form-group">
                                     <label for="lastName" class="form-label form-label--required">Last Name</label>
-                                    <input type="text" id="lastName" name="lastName" value="<%= user.getLastName() %>" 
+                                    <input type="text" id="lastName" name="lastName" value="${user.lastName}" 
                                            class="form-input" required>
                                 </div>
                                 <div class="form-group md:col-span-2">
                                     <label for="email" class="form-label form-label--required">Email</label>
-                                    <input type="email" id="email" name="email" value="<%= user.getEmail() %>" 
+                                    <input type="email" id="email" name="email" value="${user.email}" 
                                            class="form-input" required>
                                 </div>
                                 <div class="form-group md:col-span-2">
                                     <label for="phone" class="form-label form-label--required">Phone Number</label>
-                                    <input type="tel" id="phone" name="phone" value="<%= user.getPhone() != null ? user.getPhone() : "" %>" 
+                                    <input type="tel" id="phone" name="phone" value="${empty user.phone ? '' : user.phone}" 
                                            class="form-input" required>
                                 </div>
                                 <div class="form-group md:col-span-2">
                                     <label for="address1" class="form-label form-label--required">Address Line 1</label>
                                     <input type="text" id="address1" name="address1" 
-                                           value="<%= user.getAddressLine1() != null ? user.getAddressLine1() : "" %>" 
+                                           value="${empty user.addressLine1 ? '' : user.addressLine1}" 
                                            class="form-input" placeholder="Street address, P.O. box, company name" required>
                                 </div>
                                 <div class="form-group md:col-span-2">
                                     <label for="address2" class="form-label">Address Line 2</label>
                                     <input type="text" id="address2" name="address2" 
-                                           value="<%= user.getAddressLine2() != null ? user.getAddressLine2() : "" %>" 
+                                           value="${empty user.addressLine2 ? '' : user.addressLine2}" 
                                            class="form-input" placeholder="Apartment, suite, unit, building, floor, etc.">
                                 </div>
                                 <div class="form-group">
@@ -154,7 +150,7 @@
                                 <div class="form-group">
                                     <label for="postalCode" class="form-label form-label--required">Postal Code</label>
                                     <input type="text" id="postalCode" name="postalCode" 
-                                           value="<%= user.getPostalCode() != null ? user.getPostalCode() : "" %>" 
+                                           value="${empty user.postalCode ? '' : user.postalCode}" 
                                            class="form-input" required>
                                 </div>
                             </div>
@@ -282,62 +278,71 @@
                         </div>
                         <div class="card__body space-y-4">
                             <!-- Cart Items -->
-                            <% if (cartItems != null && !cartItems.isEmpty()) { %>
-                                <div class="space-y-3">
-                                    <% for (CartItem item : cartItems) { %>
-                                        <div class="flex gap-3 p-3 bg-neutral-50 rounded-lg">
-                                            <img src="<%= item.getProduct().getImageUrl() %>" 
-                                                 alt="<%= item.getProduct().getName() %>"
-                                                 class="w-12 h-12 object-cover rounded-md bg-neutral-200">
-                                            <div class="flex-1 min-w-0">
-                                                <h4 class="text-sm font-medium text-neutral-900 truncate">
-                                                    <%= item.getProduct().getName() %>
-                                                </h4>
-                                                <div class="flex justify-between items-center mt-1">
-                                                    <span class="text-xs text-neutral-600">Qty: <%= item.getQuantity() %></span>
-                                                    <span class="text-sm font-semibold text-brand-primary">
-                                                        $<%= String.format("%.2f", item.getProduct().getPrice() * item.getQuantity()) %>
-                                                    </span>
+                            <c:choose>
+                                <c:when test="${not empty cartItems}">
+                                    <div class="space-y-3">
+                                        <c:forEach var="item" items="${cartItems}">
+                                            <div class="flex gap-3 p-3 bg-neutral-50 rounded-lg">
+                                                <img src="${item.product.imageUrl}" 
+                                                     alt="${item.product.name}"
+                                                     class="w-12 h-12 object-cover rounded-md bg-neutral-200">
+                                                <div class="flex-1 min-w-0">
+                                                    <h4 class="text-sm font-medium text-neutral-900 truncate">
+                                                        ${item.product.name}
+                                                    </h4>
+                                                    <div class="flex justify-between items-center mt-1">
+                                                        <span class="text-xs text-neutral-600">Qty: ${item.quantity}</span>
+                                                        <span class="text-sm font-semibold text-brand-primary">
+                                                            $<fmt:formatNumber value="${item.product.price * item.quantity}" type="number" minFractionDigits="2" maxFractionDigits="2"/>
+                                                        </span>
+                                                    </div>
                                                 </div>
                                             </div>
+                                        </c:forEach>
+                                    </div>
+                                    
+                                    <!-- Price Breakdown -->
+                                    <div class="border-t border-neutral-200 pt-4 space-y-2">
+                                        <div class="flex justify-between text-sm">
+                                            <span class="text-neutral-600">Subtotal</span>
+                                            <span class="text-neutral-900">$
+                                                <fmt:formatNumber value="${totalAmount}" type="number" minFractionDigits="2" maxFractionDigits="2"/>
+                                            </span>
                                         </div>
-                                    <% } %>
-                                </div>
-                                
-                                <!-- Price Breakdown -->
-                                <div class="border-t border-neutral-200 pt-4 space-y-2">
-                                    <div class="flex justify-between text-sm">
-                                        <span class="text-neutral-600">Subtotal</span>
-                                        <span class="text-neutral-900">$<%= String.format("%.2f", totalAmount) %></span>
-                                    </div>
-                                    <div class="flex justify-between text-sm">
-                                        <span class="text-neutral-600">Shipping</span>
-                                        <span class="text-neutral-900">$15.00</span>
-                                    </div>
-                                    <div class="flex justify-between text-sm">
-                                        <span class="text-neutral-600">Tax</span>
-                                        <span class="text-neutral-900">$<%= String.format("%.2f", totalAmount * 0.1) %></span>
-                                    </div>
-                                    <div class="border-t border-neutral-200 pt-2">
-                                        <div class="flex justify-between text-lg font-semibold">
-                                            <span class="text-neutral-900">Total</span>
-                                            <span class="text-brand-primary">$<%= String.format("%.2f", totalAmount + 15.00 + (totalAmount * 0.1)) %></span>
+                                        <div class="flex justify-between text-sm">
+                                            <span class="text-neutral-600">Shipping</span>
+                                            <span class="text-neutral-900">$15.00</span>
+                                        </div>
+                                        <div class="flex justify-between text-sm">
+                                            <span class="text-neutral-600">Tax</span>
+                                            <span class="text-neutral-900">$
+                                                <fmt:formatNumber value="${totalAmount * 0.1}" type="number" minFractionDigits="2" maxFractionDigits="2"/>
+                                            </span>
+                                        </div>
+                                        <div class="border-t border-neutral-200 pt-2">
+                                            <div class="flex justify-between text-lg font-semibold">
+                                                <span class="text-neutral-900">Total</span>
+                                                <span class="text-brand-primary">$
+                                                    <fmt:formatNumber value="${totalAmount + 15.00 + (totalAmount * 0.1)}" type="number" minFractionDigits="2" maxFractionDigits="2"/>
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            <% } else { %>
-                                <div class="text-center py-8">
-                                    <div class="w-16 h-16 bg-neutral-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                        <svg class="w-8 h-8 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l-1 12H6L5 9z"/>
-                                        </svg>
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="text-center py-8">
+                                        <div class="w-16 h-16 bg-neutral-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                            <svg class="w-8 h-8 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l-1 12H6L5 9z"/>
+                                            </svg>
+                                        </div>
+                                        <p class="text-neutral-600">Your cart is empty</p>
+                                        <a href="${pageContext.request.contextPath}/browse" class="btn btn--primary btn--sm mt-4">
+                                            Continue Shopping
+                                        </a>
                                     </div>
-                                    <p class="text-neutral-600">Your cart is empty</p>
-                                    <a href="<%=request.getContextPath()%>/browse" class="btn btn--primary btn--sm mt-4">
-                                        Continue Shopping
-                                    </a>
-                                </div>
-                            <% } %>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
                         
                         <% if (cartItems != null && !cartItems.isEmpty()) { %>
@@ -372,11 +377,8 @@
         </div>
     </main>
 
-    <!-- Include Footer -->
-    <jsp:include page="components/footer.jsp" />
-
     <!-- JavaScript -->
-    <script src="<%=request.getContextPath()%>/js/main.js"></script>
+    <script src="${pageContext.request.contextPath}/js/main.js"></script>
     <script>
         // Form validation and enhancement
         document.addEventListener('DOMContentLoaded', function() {
@@ -469,12 +471,11 @@
                         
                         // Redirect after delay
                         setTimeout(() => {
-                            window.location.href = '<%=request.getContextPath()%>/orderList.jsp';
+                            window.location.href = '${pageContext.request.contextPath}/orderList.jsp';
                         }, 2000);
                     }, 2000);
                 });
             }
         });
     </script>
-</body>
-</html>
+</t:base>

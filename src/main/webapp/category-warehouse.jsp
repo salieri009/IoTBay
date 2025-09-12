@@ -1,5 +1,6 @@
-<%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ page contentType="text/html; charset=UTF-8" language="java" isELIgnored="false" %>
 <%@ page import="java.util.*, model.*" %>
+<%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
 
 <%
     List<Product> products = (List<Product>) request.getAttribute("products");
@@ -9,34 +10,23 @@
     }
 %>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Warehouse Management Solutions - IoT Bay</title>
-    <link rel="stylesheet" href="<%=request.getContextPath()%>/css/modern-theme.css">
-    <meta name="description" content="Optimize your warehouse operations with smart IoT solutions for inventory management, automation, and logistics.">
-</head>
-<body>
-    <!-- Include Header -->
-    <jsp:include page="components/header.jsp" />
+<t:base title="Warehouse Management Solutions - IoT Bay" description="Optimize your warehouse operations with IoT solutions for inventory, automation, logistics.">
     
     <!-- Include Navigation -->
     <nav class="nav__container">
         <div class="container">
             <ul class="nav__list">
                 <li class="nav__item">
-                    <a href="<%=request.getContextPath()%>/index.jsp" class="nav__link">Home</a>
+                    <a href="${pageContext.request.contextPath}/index.jsp" class="nav__link">Home</a>
                 </li>
                 <li class="nav__item">
-                    <a href="<%=request.getContextPath()%>/browse" class="nav__link">Browse</a>
+                    <a href="${pageContext.request.contextPath}/browse" class="nav__link">Browse</a>
                 </li>
                 <li class="nav__item">
-                    <a href="<%=request.getContextPath()%>/category-industrial.jsp" class="nav__link">Industrial</a>
+                    <a href="${pageContext.request.contextPath}/category-industrial.jsp" class="nav__link">Industrial</a>
                 </li>
                 <li class="nav__item">
-                    <a href="<%=request.getContextPath()%>/category-warehouse.jsp" class="nav__link nav__link--active">Warehouse</a>
+                    <a href="${pageContext.request.contextPath}/category-warehouse.jsp" class="nav__link nav__link--active">Warehouse</a>
                 </li>
                 <li class="nav__item">
                     <a href="<%=request.getContextPath()%>/category-agriculture.jsp" class="nav__link">Agriculture</a>

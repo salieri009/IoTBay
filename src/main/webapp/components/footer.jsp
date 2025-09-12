@@ -9,7 +9,7 @@
             <!-- Company Info -->
             <div class="footer__section">
                 <div class="footer__logo mb-4">
-                    <img src="${pageContext.request.contextPath}/images/logo-white.png" alt="IoT Bay" class="h-8">
+                    <img src="${pageContext.request.contextPath}/images/logo.png" alt="IoT Bay" class="h-8">
                 </div>
                 <p class="text-sm text-neutral-400 mb-4">
                     Your premier destination for cutting-edge IoT devices and smart technology solutions.

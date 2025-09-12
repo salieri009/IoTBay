@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ page contentType="text/html; charset=UTF-8" language="java" isELIgnored="false" %>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
 <t:base title="Home" description="Leading provider of IoT solutions for industry and smart living">
 
@@ -15,10 +15,10 @@
     <section class="py-6">
         <div class="container">
             <div class="flex flex-wrap gap-3">
-                <a href="<%=request.getContextPath()%>/browse" class="btn btn--primary btn--md">
+                <a href="${pageContext.request.contextPath}/browse.jsp" class="btn btn--primary btn--md">
                     Explore Products
                 </a>
-                <a href="<%=request.getContextPath()%>/about.jsp" class="btn btn--outline btn--md">
+                <a href="${pageContext.request.contextPath}/about.jsp" class="btn btn--outline btn--md">
                     Learn More
                 </a>
             </div>
@@ -30,7 +30,7 @@
         <div class="container">
             <ul class="nav__list">
                 <li class="nav__item">
-                    <a href="<%=request.getContextPath()%>/category-industrial.jsp" class="nav__link">
+                    <a href="${pageContext.request.contextPath}/category-industrial.jsp" class="nav__link">
                         <svg class="nav__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 8.172V5L8 4z"/>
                         </svg>
@@ -38,7 +38,7 @@
                     </a>
                 </li>
                 <li class="nav__item">
-                    <a href="<%=request.getContextPath()%>/category-warehouse.jsp" class="nav__link">
+                    <a href="${pageContext.request.contextPath}/category-warehouse.jsp" class="nav__link">
                         <svg class="nav__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h1.586a1 1 0 01.707.293l1.414 1.414a1 1 0 00.707.293H15a2 2 0 012 2v0M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/>
                         </svg>
@@ -46,7 +46,7 @@
                     </a>
                 </li>
                 <li class="nav__item">
-                    <a href="<%=request.getContextPath()%>/category-agriculture.jsp" class="nav__link">
+                    <a href="${pageContext.request.contextPath}/category-agriculture.jsp" class="nav__link">
                         <svg class="nav__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
                         </svg>
@@ -54,7 +54,7 @@
                     </a>
                 </li>
                 <li class="nav__item">
-                    <a href="<%=request.getContextPath()%>/category-smarthome.jsp" class="nav__link">
+                    <a href="${pageContext.request.contextPath}/category-smarthome.jsp" class="nav__link">
                         <svg class="nav__icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2H3v10z"/>
                         </svg>
@@ -80,10 +80,10 @@
             <div class="product-grid">
                 <!-- Smart Industrial Sensor -->
                 <div class="product-card">
-                    <img src="<%=request.getContextPath()%>/images/sample1.png" 
+                    <img src="${pageContext.request.contextPath}/images/sample1.png" 
                          alt="Smart Industrial Sensor" 
                          class="product-card__image"
-                         onerror="this.src='<%=request.getContextPath()%>/images/welcome.png'">
+                         onerror="this.src='${pageContext.request.contextPath}/images/welcome.png'">
                     <div class="product-card__body">
                         <div class="badge badge--primary mb-3">Industrial IoT</div>
                         <h3 class="product-card__title">Smart Industrial Sensor</h3>
@@ -93,7 +93,7 @@
                         </p>
                         <div class="product-card__price">$459.00</div>
                         <div class="product-card__actions">
-                            <a href="<%=request.getContextPath()%>/productDetails.jsp?id=1" class="btn btn--outline btn--sm">
+                            <a href="${pageContext.request.contextPath}/productDetails.jsp?id=1" class="btn btn--outline btn--sm">
                                 View Details
                             </a>
                             <button onclick="addToCart(1)" class="btn btn--primary btn--sm">
@@ -105,10 +105,10 @@
                 
                 <!-- IoT Connectivity Kit -->
                 <div class="product-card">
-                    <img src="<%=request.getContextPath()%>/images/sample2.png" 
+                    <img src="${pageContext.request.contextPath}/images/sample2.png" 
                          alt="IoT Connectivity Kit" 
                          class="product-card__image"
-                         onerror="this.src='<%=request.getContextPath()%>/images/welcome.png'">
+                         onerror="this.src='${pageContext.request.contextPath}/images/welcome.png'">
                     <div class="product-card__body">
                         <div class="badge badge--secondary mb-3">Connectivity</div>
                         <h3 class="product-card__title">IoT Connectivity Kit</h3>
@@ -118,7 +118,7 @@
                         </p>
                         <div class="product-card__price">$89.00</div>
                         <div class="product-card__actions">
-                            <a href="<%=request.getContextPath()%>/productDetails.jsp?id=2" class="btn btn--outline btn--sm">
+                            <a href="${pageContext.request.contextPath}/productDetails.jsp?id=2" class="btn btn--outline btn--sm">
                                 View Details
                             </a>
                             <button onclick="addToCart(2)" class="btn btn--primary btn--sm">
@@ -130,10 +130,10 @@
                 
                 <!-- Smart Power Management -->
                 <div class="product-card">
-                    <img src="<%=request.getContextPath()%>/images/sample3.png" 
+                    <img src="${pageContext.request.contextPath}/images/sample3.png" 
                          alt="Smart Power Management System" 
                          class="product-card__image"
-                         onerror="this.src='<%=request.getContextPath()%>/images/welcome.png'">
+                         onerror="this.src='${pageContext.request.contextPath}/images/welcome.png'">
                     <div class="product-card__body">
                         <div class="badge badge--success mb-3">Energy</div>
                         <h3 class="product-card__title">Smart Power Management</h3>
@@ -143,7 +143,7 @@
                         </p>
                         <div class="product-card__price">$299.00</div>
                         <div class="product-card__actions">
-                            <a href="<%=request.getContextPath()%>/productDetails.jsp?id=3" class="btn btn--outline btn--sm">
+                            <a href="${pageContext.request.contextPath}/productDetails.jsp?id=3" class="btn btn--outline btn--sm">
                                 View Details
                             </a>
                             <button onclick="addToCart(3)" class="btn btn--primary btn--sm">
@@ -156,7 +156,7 @@
             
             <!-- Call to Action -->
             <div class="text-center mt-12">
-                <a href="<%=request.getContextPath()%>/browse" class="btn btn--primary btn--lg">
+                <a href="${pageContext.request.contextPath}/browse.jsp" class="btn btn--primary btn--lg">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                     </svg>
@@ -166,5 +166,5 @@
         </div>
     </section>
 
-        <script src="js/main.js"></script>
+        <script src="${pageContext.request.contextPath}/js/main.js"></script>
 </t:base>

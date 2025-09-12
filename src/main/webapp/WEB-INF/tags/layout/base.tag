@@ -17,11 +17,11 @@
 
     <title>${title != null ? title.concat(' | IoT Bay') : 'IoT Bay - Smart Technology Store'}</title>
 
-    <link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/images/favicon.ico">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/modern-theme.css">
+    <link rel="icon" type="image/x-icon" href="<c:url value='/images/favicon.ico' />">
+    <link rel="stylesheet" href="<c:url value='/css/modern-theme.css' />">
 
     <c:if test="${customCSS != null}">
-        <link rel="stylesheet" href="${pageContext.request.contextPath}/css/${customCSS}">
+        <link rel="stylesheet" href="<c:url value='/css/${customCSS}' />">
     </c:if>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -57,9 +57,9 @@
         </div>
     </div>
 
-    <script src="${pageContext.request.contextPath}/js/core.js"></script>
+    <script src="<c:url value='/js/main.js' />"></script>
     <c:if test="${customJS != null}">
-        <script src="${pageContext.request.contextPath}/js/${customJS}"></script>
+        <script src="<c:url value='/js/${customJS}' />"></script>
     </c:if>
     <script>
         window.addEventListener('load', function() {

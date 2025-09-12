@@ -262,3 +262,106 @@ webapp/
 **Version**: 1.0.0  
 **Last Updated**: 2024년 12월  
 **Next Review**: 2025년 Q1
+
+
+## 🧭 Senior UX/UI Review Playbook (Start at `index.jsp`, scale to all pages)
+
+### 1) Review Objectives
+- Consistency: Tokens/components/layout patterns are used uniformly across pages.
+- Clarity: Strong visual hierarchy and scannability; primary actions stand out.
+- Accessibility: Keyboard flow, ARIA, focus states, color contrast (WCAG 2.1 AA+).
+- Performance: Perceived speed, stable layout (no CLS), optimized media.
+- Maintainability: Zero inline styles; no per-page ad-hoc CSS; reusable components only.
+- Internationalization: English baseline; no mixed-language UI text.
+
+### 2) Page Order and Rationale
+1. `index.jsp` – defines global look (masthead, CTAs, nav rhythm)
+2. `browse.jsp` – grid density, filters, empty state, sorting
+3. `productDetails.jsp` – long-form layout, media, CTAs, trust indicators
+4. `cart.jsp` / `checkout.jsp` – forms, summaries, validation feedback
+5. `login.jsp` / `register.jsp` – form patterns, card layouts
+6. Category pages – secondary nav consistency
+7. Admin pages – tables, forms, charts; ensure same tokens/components
+
+### 3) Per-Page Workflow (repeatable checklist)
+- A. Layout structure
+  - Wrap page with `<t:base title="" description="">` (layout tag).
+  - Ensure only one main content spine (layout provides `<main>`).
+  - Use `.container` and spacing utilities for consistent gutters.
+- B. Visual hierarchy
+  - Headings: use semantic `h1..h3` or `.text-display-*` classes.
+  - CTAs: `.btn btn--primary` for primary action; `.btn--outline` for secondary.
+- C. Component conformance
+  - Buttons: `.btn` variants only (no custom colors).
+  - Forms: `.form-group`, `.form-label`, `.form-input`, `.form-select`, `.checkbox__input`.
+  - Cards: `.card` / `.product-card` with consistent radius/shadow.
+  - Navigation/Dropdown: `.user-menu__*` or `.dropdown__*` (aliases supported).
+  - Badges/alerts: `.badge--*`, `.alert--*` per tokens.
+- D. Token compliance
+  - Colors: brand/neutral tokens only; remove raw hex/rgb in markup.
+  - Spacing: utilities (`.mt-*`, `.py-*`) – remove inline style spacing.
+  - Typography: `.text-*`, `.font-*` from design system.
+- E. Accessibility
+  - Icon-only buttons have `aria-label`.
+  - Dropdowns/menus use `aria-expanded`, roles.
+  - Focus styles visible; tab order logical; contrast ≥ AA (dark/light).
+- F. States (empty/error/loading)
+  - Empty: icon + title + description + primary action.
+  - Error: `.alert--error` with icon; generic user-safe copy.
+  - Loading: `.loading`/skeleton; avoid layout jump.
+- G. Performance
+  - Images: width/height attributes; lazy where safe; fallback via `onerror`.
+  - Reduce wrappers; prefer utilities over extra DOM.
+  - Defer non-critical JS; avoid forced reflows.
+- H. Language consistency
+  - English UI text; avoid mixed language in the same surface.
+
+### 4) Anti-Patterns to Remove (search-and-fix)
+- Inline styles (`style="..."`) → use utilities (`hidden`, `inline-block`, spacing classes).
+- Legacy class names (e.g., `form__input`) → modern `.form-input` etc.
+- Raw hex colors or px sizes not mapped to tokens.
+- JSP scriptlets in markup scope within `<t:base>` – replace with EL `${}`.
+- Ad-hoc per-page CSS; migrate to tokens/components.
+
+### 5) Concrete Index Review Checklist
+- [ ] Page wrapped by `<t:base>`; no duplicate `<main>`/header/footer.
+- [ ] Masthead via `components/masthead.jsp` with `title/subtitle/image` params.
+- [ ] CTA buttons use `.btn` variants; spacing via tokens.
+- [ ] Category navigation uses `.nav__*` and tokenized icons.
+- [ ] Featured grid uses `.product-grid` + `.product-card` components.
+- [ ] All links/images use `${pageContext.request.contextPath}`.
+- [ ] No inline styles; all spacing via utilities.
+- [ ] A11y: aria labels on icon-only buttons; focus visible.
+- [ ] Dark mode and contrast verified.
+
+### 6) Propagation Strategy (from index to all pages)
+- Build a diff map (legacy → design-system) to apply consistently.
+- Group pages by template type (list/detail/forms/admin); batch replace safely.
+- Maintain a “Page Notes” doc: Issues → Fix → Commit link → Owner → Date.
+
+### 7) Tooling & Measurement
+- Lint sweeps (grep): inline `style=`, legacy `form__input`, raw colors.
+- Accessibility quick pass: keyboard-only nav, screen reader labels, contrast sampler.
+- Performance quick pass: network waterfall, image sizes, layout shift eyeball.
+
+### 8) Sign-off Criteria (per page)
+- Visual: tokens/components/spacing match system.
+- A11y: keyboard complete, aria in place, contrast ≥ AA.
+- Perf: media optimized, no blocking inline scripts, stable layout.
+- Code: no inline styles, no per-page CSS, no scriptlets in markup.
+
+### 9) Example Remediations
+- Context path
+  - Before: `<a href="<%=request.getContextPath()%>/browse">`
+  - After: `<a href="${pageContext.request.contextPath}/browse">`
+- Hide/show
+  - Before: `style="display:none"`
+  - After: `class="hidden"`
+- Form input
+  - Before: `<input class="form__input">`
+  - After: `<input class="form-input">`
+
+### 10) Review Cadence
+- Daily: 2–3 pages full pass + Page Notes update.
+- Twice weekly: cross-page consistency audits.
+- Final week: a11y/perf spot fixes, dark-mode sweep, doc refresh.

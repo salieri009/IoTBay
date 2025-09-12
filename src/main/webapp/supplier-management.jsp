@@ -1,6 +1,7 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
 <%@ page import="java.util.*" %>
 <%@ page import="model.User" %>
+<%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
 
 <%
     // Admin authorization check
@@ -11,16 +12,8 @@
     }
 %>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Supplier Management - IoT Bay Admin</title>
-    <link rel="stylesheet" href="<%=request.getContextPath()%>/css/modern-theme.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<t:base title="Supplier Management - IoT Bay Admin" description="Manage supplier relationships and performance tracking">
+    <main class="admin-layout">
     <style>
         .admin-layout {
             min-height: 100vh;
@@ -423,11 +416,7 @@
             }
         }
     </style>
-</head>
-<body>
-    <jsp:include page="components/header.jsp" />
     
-    <main class="admin-layout">
         <div class="admin-container">
             <!-- Page Header -->
             <header class="page-header">
@@ -667,7 +656,6 @@
         </div>
     </div>
     
-    <jsp:include page="components/footer.jsp" />
     
     <script>
         // Modal Management
@@ -852,5 +840,4 @@
             document.head.appendChild(style);
         });
     </script>
-</body>
-</html>
+</t:base>
