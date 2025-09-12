@@ -12,37 +12,8 @@
     int totalResults = products != null ? products.size() : 0;
 %>
 
-<!DOCTYPE html>
-<html lang="en" data-theme="light">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Browse IoT products - Smart home devices, industrial sensors, and innovative technology solutions">
-    <title>
-        <% if (keyword != null && !keyword.trim().isEmpty()) { %>
-            Search Results for "<%= keyword %>" | IoT Bay
-        <% } else if (category != null) { %>
-            <%= category %> Products | IoT Bay
-        <% } else { %>
-            Browse Products | IoT Bay - Smart Technology Store
-        <% } %>
-    </title>
-    
-    <!-- CSS -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/modern-theme.css">
-    
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-</head>
-<body class="antialiased bg-neutral-50 text-neutral-900 min-h-screen flex flex-col">
-    
-    <!-- Header -->
-    <jsp:include page="components/header.jsp" />
-    
-    <!-- Main Content -->
-    <main class="flex-1">
+<%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
+<t:base title="Browse Products" description="Browse IoT products across categories and keywords">
         <!-- Page Header -->
         <section class="page-header bg-white border-b border-neutral-200 py-8">
             <div class="container">
@@ -71,7 +42,7 @@
                 <div class="page-header__content">
                     <% if (keyword != null && !keyword.trim().isEmpty()) { %>
                         <h1 class="page-header__title">
-                            Search Results for "<span class="text-brand-primary"><%= keyword %></span>"
+                            Search Results for "<span class="text-primary"><%= keyword %></span>"
                         </h1>
                         <p class="page-header__subtitle">
                             Found <%= totalResults %> product<%= totalResults != 1 ? "s" : "" %> matching your search
@@ -98,7 +69,7 @@
                     <!-- Filters and Sort Options -->
                     <div class="browse-controls">
                         <div class="filter-controls">
-                            <select class="form__select" id="categoryFilter" onchange="filterByCategory()">
+                            <select class="form-select" id="categoryFilter" onchange="filterByCategory()">
                                 <option value="">All Categories</option>
                                 <option value="1" <%= categoryId != null && categoryId == 1 ? "selected" : "" %>>Sensors</option>
                                 <option value="2" <%= categoryId != null && categoryId == 2 ? "selected" : "" %>>Controllers</option>
@@ -108,7 +79,7 @@
                         </div>
                         
                         <div class="sort-controls">
-                            <select class="form__select" id="sortBy" onchange="sortProducts()">
+                            <select class="form-select" id="sortBy" onchange="sortProducts()">
                                 <option value="name">Sort by Name</option>
                                 <option value="price-low">Price: Low to High</option>
                                 <option value="price-high">Price: High to Low</option>
@@ -142,7 +113,7 @@
                                                 <a href="product?productId=<%= p.getId() %>" class="btn btn--outline btn--sm">
                                                     View Details
                                                 </a>
-                                                <form class="add-to-cart-form" action="cart" method="post" style="display: inline;">
+                                                <form class="add-to-cart-form inline-block" action="cart" method="post">
                                                     <input type="hidden" name="action" value="add">
                                                     <input type="hidden" name="productId" value="<%= p.getId() %>">
                                                     <input type="hidden" name="quantity" value="1">
@@ -176,9 +147,6 @@
                     <% } %>
                 </div>
             </div>
-        </main>
-
-        <jsp:include page="components/footer.jsp" />
         <script src="js/main.js"></script>
         <script>
             function filterByCategory() {
@@ -274,5 +242,4 @@
                 });
             });
         </script>
-    </body>
-</html>
+</t:base>

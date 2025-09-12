@@ -57,12 +57,12 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
                 <!-- Product Images Section -->
-                <div class="product-gallery">
+                    <div class="product-gallery">
                     <div class="aspect-square bg-white rounded-lg shadow-lg overflow-hidden mb-4">
                         <img src="${pageContext.request.contextPath}/<%= productImage %>" 
                              alt="<%= productName %>" 
                              class="w-full h-full object-cover"
-                             id="mainProductImage"
+                                 id="mainProductImage"
                              onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/sample1.png';"/>
                     </div>
                     
@@ -90,7 +90,7 @@
                 </div>
 
                 <!-- Product Information Section -->
-                <div class="product-info">
+                    <div class="product-info">
                     <div class="mb-4">
                         <span class="inline-block px-3 py-1 bg-brand-primary text-white text-sm rounded-full mb-4">
                             IoT Device
@@ -368,7 +368,7 @@
                     </div>
                 </div>
             </section>
-        </div>
+                        </div>
 
                         <!-- Product Description -->
                         <div class="product-info__description">
@@ -608,4 +608,4 @@
     </script>
 </body>
 </html>
-
+    

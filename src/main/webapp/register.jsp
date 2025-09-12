@@ -1,13 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="css/modern-theme.css" />
-    <title>IoT Bay - Create Account</title>
-</head>
-<body>
-    <jsp:include page="components/header.jsp" />
+<%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
+<t:base title="Create Account" description="Create your IoT Bay account">
 
     <main class="auth-page">
         <div class="container">
@@ -36,22 +29,22 @@
                             <div class="form__section">
                                 <h3 class="form__section-title">Account Information</h3>
                                 <div class="form__row">
-                                    <div class="form__group">
-                                        <label for="email" class="form__label">Email Address *</label>
-                                        <input type="email" id="email" name="email" class="form__input" 
+                                    <div class="form-group">
+                                        <label for="email" class="form-label">Email Address *</label>
+                                        <input type="email" id="email" name="email" class="form-input" 
                                                placeholder="Enter your email" required />
                                     </div>
                                 </div>
                                 <div class="form__row">
-                                    <div class="form__group">
-                                        <label for="password" class="form__label">Password *</label>
-                                        <input type="password" id="password" name="password" class="form__input" 
+                                    <div class="form-group">
+                                        <label for="password" class="form-label">Password *</label>
+                                        <input type="password" id="password" name="password" class="form-input" 
                                                placeholder="Create a password" required />
                                     </div>
-                                    <div class="form__group">
-                                        <label for="confirmPassword" class="form__label">Confirm Password *</label>
+                                    <div class="form-group">
+                                        <label for="confirmPassword" class="form-label">Confirm Password *</label>
                                         <input type="password" id="confirmPassword" name="confirmPassword" 
-                                               class="form__input" placeholder="Confirm your password" required />
+                                               class="form-input" placeholder="Confirm your password" required />
                                     </div>
                                 </div>
                             </div>
@@ -59,26 +52,26 @@
                             <div class="form__section">
                                 <h3 class="form__section-title">Personal Information</h3>
                                 <div class="form__row">
-                                    <div class="form__group">
-                                        <label for="firstName" class="form__label">First Name *</label>
-                                        <input type="text" id="firstName" name="firstName" class="form__input" 
+                                    <div class="form-group">
+                                        <label for="firstName" class="form-label">First Name *</label>
+                                        <input type="text" id="firstName" name="firstName" class="form-input" 
                                                placeholder="Your first name" required />
                                     </div>
-                                    <div class="form__group">
-                                        <label for="lastName" class="form__label">Last Name *</label>
-                                        <input type="text" id="lastName" name="lastName" class="form__input" 
+                                    <div class="form-group">
+                                        <label for="lastName" class="form-label">Last Name *</label>
+                                        <input type="text" id="lastName" name="lastName" class="form-input" 
                                                placeholder="Your last name" required />
                                     </div>
                                 </div>
                                 <div class="form__row">
-                                    <div class="form__group">
-                                        <label for="phone" class="form__label">Phone Number *</label>
-                                        <input type="tel" id="phone" name="phone" class="form__input" 
+                                    <div class="form-group">
+                                        <label for="phone" class="form-label">Phone Number *</label>
+                                        <input type="tel" id="phone" name="phone" class="form-input" 
                                                placeholder="Your phone number" required />
                                     </div>
-                                    <div class="form__group">
-                                        <label for="dateOfBirth" class="form__label">Date of Birth</label>
-                                        <input type="date" id="dateOfBirth" name="dateOfBirth" class="form__input" />
+                                    <div class="form-group">
+                                        <label for="dateOfBirth" class="form-label">Date of Birth</label>
+                                        <input type="date" id="dateOfBirth" name="dateOfBirth" class="form-input" />
                                     </div>
                                 </div>
                             </div>
@@ -86,21 +79,21 @@
                             <div class="form__section">
                                 <h3 class="form__section-title">Address Information</h3>
                                 <div class="form__row">
-                                    <div class="form__group">
-                                        <label for="addressLine1" class="form__label">Address Line 1 *</label>
-                                        <input type="text" id="addressLine1" name="addressLine1" class="form__input" 
+                                    <div class="form-group">
+                                        <label for="addressLine1" class="form-label">Address Line 1 *</label>
+                                        <input type="text" id="addressLine1" name="addressLine1" class="form-input" 
                                                placeholder="Street address" required />
                                     </div>
-                                    <div class="form__group">
-                                        <label for="postalCode" class="form__label">Postal Code *</label>
-                                        <input type="text" id="postalCode" name="postalCode" class="form__input" 
+                                    <div class="form-group">
+                                        <label for="postalCode" class="form-label">Postal Code *</label>
+                                        <input type="text" id="postalCode" name="postalCode" class="form-input" 
                                                placeholder="Postal code" required />
                                     </div>
                                 </div>
                                 <div class="form__row">
-                                    <div class="form__group">
-                                        <label for="addressLine2" class="form__label">Address Line 2</label>
-                                        <input type="text" id="addressLine2" name="addressLine2" class="form__input" 
+                                    <div class="form-group">
+                                        <label for="addressLine2" class="form-label">Address Line 2</label>
+                                        <input type="text" id="addressLine2" name="addressLine2" class="form-input" 
                                                placeholder="Apartment, suite, etc. (optional)" />
                                     </div>
                                 </div>
@@ -108,9 +101,9 @@
                             
                             <div class="form__section">
                                 <h3 class="form__section-title">Payment Method</h3>
-                                <div class="form__group">
-                                    <label for="paymentMethod" class="form__label">Preferred Payment Method</label>
-                                    <select name="paymentMethod" id="paymentMethod" class="form__select">
+                                <div class="form-group">
+                                    <label for="paymentMethod" class="form-label">Preferred Payment Method</label>
+                                    <select name="paymentMethod" id="paymentMethod" class="form-select">
                                         <option value="CreditCard">Credit Card</option>
                                         <option value="PayPal">PayPal</option>
                                         <option value="BankTransfer">Bank Transfer</option>
@@ -120,7 +113,7 @@
                             
                             <div class="form__section">
                                 <label class="checkbox">
-                                    <input type="checkbox" name="tos" id="tos" required>
+                                    <input type="checkbox" name="tos" id="tos" class="checkbox__input" required>
                                     <span class="checkbox__mark"></span>
                                     <span class="checkbox__label">
                                         I agree to the <a href="terms.jsp" class="link">Terms of Service</a> 
@@ -143,7 +136,7 @@
     </main>
 
     <!-- Error Modal -->
-    <div id="errorModal" class="modal-overlay" style="display:none;">
+    <div id="errorModal" class="modal-overlay hidden">
         <div class="modal modal--error">
             <div class="modal__header">
                 <h2 class="modal__title">Registration Error</h2>
@@ -162,7 +155,6 @@
         </div>
     </div>
 
-    <jsp:include page="components/footer.jsp" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="js/main.js"></script>
     <script>
@@ -204,5 +196,4 @@
         });
     });
     </script>
-</body>
-</html>
+</t:base>

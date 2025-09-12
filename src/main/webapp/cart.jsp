@@ -29,16 +29,8 @@
     double total = subtotal + tax;
 %>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/modern-theme.css"/>
-    <title>Shopping Cart - IoT Bay</title>
-</head>
-<body>
-    <jsp:include page="components/header.jsp" />
+<%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
+<t:base title="Shopping Cart" description="Your IoT Bay shopping cart">
 
     <main class="cart-page">
         <div class="container">
@@ -72,13 +64,13 @@
                                     <div class="cart-item__quantity">
                                         <label class="quantity-label">Quantity:</label>
                                         <div class="quantity-controls">
-                                            <button type="button" class="quantity-btn quantity-btn--minus" 
+                                            <button type="button" class="quantity-controls__btn" 
                                                     onclick="updateQuantity('<%= item.getProductId() %>', '<%= item.getQuantity() - 1 %>')"
                                                     <%= item.getQuantity() <= 1 ? "disabled" : "" %>>
                                                 -
                                             </button>
                                             <span class="quantity-display"><%= item.getQuantity() %></span>
-                                            <button type="button" class="quantity-btn quantity-btn--plus" 
+                                            <button type="button" class="quantity-controls__btn" 
                                                     onclick="updateQuantity('<%= item.getProductId() %>', '<%= item.getQuantity() + 1 %>')">
                                                 +
                                             </button>
@@ -190,7 +182,6 @@
         </div>
     </main>
 
-    <jsp:include page="components/footer.jsp" />
     <script src="js/main.js"></script>
     <script>
         function updateQuantity(productId, newQuantity) {
@@ -276,5 +267,4 @@
             });
         }
     </script>
-</body>
-</html>
+</t:base>

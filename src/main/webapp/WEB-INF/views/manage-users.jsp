@@ -9,7 +9,7 @@
 </head>
 <body>
     <h1>Manage Users</h1>
-    <div style="text-align: right;">
+    <div class="text-right">
         <button id="main-create-btn" class="create-btn" onclick="openCreateModal()">Create New User</button>
     </div>  
     <table>
@@ -72,14 +72,14 @@
             } else {
         %>
             <tr>
-                <td colspan="5" style="text-align:center;">No users available.</td>
+                <td colspan="5" class="text-center">No users available.</td>
             </tr>
         <%
             }
         %>
         </tbody>
     </table>
-    <div id="createUserModal" class="modal" style="display:none;">
+    <div id="createUserModal" class="modal hidden">
         <div class="modal-content">
             <span class="close" onclick="closeCreateModal()">&times;</span>
             <form action="/manage/users" method="post">
@@ -121,7 +121,7 @@
         </div>
     </div>
         <!-- EDIT PRODUCT MODAL -->
-        <div id="editUserModal" class="modal" style="display:none;">
+        <div id="editUserModal" class="modal hidden">
             <div class="modal-content">
                 <span class="close" onclick="closeEditModal()">&times;</span>
                 <form action="/manage/users/update" method="post">

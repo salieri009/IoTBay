@@ -9,7 +9,7 @@
 </head>
 <body>
     <h1>Manage Products</h1>
-    <div style="text-align: right;">
+    <div class="text-right">
         <button id="main-create-btn" class="create-btn" onclick="openCreateModal()">Create New Product</button>
     </div>  
     <table>
@@ -63,14 +63,14 @@
             } else {
         %>
             <tr>
-                <td colspan="5" style="text-align:center;">No products available.</td>
+                <td colspan="5" class="text-center">No products available.</td>
             </tr>
         <%
             }
         %>
         </tbody>
     </table>
-    <div id="createProductModal" class="modal" style="display:none;">
+    <div id="createProductModal" class="modal hidden">
         <div class="modal-content">
             <span class="close" onclick="closeCreateModal()">&times;</span>
             <form action="/manage/products" method="post">
@@ -102,7 +102,7 @@
         </div>
     </div>
         <!-- EDIT PRODUCT MODAL -->
-        <div id="editProductModal" class="modal" style="display:none;">
+        <div id="editProductModal" class="modal hidden">
             <div class="modal-content">
                 <span class="close" onclick="closeEditModal()">&times;</span>
                 <form action="/manage/products/update" method="post">

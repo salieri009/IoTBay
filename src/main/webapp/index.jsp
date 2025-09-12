@@ -1,19 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IoT Bay - Smart Solutions for the Connected World</title>
-    <meta name="description" content="Leading provider of IoT solutions for industrial automation, smart agriculture, warehouse management, and connected homes.">
-    <link rel="stylesheet" href="<%=request.getContextPath()%>/css/modern-theme.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
-</head>
-<body>
-    <!-- Include Header -->
-    <jsp:include page="components/header.jsp" />
+<%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
+<t:base title="Home" description="Leading provider of IoT solutions for industry and smart living">
 
     <!-- Masthead (global hero under header) -->
     <jsp:include page="components/masthead.jsp">
@@ -179,7 +166,5 @@
         </div>
     </section>
 
-    <jsp:include page="components/footer.jsp" />
         <script src="js/main.js"></script>
-    </body>
-</html>
+</t:base>

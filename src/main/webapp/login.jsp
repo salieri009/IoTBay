@@ -1,13 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="<%=request.getContextPath()%>/css/modern-theme.css" />
-    <title>IoT Bay - Sign In</title>
-</head>
-<body>
-    <jsp:include page="components/header.jsp" />
+<%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
+<t:base title="Sign In" description="Sign in to your IoT Bay account">
 
     <main class="auth-page">
         <div class="container">
@@ -28,21 +21,21 @@
                 <% } %>
                 
                 <form class="auth-form" method="post" action="<%=request.getContextPath()%>/api/login">
-                    <div class="form__group">
-                        <label for="email" class="form__label">Email Address</label>
-                        <input type="email" id="email" name="email" class="form__input" 
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input type="email" id="email" name="email" class="form-input" 
                                placeholder="Enter your email" required />
                     </div>
                     
-                    <div class="form__group">
-                        <label for="password" class="form__label">Password</label>
-                        <input type="password" id="password" name="password" class="form__input" 
+                    <div class="form-group">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" id="password" name="password" class="form-input" 
                                placeholder="Enter your password" required />
                     </div>
                     
                     <div class="form__options">
                         <label class="checkbox">
-                            <input type="checkbox" name="remember">
+                            <input type="checkbox" name="remember" class="checkbox__input">
                             <span class="checkbox__mark"></span>
                             <span class="checkbox__label">Remember me</span>
                         </label>
@@ -60,7 +53,5 @@
         </div>
     </main>
 
-    <jsp:include page="components/footer.jsp" />
     <script src="js/main.js"></script>
-</body>
-</html>
+</t:base>
