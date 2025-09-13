@@ -26,27 +26,28 @@
 <section class="masthead bg-neutral-50 relative overflow-hidden <%= heightClass %>">
     <!-- Background image -->
     <div class="absolute inset-0">
-        <img src="<%= image %>" alt="" class="w-full h-full object-cover opacity-10" />
-        <div class="absolute inset-0 bg-gradient-to-br from-neutral-50/98 via-neutral-50/90 to-neutral-50/80"></div>
-        <!-- Additional overlay for better text readability -->
-        <div class="absolute inset-0 bg-white/50"></div>
+        <img src="<%= image %>" alt="" class="w-full h-full object-cover opacity-20" />
+        <!-- Strong overlay for better text readability -->
+        <div class="absolute inset-0 bg-gradient-to-br from-neutral-900/70 via-neutral-800/60 to-neutral-900/80"></div>
+        <!-- Additional white overlay for text contrast -->
+        <div class="absolute inset-0 bg-white/30"></div>
         <!-- Text shadow overlay -->
-        <div class="absolute inset-0 bg-gradient-to-r from-white/60 via-transparent to-white/40"></div>
+        <div class="absolute inset-0 bg-gradient-to-r from-white/80 via-white/40 to-white/60"></div>
     </div>
 
     <div class="container relative z-10">
         <div class="grid grid-cols-1 lg:grid-cols-12 items-center gap-10">
             <div class="<%= "left".equals(align) ? "lg:col-span-7" : "lg:col-span-12 text-center" %>">
-                <h1 class="text-4xl md:text-6xl font-bold tracking-tight text-neutral-900 mb-6 drop-shadow-2xl">
-                    <span class="bg-gradient-to-r from-brand-primary to-brand-secondary bg-clip-text text-transparent drop-shadow-lg relative">
-                        <span class="absolute inset-0 bg-white/80 rounded-lg -m-2 blur-sm"></span>
-                        <span class="relative z-10"><%= title %></span>
+                <h1 class="text-4xl md:text-6xl font-bold tracking-tight text-white mb-6 drop-shadow-2xl">
+                    <span class="bg-gradient-to-r from-white via-blue-50 to-white bg-clip-text text-transparent drop-shadow-2xl relative">
+                        <span class="absolute inset-0 bg-black/20 rounded-lg -m-3 blur-md"></span>
+                        <span class="relative z-10 text-shadow-lg"><%= title %></span>
                     </span>
                 </h1>
                 <% if (!subtitle.isEmpty()) { %>
-                <p class="text-lg md:text-xl text-neutral-800 max-w-2xl <%= "left".equals(align) ? "" : "mx-auto" %> mb-8 drop-shadow-xl font-semibold relative">
-                    <span class="absolute inset-0 bg-white/70 rounded-md -m-1 blur-sm"></span>
-                    <span class="relative z-10"><%= subtitle %></span>
+                <p class="text-lg md:text-xl text-white max-w-2xl <%= "left".equals(align) ? "" : "mx-auto" %> mb-8 drop-shadow-2xl font-semibold relative">
+                    <span class="absolute inset-0 bg-black/30 rounded-lg -m-2 blur-sm"></span>
+                    <span class="relative z-10 text-shadow-lg"><%= subtitle %></span>
                 </p>
                 <% } %>
                 <div class="flex flex-wrap gap-3 <%= "left".equals(align) ? "" : "justify-center" %>">
