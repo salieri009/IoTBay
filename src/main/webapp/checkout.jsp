@@ -68,7 +68,7 @@
         </div>
 
         <!-- Alert Messages -->
-        <% if (error != null) { %>
+        <c:if test="${error != null}">
             <div class="alert alert--error mb-6">
                 <div class="alert__icon">
                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -76,12 +76,12 @@
                     </svg>
                 </div>
                 <div>
-                    <strong>Error:</strong> <%= error %>
+                    <strong>Error:</strong> ${error}
                 </div>
             </div>
-        <% } %>
+        </c:if>
 
-        <% if (success != null) { %>
+        <c:if test="${success != null}">
             <div class="alert alert--success mb-6">
                 <div class="alert__icon">
                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -89,10 +89,10 @@
                     </svg>
                 </div>
                 <div>
-                    <strong>Success:</strong> <%= success %>
+                    <strong>Success:</strong> ${success}
                 </div>
             </div>
-        <% } %>
+        </c:if>
 
         <!-- Checkout Form -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">

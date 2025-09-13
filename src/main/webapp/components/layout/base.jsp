@@ -16,7 +16,7 @@
     <link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/images/favicon.ico">
     
     <!-- CSS -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/modern-theme.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/modern-theme.css?v=3">
     
     <!-- Custom CSS if needed -->
     <c:if test="${param.customCSS != null}">

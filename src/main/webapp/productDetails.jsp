@@ -74,7 +74,7 @@
                         </div>
                         <div class="aspect-square bg-neutral-100 rounded border overflow-hidden cursor-pointer">
                             <img src="${pageContext.request.contextPath}/images/sample3.png" 
-                                 alt="<%= productName %> view 3" 
+                                 alt="${product.name} view 3" 
                                  class="w-full h-full object-cover">
                         </div>
                         <div class="aspect-square bg-neutral-100 rounded border overflow-hidden cursor-pointer flex items-center justify-center">
@@ -89,17 +89,20 @@
                         <span class="inline-block px-3 py-1 bg-brand-primary text-white text-sm rounded-full mb-4">
                             IoT Device
                         </span>
-                        <h1 class="text-3xl md:text-4xl font-bold text-neutral-900 mb-4"><%= productName %></h1>
+                        <h1 class="text-3xl md:text-4xl font-bold text-neutral-900 mb-4">${product.name}</h1>
                         <div class="flex items-center gap-4 mb-6">
                             <div class="text-3xl font-bold text-brand-primary">
-                                $<%= String.format("%.2f", productPrice) %>
+                                $<fmt:formatNumber value="${product.price}" pattern="#,##0.00"/>
                             </div>
                             <div class="text-sm text-neutral-600">
-                                <% if (productStock > 0) { %>
-                                    <span class="text-green-600 font-medium">✓ In Stock (<%= productStock %> available)</span>
-                                <% } else { %>
-                                    <span class="text-red-600 font-medium">✗ Out of Stock</span>
-                                <% } %>
+                                <c:choose>
+                                    <c:when test="${product.stock > 0}">
+                                        <span class="text-green-600 font-medium">✓ In Stock (${product.stock} available)</span>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span class="text-red-600 font-medium">✗ Out of Stock</span>
+                                    </c:otherwise>
+                                </c:choose>
                             </div>
                         </div>
                     </div>
@@ -108,7 +111,7 @@
                     <div class="mb-8">
                         <h3 class="text-lg font-semibold text-neutral-900 mb-3">Description</h3>
                         <p class="text-neutral-600 leading-relaxed">
-                            <%= productDescription %>
+                            ${product.description}
                         </p>
                     </div>
 
@@ -170,25 +173,28 @@
                         </div>
 
                         <div class="space-y-3">
-                            <% if (productStock > 0) { %>
-                                <button data-product-id="${pd_id}" onclick="addToCart(this.dataset.productId)" 
-                                        class="w-full btn btn--primary btn--lg">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m0 0H17"></path>
-                                    </svg>
-                                    Add to Cart
-                                </button>
-                                <button class="w-full btn btn--outline btn--lg">
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                                    </svg>
-                                    Add to Wishlist
-                                </button>
-                            <% } else { %>
-                                <button disabled class="w-full btn btn--disabled btn--lg">
-                                    Out of Stock
-                                </button>
-                            <% } %>
+                            <c:choose>
+                                <c:when test="${product.stock > 0}">
+                                    <button data-product-id="${product.id}" onclick="addToCart(this.dataset.productId)" 
+                                            class="w-full btn btn--primary btn--lg">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m0 0H17"></path>
+                                        </svg>
+                                        Add to Cart
+                                    </button>
+                                    <button class="w-full btn btn--outline btn--lg">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                                        </svg>
+                                        Add to Wishlist
+                                    </button>
+                                </c:when>
+                                <c:otherwise>
+                                    <button disabled class="w-full btn btn--disabled btn--lg">
+                                        Out of Stock
+                                    </button>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
 
                         <!-- Shipping Info -->
@@ -471,7 +477,6 @@
         </div>
     </main>
 
-    <jsp:include page="components/footer.jsp" />
     <script src="js/main.js"></script>
     <script>
         // Quantity control functions

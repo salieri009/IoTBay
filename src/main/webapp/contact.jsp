@@ -15,7 +15,7 @@
     <title>Contact Us | IoT Bay - Smart Technology Store</title>
     
     <!-- CSS -->
-    <link rel="stylesheet" href="<%= contextPath %>/css/modern-theme.css">
+    <link rel="stylesheet" href="<%= contextPath %>/css/modern-theme.css?v=3">
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

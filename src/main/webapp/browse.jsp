@@ -18,7 +18,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Browse Products - IoT Bay</title>
     <meta name="description" content="Browse IoT products across categories and keywords">
-    <link rel="stylesheet" href="<%= contextPath %>/css/modern-theme.css">
+    <link rel="stylesheet" href="<%= contextPath %>/css/modern-theme.css?v=3">
 </head>
 <body>
     <!-- Page Header -->

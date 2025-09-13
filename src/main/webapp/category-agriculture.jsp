@@ -29,10 +29,10 @@
                     <a href="${pageContext.request.contextPath}/category-warehouse.jsp" class="nav__link">Warehouse</a>
                 </li>
                 <li class="nav__item">
-                    <a href="<%=request.getContextPath()%>/category-agriculture.jsp" class="nav__link nav__link--active">Agriculture</a>
+                    <a href="${pageContext.request.contextPath}/category-agriculture.jsp" class="nav__link nav__link--active">Agriculture</a>
                 </li>
                 <li class="nav__item">
-                    <a href="<%=request.getContextPath()%>/category-smarthome.jsp" class="nav__link">Smart Home</a>
+                    <a href="${pageContext.request.contextPath}/category-smarthome.jsp" class="nav__link">Smart Home</a>
                 </li>
             </ul>
         </div>
@@ -63,10 +63,10 @@
                 </div>
             </div>
             <div class="hero__image">
-                <img src="<%=request.getContextPath()%>/images/agriculture-hero.jpg" 
+                <img src="${pageContext.request.contextPath}/images/agriculture-hero.jpg" 
                      alt="Smart Agriculture Technology" 
                      class="hero__image"
-                     onerror="this.src='<%=request.getContextPath()%>/images/sample3.png'">
+                     onerror="this.src='${pageContext.request.contextPath}/images/sample3.png'">
             </div>
         </div>
     </section>
@@ -76,9 +76,9 @@
         <!-- Breadcrumb -->
         <nav class="mb-8">
             <ol class="flex items-center gap-2 text-sm text-neutral-600">
-                <li><a href="<%=request.getContextPath()%>/index.jsp" class="hover:text-primary">Home</a></li>
+                <li><a href="${pageContext.request.contextPath}/index.jsp" class="hover:text-primary">Home</a></li>
                 <li>/</li>
-                <li><a href="<%=request.getContextPath()%>/browse" class="hover:text-primary">Categories</a></li>
+                <li><a href="${pageContext.request.contextPath}/browse" class="hover:text-primary">Categories</a></li>
                 <li>/</li>
                 <li class="text-neutral-900 font-medium">Smart Agriculture</li>
             </ol>
@@ -370,10 +370,10 @@
                 <!-- Search and Filter Controls -->
                 <div class="flex flex-col sm:flex-row gap-4">
                     <div class="relative">
-                        <form action="<%=request.getContextPath()%>/category-agriculture.jsp" method="get" class="flex">
+                        <form action="${pageContext.request.contextPath}/category-agriculture.jsp" method="get" class="flex">
                             <input type="text" 
                                    name="search" 
-                                   value="<%= searchKeyword != null ? searchKeyword : "" %>"
+                                   value="${param.search != null ? param.search : ''}"
                                    placeholder="Search agriculture products..." 
                                    class="form-input rounded-r-none w-64">
                             <button type="submit" class="btn btn--primary rounded-l-none">
@@ -409,7 +409,7 @@
         <section class="product-grid mb-16" id="productsGrid">
             <!-- Demo agriculture products -->
             <div class="product-card" data-category="sensors" data-price="199">
-                <img src="<%=request.getContextPath()%>/images/sample1.png" 
+                <img src="${pageContext.request.contextPath}/images/sample1.png" 
                      alt="Smart Soil Sensor Pro" 
                      class="product-card__image">
                 <div class="product-card__body">
@@ -419,7 +419,7 @@
                     </p>
                     <div class="product-card__price">$199.99</div>
                     <div class="product-card__actions">
-                        <a href="<%=request.getContextPath()%>/productDetails.jsp?id=13" class="btn btn--outline btn--sm">
+                        <a href="${pageContext.request.contextPath}/productDetails.jsp?id=13" class="btn btn--outline btn--sm">
                             View Details
                         </a>
                         <button onclick="addToCart(13)" class="btn btn--primary btn--sm">
@@ -430,7 +430,7 @@
             </div>
 
             <div class="product-card" data-category="irrigation" data-price="799">
-                <img src="<%=request.getContextPath()%>/images/sample2.png" 
+                <img src="${pageContext.request.contextPath}/images/sample2.png" 
                      alt="Smart Irrigation Controller" 
                      class="product-card__image">
                 <div class="product-card__body">
@@ -440,7 +440,7 @@
                     </p>
                     <div class="product-card__price">$799.99</div>
                     <div class="product-card__actions">
-                        <a href="<%=request.getContextPath()%>/productDetails.jsp?id=14" class="btn btn--outline btn--sm">
+                        <a href="${pageContext.request.contextPath}/productDetails.jsp?id=14" class="btn btn--outline btn--sm">
                             View Details
                         </a>
                         <button onclick="addToCart(14)" class="btn btn--primary btn--sm">
@@ -451,7 +451,7 @@
             </div>
 
             <div class="product-card" data-category="livestock" data-price="89">
-                <img src="<%=request.getContextPath()%>/images/sample3.png" 
+                <img src="${pageContext.request.contextPath}/images/sample3.png" 
                      alt="Livestock GPS Tracker" 
                      class="product-card__image">
                 <div class="product-card__body">
@@ -461,7 +461,7 @@
                     </p>
                     <div class="product-card__price">$89.99</div>
                     <div class="product-card__actions">
-                        <a href="<%=request.getContextPath()%>/productDetails.jsp?id=15" class="btn btn--outline btn--sm">
+                        <a href="${pageContext.request.contextPath}/productDetails.jsp?id=15" class="btn btn--outline btn--sm">
                             View Details
                         </a>
                         <button onclick="addToCart(15)" class="btn btn--primary btn--sm">
@@ -472,7 +472,7 @@
             </div>
 
             <div class="product-card" data-category="weather" data-price="449">
-                <img src="<%=request.getContextPath()%>/images/sample1.png" 
+                <img src="${pageContext.request.contextPath}/images/sample1.png" 
                      alt="Farm Weather Station" 
                      class="product-card__image">
                 <div class="product-card__body">
@@ -482,7 +482,7 @@
                     </p>
                     <div class="product-card__price">$449.99</div>
                     <div class="product-card__actions">
-                        <a href="<%=request.getContextPath()%>/productDetails.jsp?id=16" class="btn btn--outline btn--sm">
+                        <a href="${pageContext.request.contextPath}/productDetails.jsp?id=16" class="btn btn--outline btn--sm">
                             View Details
                         </a>
                         <button onclick="addToCart(16)" class="btn btn--primary btn--sm">
@@ -493,7 +493,7 @@
             </div>
 
             <div class="product-card" data-category="greenhouse" data-price="1299">
-                <img src="<%=request.getContextPath()%>/images/sample2.png" 
+                <img src="${pageContext.request.contextPath}/images/sample2.png" 
                      alt="Greenhouse Automation Kit" 
                      class="product-card__image">
                 <div class="product-card__body">
@@ -503,7 +503,7 @@
                     </p>
                     <div class="product-card__price">$1,299.99</div>
                     <div class="product-card__actions">
-                        <a href="<%=request.getContextPath()%>/productDetails.jsp?id=17" class="btn btn--outline btn--sm">
+                        <a href="${pageContext.request.contextPath}/productDetails.jsp?id=17" class="btn btn--outline btn--sm">
                             View Details
                         </a>
                         <button onclick="addToCart(17)" class="btn btn--primary btn--sm">
@@ -514,7 +514,7 @@
             </div>
 
             <div class="product-card" data-category="drones" data-price="2499">
-                <img src="<%=request.getContextPath()%>/images/sample3.png" 
+                <img src="${pageContext.request.contextPath}/images/sample3.png" 
                      alt="Agricultural Drone Pro" 
                      class="product-card__image">
                 <div class="product-card__body">
@@ -524,7 +524,7 @@
                     </p>
                     <div class="product-card__price">$2,499.99</div>
                     <div class="product-card__actions">
-                        <a href="<%=request.getContextPath()%>/productDetails.jsp?id=18" class="btn btn--outline btn--sm">
+                        <a href="${pageContext.request.contextPath}/productDetails.jsp?id=18" class="btn btn--outline btn--sm">
                             View Details
                         </a>
                         <button onclick="addToCart(18)" class="btn btn--primary btn--sm">
@@ -580,13 +580,13 @@
                     Get expert guidance on implementing IoT solutions for your farm.
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <a href="<%=request.getContextPath()%>/contact.jsp" class="btn btn--secondary btn--lg">
+                    <a href="${pageContext.request.contextPath}/contact.jsp" class="btn btn--secondary btn--lg">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
                         </svg>
                         Get Free Consultation
                     </a>
-                    <a href="<%=request.getContextPath()%>/browse" class="btn btn--outline btn--lg border-white text-white hover:bg-white hover:text-green-600">
+                    <a href="${pageContext.request.contextPath}/browse" class="btn btn--outline btn--lg border-white text-white hover:bg-white hover:text-green-600">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
                         </svg>
@@ -598,10 +598,9 @@
     </main>
 
     <!-- Include Footer -->
-    <jsp:include page="components/footer.jsp" />
 
     <!-- JavaScript -->
-    <script src="<%=request.getContextPath()%>/js/main.js"></script>
+    <script src="${pageContext.request.contextPath}/js/main.js"></script>
     <script>
         // Product filtering and sorting functionality
         function filterProducts(category) {
@@ -692,5 +691,4 @@
         // Initialize animations when page loads
         document.addEventListener('DOMContentLoaded', animateCounters);
     </script>
-</body>
-</html>
+</t:base>

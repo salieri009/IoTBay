@@ -7,11 +7,20 @@
     String size = request.getParameter("size"); // xs | sm | md | lg
     String align = request.getParameter("align"); // left | center
 
+    // Safe parameter handling with proper null checks
     if (title == null) title = "";
     if (subtitle == null) subtitle = "";
     if (align == null) align = "left";
     if (size == null) size = "lg";
     if (image == null) image = pageContext.getRequest().getServletContext().getContextPath() + "/images/hero.png";
+    
+    // Additional safety checks
+    title = title.trim();
+    subtitle = subtitle.trim();
+    
+    // Safe null checks for display
+    boolean hasTitle = title != null && !title.isEmpty();
+    boolean hasSubtitle = subtitle != null && !subtitle.isEmpty();
 
     // Height class mapping (use padding only to avoid custom min-h classes)
     String heightClass;
@@ -38,13 +47,15 @@
     <div class="container relative z-10">
         <div class="grid grid-cols-1 lg:grid-cols-12 items-center gap-10">
             <div class="<%= "left".equals(align) ? "lg:col-span-7" : "lg:col-span-12 text-center" %>">
+                <% if (hasTitle) { %>
                 <h1 class="text-4xl md:text-6xl font-bold tracking-tight text-white mb-6 drop-shadow-2xl">
                     <span class="bg-gradient-to-r from-white via-blue-50 to-white bg-clip-text text-transparent drop-shadow-2xl relative">
                         <span class="absolute inset-0 bg-black/20 rounded-lg -m-3 blur-md"></span>
                         <span class="relative z-10 text-shadow-lg"><%= title %></span>
                     </span>
                 </h1>
-                <% if (!subtitle.isEmpty()) { %>
+                <% } %>
+                <% if (hasSubtitle) { %>
                 <p class="text-lg md:text-xl text-white max-w-2xl <%= "left".equals(align) ? "" : "mx-auto" %> mb-8 drop-shadow-2xl font-semibold relative">
                     <span class="absolute inset-0 bg-black/30 rounded-lg -m-2 blur-sm"></span>
                     <span class="relative z-10 text-shadow-lg"><%= subtitle %></span>
