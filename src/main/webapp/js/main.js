@@ -26,9 +26,30 @@ function initializeHeader() {
 function toggleUserMenu() {
     const dropdown = document.getElementById('userMenuDropdown');
     if (dropdown) {
+        // Close other dropdowns first
+        closeAllDropdowns();
+        // Toggle current dropdown
         dropdown.classList.toggle('show');
     }
 }
+
+// Close all dropdowns
+function closeAllDropdowns() {
+    const dropdowns = document.querySelectorAll('.nav__user-dropdown, .nav__dropdown-menu');
+    dropdowns.forEach(dropdown => {
+        dropdown.classList.remove('show');
+    });
+}
+
+// Close dropdowns when clicking outside
+document.addEventListener('click', function(event) {
+    const userMenu = document.querySelector('.nav__user-menu');
+    const dropdown = document.getElementById('userMenuDropdown');
+    
+    if (userMenu && dropdown && !userMenu.contains(event.target)) {
+        dropdown.classList.remove('show');
+    }
+});
 
 // Search overlay toggle
 function toggleSearch() {

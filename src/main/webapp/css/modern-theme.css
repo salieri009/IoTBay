@@ -1116,9 +1116,16 @@ h1, h2, h3, h4, h5, h6 {
   grid-template-columns: repeat(4, 1fr) !important;
 }
 
+.footer__brand {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
 .footer__section {
   display: flex;
   flex-direction: column;
+  text-align: left;
 }
 
 .footer__section h3 {
@@ -1142,6 +1149,7 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
+  text-align: left;
 }
 
 .footer__links li {
@@ -1173,20 +1181,29 @@ h1, h2, h3, h4, h5, h6 {
 .footer__bottom {
   border-top: var(--border) solid var(--neutral-800);
   padding-top: var(--space-8);
-  text-align: center;
+  text-align: center !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .footer__copyright {
   font-size: var(--text-sm);
   color: var(--neutral-500);
   margin-bottom: var(--space-4);
+  text-align: center !important;
+  width: 100%;
 }
 
 .footer__legal {
-  display: flex;
-  justify-content: center;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
   gap: var(--space-6);
   flex-wrap: wrap;
+  width: 100%;
+  text-align: center !important;
 }
 
 .footer__legal a {
@@ -4530,11 +4547,61 @@ tbody tr:hover {
   color: var(--neutral-900);
 }
 
+/* Dark mode footer bottom alignment */
+[data-theme="dark"] .footer__bottom {
+  text-align: center !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+[data-theme="dark"] .footer__copyright {
+  text-align: center !important;
+  width: 100%;
+}
+
+[data-theme="dark"] .footer__legal {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100%;
+  text-align: center !important;
+}
+
+/* Dark mode footer sections - maintain readability */
+[data-theme="dark"] .footer__brand {
+  text-align: left !important;
+}
+
+[data-theme="dark"] .footer__section {
+  text-align: left !important;
+}
+
+[data-theme="dark"] .footer__links {
+  text-align: left !important;
+}
+
 /* =====================================
    READABILITY IMPROVEMENTS
    ===================================== */
 
-/* Enhanced text contrast */
+/* Enhanced text contrast for both themes */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+p, .text-neutral-600 {
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+}
+
+.text-neutral-500 {
+  letter-spacing: 0.01em;
+}
+
+/* Dark theme specific styles */
 [data-theme="dark"] h1, [data-theme="dark"] h2, [data-theme="dark"] h3, 
 [data-theme="dark"] h4, [data-theme="dark"] h5, [data-theme="dark"] h6 {
   color: var(--neutral-900);
@@ -4908,6 +4975,11 @@ tbody tr:hover {
   font-size: var(--text-sm);
 }
 
+/* User Menu Container */
+.nav__user-menu {
+  position: relative;
+}
+
 /* User Dropdown */
 .nav__user-dropdown {
   position: absolute;
@@ -4923,12 +4995,14 @@ tbody tr:hover {
   transform: translateY(-10px);
   transition: all var(--duration-200) var(--ease-in-out);
   z-index: var(--z-dropdown);
+  pointer-events: none;
 }
 
 .nav__user-dropdown.show {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
+  pointer-events: auto;
 }
 
 .nav__user-info {
