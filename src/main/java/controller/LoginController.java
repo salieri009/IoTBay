@@ -12,29 +12,23 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import dao.AccessLogDAOImpl;
-import dao.UserDAOImpl;
+import dao.stub.AccessLogDAOStub;
+import dao.stub.UserDAOStub;
 import dao.interfaces.AccessLogDAO;
 import dao.interfaces.UserDAO;
-import db.DBConnection;
 import model.AccessLog;
 import model.User;
 import utils.PasswordUtil;
 
-@WebServlet("/login")
+@WebServlet("/api/login")
 public class LoginController extends HttpServlet {
     private AccessLogDAO accessLogDAO;
     private UserDAO userDAO;
 
     @Override
     public void init() {
-        try {
-            Connection connection = DBConnection.getConnection();
-            accessLogDAO = new AccessLogDAOImpl(connection);
-            userDAO = new UserDAOImpl(connection);
-        } catch (SQLException | ClassNotFoundException e) {
-            throw new RuntimeException("Failed to initialize database connection", e);
-        }
+        accessLogDAO = new AccessLogDAOStub();
+        userDAO = new UserDAOStub();
     }
 
     @Override
@@ -62,8 +56,8 @@ public class LoginController extends HttpServlet {
                 return;
             }
 
-            // Use secure password verification
-            if (!PasswordUtil.verifyPassword(password, user.getPassword())) {
+            // Use secure password verification (for stub, use plain text comparison)
+            if (!password.equals(user.getPassword())) {
                 request.setAttribute("errorMessage", genericError);
                 request.getRequestDispatcher("/login.jsp").forward(request, response);
                 return;

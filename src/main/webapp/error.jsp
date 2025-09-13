@@ -33,7 +33,7 @@
                         <div class="text-sm text-neutral-700 space-y-2">
                             <c:if test="${not empty pageContext.exception}">
                                 <div>
-                                    <strong>Exception:</strong> ${pageContext.exception.class.simpleName}
+                                    <strong>Exception:</strong> ${pageContext.exception['class'].name}
                                 </div>
                                 <div>
                                     <strong>Message:</strong> ${pageContext.exception.message}

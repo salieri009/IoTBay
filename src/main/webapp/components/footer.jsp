@@ -86,11 +86,11 @@
         
         <!-- Footer Bottom -->
         <div class="footer__bottom border-t border-neutral-800 py-6">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="text-center space-y-4">
                 <div class="footer__copyright text-sm text-neutral-400">
                     © <%= java.time.Year.now().getValue() %> IoT Bay. All rights reserved.
                 </div>
-                <div class="footer__legal flex gap-6 text-sm">
+                <div class="footer__legal flex justify-center gap-6 text-sm">
                     <a href="${pageContext.request.contextPath}/privacy" class="footer__link">Privacy Policy</a>
                     <a href="${pageContext.request.contextPath}/terms" class="footer__link">Terms of Service</a>
                     <a href="${pageContext.request.contextPath}/cookies" class="footer__link">Cookie Policy</a>
