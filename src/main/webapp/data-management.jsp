@@ -846,7 +846,8 @@
                 for (let i = 0; i < Math.min(errors, 5); i++) {
                     const errorDiv = document.createElement('div');
                     errorDiv.className = 'error-item';
-                    errorDiv.textContent = `Row ${Math.floor(Math.random() * totalRecords) + 1}: Invalid data format in column '${entityType === 'users' ? 'email' : 'name'}'`;
+                    const columnName = entityType === 'users' ? 'email' : 'name';
+                    errorDiv.textContent = `Row ${Math.floor(Math.random() * totalRecords) + 1}: Invalid data format in column '${columnName}'`;
                     errorList.appendChild(errorDiv);
                 }
             }

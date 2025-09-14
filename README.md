@@ -236,14 +236,4 @@ This project is developed for **academic purposes** as part of a university cour
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
----
-
-## 📞 Support
-
-For questions or support, please contact:
-- **Email**: support@iotbay.com
-- **Phone**: 1-800-IOT-TECH
-
----
-
-**Built with ❤️ using modern web technologies**
+--
