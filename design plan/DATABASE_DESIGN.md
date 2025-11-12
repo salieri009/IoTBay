@@ -1,8 +1,17 @@
 # IoTBay Database Design Document
 
+## 📋 Project Information
+
+**Course**: 41025 Information Systems Development (ISD)  
+**Assignment**: Assignment 2 - Autumn 2025  
+**Institution**: University of Technology Sydney (UTS)  
+**Project Type**: E-commerce Web Application for IoT Devices
+
+---
+
 ## 📊 데이터베이스 개요
 
-IoTBay는 IoT 전자상거래 플랫폼을 위한 관계형 데이터베이스 설계를 사용합니다. 확장성, 성능, 데이터 무결성을 고려한 정규화된 스키마를 제공합니다.
+IoTBay는 IoT 전자상거래 플랫폼을 위한 관계형 데이터베이스 설계를 사용합니다. **UTS 41025 ISD Assignment 2 Autumn 2025**의 요구사항에 맞춰 확장성, 성능, 데이터 무결성을 고려한 정규화된 스키마를 제공합니다.
 
 ### 기술 스택
 - **개발환경**: SQLite 3.x

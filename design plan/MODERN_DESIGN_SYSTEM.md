@@ -1,7 +1,17 @@
 # IoT Bay Modern Design System Implementation
 
+## 📋 Project Information
+
+**Course**: 41025 Information Systems Development (ISD)  
+**Assignment**: Assignment 2 - Autumn 2025  
+**Institution**: University of Technology Sydney (UTS)  
+**Project Type**: E-commerce Web Application for IoT Devices
+
+---
+
 ## 📋 프로젝트 개요
-IoT Bay는 JSP/Servlet 기반의 전통적인 웹 애플리케이션을 현대적이고 미래지향적인 디자인으로 업그레이드했습니다. 이 문서는 새로운 디자인 시스템의 구현과 사용법을 상세히 설명합니다.
+
+IoT Bay는 JSP/Servlet 기반의 전통적인 웹 애플리케이션을 현대적이고 미래지향적인 디자인으로 업그레이드했습니다. **UTS 41025 ISD Assignment 2 Autumn 2025**의 요구사항에 맞춰 이 문서는 새로운 디자인 시스템의 구현과 사용법을 상세히 설명합니다.
 
 ## 🎨 디자인 시스템 핵심 특징
 

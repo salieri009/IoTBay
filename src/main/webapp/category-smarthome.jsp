@@ -1,5 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" isELIgnored="false" %>
 <%@ page import="java.util.*, model.*" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
 
 <%
@@ -8,35 +11,11 @@
     if (products == null) {
         products = new ArrayList<>();
     }
+    // Expose to EL
+    request.setAttribute("products", products);
 %>
 
 <t:base title="Smart Home Solutions - IoT Bay" description="Smart home automation, security, and energy management.">
-    
-    <!-- Include Navigation -->
-    <nav class="nav__container">
-        <div class="container">
-            <ul class="nav__list">
-                <li class="nav__item">
-                    <a href="${pageContext.request.contextPath}/index.jsp" class="nav__link">Home</a>
-                </li>
-                <li class="nav__item">
-                    <a href="${pageContext.request.contextPath}/browse" class="nav__link">Browse</a>
-                </li>
-                <li class="nav__item">
-                    <a href="${pageContext.request.contextPath}/category-industrial.jsp" class="nav__link">Industrial</a>
-                </li>
-                <li class="nav__item">
-                    <a href="${pageContext.request.contextPath}/category-warehouse.jsp" class="nav__link">Warehouse</a>
-                </li>
-                <li class="nav__item">
-                    <a href="${pageContext.request.contextPath}/category-agriculture.jsp" class="nav__link">Agriculture</a>
-                </li>
-                <li class="nav__item">
-                    <a href="${pageContext.request.contextPath}/category-smarthome.jsp" class="nav__link nav__link--active">Smart Home</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
 
     <!-- Hero Section -->
     <section class="hero bg-gradient-to-r from-purple-50 to-pink-100">
@@ -404,147 +383,136 @@
             </div>
         </section>
 
-        <!-- Products Grid -->
-        <section class="py-16" id="productsGrid">
+        <!-- Products Grid Section (Section 1.1 - Hierarchical Product Information) -->
+        <section id="products" class="py-8">
             <div class="container">
-                <div class="text-center mb-12">
-                    <h2 class="text-3xl font-bold text-neutral-900 mb-4">Smart Home Products</h2>
-                    <p class="text-lg text-neutral-600 max-w-2xl mx-auto">Transform your home with our comprehensive range of smart home devices and automation solutions</p>
+                <!-- Skeleton Loading State (Section 3.2) -->
+                <div id="products-skeleton" class="product-grid hidden">
+                    <c:forEach begin="1" end="8" varStatus="loop">
+                        <div class="skeleton-card">
+                            <div class="skeleton skeleton-image"></div>
+                            <div class="skeleton skeleton-text skeleton-text--title"></div>
+                            <div class="skeleton skeleton-text"></div>
+                            <div class="skeleton skeleton-text skeleton-text--short"></div>
+                        </div>
+                    </c:forEach>
                 </div>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    <!-- Product 1 -->
-                    <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 border border-neutral-200 overflow-hidden" data-category="lighting" data-price="49">
-                        <div class="relative">
-                            <img src="${pageContext.request.contextPath}/images/sample1.png" alt="Smart LED Bulb" class="w-full h-48 object-cover">
-                            <div class="absolute top-3 left-3">
-                                <span class="bg-purple-600 text-white px-2 py-1 rounded-full text-xs font-medium">Smart Home</span>
-                            </div>
-                        </div>
-                        <div class="p-6">
-                            <h3 class="text-lg font-semibold text-neutral-900 mb-2 line-clamp-2">Smart LED Bulb - Color Changing</h3>
-                            <p class="text-neutral-600 text-sm mb-4 line-clamp-3">WiFi-enabled LED bulb with 16 million colors, dimming, and voice control compatibility.</p>
-                            <div class="flex items-center justify-between mb-4">
-                                <div class="text-2xl font-bold text-neutral-900">$49.99</div>
-                                <div class="text-sm text-neutral-500">USD</div>
-                            </div>
-                            <div class="flex gap-2">
-                                <a href="${pageContext.request.contextPath}/productDetails.jsp?id=19" class="flex-1 bg-purple-600 text-white text-center py-2 px-4 rounded-md hover:bg-purple-700 transition-colors duration-200 text-sm font-medium">View Details</a>
-                                <button onclick="addToCart(19)" class="flex-1 border border-neutral-300 text-neutral-700 py-2 px-4 rounded-md hover:bg-neutral-50 transition-colors duration-200 text-sm font-medium">Add to Cart</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Product 2 -->
-                    <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 border border-neutral-200 overflow-hidden" data-category="security" data-price="199">
-                        <div class="relative">
-                            <img src="${pageContext.request.contextPath}/images/sample2.png" alt="Smart Security Camera" class="w-full h-48 object-cover">
-                            <div class="absolute top-3 left-3">
-                                <span class="bg-purple-600 text-white px-2 py-1 rounded-full text-xs font-medium">Smart Home</span>
-                            </div>
-                        </div>
-                        <div class="p-6">
-                            <h3 class="text-lg font-semibold text-neutral-900 mb-2 line-clamp-2">Indoor Security Camera Pro</h3>
-                            <p class="text-neutral-600 text-sm mb-4 line-clamp-3">4K HD camera with night vision, two-way audio, and AI-powered motion detection.</p>
-                            <div class="flex items-center justify-between mb-4">
-                                <div class="text-2xl font-bold text-neutral-900">$199.99</div>
-                                <div class="text-sm text-neutral-500">USD</div>
-                            </div>
-                            <div class="flex gap-2">
-                                <a href="${pageContext.request.contextPath}/productDetails.jsp?id=20" class="flex-1 bg-purple-600 text-white text-center py-2 px-4 rounded-md hover:bg-purple-700 transition-colors duration-200 text-sm font-medium">View Details</a>
-                                <button onclick="addToCart(20)" class="flex-1 border border-neutral-300 text-neutral-700 py-2 px-4 rounded-md hover:bg-neutral-50 transition-colors duration-200 text-sm font-medium">Add to Cart</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Product 3 -->
-                    <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 border border-neutral-200 overflow-hidden" data-category="climate" data-price="249">
-                        <div class="relative">
-                            <img src="${pageContext.request.contextPath}/images/sample3.png" alt="Smart Thermostat" class="w-full h-48 object-cover">
-                            <div class="absolute top-3 left-3">
-                                <span class="bg-purple-600 text-white px-2 py-1 rounded-full text-xs font-medium">Smart Home</span>
-                            </div>
-                        </div>
-                        <div class="p-6">
-                            <h3 class="text-lg font-semibold text-neutral-900 mb-2 line-clamp-2">Learning Smart Thermostat</h3>
-                            <p class="text-neutral-600 text-sm mb-4 line-clamp-3">AI-powered thermostat that learns your schedule and preferences for optimal comfort and savings.</p>
-                            <div class="flex items-center justify-between mb-4">
-                                <div class="text-2xl font-bold text-neutral-900">$249.99</div>
-                                <div class="text-sm text-neutral-500">USD</div>
-                            </div>
-                            <div class="flex gap-2">
-                                <a href="${pageContext.request.contextPath}/productDetails.jsp?id=21" class="flex-1 bg-purple-600 text-white text-center py-2 px-4 rounded-md hover:bg-purple-700 transition-colors duration-200 text-sm font-medium">View Details</a>
-                                <button onclick="addToCart(21)" class="flex-1 border border-neutral-300 text-neutral-700 py-2 px-4 rounded-md hover:bg-neutral-50 transition-colors duration-200 text-sm font-medium">Add to Cart</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Product 4 -->
-                    <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 border border-neutral-200 overflow-hidden" data-category="entertainment" data-price="99">
-                        <div class="relative">
-                            <img src="${pageContext.request.contextPath}/images/sample1.png" alt="Smart Speaker" class="w-full h-48 object-cover">
-                            <div class="absolute top-3 left-3">
-                                <span class="bg-purple-600 text-white px-2 py-1 rounded-full text-xs font-medium">Smart Home</span>
-                            </div>
-                        </div>
-                        <div class="p-6">
-                            <h3 class="text-lg font-semibold text-neutral-900 mb-2 line-clamp-2">Smart Speaker with Voice Assistant</h3>
-                            <p class="text-neutral-600 text-sm mb-4 line-clamp-3">High-quality audio speaker with built-in voice assistant and smart home hub capabilities.</p>
-                            <div class="flex items-center justify-between mb-4">
-                                <div class="text-2xl font-bold text-neutral-900">$99.99</div>
-                                <div class="text-sm text-neutral-500">USD</div>
-                            </div>
-                            <div class="flex gap-2">
-                                <a href="${pageContext.request.contextPath}/productDetails.jsp?id=22" class="flex-1 bg-purple-600 text-white text-center py-2 px-4 rounded-md hover:bg-purple-700 transition-colors duration-200 text-sm font-medium">View Details</a>
-                                <button onclick="addToCart(22)" class="flex-1 border border-neutral-300 text-neutral-700 py-2 px-4 rounded-md hover:bg-neutral-50 transition-colors duration-200 text-sm font-medium">Add to Cart</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Product 5 -->
-                    <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 border border-neutral-200 overflow-hidden" data-category="security" data-price="159">
-                        <div class="relative">
-                            <img src="${pageContext.request.contextPath}/images/sample2.png" alt="Smart Door Lock" class="w-full h-48 object-cover">
-                            <div class="absolute top-3 left-3">
-                                <span class="bg-purple-600 text-white px-2 py-1 rounded-full text-xs font-medium">Smart Home</span>
-                            </div>
-                        </div>
-                        <div class="p-6">
-                            <h3 class="text-lg font-semibold text-neutral-900 mb-2 line-clamp-2">Smart Door Lock with Keypad</h3>
-                            <p class="text-neutral-600 text-sm mb-4 line-clamp-3">Keyless entry with smartphone app, temporary codes, and automatic locking features.</p>
-                            <div class="flex items-center justify-between mb-4">
-                                <div class="text-2xl font-bold text-neutral-900">$159.99</div>
-                                <div class="text-sm text-neutral-500">USD</div>
-                            </div>
-                            <div class="flex gap-2">
-                                <a href="${pageContext.request.contextPath}/productDetails.jsp?id=23" class="flex-1 bg-purple-600 text-white text-center py-2 px-4 rounded-md hover:bg-purple-700 transition-colors duration-200 text-sm font-medium">View Details</a>
-                                <button onclick="addToCart(23)" class="flex-1 border border-neutral-300 text-neutral-700 py-2 px-4 rounded-md hover:bg-neutral-50 transition-colors duration-200 text-sm font-medium">Add to Cart</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Product 6 -->
-                    <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 border border-neutral-200 overflow-hidden" data-category="kitchen" data-price="299">
-                        <div class="relative">
-                            <img src="${pageContext.request.contextPath}/images/sample3.png" alt="Smart Coffee Maker" class="w-full h-48 object-cover">
-                            <div class="absolute top-3 left-3">
-                                <span class="bg-purple-600 text-white px-2 py-1 rounded-full text-xs font-medium">Smart Home</span>
-                            </div>
-                        </div>
-                        <div class="p-6">
-                            <h3 class="text-lg font-semibold text-neutral-900 mb-2 line-clamp-2">Smart Coffee Maker Pro</h3>
-                            <p class="text-neutral-600 text-sm mb-4 line-clamp-3">WiFi-enabled coffee maker with scheduling, strength control, and integration with voice assistants.</p>
-                            <div class="flex items-center justify-between mb-4">
-                                <div class="text-2xl font-bold text-neutral-900">$299.99</div>
-                                <div class="text-sm text-neutral-500">USD</div>
-                            </div>
-                            <div class="flex gap-2">
-                                <a href="${pageContext.request.contextPath}/productDetails.jsp?id=24" class="flex-1 bg-purple-600 text-white text-center py-2 px-4 rounded-md hover:bg-purple-700 transition-colors duration-200 text-sm font-medium">View Details</a>
-                                <button onclick="addToCart(24)" class="flex-1 border border-neutral-300 text-neutral-700 py-2 px-4 rounded-md hover:bg-neutral-50 transition-colors duration-200 text-sm font-medium">Add to Cart</button>
-                            </div>
-                        </div>
-                    </div>
+                <div class="mb-8">
+                    <h2 class="text-display-sm font-bold text-neutral-900 mb-2">Smart Home Products</h2>
+                    <p class="text-lg text-neutral-600">Transform your home with our comprehensive range of smart home devices and automation solutions</p>
                 </div>
+                
+                <c:choose>
+                    <c:when test="${products != null && !empty products}">
+                        <div class="product-grid" id="products-grid">
+                            <c:forEach var="p" items="${products}">
+                                <div class="product-card" 
+                                     data-product-id="${p.id}" 
+                                     data-price="${p.price}" 
+                                     data-name="${fn:toLowerCase(p.name)}"
+                                     data-category="smarthome"
+                                     tabindex="0"
+                                     role="article"
+                                     aria-label="Product: ${p.name}">
+                                    <div class="product-card__image-container">
+                                        <img class="product-card__image" 
+                                             src="${p.imageUrl != null && !empty p.imageUrl ? p.imageUrl : 'images/default-product.png'}" 
+                                             alt="${p.name}" 
+                                             loading="lazy"
+                                             width="300"
+                                             height="300"
+                                             onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/default-product.png';" />
+                                        <!-- Stock Badge (Visibility of System Status - Nielsen's Heuristic 1) -->
+                                        <c:if test="${p.stockQuantity > 0 && p.stockQuantity < 5}">
+                                            <span class="product-card__badge product-card__badge--warning" aria-label="Low stock: ${p.stockQuantity} remaining">
+                                                Low Stock
+                                            </span>
+                                        </c:if>
+                                        <c:if test="${p.stockQuantity == 0}">
+                                            <span class="product-card__badge product-card__badge--error" aria-label="Out of stock">
+                                                Out of Stock
+                                            </span>
+                                        </c:if>
+                                    </div>
+                                    <div class="product-card__body">
+                                        <div class="product-card__header">
+                                            <h3 class="product-card__title">${p.name}</h3>
+                                            <!-- Key Spec Badge (Section 1.1 - Recognition rather than recall) -->
+                                            <span class="product-card__spec-badge" title="Communication Protocol">WiFi</span>
+                                        </div>
+                                        <p class="product-card__description">
+                                            <c:choose>
+                                                <c:when test="${fn:length(p.description) > 100}">
+                                                    ${fn:substring(p.description, 0, 100)}...
+                                                </c:when>
+                                                <c:otherwise>
+                                                    ${p.description}
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </p>
+                                        <div class="product-card__footer">
+                                            <div class="product-card__price-info">
+                                                <div class="product-card__price">$<fmt:formatNumber value="${p.price}" pattern="#.00" /></div>
+                                                <div class="product-card__stock-status">
+                                                    <c:choose>
+                                                        <c:when test="${p.stockQuantity > 0}">
+                                                            <span class="text-success text-sm">✓ In Stock</span>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <span class="text-error text-sm">✗ Out of Stock</span>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </div>
+                                            </div>
+                                            <div class="product-card__actions">
+                                                <a href="${pageContext.request.contextPath}/product?productId=${p.id}" 
+                                                   class="btn btn--outline btn--sm"
+                                                   aria-label="View details for ${p.name}">
+                                                    View Details
+                                                </a>
+                                                <button type="button"
+                                                        onclick="if(typeof addToCart === 'function') { addToCart(${p.id}, 1); } else { window.location.href='${pageContext.request.contextPath}/productDetails.jsp?id=${p.id}'; }"
+                                                        class="btn btn--primary btn--sm"
+                                                        aria-label="Add ${p.name} to cart"
+                                                        <c:if test="${p.stockQuantity == 0}">disabled</c:if>>
+                                                    <c:choose>
+                                                        <c:when test="${p.stockQuantity > 0}">Add to Cart</c:when>
+                                                        <c:otherwise>Out of Stock</c:otherwise>
+                                                    </c:choose>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:forEach>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <!-- Empty State (Section 3.2) -->
+                        <div class="empty-state text-center py-16">
+                            <div class="empty-state__icon mb-6">
+                                <svg class="w-24 h-24 mx-auto text-neutral-400" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-2xl font-bold text-neutral-900 mb-4">No smart home products found</h3>
+                            <p class="text-lg text-neutral-600 mb-8 max-w-md mx-auto">
+                                <c:choose>
+                                    <c:when test="${param.search != null && !empty param.search}">
+                                        We couldn't find any smart home products matching "${param.search}". Try adjusting your search terms.
+                                    </c:when>
+                                    <c:otherwise>
+                                        There are no smart home products available at this time. Please check back later.
+                                    </c:otherwise>
+                                </c:choose>
+                            </p>
+                            <a href="${pageContext.request.contextPath}/browse" class="btn btn--primary">
+                                Browse All Products
+                            </a>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
             </div>
         </section>
 
@@ -722,19 +690,21 @@
         }
 
         function sortProducts(sortBy) {
-            const grid = document.getElementById('productsGrid');
+            const grid = document.getElementById('products-grid');
+            if (!grid) return;
+            
             const products = Array.from(grid.querySelectorAll('.product-card'));
             
             products.sort((a, b) => {
                 switch(sortBy) {
                     case 'name':
-                        return a.querySelector('.product-card__title').textContent.localeCompare(
-                            b.querySelector('.product-card__title').textContent
-                        );
+                        const titleA = a.querySelector('.product-card__title')?.textContent || '';
+                        const titleB = b.querySelector('.product-card__title')?.textContent || '';
+                        return titleA.localeCompare(titleB);
                     case 'price-low':
-                        return parseFloat(a.dataset.price) - parseFloat(b.dataset.price);
+                        return parseFloat(a.dataset.price || 0) - parseFloat(b.dataset.price || 0);
                     case 'price-high':
-                        return parseFloat(b.dataset.price) - parseFloat(a.dataset.price);
+                        return parseFloat(b.dataset.price || 0) - parseFloat(a.dataset.price || 0);
                     default:
                         return 0;
                 }
@@ -742,21 +712,19 @@
             
             products.forEach(product => grid.appendChild(product));
         }
-
-        function addToCart(productId) {
-            // Add loading state
-            const button = event.target;
-            const originalText = button.textContent;
-            button.innerHTML = '<div class="loading mr-2"></div> Adding...';
-            button.disabled = true;
+        
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show skeleton loading if products are being loaded
+            const productsGrid = document.getElementById('products-grid');
+            const skeleton = document.getElementById('products-skeleton');
             
-            // Simulate API call
-            setTimeout(() => {
-                button.textContent = originalText;
-                button.disabled = false;
-                showToast('Product added to cart successfully!', 'success');
-            }, 1000);
-        }
+            if (productsGrid && productsGrid.children.length === 0 && skeleton) {
+                skeleton.classList.remove('hidden');
+            } else if (skeleton) {
+                skeleton.classList.add('hidden');
+            }
+        });
 
         // Smooth scrolling for anchor links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {

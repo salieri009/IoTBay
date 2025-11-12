@@ -1,31 +1,9 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
 
-<%
-    String contextPath = request.getContextPath();
-%>
-
-<!DOCTYPE html>
-<html lang="en" data-theme="light">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="About IoT Bay - Leading provider of innovative IoT solutions for smart homes, industry, and beyond">
-    <title>About Us | IoT Bay - Smart Technology Store</title>
-    
-    <!-- CSS -->
-    <link rel="stylesheet" href="<%= contextPath %>/css/modern-theme.css?v=2">
-    
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-</head>
-<body class="antialiased bg-neutral-50 text-neutral-900 min-h-screen flex flex-col">
-    
-    <!-- Header -->
-    <jsp:include page="components/header.jsp" />
+<t:base title="About Us" description="About IoT Bay - Leading provider of innovative IoT solutions for smart homes, industry, and beyond">
 
     <!-- Hero Section -->
     <section class="hero-section relative overflow-hidden">

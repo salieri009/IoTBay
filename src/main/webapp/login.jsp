@@ -34,17 +34,19 @@
                 </div>
                 <% } %>
                 
-                <form class="space-y-6" method="post" action="<%= contextPath %>/api/login">
+                <form class="space-y-6" method="post" action="<%= contextPath %>/api/login" id="loginForm">
                     <div class="form-group">
                         <label for="email" class="form-label">Email Address</label>
                         <input type="email" id="email" name="email" class="form-input" 
-                               placeholder="Enter your email" required />
+                               placeholder="Enter your email" required autocomplete="email" />
+                        <div class="form-error" id="emailError" style="display: none;"></div>
                     </div>
                     
                     <div class="form-group">
                         <label for="password" class="form-label">Password</label>
                         <input type="password" id="password" name="password" class="form-input" 
-                               placeholder="Enter your password" required />
+                               placeholder="Enter your password" required autocomplete="current-password" />
+                        <div class="form-error" id="passwordError" style="display: none;"></div>
                     </div>
                     
                     <div class="flex items-center justify-between">
@@ -57,7 +59,7 @@
                     </div>
                     
                     <input type="hidden" name="source" value="logins" />
-                    <button type="submit" class="btn btn--primary btn--full">Sign In</button>
+                    <button type="submit" class="btn btn--primary btn--full" id="submitBtn">Sign In</button>
                 </form>
                 
                 <div class="mt-6 text-center">
@@ -68,5 +70,126 @@
     </main>
 
     <script src="<%= contextPath %>/js/main.js"></script>
+    <script>
+        // Form submission with loading state and better error handling
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const originalText = submitBtn.textContent;
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            
+            // Basic validation
+            let hasErrors = false;
+            
+            if (!emailInput.value.trim()) {
+                showFieldError('emailError', 'Email address is required');
+                hasErrors = true;
+            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value)) {
+                showFieldError('emailError', 'Please enter a valid email address');
+                hasErrors = true;
+            } else {
+                hideFieldError('emailError');
+            }
+            
+            if (!passwordInput.value) {
+                showFieldError('passwordError', 'Password is required');
+                hasErrors = true;
+            } else {
+                hideFieldError('passwordError');
+            }
+            
+            if (hasErrors) {
+                return;
+            }
+            
+            // Show loading state
+            submitBtn.textContent = 'Signing in...';
+            submitBtn.disabled = true;
+            if (typeof showLoading === 'function') {
+                showLoading(submitBtn);
+            }
+            
+            // Submit form
+            const formData = new FormData(this);
+            
+            fetch(this.action, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                } else {
+                    return response.text().then(text => {
+                        throw new Error('Login failed');
+                    });
+                }
+            })
+            .then(html => {
+                // Check if response contains error indicators
+                if (html.includes('error') || html.includes('Invalid')) {
+                    throw new Error('Invalid email or password. Please try again.');
+                }
+                // Success - redirect or reload
+                if (typeof showToast === 'function') {
+                    showToast('Login successful! Redirecting...', 'success');
+                }
+                setTimeout(() => {
+                    window.location.href = '<%= contextPath %>/';
+                }, 500);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                
+                // Reset button
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+                if (typeof hideLoading === 'function') {
+                    hideLoading(submitBtn);
+                }
+                
+                // Show helpful error message
+                let errorMsg = 'Login failed. ';
+                if (error.message.includes('email') || error.message.includes('Email')) {
+                    errorMsg += 'The email address you entered is not registered. Would you like to <a href="register.jsp">create an account</a>?';
+                } else if (error.message.includes('password') || error.message.includes('Password')) {
+                    errorMsg += 'The password you entered is incorrect. Please try again or <a href="forgot-password.jsp">reset your password</a>.';
+                } else {
+                    errorMsg += 'Please check your email and password and try again.';
+                }
+                
+                // Show error in password field
+                showFieldError('passwordError', errorMsg);
+                
+                // Focus on password field
+                passwordInput.focus();
+            });
+        });
+        
+        function showFieldError(fieldId, message) {
+            const errorDiv = document.getElementById(fieldId);
+            if (errorDiv) {
+                errorDiv.innerHTML = message;
+                errorDiv.style.display = 'block';
+                const input = errorDiv.previousElementSibling;
+                if (input && input.classList) {
+                    input.classList.add('form-input--error');
+                }
+            }
+        }
+        
+        function hideFieldError(fieldId) {
+            const errorDiv = document.getElementById(fieldId);
+            if (errorDiv) {
+                errorDiv.style.display = 'none';
+                const input = errorDiv.previousElementSibling;
+                if (input && input.classList) {
+                    input.classList.remove('form-input--error');
+                }
+            }
+        }
+    </script>
 </body>
 </html>

@@ -21,12 +21,16 @@ import db.DBConnection;
 import model.CartItem;
 import model.Product;
 import model.User;
+import service.CartService;
+import service.CartService.CartOperationResult;
+import service.CartService.CartSummary;
 import utils.ResponseUtil;
 
 @WebServlet({"/cart", "/api/cart/*"})
 public class CartController extends HttpServlet {
     private CartItemDAO cartItemDAO;
     private ProductDAO productDAO;
+    private CartService cartService;
 
     @Override
     public void init() {
@@ -34,6 +38,7 @@ public class CartController extends HttpServlet {
             Connection connection = DBConnection.getConnection();
             cartItemDAO = new CartItemDAO(connection);
             productDAO = new ProductDAO(connection);
+            cartService = new CartService(cartItemDAO, productDAO);
         } catch (SQLException | ClassNotFoundException e) {
             throw new RuntimeException("Failed to initialize database connection", e);
         }
@@ -121,7 +126,7 @@ public class CartController extends HttpServlet {
         try {
             switch (pathInfo) {
                 case "/api/items":
-                    getCartItemsApi(response, user);
+                    getCartItemsApi(request, response, user);
                     break;
                 case "/api/count":
                     getCartItemCountApi(response, user);
@@ -310,38 +315,41 @@ public class CartController extends HttpServlet {
             int productId = Integer.parseInt(productIdStr);
             int quantity = Integer.parseInt(quantityStr);
 
-            if (quantity <= 0) {
+            // Use CartService for business logic and compatibility checking
+            CartOperationResult result = cartService.addToCart(user.getId(), productId, quantity);
+            
+            if (result.isSuccess()) {
+                // Build response with compatibility warnings if any
+                StringBuilder jsonResponse = new StringBuilder();
+                jsonResponse.append("{\"success\": true, \"message\": \"")
+                           .append(result.getMessage().replace("\"", "\\\""))
+                           .append("\"");
+                
+                if (result.getCompatibilityIssues() != null && !result.getCompatibilityIssues().isEmpty()) {
+                    jsonResponse.append(", \"compatibilityWarnings\": [");
+                    for (int i = 0; i < result.getCompatibilityIssues().size(); i++) {
+                        if (i > 0) jsonResponse.append(",");
+                        service.CompatibilityEngine.CompatibilityIssue issue = result.getCompatibilityIssues().get(i);
+                        jsonResponse.append("{\"type\": \"").append(issue.getType().name())
+                                   .append("\", \"message\": \"").append(issue.getMessage().replace("\"", "\\\""))
+                                   .append("\", \"severity\": \"").append(issue.getSeverity()).append("\"}");
+                    }
+                    jsonResponse.append("]");
+                }
+                
+                jsonResponse.append("}");
+                ResponseUtil.sendJsonResponse(response, jsonResponse.toString());
+            } else {
                 ResponseUtil.sendJsonError(response, HttpServletResponse.SC_BAD_REQUEST, 
-                    "Quantity must be greater than zero");
-                return;
+                    result.getErrorMessage());
             }
-
-            Product product = productDAO.getProductById(productId);
-            if (product == null) {
-                ResponseUtil.sendJsonError(response, HttpServletResponse.SC_NOT_FOUND, 
-                    "Product not found");
-                return;
-            }
-
-            if (product.getStockQuantity() < quantity) {
-                ResponseUtil.sendJsonError(response, HttpServletResponse.SC_BAD_REQUEST, 
-                    "Insufficient stock available");
-                return;
-            }
-
-            CartItem cartItem = new CartItem();
-            cartItem.setUserId(user.getId());
-            cartItem.setProductId(productId);
-            cartItem.setQuantity(quantity);
-            cartItem.setPrice(BigDecimal.valueOf(product.getPrice()));
-            cartItem.setAddedAt(LocalDateTime.now());
-
-            int itemId = cartItemDAO.addCartItem(cartItem);
-            ResponseUtil.sendJsonResponse(response, "{\"success\": true, \"itemId\": " + itemId + "}");
 
         } catch (NumberFormatException e) {
             ResponseUtil.sendJsonError(response, HttpServletResponse.SC_BAD_REQUEST, 
                 "Invalid product ID or quantity format");
+        } catch (SQLException e) {
+            ResponseUtil.sendJsonError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, 
+                "Database error: " + e.getMessage());
         }
     }
 
@@ -394,10 +402,49 @@ public class CartController extends HttpServlet {
         }
     }
 
-    private void getCartItemsApi(HttpServletResponse response, User user)
+    private void getCartItemsApi(HttpServletRequest request, HttpServletResponse response, User user)
             throws Exception {
-        List<CartItem> cartItems = cartItemDAO.getCartItemsByUserId(user.getId());
-        ResponseUtil.sendJsonResponse(response, cartItems);
+        try {
+            CartSummary summary = cartService.getCartSummary(user.getId());
+            
+            // Build comprehensive response with compatibility information
+            StringBuilder jsonResponse = new StringBuilder();
+            jsonResponse.append("{\"items\": [");
+            
+            List<CartItem> items = summary.getItems();
+            for (int i = 0; i < items.size(); i++) {
+                if (i > 0) jsonResponse.append(",");
+                CartItem item = items.get(i);
+                jsonResponse.append("{\"id\": ").append(item.getId())
+                           .append(", \"productId\": ").append(item.getProductId())
+                           .append(", \"quantity\": ").append(item.getQuantity())
+                           .append(", \"price\": ").append(item.getPrice())
+                           .append("}");
+            }
+            
+            jsonResponse.append("], \"total\": ").append(summary.getTotal())
+                       .append(", \"itemCount\": ").append(summary.getItemCount());
+            
+            // Add compatibility warnings if any
+            if (summary.getCompatibilityIssues() != null && !summary.getCompatibilityIssues().isEmpty()) {
+                jsonResponse.append(", \"compatibilityWarnings\": [");
+                for (int i = 0; i < summary.getCompatibilityIssues().size(); i++) {
+                    if (i > 0) jsonResponse.append(",");
+                    service.CompatibilityEngine.CompatibilityIssue issue = summary.getCompatibilityIssues().get(i);
+                    jsonResponse.append("{\"type\": \"").append(issue.getType().name())
+                               .append("\", \"message\": \"").append(issue.getMessage().replace("\"", "\\\""))
+                               .append("\", \"severity\": \"").append(issue.getSeverity()).append("\"}");
+                }
+                jsonResponse.append("]");
+            }
+            
+            jsonResponse.append("}");
+            ResponseUtil.sendJsonResponse(response, jsonResponse.toString());
+            
+        } catch (SQLException e) {
+            ResponseUtil.sendJsonError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, 
+                "Database error: " + e.getMessage());
+        }
     }
 
     private void getCartItemCountApi(HttpServletResponse response, User user)

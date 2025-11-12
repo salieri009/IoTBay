@@ -67,6 +67,26 @@
             <p class="text-lg text-neutral-600">Review your order and complete your purchase</p>
         </div>
 
+        <!-- Checkout Progress Indicator -->
+        <div class="checkout-progress mb-8">
+            <div class="flex items-center justify-between max-w-2xl">
+                <div class="progress-step progress-step--active">
+                    <div class="progress-step__number">1</div>
+                    <div class="progress-step__label">Shipping</div>
+                </div>
+                <div class="progress-step__line"></div>
+                <div class="progress-step">
+                    <div class="progress-step__number">2</div>
+                    <div class="progress-step__label">Payment</div>
+                </div>
+                <div class="progress-step__line"></div>
+                <div class="progress-step">
+                    <div class="progress-step__number">3</div>
+                    <div class="progress-step__label">Review</div>
+                </div>
+            </div>
+        </div>
+
         <!-- Alert Messages -->
         <c:if test="${error != null}">
             <div class="alert alert--error mb-6">
@@ -380,7 +400,7 @@
     <!-- JavaScript -->
     <script src="${pageContext.request.contextPath}/js/main.js"></script>
     <script>
-        // Form validation and enhancement
+            // Enhanced Form validation (Section 4.2 - Context-aware validation)
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.querySelector('form');
             const paymentMethods = document.querySelectorAll('input[name="paymentMethod"]');
@@ -388,6 +408,25 @@
             const cardNumberInput = document.getElementById('cardNumber');
             const expiryInput = document.getElementById('expiryDate');
             const cvvInput = document.getElementById('cvv');
+            const emailInput = document.getElementById('email');
+            
+            // Enhanced email validation with business email check (Section 4.2)
+            if (emailInput && typeof FormValidator !== 'undefined') {
+                emailInput.addEventListener('blur', function() {
+                    const result = FormValidator.validateBusinessEmail(this.value);
+                    if (!result.valid) {
+                        FormValidator.showFieldError(this, result.message);
+                    } else if (result.warning) {
+                        // Show warning but don't block submission
+                        if (typeof showToast === 'function') {
+                            showToast(result.message, 'warning', 5000);
+                        }
+                        FormValidator.hideFieldError(this);
+                    } else {
+                        FormValidator.hideFieldError(this);
+                    }
+                });
+            }
 
             // Payment method change handler
             paymentMethods.forEach(method => {
@@ -454,26 +493,67 @@
                 form.addEventListener('submit', function(e) {
                     e.preventDefault();
                     
+                    // Get order total for confirmation
+                    const totalElement = document.querySelector('.summary-row--total span:last-child');
+                    const total = totalElement ? totalElement.textContent : 'the total amount';
+                    
+                    // Confirm order placement
+                    if (!confirm(`Are you sure you want to place this order for ${total}? This action cannot be undone.`)) {
+                        return;
+                    }
+                    
                     // Show loading state
                     const submitBtn = form.querySelector('button[type="submit"]');
                     const originalText = submitBtn.innerHTML;
-                    submitBtn.innerHTML = '<div class="loading mr-2"></div> Processing...';
+                    submitBtn.innerHTML = '<div class="loading mr-2"></div> Processing your order...';
                     submitBtn.disabled = true;
                     
-                    // Simulate processing time
-                    setTimeout(() => {
-                        // Reset button state
-                        submitBtn.innerHTML = originalText;
-                        submitBtn.disabled = false;
-                        
-                        // Show success message (in real app, submit the form)
-                        showToast('Order placed successfully! Redirecting to confirmation...', 'success');
-                        
+                    // Show loading indicator
+                    if (typeof showLoading === 'function') {
+                        showLoading(submitBtn);
+                    }
+                    
+                    // Submit the form
+                    const formData = new FormData(form);
+                    
+                    fetch(form.action, {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            return response.text();
+                        } else {
+                            return response.text().then(text => {
+                                throw new Error('Order placement failed. Please try again.');
+                            });
+                        }
+                    })
+                    .then(html => {
+                        // Show success message
+                        if (typeof showToast === 'function') {
+                            showToast('Order placed successfully! Redirecting to confirmation...', 'success');
+                        }
                         // Redirect after delay
                         setTimeout(() => {
                             window.location.href = '${pageContext.request.contextPath}/orderList.jsp';
-                        }, 2000);
-                    }, 2000);
+                        }, 1500);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        // Reset button state
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                        if (typeof hideLoading === 'function') {
+                            hideLoading(submitBtn);
+                        }
+                        // Show error message
+                        if (typeof showToast === 'function') {
+                            showToast(error.message || 'Failed to place order. Please check your information and try again.', 'error');
+                        } else {
+                            alert(error.message || 'Failed to place order. Please check your information and try again.');
+                        }
+                    });
                 });
             }
         });

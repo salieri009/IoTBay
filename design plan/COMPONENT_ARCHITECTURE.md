@@ -1,22 +1,58 @@
 # IoTBay Component Architecture
 
+## 📋 Project Information
+
+**Course**: 41025 Information Systems Development (ISD)  
+**Assignment**: Assignment 2 - Autumn 2025  
+**Institution**: University of Technology Sydney (UTS)  
+**Project Type**: E-commerce Web Application for IoT Devices
+
+---
+
 ## 🏗️ 아키텍처 개요
 
-IoTBay의 컴포넌트 아키텍처는 **확장가능하고 유지보수가 용이한 모듈형 구조**를 기반으로 설계되었습니다. React 18의 최신 기능과 TypeScript의 타입 안전성을 활용하여 견고하고 예측 가능한 UI 시스템을 구축합니다.
+IoTBay의 컴포넌트 아키텍처는 **확장가능하고 유지보수가 용이한 모듈형 구조**를 기반으로 설계되었습니다. **UTS 41025 ISD Assignment 2 Autumn 2025**의 요구사항에 맞춰 JSP 기반 컴포넌트 시스템을 구현하며, 재사용 가능한 UI 컴포넌트와 일관된 디자인 시스템을 제공합니다.
+
+> **참고**: 이 문서는 JSP/Servlet 기반 프로젝트를 위한 컴포넌트 아키텍처를 설명합니다. React/TypeScript 기반 프론트엔드가 별도로 존재하는 경우, 해당 프로젝트의 컴포넌트 구조도 참고할 수 있습니다.
 
 ### 설계 원칙
 - **단일 책임 원칙**: 각 컴포넌트는 하나의 명확한 역할을 담당
 - **재사용성**: 공통 컴포넌트의 최대한 활용
 - **조합성**: 작은 컴포넌트들을 조합하여 복잡한 UI 구성
-- **타입 안전성**: TypeScript를 활용한 컴파일 타임 오류 방지
-- **성능 최적화**: 메모이제이션과 지연 로딩을 통한 성능 향상
+- **일관성**: 디자인 시스템을 통한 일관된 사용자 경험
+- **접근성**: WCAG 2.1 AA 준수를 위한 접근성 고려
+- **성능 최적화**: 효율적인 렌더링과 최소한의 DOM 조작
 
 ---
 
 ## 📁 프로젝트 구조
 
+### JSP 기반 컴포넌트 구조 (메인 프로젝트)
+
 ```
-IoTBay-Frontend/
+IoTBay/
+├── src/main/webapp/
+│   ├── components/          # 재사용 가능한 JSP 컴포넌트
+│   │   ├── header.jsp       # 헤더 컴포넌트
+│   │   ├── footer.jsp       # 푸터 컴포넌트
+│   │   ├── masthead.jsp     # 히어로 섹션
+│   │   ├── product-card.jsp # 제품 카드 컴포넌트
+│   │   ├── modal.jsp        # 모달 컴포넌트
+│   │   ├── toast.jsp        # 토스트 알림
+│   │   └── layout/          # 레이아웃 태그
+│   │       └── base.tag     # 기본 레이아웃 태그
+│   ├── css/                 # 스타일시트
+│   │   ├── modern-theme.css # 메인 디자인 시스템
+│   │   └── themes/          # 테마 파일
+│   ├── js/                  # JavaScript 파일
+│   │   └── main.js          # 메인 JavaScript
+│   └── *.jsp                # 페이지 JSP 파일
+```
+
+### React 기반 프론트엔드 구조 (선택적)
+
+```
+IoTBay-Frontend/ (별도 프로젝트)
 ├── src/
 │   ├── components/          # 재사용 가능한 공통 컴포넌트
 │   │   ├── ui/             # 기본 UI 컴포넌트
@@ -26,38 +62,12 @@ IoTBay-Frontend/
 │   │   ├── feedback/       # 피드백 컴포넌트 (토스트, 모달 등)
 │   │   └── data-display/   # 데이터 표시 컴포넌트
 │   ├── pages/              # 페이지 컴포넌트
-│   │   ├── auth/           # 인증 관련 페이지
-│   │   ├── products/       # 상품 관련 페이지
-│   │   ├── cart/           # 장바구니 페이지
-│   │   ├── orders/         # 주문 관련 페이지
-│   │   ├── profile/        # 사용자 프로필
-│   │   └── admin/          # 관리자 페이지
 │   ├── hooks/              # 커스텀 훅
-│   │   ├── api/            # API 관련 훅
-│   │   ├── ui/             # UI 상태 관리 훅
-│   │   └── utils/          # 유틸리티 훅
 │   ├── contexts/           # React Context
-│   │   ├── AuthContext.tsx
-│   │   ├── ThemeContext.tsx
-│   │   ├── CartContext.tsx
-│   │   └── NotificationContext.tsx
 │   ├── services/           # API 서비스
-│   │   ├── api.ts          # 기본 API 설정
-│   │   ├── auth.ts         # 인증 서비스
-│   │   ├── products.ts     # 상품 서비스
-│   │   └── orders.ts       # 주문 서비스
 │   ├── types/              # TypeScript 타입 정의
-│   │   ├── api.ts          # API 관련 타입
-│   │   ├── components.ts   # 컴포넌트 관련 타입
-│   │   └── models.ts       # 비즈니스 모델 타입
 │   ├── utils/              # 유틸리티 함수
-│   │   ├── formatters.ts   # 포맷팅 함수
-│   │   ├── validators.ts   # 유효성 검사
-│   │   └── constants.ts    # 상수 정의
 │   └── styles/             # 스타일 파일
-│       ├── globals.css     # 전역 스타일
-│       ├── variables.css   # CSS 변수
-│       └── components/     # 컴포넌트별 스타일
 ```
 
 ---

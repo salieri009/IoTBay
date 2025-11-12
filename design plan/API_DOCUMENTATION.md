@@ -1,8 +1,17 @@
 # IoTBay API Documentation
 
+## 📋 Project Information
+
+**Course**: 41025 Information Systems Development (ISD)  
+**Assignment**: Assignment 2 - Autumn 2025  
+**Institution**: University of Technology Sydney (UTS)  
+**Project Type**: E-commerce Web Application for IoT Devices
+
+---
+
 ## 📚 API 개요
 
-IoTBay API는 RESTful 설계 원칙을 따르며, IoT 전자상거래 플랫폼의 모든 기능을 제공합니다.
+IoTBay API는 RESTful 설계 원칙을 따르며, IoT 전자상거래 플랫폼의 모든 기능을 제공합니다. 이 API는 **UTS 41025 ISD Assignment 2 Autumn 2025**의 일부로 개발되었으며, JSP/Servlet 기반 웹 애플리케이션을 위한 엔드포인트를 정의합니다.
 
 ### Base URL
 ```

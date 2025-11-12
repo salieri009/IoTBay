@@ -20,8 +20,8 @@
             productName = product.getName() != null ? product.getName() : productName;
             productDescription = product.getDescription() != null ? product.getDescription() : productDescription;
             productPrice = product.getPrice();
-            productStock = product.getStock();
-            productId = product.getProductID();
+            productStock = product.getStockQuantity();
+            productId = product.getId();
             productImage = product.getImageUrl() != null && !product.getImageUrl().isEmpty() ? product.getImageUrl() : productImage;
         } catch (Exception e) {
             // 메소드 호출 실패 시 기본값 사용
@@ -175,9 +175,11 @@
                         <div class="space-y-3">
                             <c:choose>
                                 <c:when test="${product.stock > 0}">
-                                    <button data-product-id="${product.id}" onclick="addToCart(this.dataset.productId)" 
-                                            class="w-full btn btn--primary btn--lg">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <button data-product-id="${pd_id}" 
+                                            onclick="if(typeof addToCart === 'function') { addToCart(${pd_id}, parseInt(document.getElementById('quantity').value)); } else { this.closest('form')?.submit(); }" 
+                                            class="w-full btn btn--primary btn--lg"
+                                            aria-label="Add ${pd_name} to cart">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m0 0H17"></path>
                                         </svg>
                                         Add to Cart
@@ -224,63 +226,223 @@
                 </div>
             </div>
 
-            <!-- Product Tabs -->
+                    <!-- Trust Badges Section (Section 2.1) -->
+                    <div class="mt-8 mb-8">
+                        <div class="flex flex-wrap gap-3">
+                            <div class="trust-badge" title="CE Certified - European Conformity">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                </svg>
+                                <span>CE Certified</span>
+                            </div>
+                            <div class="trust-badge" title="FCC Approved - Federal Communications Commission">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                </svg>
+                                <span>FCC Approved</span>
+                            </div>
+                            <div class="trust-badge" title="Works with Home Assistant">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/>
+                                </svg>
+                                <span>Home Assistant</span>
+                            </div>
+                            <div class="trust-badge" title="2-Year Warranty Included">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                </svg>
+                                <span>2-Year Warranty</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Product Tabs -->
             <div class="mt-16">
                 <div class="border-b border-neutral-200">
-                    <nav class="flex space-x-8">
-                        <button class="tab-button active py-4 px-1 border-b-2 border-brand-primary text-brand-primary font-medium" onclick="showTab('specifications')">
+                    <nav class="flex space-x-8" role="tablist">
+                        <button class="tab-button active py-4 px-1 border-b-2 border-brand-primary text-brand-primary font-medium" 
+                                onclick="showTab('specifications')" 
+                                role="tab" 
+                                aria-selected="true"
+                                aria-controls="specifications-panel">
                             Specifications
                         </button>
-                        <button class="tab-button py-4 px-1 border-b-2 border-transparent text-neutral-500 hover:text-neutral-700" onclick="showTab('reviews')">
+                        <button class="tab-button py-4 px-1 border-b-2 border-transparent text-neutral-500 hover:text-neutral-700" 
+                                onclick="showTab('reviews')" 
+                                role="tab" 
+                                aria-selected="false"
+                                aria-controls="reviews-panel">
                             Reviews (12)
                         </button>
-                        <button class="tab-button py-4 px-1 border-b-2 border-transparent text-neutral-500 hover:text-neutral-700" onclick="showTab('support')">
+                        <button class="tab-button py-4 px-1 border-b-2 border-transparent text-neutral-500 hover:text-neutral-700" 
+                                onclick="showTab('support')" 
+                                role="tab" 
+                                aria-selected="false"
+                                aria-controls="support-panel">
                             Support
                         </button>
                     </nav>
                 </div>
 
                 <div class="tab-content mt-8">
-                    <!-- Specifications Tab -->
-                    <div id="specifications" class="tab-panel active">
+                    <!-- Specifications Tab with Progressive Disclosure (Section 5.1) -->
+                    <div id="specifications" class="tab-panel active" role="tabpanel" aria-labelledby="specifications-tab">
                         <div class="bg-white rounded-lg shadow p-6">
                             <h3 class="text-xl font-semibold text-neutral-900 mb-6">Technical Specifications</h3>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <h4 class="font-medium text-neutral-900 mb-3">Connectivity</h4>
-                                    <dl class="space-y-2 text-sm">
-                                        <div class="flex justify-between">
-                                            <dt class="text-neutral-600">Wi-Fi:</dt>
-                                            <dd class="text-neutral-900">802.11 b/g/n/ac</dd>
-                                        </div>
-                                        <div class="flex justify-between">
-                                            <dt class="text-neutral-600">Bluetooth:</dt>
-                                            <dd class="text-neutral-900">5.0 LE</dd>
-                                        </div>
-                                        <div class="flex justify-between">
-                                            <dt class="text-neutral-600">Range:</dt>
-                                            <dd class="text-neutral-900">Up to 100m</dd>
-                                        </div>
-                                    </dl>
-                                </div>
-                                <div>
-                                    <h4 class="font-medium text-neutral-900 mb-3">Power</h4>
-                                    <dl class="space-y-2 text-sm">
-                                        <div class="flex justify-between">
-                                            <dt class="text-neutral-600">Input:</dt>
-                                            <dd class="text-neutral-900">DC 5V/2A</dd>
-                                        </div>
-                                        <div class="flex justify-between">
-                                            <dt class="text-neutral-600">Consumption:</dt>
-                                            <dd class="text-neutral-900">2.5W max</dd>
-                                        </div>
-                                        <div class="flex justify-between">
-                                            <dt class="text-neutral-600">Battery Life:</dt>
-                                            <dd class="text-neutral-900">6+ months</dd>
-                                        </div>
-                                    </dl>
+                            
+                            <!-- Essential Specs (Always Visible) -->
+                            <div class="mb-6">
+                                <h4 class="font-semibold text-neutral-900 mb-4">Essential Specifications</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <h5 class="font-medium text-neutral-700 mb-3 flex items-center gap-2">
+                                            Communication Protocol
+                                            <button class="help-tooltip" 
+                                                    aria-label="What is communication protocol?"
+                                                    data-tooltip="The communication protocol determines how this device connects and communicates with other devices and systems. Common protocols include LoRaWAN, Zigbee, WiFi, and Bluetooth.">
+                                                <svg class="w-4 h-4 text-neutral-400" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/>
+                                                </svg>
+                                            </button>
+                                        </h5>
+                                        <dl class="space-y-2 text-sm">
+                                            <div class="flex justify-between">
+                                                <dt class="text-neutral-600">Protocol:</dt>
+                                                <dd class="text-neutral-900 font-medium">WiFi 802.11 b/g/n/ac</dd>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <dt class="text-neutral-600">Bluetooth:</dt>
+                                                <dd class="text-neutral-900">5.0 LE</dd>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <dt class="text-neutral-600">Range:</dt>
+                                                <dd class="text-neutral-900">Up to 100m indoor</dd>
+                                            </div>
+                                        </dl>
+                                    </div>
+                                    <div>
+                                        <h5 class="font-medium text-neutral-700 mb-3 flex items-center gap-2">
+                                            Power Requirements
+                                            <button class="help-tooltip" 
+                                                    aria-label="What are power requirements?"
+                                                    data-tooltip="Power requirements specify the voltage and current needed to operate this device. Ensure your power supply matches these specifications for safe operation.">
+                                                <svg class="w-4 h-4 text-neutral-400" fill="currentColor" viewBox="0 0 20 20">
+                                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/>
+                                                </svg>
+                                            </button>
+                                        </h5>
+                                        <dl class="space-y-2 text-sm">
+                                            <div class="flex justify-between">
+                                                <dt class="text-neutral-600">Input:</dt>
+                                                <dd class="text-neutral-900 font-medium">DC 5V/2A</dd>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <dt class="text-neutral-600">Consumption:</dt>
+                                                <dd class="text-neutral-900">2.5W max</dd>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <dt class="text-neutral-600">Battery Life:</dt>
+                                                <dd class="text-neutral-900">6+ months</dd>
+                                            </div>
+                                        </dl>
+                                    </div>
+                                    <div>
+                                        <h5 class="font-medium text-neutral-700 mb-3">Operating Range</h5>
+                                        <dl class="space-y-2 text-sm">
+                                            <div class="flex justify-between">
+                                                <dt class="text-neutral-600">Temperature:</dt>
+                                                <dd class="text-neutral-900">-40°C to 85°C</dd>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <dt class="text-neutral-600">Humidity:</dt>
+                                                <dd class="text-neutral-900">0% to 95% RH</dd>
+                                            </div>
+                                        </dl>
+                                    </div>
                                 </div>
                             </div>
+                            
+                            <!-- Detailed Specifications (Collapsible) -->
+                            <details class="spec-details">
+                                <summary class="spec-summary cursor-pointer font-medium text-neutral-700 py-3 border-t border-neutral-200">
+                                    <span>Detailed Specifications</span>
+                                    <svg class="w-5 h-5 inline-block ml-2 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                    </svg>
+                                </summary>
+                                <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <h5 class="font-medium text-neutral-900 mb-3">Environmental Ratings</h5>
+                                        <dl class="space-y-2 text-sm">
+                                            <div class="flex justify-between">
+                                                <dt class="text-neutral-600">IP Rating:</dt>
+                                                <dd class="text-neutral-900">IP65</dd>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <dt class="text-neutral-600">Shock Resistance:</dt>
+                                                <dd class="text-neutral-900">50G</dd>
+                                            </div>
+                                        </dl>
+                                    </div>
+                                    <div>
+                                        <h5 class="font-medium text-neutral-900 mb-3">Certifications</h5>
+                                        <dl class="space-y-2 text-sm">
+                                            <div class="flex justify-between">
+                                                <dt class="text-neutral-600">CE:</dt>
+                                                <dd class="text-neutral-900">✓ Certified</dd>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <dt class="text-neutral-600">FCC:</dt>
+                                                <dd class="text-neutral-900">✓ Approved</dd>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <dt class="text-neutral-600">RoHS:</dt>
+                                                <dd class="text-neutral-900">✓ Compliant</dd>
+                                            </div>
+                                        </dl>
+                                    </div>
+                                    <div>
+                                        <h5 class="font-medium text-neutral-900 mb-3">Mechanical Dimensions</h5>
+                                        <dl class="space-y-2 text-sm">
+                                            <div class="flex justify-between">
+                                                <dt class="text-neutral-600">Size:</dt>
+                                                <dd class="text-neutral-900">85 x 55 x 25 mm</dd>
+                                            </div>
+                                            <div class="flex justify-between">
+                                                <dt class="text-neutral-600">Weight:</dt>
+                                                <dd class="text-neutral-900">120g</dd>
+                                            </div>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </details>
+                            
+                            <!-- Advanced Configuration (Collapsible) -->
+                            <details class="spec-details">
+                                <summary class="spec-summary cursor-pointer font-medium text-neutral-700 py-3 border-t border-neutral-200">
+                                    <span>Advanced Configuration</span>
+                                    <svg class="w-5 h-5 inline-block ml-2 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                    </svg>
+                                </summary>
+                                <div class="mt-4">
+                                    <h5 class="font-medium text-neutral-900 mb-3">API & Integration</h5>
+                                    <dl class="space-y-2 text-sm">
+                                        <div class="flex justify-between">
+                                            <dt class="text-neutral-600">API Endpoints:</dt>
+                                            <dd class="text-neutral-900">RESTful API v2.1</dd>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <dt class="text-neutral-600">Firmware Version:</dt>
+                                            <dd class="text-neutral-900">v3.2.1</dd>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <dt class="text-neutral-600">Compatible Platforms:</dt>
+                                            <dd class="text-neutral-900">Home Assistant, AWS IoT, Google Cloud IoT</dd>
+                                        </div>
+                                    </dl>
+                                </div>
+                            </details>
                         </div>
                     </div>
 

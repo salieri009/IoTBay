@@ -3,21 +3,11 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <footer class="footer bg-neutral-900 text-neutral-300 mt-auto">
-    <div class="footer-container" style="
-        width: 100%;
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 1rem;
-    ">
+    <div class="container">
         <!-- Main Footer Content -->
         <div class="footer__content py-8">
             <!-- Top Section: Brand + Essential Links -->
-            <div class="footer-grid" style="
-                display: grid; 
-                grid-template-columns: 1fr; 
-                gap: 2rem; 
-                margin-bottom: 2rem;
-            ">
+            <div class="footer-grid">
                 <!-- Brand Section -->
                 <div class="footer__brand">
                     <div class="footer__logo mb-4">
@@ -74,9 +64,9 @@
         
         <!-- Footer Bottom -->
         <div class="footer__bottom border-t border-neutral-800 py-6">
-            <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="footer__bottom-content">
                 <div class="footer__copyright text-sm text-neutral-400">
-                    © 2024 IoT Bay. All rights reserved.
+                    © 2025 IoT Bay. All rights reserved.
                 </div>
                 <div class="footer__legal flex gap-6 text-sm">
                     <a href="${pageContext.request.contextPath}/privacy" class="footer__link hover:text-white transition-colors">Privacy</a>
@@ -99,158 +89,13 @@
     </button>
 </footer>
 
-<style>
-/* Footer Container - Responsive */
-.footer-container {
-    width: 100% !important;
-    max-width: 1200px !important;
-    margin: 0 auto !important;
-    padding: 0 1rem !important;
-}
-
-@media (min-width: 640px) {
-    .footer-container {
-        padding: 0 1.5rem !important;
-    }
-}
-
-@media (min-width: 768px) {
-    .footer-container {
-        padding: 0 2rem !important;
-    }
-}
-
-@media (min-width: 1024px) {
-    .footer-container {
-        max-width: 1024px !important;
-    }
-}
-
-@media (min-width: 1280px) {
-    .footer-container {
-        max-width: 1280px !important;
-    }
-}
-
-/* Footer Grid Responsive Styles */
-.footer-grid {
-    display: grid !important;
-    grid-template-columns: 1fr !important;
-    gap: 2rem !important;
-}
-
-/* Small screens (576px and up) */
-@media (min-width: 576px) {
-    .footer-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
-    }
-}
-
-/* Large screens (1024px and up) */
-@media (min-width: 1024px) {
-    .footer-grid {
-        grid-template-columns: repeat(4, 1fr) !important;
-    }
-}
-
-/* Footer Brand and Section Styles */
-.footer__brand {
-    display: flex;
-    flex-direction: column;
-    text-align: left;
-}
-
-.footer__section {
-    display: flex;
-    flex-direction: column;
-    text-align: left;
-}
-
-.footer__section h3 {
-    color: #ffffff;
-    font-size: 1.125rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-}
-
-.footer__links {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.footer__links li {
-    margin-bottom: 0.75rem;
-}
-
-.footer__link {
-    color: #a3a3a3;
-    text-decoration: none;
-    transition: color 0.2s ease;
-}
-
-.footer__link:hover {
-    color: #ffffff;
-}
-
-.space-y-3 > * + * {
-    margin-top: 0.75rem;
-}
-
-.flex {
-    display: flex;
-}
-
-.items-center {
-    align-items: center;
-}
-
-.gap-2 {
-    gap: 0.5rem;
-}
-
-.text-sm {
-    font-size: 0.875rem;
-}
-
-.text-brand-primary {
-    color: #3b82f6;
-}
-
-.flex-shrink-0 {
-    flex-shrink: 0;
-}
-
-/* Footer Bottom */
-.footer__bottom {
-    border-top: 1px solid #404040;
-    padding: 1.5rem 0;
-}
-
-.footer__copyright {
-    color: #a3a3a3;
-    font-size: 0.875rem;
-}
-
-.footer__legal {
-    display: flex;
-    gap: 1.5rem;
-    font-size: 0.875rem;
-}
-
-/* Responsive Footer Bottom */
-@media (min-width: 640px) {
-    .footer__bottom > div {
-        flex-direction: row !important;
-        justify-content: space-between !important;
-    }
-}
-</style>
 
 <script>
 // Back to top functionality
 document.addEventListener('DOMContentLoaded', function() {
     const backToTopButton = document.getElementById('backToTop');
+    
+    if (!backToTopButton) return; // Safety check
     
     window.addEventListener('scroll', function() {
         if (window.pageYOffset > 300) {

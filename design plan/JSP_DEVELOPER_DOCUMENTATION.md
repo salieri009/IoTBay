@@ -1,5 +1,14 @@
 # IoTBay E-commerce Platform - Developer Documentation (JSP Edition)
 
+## 📋 Project Information
+
+**Course**: 41025 Information Systems Development (ISD)  
+**Assignment**: Assignment 2 - Autumn 2025  
+**Institution**: University of Technology Sydney (UTS)  
+**Project Type**: E-commerce Web Application for IoT Devices
+
+---
+
 ## 📋 Table of Contents
 1. [Project Overview](#project-overview)
 2. [Business Requirements](#business-requirements)
@@ -14,7 +23,7 @@
 
 ## 📋 Project Overview
 
-IoTBay is a comprehensive JSP-based e-commerce platform specialized in Internet of Things (IoT) devices and components. The platform has been modernized with a cutting-edge design system that provides a futuristic, clean, and accessible user experience while maintaining the robust JSP/Servlet architecture.
+IoTBay is a comprehensive JSP-based e-commerce platform specialized in Internet of Things (IoT) devices and components. Developed as part of **UTS 41025 ISD Assignment 2 Autumn 2025**, the platform has been modernized with a cutting-edge design system that provides a futuristic, clean, and accessible user experience while maintaining the robust JSP/Servlet architecture.
 
 ### 🎨 **NEW** Modern Design Features
 - **Contemporary Visual Design**: Clean, minimalist interface with subtle gradients and modern typography

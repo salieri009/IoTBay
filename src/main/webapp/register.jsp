@@ -74,18 +74,29 @@
                                     <label for="email" class="form-label">Email Address *</label>
                                     <input type="email" id="email" name="email" class="form-input" 
                                            placeholder="Enter your email" required />
+                                    <div class="form-error" id="emailError" style="display: none;"></div>
+                                    <div class="form-help" id="emailHelp">We'll use this to send order confirmations</div>
                                 </div>
                                 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div class="form-group">
                                         <label for="password" class="form-label">Password *</label>
                                         <input type="password" id="password" name="password" class="form-input" 
-                                               placeholder="Create a password" required />
+                                               placeholder="Create a password" required minlength="8" />
+                                        <div class="form-error" id="passwordError" style="display: none;"></div>
+                                        <div class="form-help" id="passwordHelp">Must be at least 8 characters</div>
+                                        <div class="password-strength" id="passwordStrength" style="display: none;">
+                                            <div class="password-strength-bar">
+                                                <div class="password-strength-fill" id="passwordStrengthFill"></div>
+                                            </div>
+                                            <span class="password-strength-text" id="passwordStrengthText"></span>
+                                        </div>
                                     </div>
                                     <div class="form-group">
                                         <label for="confirmPassword" class="form-label">Confirm Password *</label>
                                         <input type="password" id="confirmPassword" name="confirmPassword" 
                                                class="form-input" placeholder="Confirm your password" required />
+                                        <div class="form-error" id="confirmPasswordError" style="display: none;"></div>
                                     </div>
                                 </div>
                             </div>
@@ -215,23 +226,157 @@
             document.getElementById('errorModal').classList.remove('flex');
         }
 
+        // Real-time validation
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+        
+        // Email validation
+        emailInput.addEventListener('blur', function() {
+            const email = this.value.trim();
+            const emailError = document.getElementById('emailError');
+            
+            if (!email) {
+                showFieldError('emailError', 'Email address is required');
+            } else if (!isValidEmail(email)) {
+                showFieldError('emailError', 'Please enter a valid email address (e.g., user@example.com)');
+            } else {
+                hideFieldError('emailError');
+            }
+        });
+        
+        // Password validation
+        passwordInput.addEventListener('input', function() {
+            const password = this.value;
+            const strength = checkPasswordStrength(password);
+            updatePasswordStrength(strength);
+            
+            if (password.length > 0 && password.length < 8) {
+                showFieldError('passwordError', 'Password must be at least 8 characters long');
+            } else {
+                hideFieldError('passwordError');
+            }
+            
+            // Re-check confirmation if it's already filled
+            if (confirmPasswordInput.value) {
+                confirmPasswordInput.dispatchEvent(new Event('blur'));
+            }
+        });
+        
+        // Password confirmation validation
+        confirmPasswordInput.addEventListener('blur', function() {
+            const password = passwordInput.value;
+            const confirmPassword = this.value;
+            
+            if (!confirmPassword) {
+                showFieldError('confirmPasswordError', 'Please confirm your password');
+            } else if (password !== confirmPassword) {
+                showFieldError('confirmPasswordError', 'Passwords do not match. Please try again.');
+            } else {
+                hideFieldError('confirmPasswordError');
+            }
+        });
+        
+        // Helper functions
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+        
+        function checkPasswordStrength(password) {
+            let strength = 0;
+            if (password.length >= 8) strength++;
+            if (password.length >= 12) strength++;
+            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+            if (/\d/.test(password)) strength++;
+            if (/[^a-zA-Z\d]/.test(password)) strength++;
+            return Math.min(strength, 4);
+        }
+        
+        function updatePasswordStrength(strength) {
+            const strengthDiv = document.getElementById('passwordStrength');
+            const strengthFill = document.getElementById('passwordStrengthFill');
+            const strengthText = document.getElementById('passwordStrengthText');
+            
+            if (strength === 0) {
+                strengthDiv.style.display = 'none';
+                return;
+            }
+            
+            strengthDiv.style.display = 'block';
+            const percentage = (strength / 4) * 100;
+            strengthFill.style.width = percentage + '%';
+            
+            const levels = ['Weak', 'Fair', 'Good', 'Strong'];
+            const colors = ['#ef4444', '#f59e0b', '#3b82f6', '#10b981'];
+            strengthText.textContent = levels[strength - 1] || 'Weak';
+            strengthFill.style.backgroundColor = colors[strength - 1] || colors[0];
+        }
+        
+        function showFieldError(fieldId, message) {
+            const errorDiv = document.getElementById(fieldId);
+            if (errorDiv) {
+                errorDiv.textContent = message;
+                errorDiv.style.display = 'block';
+                const input = errorDiv.previousElementSibling;
+                if (input && input.classList) {
+                    input.classList.add('form-input--error');
+                }
+            }
+        }
+        
+        function hideFieldError(fieldId) {
+            const errorDiv = document.getElementById(fieldId);
+            if (errorDiv) {
+                errorDiv.style.display = 'none';
+                const input = errorDiv.previousElementSibling;
+                if (input && input.classList) {
+                    input.classList.remove('form-input--error');
+                }
+            }
+        }
+        
+        // Form submission
         document.getElementById('registerForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // Validate password confirmation
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
+            // Validate all fields
+            let hasErrors = false;
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
             
+            // Validate email
+            if (!email || !isValidEmail(email)) {
+                showFieldError('emailError', 'Please enter a valid email address');
+                hasErrors = true;
+            }
+            
+            // Validate password
+            if (password.length < 8) {
+                showFieldError('passwordError', 'Password must be at least 8 characters long');
+                hasErrors = true;
+            }
+            
+            // Validate password confirmation
             if (password !== confirmPassword) {
-                showModal('Passwords do not match. Please try again.');
+                showFieldError('confirmPasswordError', 'Passwords do not match. Please try again.');
+                hasErrors = true;
+            }
+            
+            if (hasErrors) {
+                showModal('Please fix the errors in the form before submitting.');
                 return;
             }
             
             const submitBtn = this.querySelector('button[type="submit"]');
             const originalText = submitBtn.textContent;
             
+            // Show loading state
             submitBtn.textContent = 'Creating Account...';
             submitBtn.disabled = true;
+            if (typeof showLoading === 'function') {
+                showLoading(submitBtn);
+            }
             
             fetch(this.action, {
                 method: 'POST',
@@ -239,16 +384,44 @@
             })
             .then(response => {
                 if (response.ok) {
-                    window.location.href = '<%= contextPath %>/welcome.jsp';
+                    return response.json().catch(() => ({})); // Handle non-JSON responses
                 } else {
-                    throw new Error('Registration failed');
+                    return response.json().then(data => {
+                        throw new Error(data.message || data.error || 'Registration failed');
+                    }).catch(() => {
+                        throw new Error('Registration failed. Please check your information and try again.');
+                    });
                 }
+            })
+            .then(data => {
+                // Show success message
+                if (typeof showToast === 'function') {
+                    showToast('Account created successfully! Redirecting...', 'success');
+                }
+                // Redirect after short delay
+                setTimeout(() => {
+                    window.location.href = '<%= contextPath %>/welcome.jsp';
+                }, 1000);
             })
             .catch(error => {
                 console.error('Error:', error);
-                showModal('Registration failed. Please try again.');
+                
+                // Provide specific error messages
+                let errorMessage = 'Registration failed. ';
+                if (error.message.includes('email') || error.message.includes('Email')) {
+                    errorMessage += 'This email is already registered. Would you like to <a href="<%= contextPath %>/login.jsp">log in</a> instead?';
+                } else if (error.message.includes('password')) {
+                    errorMessage += 'Please check your password and try again.';
+                } else {
+                    errorMessage += error.message || 'Please check your information and try again.';
+                }
+                
+                showModal(errorMessage);
                 submitBtn.textContent = originalText;
                 submitBtn.disabled = false;
+                if (typeof hideLoading === 'function') {
+                    hideLoading(submitBtn);
+                }
             });
         });
     </script>

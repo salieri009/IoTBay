@@ -1,8 +1,17 @@
 # IoTBay E-commerce Platform - Developer Documentation
 
+## 📋 Project Information
+
+**Course**: 41025 Information Systems Development (ISD)  
+**Assignment**: Assignment 2 - Autumn 2025  
+**Institution**: University of Technology Sydney (UTS)  
+**Project Type**: E-commerce Web Application for IoT Devices
+
+---
+
 ## 📋 Project Overview
 
-IoTBay is a comprehensive e-commerce web application designed specifically for Internet of Things (IoT) devices and components. The platform serves as a marketplace for IoT products including sensors, cables, batteries, and smart home devices across various categories such as Industrial, Warehouse, Agriculture, and Smart Home solutions.
+IoTBay is a comprehensive e-commerce web application designed specifically for Internet of Things (IoT) devices and components. Developed as part of **UTS 41025 ISD Assignment 2 Autumn 2025**, the platform serves as a marketplace for IoT products including sensors, cables, batteries, and smart home devices across various categories such as Industrial, Warehouse, Agriculture, and Smart Home solutions.
 
 ## 🎯 Business Requirements
 
@@ -40,12 +49,12 @@ IoTBay is a comprehensive e-commerce web application designed specifically for I
 - **JSTL**: JSP Standard Tag Library for view logic
 
 #### Frontend
-- **React 18**: Modern UI framework
-- **TypeScript**: Type-safe JavaScript development
-- **Vite**: Fast build tool and development server
-- **React Router**: Client-side routing
-- **Axios**: HTTP client for API calls
-- **CSS3**: Styling and responsive design
+- **JSP (JavaServer Pages)**: Server-side rendering for views
+- **HTML5**: Semantic markup
+- **CSS3**: Modern styling with CSS Custom Properties
+- **JavaScript ES6+**: Client-side interactivity
+- **JSTL**: JSP Standard Tag Library for view logic
+- **Design System**: Component-based CSS framework
 
 #### Security
 - **SHA-256**: Password hashing with salt

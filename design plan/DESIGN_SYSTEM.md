@@ -1,8 +1,17 @@
 # IoTBay Design System
 
+## 📋 Project Information
+
+**Course**: 41025 Information Systems Development (ISD)  
+**Assignment**: Assignment 2 - Autumn 2025  
+**Institution**: University of Technology Sydney (UTS)  
+**Project Type**: E-commerce Web Application for IoT Devices
+
+---
+
 ## 🎨 디자인 철학
 
-IoTBay는 **미래지향적이고 직관적인 IoT 생태계**를 위한 디자인 시스템입니다. 산업용 정밀함과 소비자 친화적 접근성을 조화롭게 결합하여, 기술적 복잡성을 단순하고 아름다운 인터페이스로 표현합니다.
+IoTBay는 **미래지향적이고 직관적인 IoT 생태계**를 위한 디자인 시스템입니다. **UTS 41025 ISD Assignment 2 Autumn 2025**의 요구사항에 맞춰 산업용 정밀함과 소비자 친화적 접근성을 조화롭게 결합하여, 기술적 복잡성을 단순하고 아름다운 인터페이스로 표현합니다.
 
 ### 핵심 가치
 - **직관성**: 복잡한 IoT 기술을 누구나 쉽게 이해할 수 있도록

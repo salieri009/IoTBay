@@ -240,6 +240,25 @@ public class ProductDAO implements dao.interfaces.ProductDAO {
         }
     }
 
+    /**
+     * Search products by keyword
+     * Used by ProductService
+     */
+    public List<Product> searchProducts(String keyword) throws SQLException {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            return getAllProducts();
+        }
+        return searchProducts(keyword, null, null, null);
+    }
+    
+    /**
+     * Get products by category ID
+     * Used by ProductService
+     */
+    public List<Product> getProductsByCategory(int categoryId) throws SQLException {
+        return getProductsByCategoryId(categoryId);
+    }
+    
     public List<Product> searchProducts(String searchTerm, Integer categoryId, Double minPrice, Double maxPrice) throws SQLException {
         StringBuilder query = new StringBuilder("SELECT * FROM product WHERE 1=1");
         ArrayList<Object> parameters = new ArrayList<>();
