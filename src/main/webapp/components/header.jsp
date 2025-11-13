@@ -128,7 +128,7 @@
                                 </svg>
                                 My Profile
                             </a>
-                            <a href="<c:url value='/orderList.jsp' />" class="nav__dropdown-item" role="menuitem">
+                            <a href="<c:url value='/orderhistory' />" class="nav__dropdown-item" role="menuitem">
                                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                                     <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"></path>
                                 </svg>
@@ -241,7 +241,7 @@
                     
                     <div class="nav__mobile-user-actions">
                         <a href="<c:url value='/Profiles.jsp' />" class="nav__mobile-action">My Profile</a>
-                        <a href="<c:url value='/orderList.jsp' />" class="nav__mobile-action">My Orders</a>
+                        <a href="<c:url value='/orderhistory' />" class="nav__mobile-action">My Orders</a>
                         
                         <% if (isStaff) { %>
                             <div class="nav__mobile-divider"></div>
@@ -349,11 +349,11 @@ function toggleTheme() {
     // Update ARIA pressed state
     if (button) {
         button.setAttribute('aria-pressed', newTheme === 'dark' ? 'true' : 'false');
-        button.setAttribute('aria-label', `Toggle ${newTheme === 'dark' ? 'light' : 'dark'} mode`);
+        button.setAttribute('aria-label', 'Toggle ' + (newTheme === 'dark' ? 'light' : 'dark') + ' mode');
     }
     
     // Announce to screen readers
-    announceToScreenReader(`Switched to ${newTheme} mode`);
+    announceToScreenReader('Switched to ' + newTheme + ' mode');
 }
 
 // Screen Reader Announcement Helper (Section 8.2 - Screen Reader Optimization)

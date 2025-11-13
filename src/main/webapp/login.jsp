@@ -19,15 +19,15 @@
 <body>
     <main class="min-h-screen flex items-center justify-center bg-neutral-50 py-12 px-4">
         <div class="max-w-md w-full">
-            <div class="card p-8">
-                <div class="text-center mb-6">
-                    <h1 class="text-2xl font-bold text-neutral-900 mb-2">Welcome Back</h1>
-                    <p class="text-neutral-600">Sign in to your IoT Bay account</p>
+            <div class="rounded-2xl border border-neutral-200 bg-white shadow-sm p-8">
+                <div class="text-center mb-8">
+                    <h1 class="text-display-m font-bold text-neutral-900 mb-2">Welcome back</h1>
+                    <p class="text-lg text-neutral-600">Sign in to your IoT Bay account</p>
                 </div>
                 
                 <% if (errorMessage != null) { %>
-                <div class="alert alert--error mb-6">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <div class="alert alert--error mb-6" role="alert" aria-live="polite">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                         <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
                     </svg>
                     <span><%= errorMessage %></span>
@@ -35,31 +35,40 @@
                 <% } %>
                 
                 <form class="space-y-6" method="post" action="<%= contextPath %>/api/login" id="loginForm">
-                    <div class="form-group">
-                        <label for="email" class="form-label">Email Address</label>
-                        <input type="email" id="email" name="email" class="form-input" 
-                               placeholder="Enter your email" required autocomplete="email" />
-                        <div class="form-error" id="emailError" style="display: none;"></div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" id="password" name="password" class="form-input" 
-                               placeholder="Enter your password" required autocomplete="current-password" />
-                        <div class="form-error" id="passwordError" style="display: none;"></div>
-                    </div>
-                    
-                    <div class="flex items-center justify-between">
-                        <label class="checkbox">
-                            <input type="checkbox" name="remember" class="checkbox__input">
-                            <span class="checkbox__mark"></span>
-                            <span class="checkbox__label">Remember me</span>
-                        </label>
-                        <a href="forgot-password.jsp" class="text-sm text-brand-primary hover:text-brand-primary-600">Forgot password?</a>
-                    </div>
-                    
-                    <input type="hidden" name="source" value="logins" />
-                    <button type="submit" class="btn btn--primary btn--full" id="submitBtn">Sign In</button>
+                    <fieldset class="space-y-6">
+                        <legend class="sr-only">Sign in to your account</legend>
+                        
+                        <div class="form-group">
+                            <label for="email" class="form-label form-label--required">Email address</label>
+                            <input type="email" id="email" name="email" class="form-input" 
+                                   placeholder="your.email@example.com" required autocomplete="email" 
+                                   aria-describedby="email-help emailError" />
+                            <div id="email-help" class="form-help text-xs text-neutral-500 mt-1">Enter the email address associated with your account</div>
+                            <div class="form-error" id="emailError" style="display: none;" role="alert" aria-live="polite"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="password" class="form-label form-label--required">Password</label>
+                            <input type="password" id="password" name="password" class="form-input" 
+                                   placeholder="Enter your password" required autocomplete="current-password" 
+                                   aria-describedby="password-help passwordError" />
+                            <div id="password-help" class="form-help text-xs text-neutral-500 mt-1">Case-sensitive password</div>
+                            <div class="form-error" id="passwordError" style="display: none;" role="alert" aria-live="polite"></div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between">
+                            <label class="checkbox">
+                                <input type="checkbox" name="remember" class="checkbox__input" aria-describedby="remember-help">
+                                <span class="checkbox__mark"></span>
+                                <span class="checkbox__label">Remember me</span>
+                            </label>
+                            <a href="forgot-password.jsp" class="text-sm text-brand-primary hover:text-brand-primary-600">Forgot password?</a>
+                        </div>
+                        <div id="remember-help" class="sr-only">Keep you signed in on this device</div>
+                        
+                        <input type="hidden" name="source" value="logins" />
+                        <button type="submit" class="btn btn--primary btn--lg w-full" id="submitBtn">Sign in</button>
+                    </fieldset>
                 </form>
                 
                 <div class="mt-6 text-center">

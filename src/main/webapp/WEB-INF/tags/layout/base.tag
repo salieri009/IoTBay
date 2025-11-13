@@ -1,5 +1,6 @@
 <%@ tag language="java" pageEncoding="UTF-8" body-content="scriptless" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <%@ attribute name="title" required="false" rtexprvalue="true" %>
 <%@ attribute name="description" required="false" rtexprvalue="true" %>
@@ -15,7 +16,7 @@
     <meta name="keywords" content="IoT devices, smart home, sensors, electronics, technology">
     <meta name="author" content="IoT Bay">
 
-    <title>${title != null ? title.concat(' | IoT Bay') : 'IoT Bay - Smart Technology Store'}</title>
+    <title><c:choose><c:when test="${title != null}">${title} | IoT Bay</c:when><c:otherwise>IoT Bay - Smart Technology Store</c:otherwise></c:choose></title>
 
     <link rel="icon" type="image/x-icon" href="<c:url value='/images/favicon.ico' />">
     <link rel="stylesheet" href="<c:url value='/css/modern-theme.css' />">
@@ -81,13 +82,13 @@
         <!-- Urgent error messages for screen readers -->
     </div>
 
-    <jsp:include page="/components/header.jsp" />
+    <c:import url="/components/header.jsp" />
 
     <main id="main-content" class="flex-1" role="main" aria-label="Main content">
         <jsp:doBody/>
     </main>
 
-    <jsp:include page="/components/footer.jsp" />
+    <c:import url="/components/footer.jsp" />
 
     <!-- Toast Notifications Container (Enhanced ARIA) -->
     <div 

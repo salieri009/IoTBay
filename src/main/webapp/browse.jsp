@@ -11,27 +11,49 @@
     String category = (String) request.getAttribute("category");
     int totalResults = products != null ? products.size() : 0;
     String contextPath = request.getContextPath();
+
+    String pageHeading;
+    String pageDescription;
+    String badgeLabel = null;
+    if (keyword != null && !keyword.trim().isEmpty()) {
+        pageHeading = "Search results for \"" + keyword + "\"";
+        pageDescription = "Found " + totalResults + " product" + (totalResults != 1 ? "s" : "") + " matching your search.";
+        badgeLabel = "Keyword: " + keyword;
+    } else if (category != null && !category.trim().isEmpty()) {
+        pageHeading = category + " products";
+        pageDescription = "Discover " + totalResults + " " + category.toLowerCase() + " solution" + (totalResults != 1 ? "s" : "") + ".";
+        badgeLabel = "Category: " + category;
+    } else {
+        pageHeading = "Browse all products";
+        pageDescription = "Explore our complete collection of " + totalResults + " IoT products and solutions.";
+    }
+    String resultsNoun = totalResults == 1 ? "product" : "products";
+    int displayUpperBound = totalResults == 0 ? 0 : Math.min(totalResults, 12);
+    String resultsSummaryText = totalResults == 0
+        ? "No " + resultsNoun + " available for the current selection."
+        : "Showing 1-" + displayUpperBound + " of " + totalResults + " " + resultsNoun;
+
     // Expose to EL
     request.setAttribute("category", category);
 %>
 
 <t:base title="Browse Products" description="Browse IoT products across categories and keywords">
     <!-- Page Header -->
-    <section class="page-header bg-white border-b border-neutral-200 py-8">
-        <div class="container">
+    <section class="pt-12 pb-8 bg-white border-b border-neutral-200">
+        <div class="container space-y-8">
             <!-- Breadcrumb -->
-            <nav class="breadcrumb mb-4" aria-label="Breadcrumb">
-                <ol class="flex items-center gap-2 text-sm text-neutral-600">
+            <nav class="breadcrumb" aria-label="Breadcrumb">
+                <ol class="flex flex-wrap items-center gap-2 text-sm text-neutral-600">
                     <li>
                         <a href="${pageContext.request.contextPath}/" class="hover:text-brand-primary">Home</a>
                     </li>
-                    <li>/</li>
+                    <li aria-hidden="true">/</li>
                     <c:choose>
                         <c:when test="${category != null && !empty category}">
                             <li>
                                 <a href="${pageContext.request.contextPath}/categories.jsp" class="hover:text-brand-primary">Categories</a>
                             </li>
-                            <li>/</li>
+                            <li aria-hidden="true">/</li>
                             <li class="text-neutral-900 font-medium" aria-current="page">
                                 ${category}
                             </li>
@@ -44,54 +66,63 @@
                     </c:choose>
                 </ol>
             </nav>
-            
-            <!-- Page Title -->
-            <div class="mb-6">
-                <% if (keyword != null && !keyword.trim().isEmpty()) { %>
-                    <h1 class="text-3xl md:text-4xl font-bold text-neutral-900 mb-2">
-                        Search Results for "<span class="text-brand-primary"><%= keyword %></span>"
+
+            <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,340px)]">
+                <div class="space-y-4">
+                    <h1 class="text-display-m md:text-display-l font-bold text-neutral-900 leading-tight">
+                        <%= pageHeading %>
                     </h1>
-                    <p class="text-lg text-neutral-600">
-                        Found <%= totalResults %> product<%= totalResults != 1 ? "s" : "" %> matching your search
+                    <p class="text-lg text-neutral-600 max-w-3xl">
+                        <%= pageDescription %>
                     </p>
-                <% } else if (category != null) { %>
-                    <h1 class="text-3xl md:text-4xl font-bold text-neutral-900 mb-2"><%= category %> Products</h1>
-                    <p class="text-lg text-neutral-600">
-                        Discover <%= totalResults %> innovative <%= category.toLowerCase() %> solution<%= totalResults != 1 ? "s" : "" %>
-                    </p>
-                <% } else { %>
-                    <h1 class="text-3xl md:text-4xl font-bold text-neutral-900 mb-2">Browse All Products</h1>
-                    <p class="text-lg text-neutral-600">
-                        Explore our complete collection of <%= totalResults %> IoT products and solutions
-                    </p>
-                <% } %>
-            </div>
-            
-            <!-- Search Bar and Sort Options (Section 4.2) -->
-            <div class="flex flex-wrap items-center gap-4 mb-8">
-                <div class="flex-1 min-w-[300px]">
-                    <form action="${pageContext.request.contextPath}/browse" method="get" class="flex gap-2">
-                        <input 
-                            type="search" 
-                            id="productSearch"
-                            name="keyword" 
-                            value="<%= keyword != null ? keyword : "" %>"
-                            placeholder="Search products..." 
-                            class="form-input flex-1"
-                            aria-label="Search products"
-                            aria-describedby="search-help">
-                        <button type="submit" class="btn btn--primary" aria-label="Search">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                            </svg>
-                        </button>
-                    </form>
-                    <p id="search-help" class="sr-only">Search for IoT products by name, description, or keywords</p>
+                    <div class="flex flex-wrap items-center gap-3 text-sm text-neutral-600">
+                        <span class="inline-flex items-center gap-2 rounded-full bg-neutral-100 px-3 py-1 font-medium text-neutral-700">
+                            <span class="inline-flex h-2 w-2 rounded-full bg-brand-primary"></span>
+                            <%= totalResults %> <%= resultsNoun %>
+                        </span>
+                        <% if (badgeLabel != null) { %>
+                            <span class="inline-flex items-center gap-2 rounded-full bg-neutral-100 px-3 py-1 font-medium text-neutral-700">
+                                <span class="inline-flex h-2 w-2 rounded-full bg-brand-secondary"></span>
+                                <%= badgeLabel %>
+                            </span>
+                        <% } %>
+                    </div>
                 </div>
-                
-                <div class="flex items-center gap-4">
-                    <div class="flex-1 min-w-[200px]">
-                        <label for="sortBy" class="sr-only">Sort Products</label>
+                <aside class="rounded-2xl bg-neutral-50 border border-neutral-200 p-6 space-y-4" aria-label="Search guidance">
+                    <div>
+                        <h2 class="text-sm font-semibold text-neutral-700 uppercase tracking-wide">At a glance</h2>
+                        <p class="mt-2 text-2xl font-bold text-neutral-900"><%= totalResults %> <span class="text-sm font-medium text-neutral-600">results</span></p>
+                    </div>
+                    <ul class="space-y-3 text-sm text-neutral-600">
+                        <li>Use filters to focus by category, protocol, voltage, or stock availability.</li>
+                        <li>Switch between grid and list views to compare product metadata efficiently.</li>
+                        <li>Sorting updates the catalogue instantly—screen readers announce each change.</li>
+                    </ul>
+                    <p class="text-xs text-neutral-500">Need help selecting hardware? <a href="${pageContext.request.contextPath}/contact.jsp" class="text-brand-primary hover:underline">Contact a specialist</a>.</p>
+                </aside>
+            </div>
+
+            <!-- Search, Sort & View Controls -->
+            <div class="flex flex-col gap-4 xl:flex-row xl:items-end">
+                <form action="${pageContext.request.contextPath}/browse" method="get" class="flex w-full flex-col gap-2 sm:flex-row">
+                    <label for="productSearch" class="sr-only">Search products</label>
+                    <input 
+                        type="search" 
+                        id="productSearch"
+                        name="keyword" 
+                        value="<%= keyword != null ? keyword : "" %>"
+                        placeholder="Search products by name, SKU, or capability" 
+                        class="form-input flex-1"
+                        aria-describedby="search-hint">
+                    <button type="submit" class="btn btn--primary" aria-label="Submit product search">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </button>
+                </form>
+                <div class="flex w-full flex-col gap-3 sm:flex-row sm:items-stretch xl:w-auto">
+                    <div class="sm:w-56">
+                        <label for="sortBy" class="sr-only">Sort products</label>
                         <select class="form-input w-full" id="sortBy" onchange="sortProducts()" aria-label="Sort products">
                             <option value="relevance">Sort by: Relevance</option>
                             <option value="price-low">Price: Low to High</option>
@@ -102,39 +133,43 @@
                             <option value="stock">Stock: High to Low</option>
                         </select>
                     </div>
-                    
-                    <!-- View Toggle (Grid/List) -->
-                    <div class="flex items-center gap-2 border border-neutral-300 rounded-lg p-1" role="group" aria-label="View options">
+                    <div class="flex items-center gap-2" role="group" aria-label="View options">
                         <button 
                             type="button" 
                             id="gridViewBtn"
-                            class="view-toggle-btn active p-2 rounded hover:bg-neutral-100" 
+                            class="btn btn--primary btn--sm"
                             onclick="toggleView('grid')"
                             aria-label="Grid view"
                             aria-pressed="true">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                                 <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
                             </svg>
+                            <span class="sr-only">Grid view</span>
                         </button>
                         <button 
                             type="button" 
                             id="listViewBtn"
-                            class="view-toggle-btn p-2 rounded hover:bg-neutral-100" 
+                            class="btn btn--ghost btn--sm"
                             onclick="toggleView('list')"
                             aria-label="List view"
                             aria-pressed="false">
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                                 <path fill-rule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
                             </svg>
+                            <span class="sr-only">List view</span>
                         </button>
                     </div>
                 </div>
             </div>
-            
+
+            <p id="search-hint" class="text-sm text-neutral-500">
+                Tip: combine keyword search with filters for precise results. Results update instantly and are announced for assistive technologies.
+            </p>
+
             <!-- Results Count -->
-            <div class="mb-4">
+            <div>
                 <p class="text-sm text-neutral-600" id="results-count" aria-live="polite">
-                    Showing 1-<%= totalResults > 12 ? 12 : totalResults %> of <%= totalResults %> product<%= totalResults != 1 ? "s" : "" %>
+                    <%= resultsSummaryText %>
                 </p>
             </div>
         </div>
@@ -145,130 +180,137 @@
         <div class="container">
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
                 <!-- Filters Sidebar (Section 4.2) -->
-                <aside class="lg:col-span-1" id="filters-sidebar">
-                    <div class="filters-panel bg-white rounded-lg shadow-sm border border-neutral-200 p-6 sticky top-8">
-                        <div class="flex items-center justify-between mb-6">
+                <aside class="lg:col-span-1" id="filters-sidebar" role="complementary" aria-label="Filter products">
+                    <div class="filters-panel bg-white rounded-lg shadow-sm border border-neutral-200 p-6 sticky top-8 space-y-6">
+                        <div class="flex items-center justify-between">
                             <h2 class="text-lg font-semibold text-neutral-900">Filters</h2>
                             <button 
                                 type="button" 
                                 class="text-sm text-brand-primary hover:underline lg:hidden"
-                                onclick="toggleFilters()"
-                                aria-label="Toggle filters"
+                                onclick="toggleFilters(event)"
+                                aria-label="Toggle filter visibility"
                                 aria-expanded="true">
                                 Hide
                             </button>
                         </div>
-                        
-                        <form id="filtersForm" class="space-y-6">
+
+                        <form id="filtersForm" class="space-y-6" aria-describedby="filters-help">
+                            <p id="filters-help" class="text-sm text-neutral-500">
+                                Select one or more filter options and choose “Apply filters” to refresh the catalogue.
+                            </p>
+
                             <!-- Category Filter -->
-                            <div class="filter-group">
-                                <h3 class="text-sm font-semibold text-neutral-900 mb-3">Category</h3>
+                            <fieldset class="filter-group">
+                                <legend class="text-sm font-semibold text-neutral-900 mb-3">Category</legend>
                                 <div class="space-y-2">
-                                    <label class="flex items-center gap-2 cursor-pointer">
+                                    <label class="flex items-center gap-2">
                                         <input type="checkbox" name="category" value="industrial" class="form-checkbox" 
                                                <%= category != null && category.equalsIgnoreCase("industrial") ? "checked" : "" %>>
                                         <span class="text-sm text-neutral-700">Industrial</span>
                                     </label>
-                                    <label class="flex items-center gap-2 cursor-pointer">
+                                    <label class="flex items-center gap-2">
                                         <input type="checkbox" name="category" value="warehouse" class="form-checkbox"
                                                <%= category != null && category.equalsIgnoreCase("warehouse") ? "checked" : "" %>>
                                         <span class="text-sm text-neutral-700">Warehouse</span>
                                     </label>
-                                    <label class="flex items-center gap-2 cursor-pointer">
+                                    <label class="flex items-center gap-2">
                                         <input type="checkbox" name="category" value="agriculture" class="form-checkbox"
                                                <%= category != null && category.equalsIgnoreCase("agriculture") ? "checked" : "" %>>
                                         <span class="text-sm text-neutral-700">Agriculture</span>
                                     </label>
-                                    <label class="flex items-center gap-2 cursor-pointer">
+                                    <label class="flex items-center gap-2">
                                         <input type="checkbox" name="category" value="smarthome" class="form-checkbox"
                                                <%= category != null && category.equalsIgnoreCase("smarthome") ? "checked" : "" %>>
                                         <span class="text-sm text-neutral-700">Smart Home</span>
                                     </label>
                                 </div>
-                            </div>
+                            </fieldset>
                             
                             <!-- Protocol Filter -->
-                            <div class="filter-group">
-                                <h3 class="text-sm font-semibold text-neutral-900 mb-3">Protocol</h3>
+                            <fieldset class="filter-group">
+                                <legend class="text-sm font-semibold text-neutral-900 mb-3">Protocol</legend>
                                 <div class="space-y-2">
-                                    <label class="flex items-center gap-2 cursor-pointer">
+                                    <label class="flex items-center gap-2">
                                         <input type="checkbox" name="protocol" value="lorawan" class="form-checkbox">
                                         <span class="text-sm text-neutral-700">LoRaWAN</span>
                                     </label>
-                                    <label class="flex items-center gap-2 cursor-pointer">
+                                    <label class="flex items-center gap-2">
                                         <input type="checkbox" name="protocol" value="wifi" class="form-checkbox">
                                         <span class="text-sm text-neutral-700">WiFi</span>
                                     </label>
-                                    <label class="flex items-center gap-2 cursor-pointer">
+                                    <label class="flex items-center gap-2">
                                         <input type="checkbox" name="protocol" value="zigbee" class="form-checkbox">
                                         <span class="text-sm text-neutral-700">Zigbee</span>
                                     </label>
-                                    <label class="flex items-center gap-2 cursor-pointer">
+                                    <label class="flex items-center gap-2">
                                         <input type="checkbox" name="protocol" value="bluetooth" class="form-checkbox">
                                         <span class="text-sm text-neutral-700">Bluetooth</span>
                                     </label>
                                 </div>
-                            </div>
+                            </fieldset>
                             
                             <!-- Voltage Filter -->
-                            <div class="filter-group">
-                                <h3 class="text-sm font-semibold text-neutral-900 mb-3">Voltage</h3>
+                            <fieldset class="filter-group">
+                                <legend class="text-sm font-semibold text-neutral-900 mb-3">Voltage</legend>
                                 <div class="space-y-2">
-                                    <label class="flex items-center gap-2 cursor-pointer">
+                                    <label class="flex items-center gap-2">
                                         <input type="checkbox" name="voltage" value="5v" class="form-checkbox">
                                         <span class="text-sm text-neutral-700">5V DC</span>
                                     </label>
-                                    <label class="flex items-center gap-2 cursor-pointer">
+                                    <label class="flex items-center gap-2">
                                         <input type="checkbox" name="voltage" value="12v" class="form-checkbox">
                                         <span class="text-sm text-neutral-700">12V DC</span>
                                     </label>
-                                    <label class="flex items-center gap-2 cursor-pointer">
+                                    <label class="flex items-center gap-2">
                                         <input type="checkbox" name="voltage" value="24v" class="form-checkbox">
                                         <span class="text-sm text-neutral-700">24V DC</span>
                                     </label>
                                 </div>
-                            </div>
+                            </fieldset>
                             
                             <!-- Price Range -->
-                            <div class="filter-group">
-                                <h3 class="text-sm font-semibold text-neutral-900 mb-3">Price Range</h3>
+                            <fieldset class="filter-group">
+                                <legend class="text-sm font-semibold text-neutral-900 mb-3">Price range</legend>
                                 <div class="space-y-3">
                                     <div class="flex items-center gap-2">
+                                        <label for="priceMin" class="sr-only">Minimum price</label>
                                         <input type="number" id="priceMin" name="priceMin" placeholder="Min" 
                                                class="form-input text-sm" min="0" step="10">
-                                        <span class="text-neutral-500">-</span>
+                                        <span class="text-neutral-500" aria-hidden="true">–</span>
+                                        <label for="priceMax" class="sr-only">Maximum price</label>
                                         <input type="number" id="priceMax" name="priceMax" placeholder="Max" 
                                                class="form-input text-sm" min="0" step="10">
                                     </div>
                                     <div class="price-range-slider">
+                                        <label for="priceRange" class="sr-only">Adjust price range slider</label>
                                         <input type="range" id="priceRange" min="0" max="1000" value="500" 
-                                               class="w-full" aria-label="Price range">
+                                               class="w-full" aria-valuemin="0" aria-valuemax="1000" aria-label="Price range">
                                     </div>
                                 </div>
-                            </div>
+                            </fieldset>
                             
                             <!-- Stock Status -->
-                            <div class="filter-group">
-                                <h3 class="text-sm font-semibold text-neutral-900 mb-3">Stock Status</h3>
+                            <fieldset class="filter-group">
+                                <legend class="text-sm font-semibold text-neutral-900 mb-3">Stock status</legend>
                                 <div class="space-y-2">
-                                    <label class="flex items-center gap-2 cursor-pointer">
+                                    <label class="flex items-center gap-2">
                                         <input type="checkbox" name="stock" value="in-stock" class="form-checkbox" checked>
-                                        <span class="text-sm text-neutral-700">In Stock Only</span>
+                                        <span class="text-sm text-neutral-700">In stock only</span>
                                     </label>
-                                    <label class="flex items-center gap-2 cursor-pointer">
+                                    <label class="flex items-center gap-2">
                                         <input type="checkbox" name="stock" value="include-out" class="form-checkbox">
-                                        <span class="text-sm text-neutral-700">Include Out of Stock</span>
+                                        <span class="text-sm text-neutral-700">Include out of stock</span>
                                     </label>
                                 </div>
-                            </div>
+                            </fieldset>
                             
                             <!-- Filter Actions -->
                             <div class="flex flex-col gap-2 pt-4 border-t border-neutral-200">
                                 <button type="button" onclick="applyFilters()" class="btn btn--primary w-full">
-                                    Apply Filters
+                                    Apply filters
                                 </button>
-                                <button type="button" onclick="clearFilters()" class="btn btn--ghost w-full">
-                                    Clear All
+                                <button type="button" onclick="clearFilters()" class="btn btn--outline w-full">
+                                    Clear all
                                 </button>
                             </div>
                         </form>
@@ -451,8 +493,8 @@
                                 <% } %>
                             </p>
                             <div class="flex flex-wrap justify-center gap-4">
-                                <button onclick="clearFilters()" class="btn btn--secondary">Clear Filters</button>
-                                <a href="${pageContext.request.contextPath}/browse.jsp" class="btn btn--primary">Browse All Products</a>
+                                <button onclick="clearFilters()" class="btn btn--outline">Clear all filters</button>
+                                <a href="${pageContext.request.contextPath}/browse.jsp" class="btn btn--primary">Browse all products</a>
                             </div>
                         </div>
                     <% } %>
@@ -522,13 +564,13 @@
             window.location.href = url;
         }
         
-        function toggleFilters() {
+        function toggleFilters(event) {
             const sidebar = document.getElementById('filters-sidebar');
-            const isHidden = sidebar.classList.contains('hidden');
-            sidebar.classList.toggle('hidden');
-            const button = event.target;
-            button.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
-            button.textContent = isHidden ? 'Hide' : 'Show Filters';
+            if (!sidebar) return;
+            const button = event.currentTarget || event.target;
+            const isHiddenNow = sidebar.classList.toggle('hidden');
+            button.setAttribute('aria-expanded', isHiddenNow ? 'false' : 'true');
+            button.textContent = isHiddenNow ? 'Show' : 'Hide';
         }
         
         function sortProducts() {
@@ -576,19 +618,23 @@
             const listBtn = document.getElementById('listViewBtn');
             const productGrid = document.getElementById('products-grid');
             
-            if (!productGrid) return;
+            if (!productGrid || !gridBtn || !listBtn) return;
             
             if (view === 'grid') {
-                gridBtn.classList.add('active');
+                gridBtn.classList.add('btn--primary');
+                gridBtn.classList.remove('btn--ghost');
                 gridBtn.setAttribute('aria-pressed', 'true');
-                listBtn.classList.remove('active');
+                listBtn.classList.remove('btn--primary');
+                listBtn.classList.add('btn--ghost');
                 listBtn.setAttribute('aria-pressed', 'false');
                 productGrid.classList.remove('product-list');
                 productGrid.classList.add('product-grid');
             } else {
-                listBtn.classList.add('active');
+                listBtn.classList.add('btn--primary');
+                listBtn.classList.remove('btn--ghost');
                 listBtn.setAttribute('aria-pressed', 'true');
-                gridBtn.classList.remove('active');
+                gridBtn.classList.remove('btn--primary');
+                gridBtn.classList.add('btn--ghost');
                 gridBtn.setAttribute('aria-pressed', 'false');
                 productGrid.classList.remove('product-grid');
                 productGrid.classList.add('product-list');

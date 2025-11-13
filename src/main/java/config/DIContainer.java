@@ -23,17 +23,26 @@ import db.DBConnection;
 public class DIContainer {
     private static final ConcurrentHashMap<Class<?>, Object> instances = new ConcurrentHashMap<>();
     private static Connection connection;
+    private static volatile boolean initialized = false;
+    private static final Object lock = new Object();
     
-    static {
-        try {
-            connection = DBConnection.getConnection();
-            initializeDAOs();
-        } catch (SQLException | ClassNotFoundException e) {
-            throw new RuntimeException("Failed to initialize DI Container", e);
+    private static void ensureInitialized() {
+        if (!initialized) {
+            synchronized (lock) {
+                if (!initialized) {
+                    try {
+                        connection = DBConnection.getConnection();
+                        initializeDAOs();
+                        initialized = true;
+                    } catch (SQLException | ClassNotFoundException e) {
+                        throw new RuntimeException("Failed to initialize DI Container", e);
+                    }
+                }
+            }
         }
     }
     
-    private static void initializeDAOs() {
+    private static void initializeDAOs() throws SQLException {
         // DAO 인스턴스들을 한 번만 생성하여 재사용 (Singleton 패턴)
         register(UserDAO.class, new UserDAOImpl(connection));
         register(ProductDAO.class, new ProductDAOImpl(connection));
@@ -44,6 +53,7 @@ public class DIContainer {
     
     @SuppressWarnings("unchecked")
     public static <T> T get(Class<T> clazz) {
+        ensureInitialized();
         return (T) instances.get(clazz);
     }
     
@@ -52,6 +62,7 @@ public class DIContainer {
     }
     
     public static Connection getConnection() {
+        ensureInitialized();
         return connection;
     }
 }

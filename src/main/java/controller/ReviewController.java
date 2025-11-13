@@ -7,6 +7,7 @@ import db.DBConnection;
 import model.Review;
 import model.Product;
 import model.User;
+import service.ReviewService;
 import utils.InputValidator;
 
 import javax.servlet.ServletException;
@@ -18,14 +19,18 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.List;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 @WebServlet("/review/*")
 public class ReviewController extends HttpServlet {
     
     private ReviewDAO reviewDAO;
     private ProductDAO productDAO;
+    private ReviewService reviewService;
+    private final Gson gson = new Gson();
     
     @Override
     public void init() throws ServletException {
@@ -33,6 +38,7 @@ public class ReviewController extends HttpServlet {
             Connection connection = DBConnection.getConnection();
             reviewDAO = new ReviewDAO(connection);
             productDAO = new ProductDAOImpl(connection);
+            reviewService = new ReviewService(reviewDAO, productDAO);
         } catch (Exception e) {
             throw new ServletException("Failed to initialize ReviewController", e);
         }
@@ -43,23 +49,45 @@ public class ReviewController extends HttpServlet {
             throws ServletException, IOException {
         
         String pathInfo = request.getPathInfo();
+        String acceptHeader = request.getHeader("Accept");
+        boolean isJsonRequest = acceptHeader != null && acceptHeader.contains("application/json");
         
         try {
             if (pathInfo == null || pathInfo.equals("/")) {
-                listReviews(request, response);
+                if (isJsonRequest) {
+                    listReviewsJson(request, response);
+                } else {
+                    listReviews(request, response);
+                }
             } else if (pathInfo.startsWith("/product/")) {
-                listProductReviews(request, response);
+                if (isJsonRequest) {
+                    listProductReviewsJson(request, response);
+                } else {
+                    listProductReviews(request, response);
+                }
             } else if (pathInfo.startsWith("/user/")) {
-                listUserReviews(request, response);
+                if (isJsonRequest) {
+                    listUserReviewsJson(request, response);
+                } else {
+                    listUserReviews(request, response);
+                }
             } else if (pathInfo.startsWith("/view/")) {
-                viewReview(request, response);
+                if (isJsonRequest) {
+                    viewReviewJson(request, response);
+                } else {
+                    viewReview(request, response);
+                }
             } else if (pathInfo.equals("/form")) {
                 showReviewForm(request, response);
             } else {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
             }
         } catch (Exception e) {
-            handleError(request, response, "Error processing review request", e);
+            if (isJsonRequest) {
+                handleJsonError(response, "Error processing review request", e);
+            } else {
+                handleError(request, response, "Error processing review request", e);
+            }
         }
     }
     
@@ -68,19 +96,37 @@ public class ReviewController extends HttpServlet {
             throws ServletException, IOException {
         
         String pathInfo = request.getPathInfo();
+        String acceptHeader = request.getHeader("Accept");
+        boolean isJsonRequest = acceptHeader != null && acceptHeader.contains("application/json");
         
         try {
             if (pathInfo == null || pathInfo.equals("/create")) {
-                createReview(request, response);
+                if (isJsonRequest) {
+                    createReviewJson(request, response);
+                } else {
+                    createReview(request, response);
+                }
             } else if (pathInfo.equals("/update")) {
-                updateReview(request, response);
+                if (isJsonRequest) {
+                    updateReviewJson(request, response);
+                } else {
+                    updateReview(request, response);
+                }
             } else if (pathInfo.equals("/delete")) {
-                deleteReview(request, response);
+                if (isJsonRequest) {
+                    deleteReviewJson(request, response);
+                } else {
+                    deleteReview(request, response);
+                }
             } else {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
             }
         } catch (Exception e) {
-            handleError(request, response, "Error processing review", e);
+            if (isJsonRequest) {
+                handleJsonError(response, "Error processing review", e);
+            } else {
+                handleError(request, response, "Error processing review", e);
+            }
         }
     }
     
@@ -112,43 +158,72 @@ public class ReviewController extends HttpServlet {
         Integer productId = Integer.parseInt(productIdStr);
         Integer rating = Integer.parseInt(ratingStr);
         
-        // Validate rating range
-        if (rating < 1 || rating > 5) {
-            request.setAttribute("error", "Rating must be between 1 and 5");
-            request.getRequestDispatcher("/review-form.jsp").forward(request, response);
-            return;
-        }
+        // Use ReviewService for business logic
+        ReviewService.ReviewOperationResult result = reviewService.createReview(
+            currentUser.getUserId(), productId, rating, title, reviewText);
         
-        // Check if product exists
-        Product product = productDAO.findById(productId);
-        if (product == null) {
-            request.setAttribute("error", "Product not found");
-            request.getRequestDispatcher("/review-form.jsp").forward(request, response);
-            return;
-        }
-        
-        // Check if user has already reviewed this product
-        if (reviewDAO.hasUserReviewedProduct(currentUser.getUserId(), productId)) {
-            request.setAttribute("error", "You have already reviewed this product");
+        if (!result.isSuccess()) {
+            request.setAttribute("error", result.getErrorMessage());
+            Product product = productDAO.findById(productId);
             request.setAttribute("product", product);
             request.getRequestDispatcher("/review-form.jsp").forward(request, response);
             return;
         }
         
-        // Create review
-        Review review = new Review();
-        review.setUserId(currentUser.getUserId());
-        review.setProductId(productId);
-        review.setRating(rating);
-        review.setReviewText(reviewText);
-        review.setTitle(title);
-        review.setReviewDate(new Timestamp(System.currentTimeMillis()));
-        review.setVerified(false); // Reviews need staff verification
-        
-        reviewDAO.create(review);
-        
-        session.setAttribute("successMessage", "Review submitted successfully. It will be visible after moderation.");
+        session.setAttribute("successMessage", result.getMessage());
         response.sendRedirect(request.getContextPath() + "/product/" + productId);
+    }
+    
+    private void createReviewJson(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException, SQLException {
+        
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        
+        HttpSession session = request.getSession();
+        User currentUser = (User) session.getAttribute("user");
+        
+        if (currentUser == null) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            JsonObject json = new JsonObject();
+            json.addProperty("success", false);
+            json.addProperty("error", "Not logged in");
+            response.getWriter().write(gson.toJson(json));
+            return;
+        }
+        
+        // Parse JSON request body or form parameters
+        String productIdStr = request.getParameter("productId");
+        String ratingStr = request.getParameter("rating");
+        String reviewText = request.getParameter("reviewText");
+        String title = request.getParameter("title");
+        
+        if (productIdStr == null || ratingStr == null || reviewText == null) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            JsonObject json = new JsonObject();
+            json.addProperty("success", false);
+            json.addProperty("error", "Product ID, rating, and review text are required");
+            response.getWriter().write(gson.toJson(json));
+            return;
+        }
+        
+        Integer productId = Integer.parseInt(productIdStr);
+        Integer rating = Integer.parseInt(ratingStr);
+        
+        ReviewService.ReviewOperationResult result = reviewService.createReview(
+            currentUser.getUserId(), productId, rating, title, reviewText);
+        
+        JsonObject json = new JsonObject();
+        json.addProperty("success", result.isSuccess());
+        
+        if (result.isSuccess()) {
+            json.addProperty("message", result.getMessage());
+            json.add("review", gson.toJsonTree(result.getReview()));
+        } else {
+            json.addProperty("error", result.getErrorMessage());
+        }
+        
+        response.getWriter().write(gson.toJson(json));
     }
     
     private void updateReview(HttpServletRequest request, HttpServletResponse response) 
@@ -163,47 +238,88 @@ public class ReviewController extends HttpServlet {
         }
         
         Integer reviewId = Integer.parseInt(request.getParameter("reviewId"));
-        Review review = reviewDAO.findById(reviewId);
-        
-        if (review == null) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
-        
-        // Verify ownership
-        if (review.getUserId() != currentUser.getUserId() && 
-            !"staff".equalsIgnoreCase(currentUser.getRole())) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN);
-            return;
-        }
-        
-        // Update review
         String ratingStr = request.getParameter("rating");
         String reviewText = InputValidator.validateAndSanitize(
             request.getParameter("reviewText"), "Review text");
         String title = InputValidator.validateAndSanitize(
             request.getParameter("title"), "Review title");
         
-        if (ratingStr != null) {
-            Integer rating = Integer.parseInt(ratingStr);
-            if (rating >= 1 && rating <= 5) {
-                review.setRating(rating);
-            }
+        Integer rating = null;
+        if (ratingStr != null && !ratingStr.isEmpty()) {
+            rating = Integer.parseInt(ratingStr);
         }
         
-        review.setReviewText(reviewText);
-        review.setTitle(title);
-        review.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
+        boolean isStaff = "staff".equalsIgnoreCase(currentUser.getRole()) || 
+                         "admin".equalsIgnoreCase(currentUser.getRole());
         
-        // If customer updated, reset verification status
-        if (!"staff".equalsIgnoreCase(currentUser.getRole())) {
-            review.setVerified(false);
+        ReviewService.ReviewOperationResult result = reviewService.updateReview(
+            reviewId, currentUser.getUserId(), rating, title, reviewText, isStaff);
+        
+        if (!result.isSuccess()) {
+            request.setAttribute("error", result.getErrorMessage());
+            request.getRequestDispatcher("/error.jsp").forward(request, response);
+            return;
         }
         
-        reviewDAO.update(review);
-        
-        session.setAttribute("successMessage", "Review updated successfully");
+        session.setAttribute("successMessage", result.getMessage());
         response.sendRedirect(request.getContextPath() + "/review/view/" + reviewId);
+    }
+    
+    private void updateReviewJson(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException, SQLException {
+        
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        
+        HttpSession session = request.getSession();
+        User currentUser = (User) session.getAttribute("user");
+        
+        if (currentUser == null) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            JsonObject json = new JsonObject();
+            json.addProperty("success", false);
+            json.addProperty("error", "Not logged in");
+            response.getWriter().write(gson.toJson(json));
+            return;
+        }
+        
+        String reviewIdStr = request.getParameter("reviewId");
+        if (reviewIdStr == null) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            JsonObject json = new JsonObject();
+            json.addProperty("success", false);
+            json.addProperty("error", "Review ID is required");
+            response.getWriter().write(gson.toJson(json));
+            return;
+        }
+        
+        Integer reviewId = Integer.parseInt(reviewIdStr);
+        String ratingStr = request.getParameter("rating");
+        String reviewText = request.getParameter("reviewText");
+        String title = request.getParameter("title");
+        
+        Integer rating = null;
+        if (ratingStr != null && !ratingStr.isEmpty()) {
+            rating = Integer.parseInt(ratingStr);
+        }
+        
+        boolean isStaff = "staff".equalsIgnoreCase(currentUser.getRole()) || 
+                         "admin".equalsIgnoreCase(currentUser.getRole());
+        
+        ReviewService.ReviewOperationResult result = reviewService.updateReview(
+            reviewId, currentUser.getUserId(), rating, title, reviewText, isStaff);
+        
+        JsonObject json = new JsonObject();
+        json.addProperty("success", result.isSuccess());
+        
+        if (result.isSuccess()) {
+            json.addProperty("message", result.getMessage());
+            json.add("review", gson.toJsonTree(result.getReview()));
+        } else {
+            json.addProperty("error", result.getErrorMessage());
+        }
+        
+        response.getWriter().write(gson.toJson(json));
     }
     
     private void deleteReview(HttpServletRequest request, HttpServletResponse response) 
@@ -218,30 +334,78 @@ public class ReviewController extends HttpServlet {
         }
         
         Integer reviewId = Integer.parseInt(request.getParameter("reviewId"));
+        boolean isStaff = "staff".equalsIgnoreCase(currentUser.getRole()) || 
+                         "admin".equalsIgnoreCase(currentUser.getRole());
+        
+        ReviewService.ReviewOperationResult result = reviewService.deleteReview(
+            reviewId, currentUser.getUserId(), isStaff);
+        
+        if (!result.isSuccess()) {
+            request.setAttribute("error", result.getErrorMessage());
+            request.getRequestDispatcher("/error.jsp").forward(request, response);
+            return;
+        }
+        
+        session.setAttribute("successMessage", result.getMessage());
+        
         Review review = reviewDAO.findById(reviewId);
-        
-        if (review == null) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
-        
-        // Verify ownership or staff privileges
-        if (review.getUserId() != currentUser.getUserId() && 
-            !"staff".equalsIgnoreCase(currentUser.getRole())) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN);
-            return;
-        }
-        
-        Integer productId = review.getProductId();
-        reviewDAO.delete(reviewId);
-        
-        session.setAttribute("successMessage", "Review deleted successfully");
-        
-        if ("staff".equalsIgnoreCase(currentUser.getRole())) {
-            response.sendRedirect(request.getContextPath() + "/admin/reviews");
+        if (review != null) {
+            Integer productId = review.getProductId();
+            if (isStaff) {
+                response.sendRedirect(request.getContextPath() + "/admin/reviews");
+            } else {
+                response.sendRedirect(request.getContextPath() + "/product/" + productId);
+            }
         } else {
-            response.sendRedirect(request.getContextPath() + "/product/" + productId);
+            response.sendRedirect(request.getContextPath() + "/review");
         }
+    }
+    
+    private void deleteReviewJson(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException, SQLException {
+        
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        
+        HttpSession session = request.getSession();
+        User currentUser = (User) session.getAttribute("user");
+        
+        if (currentUser == null) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            JsonObject json = new JsonObject();
+            json.addProperty("success", false);
+            json.addProperty("error", "Not logged in");
+            response.getWriter().write(gson.toJson(json));
+            return;
+        }
+        
+        String reviewIdStr = request.getParameter("reviewId");
+        if (reviewIdStr == null) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            JsonObject json = new JsonObject();
+            json.addProperty("success", false);
+            json.addProperty("error", "Review ID is required");
+            response.getWriter().write(gson.toJson(json));
+            return;
+        }
+        
+        Integer reviewId = Integer.parseInt(reviewIdStr);
+        boolean isStaff = "staff".equalsIgnoreCase(currentUser.getRole()) || 
+                         "admin".equalsIgnoreCase(currentUser.getRole());
+        
+        ReviewService.ReviewOperationResult result = reviewService.deleteReview(
+            reviewId, currentUser.getUserId(), isStaff);
+        
+        JsonObject json = new JsonObject();
+        json.addProperty("success", result.isSuccess());
+        
+        if (result.isSuccess()) {
+            json.addProperty("message", result.getMessage());
+        } else {
+            json.addProperty("error", result.getErrorMessage());
+        }
+        
+        response.getWriter().write(gson.toJson(json));
     }
     
     private void listReviews(HttpServletRequest request, HttpServletResponse response) 
@@ -359,6 +523,148 @@ public class ReviewController extends HttpServlet {
         
         request.setAttribute("product", product);
         request.getRequestDispatcher("/review-form.jsp").forward(request, response);
+    }
+    
+    // JSON API methods
+    private void listReviewsJson(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException, SQLException {
+        
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        
+        HttpSession session = request.getSession();
+        User currentUser = (User) session.getAttribute("user");
+        
+        if (currentUser == null) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            JsonObject json = new JsonObject();
+            json.addProperty("success", false);
+            json.addProperty("error", "Not logged in");
+            response.getWriter().write(gson.toJson(json));
+            return;
+        }
+        
+        List<Review> reviews;
+        if ("staff".equalsIgnoreCase(currentUser.getRole()) || 
+            "admin".equalsIgnoreCase(currentUser.getRole())) {
+            reviews = reviewDAO.findAll();
+        } else {
+            reviews = reviewDAO.findByUserId(currentUser.getUserId());
+        }
+        
+        JsonObject json = new JsonObject();
+        json.addProperty("success", true);
+        json.add("reviews", gson.toJsonTree(reviews));
+        json.addProperty("count", reviews.size());
+        
+        response.getWriter().write(gson.toJson(json));
+    }
+    
+    private void listProductReviewsJson(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException, SQLException {
+        
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        
+        String pathInfo = request.getPathInfo();
+        Integer productId = Integer.parseInt(pathInfo.substring(9)); // Remove "/product/"
+        
+        Product product = productDAO.findById(productId);
+        if (product == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            JsonObject json = new JsonObject();
+            json.addProperty("success", false);
+            json.addProperty("error", "Product not found");
+            response.getWriter().write(gson.toJson(json));
+            return;
+        }
+        
+        ReviewService.ProductReviewStatistics stats = reviewService.getProductReviewStatistics(productId, true);
+        
+        JsonObject json = new JsonObject();
+        json.addProperty("success", true);
+        json.add("product", gson.toJsonTree(product));
+        json.add("reviews", gson.toJsonTree(stats.getReviews()));
+        json.addProperty("averageRating", stats.getAverageRating());
+        json.addProperty("totalReviews", stats.getTotalReviews());
+        json.add("ratingDistribution", gson.toJsonTree(stats.getRatingDistribution()));
+        
+        response.getWriter().write(gson.toJson(json));
+    }
+    
+    private void listUserReviewsJson(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException, SQLException {
+        
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        
+        String pathInfo = request.getPathInfo();
+        Integer userId = Integer.parseInt(pathInfo.substring(6)); // Remove "/user/"
+        
+        List<Review> reviews = reviewDAO.findByUserId(userId);
+        
+        JsonObject json = new JsonObject();
+        json.addProperty("success", true);
+        json.add("reviews", gson.toJsonTree(reviews));
+        json.addProperty("count", reviews.size());
+        json.addProperty("userId", userId);
+        
+        response.getWriter().write(gson.toJson(json));
+    }
+    
+    private void viewReviewJson(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException, SQLException {
+        
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        
+        String pathInfo = request.getPathInfo();
+        Integer reviewId = Integer.parseInt(pathInfo.substring(6)); // Remove "/view/"
+        
+        Review review = reviewDAO.findById(reviewId);
+        if (review == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            JsonObject json = new JsonObject();
+            json.addProperty("success", false);
+            json.addProperty("error", "Review not found");
+            response.getWriter().write(gson.toJson(json));
+            return;
+        }
+        
+        HttpSession session = request.getSession();
+        User currentUser = (User) session.getAttribute("user");
+        
+        if (review.getUserId() != currentUser.getUserId() && 
+            !"staff".equalsIgnoreCase(currentUser.getRole())) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            JsonObject json = new JsonObject();
+            json.addProperty("success", false);
+            json.addProperty("error", "Access denied");
+            response.getWriter().write(gson.toJson(json));
+            return;
+        }
+        
+        Product product = productDAO.findById(review.getProductId());
+        
+        JsonObject json = new JsonObject();
+        json.addProperty("success", true);
+        json.add("review", gson.toJsonTree(review));
+        json.add("product", gson.toJsonTree(product));
+        
+        response.getWriter().write(gson.toJson(json));
+    }
+    
+    private void handleJsonError(HttpServletResponse response, String message, Exception e) 
+            throws IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        
+        JsonObject json = new JsonObject();
+        json.addProperty("success", false);
+        json.addProperty("error", message + ": " + e.getMessage());
+        
+        response.getWriter().write(gson.toJson(json));
     }
     
     private void handleError(HttpServletRequest request, HttpServletResponse response, 

@@ -1,94 +1,65 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="css/modern-theme.css" />
-    <title>Goodbye - IoT Bay</title>
-</head>
-<body>
-    <main class="goodbye-page">
+<%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<t:base title="Thank you for visiting IoTBay!" description="Goodbye page after logout or account deletion">
+    <main class="goodbye-page flex items-center justify-center py-20 min-h-screen">
         <div class="container">
-            <div class="goodbye-content">
-                <div class="goodbye-icon">
-                    <svg fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.293l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clip-rule="evenodd"></path>
+            <div class="max-w-2xl mx-auto text-center">
+                <!-- Goodbye Icon -->
+                <div class="w-20 h-20 bg-brand-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <svg class="w-10 h-10 text-brand-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
                     </svg>
                 </div>
                 
-                <h1 class="goodbye-title">Thank you for visiting IoT Bay!</h1>
-                <p class="goodbye-description">
+                <!-- Goodbye Title -->
+                <h1 class="text-display-lg text-neutral-900 mb-4">
+                    Thank you for visiting IoTBay!
+                </h1>
+                
+                <!-- Goodbye Message -->
+                <p class="text-lg text-neutral-600 mb-8 max-w-lg mx-auto">
                     You have successfully logged out. We hope you enjoyed your experience 
                     exploring our IoT solutions and products.
                 </p>
                 
-                <div class="goodbye-features">
-                    <div class="feature-highlight">
-                        <h3>Come back soon!</h3>
-                        <p>We're constantly adding new products and features to enhance your IoT experience.</p>
-                    </div>
+                <!-- Feature Reminders -->
+                <div class="bg-neutral-50 rounded-lg p-6 mb-8">
+                    <h3 class="font-semibold text-neutral-900 mb-2">Come back soon!</h3>
+                    <p class="text-neutral-600">
+                        We're constantly adding new products and features to enhance your IoT experience.
+                    </p>
                 </div>
                 
-                <div class="goodbye-actions">
-                    <a href="index.jsp" class="btn btn--primary btn--lg">
-                        <svg class="btn__icon" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="${pageContext.request.contextPath}/" class="btn btn--primary btn--lg">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
                         </svg>
-                        Return to Home
+                        Return to Homepage
                     </a>
-                    <a href="login.jsp" class="btn btn--outline btn--lg">
-                        <svg class="btn__icon" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M3 3a1 1 0 011 1v12a1 1 0 11-2 0V4a1 1 0 011-1zm7.707 3.293a1 1 0 010 1.414L9.414 9H17a1 1 0 110 2H9.414l1.293 1.293a1 1 0 01-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                    <a href="${pageContext.request.contextPath}/login.jsp" class="btn btn--outline btn--lg">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
                         </svg>
-                        Sign In Again
+                        Log In Again
                     </a>
-                </div>
-                
-                <div class="goodbye-newsletter">
-                    <h3>Stay Connected</h3>
-                    <p>Subscribe to our newsletter for the latest IoT products and updates</p>
-                    <form class="newsletter-form">
-                        <input type="email" class="form__input" placeholder="Enter your email">
-                        <button type="submit" class="btn btn--primary">Subscribe</button>
-                    </form>
                 </div>
             </div>
         </div>
     </main>
     
-    <script src="js/main.js"></script>
     <script>
-        // Newsletter form submission
-        document.querySelector('.newsletter-form')?.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const email = this.querySelector('input[type="email"]').value;
-            if (email) {
-                if (window.showToast) {
-                    window.showToast('Thank you for subscribing!', 'success');
-                }
-                this.reset();
-            }
-        });
-        
         // Add farewell animation
         document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => {
-                document.querySelector('.goodbye-content').classList.add('animate-in');
+                const content = document.querySelector('.goodbye-page .max-w-2xl');
+                if (content) {
+                    content.classList.add('animate-in');
+                }
             }, 300);
         });
     </script>
-</body>
-</html>
-<body>
-<div class="goodbye-container">
-    <div class="emoji">👋</div>
-    <h2>Goodbye!</h2>
-    <p>
-        Thank you for visiting.<br>
-        We hope to see you again soon.
-    </p>
-    <a href="<%= request.getContextPath() %>/index.jsp">Go to Home</a>
-</div>
-</body>
-</html>
+</t:base>

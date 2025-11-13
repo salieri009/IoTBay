@@ -27,29 +27,64 @@
     request.setAttribute("totalAmount", totalAmount);
 %>
 
+<%
+    double tax = totalAmount * 0.1;
+    double shipping = totalAmount >= 50.0 ? 0.0 : 15.0;
+    double total = totalAmount + tax + shipping;
+    String totalFormatted = String.format("%1$,.2f", total);
+    String subtotalFormatted = String.format("%1$,.2f", totalAmount);
+    String taxFormatted = String.format("%1$,.2f", tax);
+    String shippingFormatted = shipping == 0.0 ? "Free" : String.format("%1$,.2f", shipping);
+    int itemCount = cartItems != null ? cartItems.size() : 0;
+    request.setAttribute("totalFormatted", totalFormatted);
+    request.setAttribute("subtotalFormatted", subtotalFormatted);
+    request.setAttribute("taxFormatted", taxFormatted);
+    request.setAttribute("shippingFormatted", shippingFormatted);
+    request.setAttribute("itemCount", itemCount);
+%>
+
 <t:base title="Checkout - IoT Bay" description="Secure checkout and order review">
-    <main class="checkout-page py-8">
-        <div class="container">
-            <!-- Breadcrumb Navigation (Section 4.5) -->
-            <nav class="breadcrumb mb-6" aria-label="Breadcrumb">
-                <ol class="flex items-center gap-2 text-sm text-neutral-600">
-                    <li>
-                        <a href="${pageContext.request.contextPath}/" class="hover:text-brand-primary">Home</a>
-                    </li>
-                    <li>/</li>
-                    <li>
-                        <a href="${pageContext.request.contextPath}/cart.jsp" class="hover:text-brand-primary">Cart</a>
-                    </li>
-                    <li>/</li>
+    <main class="py-12">
+        <div class="container space-y-10">
+            <!-- Breadcrumb Navigation -->
+            <nav aria-label="Breadcrumb">
+                <ol class="flex flex-wrap items-center gap-2 text-sm text-neutral-600">
+                    <li><a href="${pageContext.request.contextPath}/" class="hover:text-brand-primary">Home</a></li>
+                    <li aria-hidden="true">/</li>
+                    <li><a href="${pageContext.request.contextPath}/cart.jsp" class="hover:text-brand-primary">Cart</a></li>
+                    <li aria-hidden="true">/</li>
                     <li class="text-neutral-900 font-medium" aria-current="page">Checkout</li>
                 </ol>
             </nav>
 
-            <!-- Page Header (Section 4.5) -->
-            <div class="mb-8">
-                <h1 class="text-display-md font-bold text-neutral-900 mb-2">Secure Checkout</h1>
-                <p class="text-lg text-neutral-600">Review your order and complete your purchase</p>
-            </div>
+            <!-- Page Header -->
+            <section class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,360px)]">
+                <div class="space-y-4">
+                    <h1 class="text-display-l font-bold text-neutral-900 leading-tight">Secure checkout</h1>
+                    <p class="text-lg text-neutral-600">Review your order and complete your purchase</p>
+                    <div class="flex flex-wrap items-center gap-3 text-sm text-neutral-600">
+                        <span class="inline-flex items-center gap-2 rounded-full bg-neutral-100 px-3 py-1 font-medium text-neutral-700">
+                            <span class="inline-flex h-2 w-2 rounded-full bg-brand-primary"></span>
+                            ${itemCount} ${itemCount == 1 ? 'item' : 'items'}
+                        </span>
+                        <span class="inline-flex items-center gap-2 rounded-full bg-neutral-100 px-3 py-1 font-medium text-neutral-700">
+                            <span class="inline-flex h-2 w-2 rounded-full bg-brand-secondary"></span>
+                            Total: &#36;${totalFormatted}
+                        </span>
+                    </div>
+                </div>
+                <aside class="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 space-y-4" aria-label="Checkout guidance">
+                    <div>
+                        <h2 class="text-sm font-semibold uppercase tracking-wide text-neutral-700">What to expect</h2>
+                        <p class="mt-2 text-sm text-neutral-600">Complete shipping details, select a payment method, and review your order before confirming. All information is encrypted and secure.</p>
+                    </div>
+                    <ul class="space-y-3 text-sm text-neutral-600">
+                        <li>Your cart items are reserved for 30 minutes during checkout.</li>
+                        <li>Orders over &#36;100 qualify for free shipping automatically.</li>
+                        <li>You'll receive an email confirmation once your order is placed.</li>
+                    </ul>
+                </aside>
+            </section>
 
             <!-- Checkout Progress Indicator (Section 4.5) -->
             <div class="checkout-progress mb-8 bg-white rounded-lg shadow-sm border border-neutral-200 p-6">
@@ -137,28 +172,33 @@
             <!-- Checkout Form -->
             <div class="lg:col-span-2">
                 <form id="checkoutForm" action="${pageContext.request.contextPath}/checkout" method="post" class="space-y-8" onsubmit="return validateCheckoutForm(event)">
-                    <!-- STEP 2: Shipping Information (Section 4.5) -->
-                    <div class="card bg-white rounded-lg shadow-sm border border-neutral-200">
-                        <div class="card__header p-6 border-b border-neutral-200">
+                    <!-- STEP 2: Shipping Information -->
+                    <section class="rounded-2xl border border-neutral-200 bg-white shadow-sm">
+                        <div class="p-6 border-b border-neutral-200">
                             <h2 class="text-xl font-semibold text-neutral-900 flex items-center gap-3">
-                                <div class="w-10 h-10 bg-brand-primary text-white rounded-full flex items-center justify-center flex-shrink-0">
+                                <div class="w-10 h-10 bg-brand-primary text-white rounded-full flex items-center justify-center flex-shrink-0" aria-hidden="true">
                                     <span class="text-sm font-bold">2</span>
                                 </div>
-                                Shipping Information
+                                Shipping information
                             </h2>
+                            <p class="mt-2 text-sm text-neutral-600">Enter the delivery address for your order</p>
                         </div>
-                        <div class="card__body p-6">
-                            <!-- Saved Addresses (if available) -->
-                            <div class="mb-6">
-                                <label for="savedAddress" class="form-label">Use Saved Address</label>
-                                <select id="savedAddress" name="savedAddress" class="form-input" onchange="loadSavedAddress(this.value)">
-                                    <option value="">Select a saved address...</option>
-                                    <option value="1">Home Address</option>
-                                    <option value="2">Work Address</option>
-                                </select>
-                            </div>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="p-6">
+                            <fieldset class="space-y-6">
+                                <legend class="sr-only">Shipping address details</legend>
+                                
+                                <!-- Saved Addresses -->
+                                <div>
+                                    <label for="savedAddress" class="form-label">Use saved address</label>
+                                    <select id="savedAddress" name="savedAddress" class="form-input" onchange="loadSavedAddress(this.value)" aria-describedby="savedAddress-help">
+                                        <option value="">Select a saved address...</option>
+                                        <option value="1">Home Address</option>
+                                        <option value="2">Work Address</option>
+                                    </select>
+                                    <div id="savedAddress-help" class="form-help text-xs text-neutral-500 mt-1">Quickly load a previously saved address</div>
+                                </div>
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div class="form-group md:col-span-2">
                                     <label for="fullName" class="form-label form-label--required">Full Name</label>
                                     <input type="text" id="fullName" name="fullName" 
@@ -274,27 +314,30 @@
                                 </div>
                             </div>
                             
-                            <!-- Address Options -->
-                            <div class="mt-6 pt-6 border-t border-neutral-200 space-y-3">
-                                <label class="flex items-center gap-2 cursor-pointer">
-                                    <input type="checkbox" id="useBillingAddress" name="useBillingAddress" class="form-checkbox">
-                                    <span class="text-sm text-neutral-700">Use billing address as shipping address</span>
-                                </label>
-                                <label class="flex items-center gap-2 cursor-pointer">
-                                    <input type="checkbox" id="saveAddress" name="saveAddress" class="form-checkbox">
-                                    <span class="text-sm text-neutral-700">Save this address for future orders</span>
-                                </label>
-                            </div>
+                                <!-- Address Options -->
+                                <div class="pt-6 border-t border-neutral-200 space-y-3">
+                                    <label class="flex items-center gap-2 cursor-pointer">
+                                        <input type="checkbox" id="useBillingAddress" name="useBillingAddress" class="form-checkbox">
+                                        <span class="text-sm text-neutral-700">Use billing address as shipping address</span>
+                                    </label>
+                                    <label class="flex items-center gap-2 cursor-pointer">
+                                        <input type="checkbox" id="saveAddress" name="saveAddress" class="form-checkbox">
+                                        <span class="text-sm text-neutral-700">Save this address for future orders</span>
+                                    </label>
+                                </div>
+                            </fieldset>
                         </div>
-                    </div>
+                    </section>
                     
-                    <!-- Shipping Method Selection (Section 4.5) -->
-                    <div class="card bg-white rounded-lg shadow-sm border border-neutral-200 mt-6">
-                        <div class="card__header p-6 border-b border-neutral-200">
-                            <h2 class="text-xl font-semibold text-neutral-900">Shipping Method</h2>
+                    <!-- Shipping Method Selection -->
+                    <section class="rounded-2xl border border-neutral-200 bg-white shadow-sm">
+                        <div class="p-6 border-b border-neutral-200">
+                            <h2 class="text-xl font-semibold text-neutral-900">Shipping method</h2>
+                            <p class="mt-2 text-sm text-neutral-600">Choose how quickly you'd like to receive your order</p>
                         </div>
-                        <div class="card__body p-6">
-                            <div class="space-y-4">
+                        <div class="p-6">
+                            <fieldset class="space-y-4">
+                                <legend class="sr-only">Select shipping method</legend>
                                 <label class="shipping-option flex items-start gap-4 p-4 border-2 border-brand-primary rounded-lg cursor-pointer bg-brand-primary-50">
                                     <input type="radio" name="shippingMethod" value="standard" class="radio__input mt-1" checked>
                                     <div class="flex-1">
@@ -327,25 +370,25 @@
                                         <p class="text-sm text-neutral-600">Next business day</p>
                                     </div>
                                 </label>
-                            </div>
+                            </fieldset>
                         </div>
-                    </div>
+                    </section>
 
-                    <!-- STEP 3: Payment Information (Section 4.5) -->
-                    <div class="card bg-white rounded-lg shadow-sm border border-neutral-200 mt-6">
-                        <div class="card__header p-6 border-b border-neutral-200">
+                    <!-- STEP 3: Payment Information -->
+                    <section class="rounded-2xl border border-neutral-200 bg-white shadow-sm">
+                        <div class="p-6 border-b border-neutral-200">
                             <h2 class="text-xl font-semibold text-neutral-900 flex items-center gap-3">
-                                <div class="w-10 h-10 bg-brand-primary text-white rounded-full flex items-center justify-center flex-shrink-0">
+                                <div class="w-10 h-10 bg-brand-primary text-white rounded-full flex items-center justify-center flex-shrink-0" aria-hidden="true">
                                     <span class="text-sm font-bold">3</span>
                                 </div>
-                                Payment Information
+                                Payment information
                             </h2>
+                            <p class="mt-2 text-sm text-neutral-600">Select your preferred payment method and enter details</p>
                         </div>
-                        <div class="card__body p-6">
+                        <div class="p-6">
                             <div class="space-y-6">
-                                <!-- Payment Method Selection (Section 4.5) -->
-                                <div class="form-group">
-                                    <label class="form-label form-label--required">Payment Method</label>
+                                <fieldset>
+                                    <legend class="form-label form-label--required mb-4">Payment method</legend>
                                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                         <label class="payment-option flex flex-col items-center gap-2 p-4 border-2 border-brand-primary rounded-lg cursor-pointer bg-brand-primary-50">
                                             <input type="radio" name="paymentMethod" value="credit" class="radio__input" checked onchange="togglePaymentForm('credit')">
@@ -372,10 +415,11 @@
                                             <span class="text-xs text-neutral-500">For orders $1000+</span>
                                         </label>
                                     </div>
-                                </div>
+                                </fieldset>
 
-                                <!-- Credit Card Form (Section 4.5) -->
-                                <div id="creditCardForm" class="space-y-4">
+                                <!-- Credit Card Form -->
+                                <fieldset id="creditCardForm" class="space-y-4">
+                                    <legend class="sr-only">Credit card details</legend>
                                     <div class="form-group">
                                         <label for="cardNumber" class="form-label form-label--required">Card Number</label>
                                         <div class="relative">
@@ -465,10 +509,11 @@
                                             Your card information will be encrypted and stored securely
                                         </div>
                                     </div>
-                                </div>
+                                </fieldset>
                                 
                                 <!-- PayPal Form (Hidden by default) -->
-                                <div id="paypalForm" class="hidden space-y-4">
+                                <fieldset id="paypalForm" class="hidden space-y-4">
+                                    <legend class="sr-only">PayPal payment</legend>
                                     <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
                                         <p class="text-sm text-blue-900 mb-4">
                                             You will be redirected to PayPal to complete your payment securely.
@@ -477,10 +522,11 @@
                                             Continue to PayPal
                                         </button>
                                     </div>
-                                </div>
+                                </fieldset>
                                 
                                 <!-- Bank Transfer Form (Hidden by default) -->
-                                <div id="bankForm" class="hidden space-y-4">
+                                <fieldset id="bankForm" class="hidden space-y-4">
+                                    <legend class="sr-only">Bank transfer details</legend>
                                     <div class="bg-neutral-50 border border-neutral-200 rounded-lg p-4">
                                         <p class="text-sm text-neutral-700 mb-2">
                                             <strong>Bank Transfer Details:</strong>
@@ -495,22 +541,23 @@
                                             Please include your order number in the transfer reference. Orders will be processed after payment confirmation (2-3 business days).
                                         </p>
                                     </div>
-                                </div>
+                                </fieldset>
                             </div>
                         </div>
-                    </div>
+                    </section>
 
-                    <!-- STEP 4: Review & Confirm (Section 4.5) -->
-                    <div class="card bg-white rounded-lg shadow-sm border border-neutral-200 mt-6">
-                        <div class="card__header p-6 border-b border-neutral-200">
+                    <!-- STEP 4: Review & Confirm -->
+                    <section class="rounded-2xl border border-neutral-200 bg-white shadow-sm">
+                        <div class="p-6 border-b border-neutral-200">
                             <h2 class="text-xl font-semibold text-neutral-900 flex items-center gap-3">
-                                <div class="w-10 h-10 bg-brand-primary text-white rounded-full flex items-center justify-center flex-shrink-0">
+                                <div class="w-10 h-10 bg-brand-primary text-white rounded-full flex items-center justify-center flex-shrink-0" aria-hidden="true">
                                     <span class="text-sm font-bold">4</span>
                                 </div>
-                                Review & Confirm
+                                Review & confirm
                             </h2>
+                            <p class="mt-2 text-sm text-neutral-600">Verify your information before placing your order</p>
                         </div>
-                        <div class="card__body p-6">
+                        <div class="p-6">
                             <!-- Shipping Address Review -->
                             <div class="mb-6 pb-6 border-b border-neutral-200">
                                 <div class="flex items-start justify-between mb-2">
@@ -581,18 +628,18 @@
                                 </a>
                             </div>
                         </div>
-                    </div>
+                    </section>
                 </form>
             </div>
 
-            <!-- Order Summary Sidebar (Section 4.5) -->
-            <div class="lg:col-span-1">
+            <!-- Order Summary Sidebar -->
+            <aside class="lg:col-span-1">
                 <div class="sticky top-8">
-                    <div class="card bg-white rounded-lg shadow-sm border border-neutral-200">
-                        <div class="card__header p-6 border-b border-neutral-200">
-                            <h2 class="text-xl font-semibold text-neutral-900">Order Summary</h2>
+                    <div class="rounded-2xl border border-neutral-200 bg-white shadow-sm">
+                        <div class="p-6 border-b border-neutral-200">
+                            <h2 class="text-xl font-semibold text-neutral-900">Order summary</h2>
                         </div>
-                        <div class="card__body p-6 space-y-4">
+                        <div class="p-6 space-y-4">
                             <!-- Cart Items List -->
                             <c:choose>
                                 <c:when test="${not empty cartItems}">
@@ -619,43 +666,43 @@
                                         </c:forEach>
                                     </div>
                                     
-                                    <!-- Price Breakdown (Section 4.5) -->
-                                    <div class="border-t border-neutral-200 pt-4 space-y-3">
+                                    <!-- Price Breakdown -->
+                                    <dl class="border-t border-neutral-200 pt-4 space-y-3" aria-label="Order totals">
                                         <div class="flex justify-between text-sm">
-                                            <span class="text-neutral-600">Subtotal (<c:out value="${cartItems.size()}" /> items)</span>
-                                            <span class="font-medium text-neutral-900">$<fmt:formatNumber value="${totalAmount}" pattern="#,##0.00" /></span>
+                                            <dt class="text-neutral-600">Subtotal (<c:out value="${itemCount}" /> items)</dt>
+                                            <dd class="font-medium text-neutral-900">&#36;${subtotalFormatted}</dd>
                                         </div>
                                         <div class="flex justify-between text-sm">
-                                            <span class="text-neutral-600">Shipping</span>
-                                            <span class="font-medium text-neutral-900" id="shippingCost">
+                                            <dt class="text-neutral-600">Shipping</dt>
+                                            <dd class="font-medium text-neutral-900" id="shippingCost">
                                                 <c:choose>
                                                     <c:when test="${totalAmount >= 50}">
                                                         <span class="text-success">Free</span>
                                                     </c:when>
                                                     <c:otherwise>
-                                                        $15.00
+                                                        &#36;${shippingFormatted}
                                                     </c:otherwise>
                                                 </c:choose>
-                                            </span>
+                                            </dd>
                                         </div>
                                         <c:if test="${totalAmount < 50}">
                                             <div class="text-xs text-neutral-500 italic">
-                                                Add $<fmt:formatNumber value="${50 - totalAmount}" pattern="#,##0.00" /> more for free shipping
+                                                Add &#36;<fmt:formatNumber value="${50 - totalAmount}" pattern="#,##0.00" /> more for free shipping
                                             </div>
                                         </c:if>
                                         <div class="flex justify-between text-sm">
-                                            <span class="text-neutral-600">Tax</span>
-                                            <span class="font-medium text-neutral-900">$<fmt:formatNumber value="${totalAmount * 0.1}" pattern="#,##0.00" /></span>
+                                            <dt class="text-neutral-600">Tax</dt>
+                                            <dd class="font-medium text-neutral-900">&#36;${taxFormatted}</dd>
                                         </div>
                                         <div class="border-t border-neutral-200 pt-3">
                                             <div class="flex justify-between items-center">
-                                                <span class="text-lg font-semibold text-neutral-900">Total</span>
-                                                <span class="text-2xl font-bold text-brand-primary" id="orderTotal">
-                                                    $<fmt:formatNumber value="${totalAmount * 1.1 + (totalAmount >= 50 ? 0 : 15)}" pattern="#,##0.00" />
-                                                </span>
+                                                <dt class="text-lg font-semibold text-neutral-900">Total</dt>
+                                                <dd class="text-2xl font-bold text-brand-primary" id="orderTotal">
+                                                    &#36;${totalFormatted}
+                                                </dd>
                                             </div>
                                         </div>
-                                    </div>
+                                    </dl>
                                     
                                     <!-- Security Badges (Section 4.5) -->
                                     <div class="border-t border-neutral-200 pt-4">
@@ -701,10 +748,9 @@
                                 </c:otherwise>
                             </c:choose>
                         </div>
-                        
                     </div>
                 </div>
-            </div>
+            </aside>
         </div>
     </main>
 

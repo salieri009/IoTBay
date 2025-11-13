@@ -1,136 +1,214 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="model.User" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
 
 <%
     User user = (User) session.getAttribute("user");
     String from = (String) session.getAttribute("from");
     session.removeAttribute("from");
+
+    String contextPath = request.getContextPath();
+
+    String heading;
+    String status;
+    String description;
+    String primaryCtaHref;
+    String primaryCtaLabel;
+    String secondaryCtaHref;
+    String secondaryCtaLabel;
+    String highlightTitle;
+    String highlightDetail;
+    String highlightLinkHref;
+    String highlightLinkLabel;
+
+    if (user != null) {
+        if ("register".equals(from)) {
+            heading = "Welcome to IoT Bay, " + user.getFirstName() + "!";
+            status = "Registration confirmed";
+            description = "You're all set to explore industrial-grade hardware, developer kits, and deployment-ready IoT bundles.";
+            primaryCtaHref = contextPath + "/browse.jsp";
+            primaryCtaLabel = "Start browsing products";
+            secondaryCtaHref = contextPath + "/updateProfile.jsp";
+            secondaryCtaLabel = "Complete your profile";
+            highlightTitle = "Activate your new account";
+            highlightDetail = "Save default shipping details and communication preferences so checkout stays quick across devices.";
+            highlightLinkHref = contextPath + "/updateProfile.jsp";
+            highlightLinkLabel = "Update profile";
+        } else {
+            heading = "Welcome back, " + user.getFirstName() + "!";
+            status = "You're signed in";
+            description = "Pick up where you left off—saved carts, recommendations, and order activity are synced to your account.";
+            primaryCtaHref = contextPath + "/";
+            primaryCtaLabel = "Continue to homepage";
+            secondaryCtaHref = contextPath + "/orderList.jsp";
+            secondaryCtaLabel = "View recent orders";
+            highlightTitle = "Account snapshot";
+            highlightDetail = "Review open orders, manage payment options, or jump back into active projects in one place.";
+            highlightLinkHref = contextPath + "/Profiles.jsp";
+            highlightLinkLabel = "Manage account";
+        }
+    } else {
+        heading = "Welcome to IoT Bay!";
+        status = "Connected experiences await";
+        description = "Discover certified gateways, sensors, and partner services that bring resilient, human-centered IoT deployments to life.";
+        primaryCtaHref = contextPath + "/browse.jsp";
+        primaryCtaLabel = "Browse the catalogue";
+        secondaryCtaHref = contextPath + "/register.jsp";
+        secondaryCtaLabel = "Create an account";
+        highlightTitle = "New to IoT Bay?";
+        highlightDetail = "Sign up to track orders, access compatibility tooling, and receive implementation guidance tailored to your industry.";
+        highlightLinkHref = contextPath + "/login.jsp";
+        highlightLinkLabel = "Sign in";
+    }
+
+    request.setAttribute("welcomeHeading", heading);
+    request.setAttribute("welcomeStatus", status);
+    request.setAttribute("welcomeDescription", description);
+    request.setAttribute("primaryCtaHref", primaryCtaHref);
+    request.setAttribute("primaryCtaLabel", primaryCtaLabel);
+    request.setAttribute("secondaryCtaHref", secondaryCtaHref);
+    request.setAttribute("secondaryCtaLabel", secondaryCtaLabel);
+    request.setAttribute("highlightTitle", highlightTitle);
+    request.setAttribute("highlightDetail", highlightDetail);
+    request.setAttribute("highlightLinkHref", highlightLinkHref);
+    request.setAttribute("highlightLinkLabel", highlightLinkLabel);
 %>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="css/modern-theme.css" />
-    <title>IoT Bay - Welcome</title>
-</head>
-<body>
-    <jsp:include page="components/header.jsp" />
-
-    <main class="welcome-page">
-        <div class="container">
-            <div class="welcome-hero">
-                <div class="welcome-content">
-                    <div class="welcome-animation">
-                        <div class="success-checkmark">
-                            <div class="check-icon">
-                                <span class="icon-line line-tip"></span>
-                                <span class="icon-line line-long"></span>
-                                <div class="icon-circle"></div>
-                                <div class="icon-fix"></div>
-                            </div>
+<t:base title="Welcome" description="Welcome to IoT Bay — trusted IoT solutions, expert support, and deployment-ready hardware.">
+    <section class="py-16">
+        <div class="container space-y-12">
+            <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,340px)] items-start">
+                <div class="rounded-2xl border border-neutral-200 bg-white shadow-sm p-10 space-y-8">
+                    <span class="inline-flex items-center gap-2 rounded-full bg-neutral-100 px-3 py-1 text-sm font-semibold text-neutral-700">
+                        <span class="inline-flex h-2 w-2 rounded-full bg-brand-primary"></span>
+                        ${welcomeStatus}
+                    </span>
+                    <div class="space-y-4">
+                        <h1 class="text-display-l font-bold text-neutral-900 leading-tight">
+                            ${welcomeHeading}
+                        </h1>
+                        <p class="text-lg text-neutral-600 max-w-3xl">
+                            ${welcomeDescription}
+                        </p>
+                    </div>
+                    <div class="flex flex-col gap-3 sm:flex-row">
+                        <a href="${primaryCtaHref}" class="btn btn--primary btn--lg sm:flex-1" aria-label="${primaryCtaLabel}">
+                            ${primaryCtaLabel}
+                        </a>
+                        <a href="${secondaryCtaHref}" class="btn btn--outline btn--lg sm:flex-1" aria-label="${secondaryCtaLabel}">
+                            ${secondaryCtaLabel}
+                        </a>
+                    </div>
+                    <div class="grid gap-4 sm:grid-cols-2">
+                        <div class="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 space-y-3" role="group" aria-label="Free shipping">
+                            <h2 class="text-sm font-semibold text-neutral-700 uppercase tracking-wide">Free shipping</h2>
+                            <p class="text-sm text-neutral-600">Orders over &#36;50 automatically qualify for complimentary tracked delivery.</p>
+                        </div>
+                        <div class="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 space-y-3" role="group" aria-label="Extended warranty">
+                            <h2 class="text-sm font-semibold text-neutral-700 uppercase tracking-wide">Extended warranty</h2>
+                            <p class="text-sm text-neutral-600">Every device ships with a minimum two-year warranty and optional care plans.</p>
                         </div>
                     </div>
-                    
-                    <div class="welcome-message">
-                        <%
-                            if (user != null) {
-                                if ("register".equals(from)) {
-                        %>
-                                <h1 class="welcome-title">Welcome to IoT Bay, <%= user.getFirstName() %>!</h1>
-                                <p class="welcome-subtitle">Your registration was successful</p>
-                                <p class="welcome-description">
-                                    Thank you for joining IoT Bay — your gateway to smarter living. 
-                                    Explore our cutting-edge IoT solutions and start your connected journey today.
-                                </p>
-                        <%
-                                } else {
-                        %>
-                                <h1 class="welcome-title">Welcome back, <%= user.getFirstName() %>!</h1>
-                                <p class="welcome-subtitle">You have successfully logged in</p>
-                                <p class="welcome-description">
-                                    We're glad to see you again. Continue exploring our latest IoT products 
-                                    and smart solutions designed for the connected world.
-                                </p>
-                        <%
-                                }
-                            } else {
-                        %>
-                                <h1 class="welcome-title">Welcome to IoT Bay!</h1>
-                                <p class="welcome-subtitle">We're glad you're here</p>
-                                <p class="welcome-description">
-                                    Discover the future of connected technology with our comprehensive 
-                                    range of IoT solutions for every need.
-                                </p>
-                        <%
-                            }
-                        %>
+                </div>
+
+                <aside class="rounded-2xl border border-brand-primary-200 bg-brand-primary-900 text-white shadow-sm p-8 space-y-6" aria-label="Account guidance">
+                    <div class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-white/10" aria-hidden="true">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
                     </div>
-                    
-                    <div class="welcome-actions">
-                        <a href="index.jsp" class="btn btn--primary btn--lg">
-                            <svg class="btn__icon" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
-                            </svg>
-                            Go to Home
-                        </a>
-                        <a href="browse" class="btn btn--outline btn--lg">
-                            <svg class="btn__icon" fill="currentColor" viewBox="0 0 20 20">
+                    <div class="space-y-2">
+                        <h2 class="text-xl font-semibold">${highlightTitle}</h2>
+                        <p class="text-sm text-white/80">${highlightDetail}</p>
+                    </div>
+                    <div class="space-y-3 text-sm text-white/70">
+                        <div class="flex items-start gap-2">
+                            <span class="inline-flex h-2 w-2 translate-y-2 rounded-full bg-white"></span>
+                            <p>Track orders, manage licences, and access procurement-ready documentation.</p>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <span class="inline-flex h-2 w-2 translate-y-2 rounded-full bg-white"></span>
+                            <p>Invite teammates to collaborate on carts and compatibility reviews.</p>
+                        </div>
+                        <div class="flex items-start gap-2">
+                            <span class="inline-flex h-2 w-2 translate-y-2 rounded-full bg-white"></span>
+                            <p>Receive alerts when stock levels change for saved products.</p>
+                        </div>
+                    </div>
+                    <a href="${highlightLinkHref}" class="btn btn--white btn--sm w-full" aria-label="${highlightLinkLabel}">
+                        ${highlightLinkLabel}
+                    </a>
+                </aside>
+            </div>
+
+            <section class="space-y-8">
+                <header class="space-y-3">
+                    <h2 class="text-display-s font-semibold text-neutral-900">Why teams choose IoT Bay</h2>
+                    <p class="text-neutral-600 max-w-3xl">Human-centred tooling, global partner hardware, and compliance-first operations keep your deployments moving without surprises.</p>
+                </header>
+                <ul class="grid gap-4 lg:grid-cols-4 md:grid-cols-2" role="list">
+                    <li class="rounded-2xl border border-neutral-200 bg-white p-6 space-y-3" role="group" aria-label="Compatibility assistance">
+                        <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-brand-primary-100 text-brand-primary">1</span>
+                        <h3 class="text-base font-semibold text-neutral-900">Compatibility assistance</h3>
+                        <p class="text-sm text-neutral-600">Guided specification reviews ensure sensors, gateways, and middleware integrate cleanly.</p>
+                    </li>
+                    <li class="rounded-2xl border border-neutral-200 bg-white p-6 space-y-3" role="group" aria-label="Industrial readiness">
+                        <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-brand-primary-100 text-brand-primary">2</span>
+                        <h3 class="text-base font-semibold text-neutral-900">Industrial readiness</h3>
+                        <p class="text-sm text-neutral-600">Certified hardware spans harsh environments, on-prem connectivity, and hybrid cloud workloads.</p>
+                    </li>
+                    <li class="rounded-2xl border border-neutral-200 bg-white p-6 space-y-3" role="group" aria-label="Procurement friendly">
+                        <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-brand-primary-100 text-brand-primary">3</span>
+                        <h3 class="text-base font-semibold text-neutral-900">Procurement friendly</h3>
+                        <p class="text-sm text-neutral-600">Quotes, invoices, and compliance documentation stay audit-ready for regulated industries.</p>
+                    </li>
+                    <li class="rounded-2xl border border-neutral-200 bg-white p-6 space-y-3" role="group" aria-label="Specialist support">
+                        <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-brand-primary-100 text-brand-primary">4</span>
+                        <h3 class="text-base font-semibold text-neutral-900">Specialist support</h3>
+                        <p class="text-sm text-neutral-600">Dedicated solution engineers help with pilots, scale-outs, and lifecycle management.</p>
+                    </li>
+                </ul>
+            </section>
+
+            <section class="space-y-6">
+                <header class="space-y-2">
+                    <h2 class="text-display-s font-semibold text-neutral-900">Quick links</h2>
+                    <p class="text-neutral-600">Jump straight into the most common actions for new and returning members.</p>
+                </header>
+                <div class="grid gap-4 md:grid-cols-3">
+                    <article class="rounded-2xl border border-neutral-200 bg-white p-6 space-y-3" role="group" aria-label="Browse catalogue">
+                        <div class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-brand-primary-100 text-brand-primary" aria-hidden="true">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"></path>
                             </svg>
-                            Browse Products
-                        </a>
-                    </div>
+                        </div>
+                        <h3 class="text-base font-semibold text-neutral-900">Browse catalogue</h3>
+                        <p class="text-sm text-neutral-600">Filter by protocol, environment rating, or deployment stage to find the right components.</p>
+                        <a href="${primaryCtaHref}" class="text-sm font-semibold text-brand-primary hover:underline">Open catalogue</a>
+                    </article>
+                    <article class="rounded-2xl border border-neutral-200 bg-white p-6 space-y-3" role="group" aria-label="Manage profile">
+                        <div class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-brand-secondary-100 text-brand-secondary" aria-hidden="true">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                        <h3 class="text-base font-semibold text-neutral-900">Manage profile</h3>
+                        <p class="text-sm text-neutral-600">Update organisation details, shipping addresses, and multi-user access in seconds.</p>
+                        <a href="${secondaryCtaHref}" class="text-sm font-semibold text-brand-primary hover:underline">Review settings</a>
+                    </article>
+                    <article class="rounded-2xl border border-neutral-200 bg-white p-6 space-y-3" role="group" aria-label="Get expert help">
+                        <div class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-neutral-900 text-white" aria-hidden="true">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-.707.707A6 6 0 1012 18a6 6 0 006-6h2a8 8 0 11-2.343-5.657l.707.707z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-base font-semibold text-neutral-900">Get expert help</h3>
+                        <p class="text-sm text-neutral-600">Need tailored procurement or a custom architecture review? We’ll pair you with a specialist.</p>
+                        <a href="${contextPath}/contact.jsp" class="text-sm font-semibold text-brand-primary hover:underline">Contact support</a>
+                    </article>
                 </div>
-                
-                <div class="welcome-features">
-                    <h3 class="features-title">What's Next?</h3>
-                    <div class="features-grid">
-                        <div class="feature-card">
-                            <div class="feature-card__icon">
-                                <svg fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"></path>
-                                </svg>
-                            </div>
-                            <h4 class="feature-card__title">Browse Products</h4>
-                            <p class="feature-card__description">Explore our extensive catalog of IoT devices and solutions</p>
-                        </div>
-                        
-                        <div class="feature-card">
-                            <div class="feature-card__icon">
-                                <svg fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
-                                </svg>
-                            </div>
-                            <h4 class="feature-card__title">Manage Profile</h4>
-                            <p class="feature-card__description">Update your personal information and preferences</p>
-                        </div>
-                        
-                        <div class="feature-card">
-                            <div class="feature-card__icon">
-                                <svg fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"></path>
-                                </svg>
-                            </div>
-                            <h4 class="feature-card__title">Start Shopping</h4>
-                            <p class="feature-card__description">Add products to your cart and complete your purchase</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            </section>
         </div>
-    </main>
-
-    <jsp:include page="components/footer.jsp" />
-    <script src="js/main.js"></script>
-    <script>
-        // Add welcome animation
-        document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(() => {
-                document.querySelector('.welcome-content').classList.add('animate-in');
-            }, 300);
-        });
-    </script>
-</body>
-</html>
+    </section>
+</t:base>

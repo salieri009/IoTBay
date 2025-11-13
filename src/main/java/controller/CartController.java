@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -48,14 +49,17 @@ public class CartController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
-        String pathInfo = request.getPathInfo();
+        String requestURI = request.getRequestURI();
+        String contextPath = request.getContextPath();
+        String path = requestURI.substring(contextPath.length());
         
-        if (pathInfo != null && pathInfo.startsWith("/api/")) {
+        // Check if this is an API request (/api/cart/*)
+        if (path.startsWith("/api/cart/")) {
             handleApiRequest(request, response);
             return;
         }
         
-        // Handle traditional form submission
+        // Handle traditional form submission (/cart)
         handleFormSubmission(request, response);
     }
 
@@ -63,14 +67,17 @@ public class CartController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
-        String pathInfo = request.getPathInfo();
+        String requestURI = request.getRequestURI();
+        String contextPath = request.getContextPath();
+        String path = requestURI.substring(contextPath.length());
         
-        if (pathInfo != null && pathInfo.startsWith("/api/")) {
+        // Check if this is an API request (/api/cart/*)
+        if (path.startsWith("/api/cart/")) {
             handleApiGet(request, response);
             return;
         }
         
-        // Handle traditional page request
+        // Handle traditional page request (/cart or /cart.jsp)
         handlePageRequest(request, response);
     }
 
@@ -91,18 +98,20 @@ public class CartController extends HttpServlet {
             return;
         }
 
-        String pathInfo = request.getPathInfo();
+        String requestURI = request.getRequestURI();
+        String contextPath = request.getContextPath();
+        String path = requestURI.substring(contextPath.length());
+        
+        // Extract the endpoint after /api/cart/
+        String endpoint = path.substring("/api/cart".length());
         
         try {
-            switch (pathInfo) {
-                case "/api/add":
-                    addToCartApi(request, response, user);
-                    break;
-                case "/api/update":
-                    updateCartItemApi(request, response, user);
-                    break;
-                default:
-                    ResponseUtil.sendJsonError(response, HttpServletResponse.SC_NOT_FOUND, "Endpoint not found");
+            if (endpoint.equals("/add") || endpoint.equals("/")) {
+                addToCartApi(request, response, user);
+            } else if (endpoint.equals("/update")) {
+                updateCartItemApi(request, response, user);
+            } else {
+                ResponseUtil.sendJsonError(response, HttpServletResponse.SC_NOT_FOUND, "Endpoint not found: " + endpoint);
             }
         } catch (Exception e) {
             ResponseUtil.sendJsonError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, 
@@ -121,21 +130,22 @@ public class CartController extends HttpServlet {
             return;
         }
 
-        String pathInfo = request.getPathInfo();
+        String requestURI = request.getRequestURI();
+        String contextPath = request.getContextPath();
+        String path = requestURI.substring(contextPath.length());
+        
+        // Extract the endpoint after /api/cart/
+        String endpoint = path.substring("/api/cart".length());
         
         try {
-            switch (pathInfo) {
-                case "/api/items":
-                    getCartItemsApi(request, response, user);
-                    break;
-                case "/api/count":
-                    getCartItemCountApi(response, user);
-                    break;
-                case "/api/total":
-                    getCartTotalApi(response, user);
-                    break;
-                default:
-                    ResponseUtil.sendJsonError(response, HttpServletResponse.SC_NOT_FOUND, "Endpoint not found");
+            if (endpoint.equals("/items") || endpoint.equals("/")) {
+                getCartItemsApi(request, response, user);
+            } else if (endpoint.equals("/count")) {
+                getCartItemCountApi(response, user);
+            } else if (endpoint.equals("/total")) {
+                getCartTotalApi(response, user);
+            } else {
+                ResponseUtil.sendJsonError(response, HttpServletResponse.SC_NOT_FOUND, "Endpoint not found: " + endpoint);
             }
         } catch (Exception e) {
             ResponseUtil.sendJsonError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, 
@@ -154,13 +164,20 @@ public class CartController extends HttpServlet {
             return;
         }
 
-        String pathInfo = request.getPathInfo();
+        String requestURI = request.getRequestURI();
+        String contextPath = request.getContextPath();
+        String path = requestURI.substring(contextPath.length());
+        
+        // Extract the endpoint after /api/cart/
+        String endpoint = path.substring("/api/cart".length());
         
         try {
-            if (pathInfo != null && pathInfo.equals("/api/clear")) {
+            if (endpoint.equals("/clear")) {
                 clearCartApi(response, user);
-            } else {
+            } else if (endpoint.equals("/remove")) {
                 removeFromCartApi(request, response, user);
+            } else {
+                ResponseUtil.sendJsonError(response, HttpServletResponse.SC_NOT_FOUND, "Endpoint not found: " + endpoint);
             }
         } catch (Exception e) {
             ResponseUtil.sendJsonError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, 
@@ -275,7 +292,7 @@ public class CartController extends HttpServlet {
         try {
             List<CartItem> cartItems = (userId != null) ? 
                 cartItemDAO.getCartItemsByUserId(userId) : 
-                List.of();
+                Collections.emptyList();
             
             BigDecimal cartTotal = (userId != null) ? 
                 cartItemDAO.getCartTotal(userId) : 
@@ -462,11 +479,26 @@ public class CartController extends HttpServlet {
     private void removeFromCartApi(HttpServletRequest request, HttpServletResponse response, User user)
             throws Exception {
         
+        // Support both itemId and productId for backward compatibility
         String productIdStr = request.getParameter("productId");
+        String itemIdStr = request.getParameter("itemId");
+        
+        // If itemId is provided, try to get productId from cart item
+        if (productIdStr == null && itemIdStr != null) {
+            try {
+                int itemId = Integer.parseInt(itemIdStr);
+                CartItem cartItem = cartItemDAO.getCartItemById(itemId);
+                if (cartItem != null && cartItem.getUserId() == user.getId()) {
+                    productIdStr = String.valueOf(cartItem.getProductId());
+                }
+            } catch (Exception e) {
+                // Fall through to error handling
+            }
+        }
 
         if (productIdStr == null) {
             ResponseUtil.sendJsonError(response, HttpServletResponse.SC_BAD_REQUEST, 
-                "Product ID is required");
+                "Product ID or Item ID is required");
             return;
         }
 
@@ -480,11 +512,25 @@ public class CartController extends HttpServlet {
             }
 
             cartItemDAO.deleteCartItem(user.getId(), productId);
-            ResponseUtil.sendJsonResponse(response, "{\"success\": true}");
+            
+            // Get updated cart summary
+            CartSummary summary = cartService.getCartSummary(user.getId());
+            
+            // Build response with updated cart info
+            StringBuilder jsonResponse = new StringBuilder();
+            jsonResponse.append("{\"success\": true, \"message\": \"Item removed from cart\"");
+            jsonResponse.append(", \"itemCount\": ").append(summary.getItemCount());
+            jsonResponse.append(", \"total\": ").append(summary.getTotal());
+            jsonResponse.append("}");
+            
+            ResponseUtil.sendJsonResponse(response, jsonResponse.toString());
 
         } catch (NumberFormatException e) {
             ResponseUtil.sendJsonError(response, HttpServletResponse.SC_BAD_REQUEST, 
                 "Invalid product ID format");
+        } catch (SQLException e) {
+            ResponseUtil.sendJsonError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, 
+                "Database error: " + e.getMessage());
         }
     }
 

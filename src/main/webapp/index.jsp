@@ -17,35 +17,44 @@
 <t:base title="Home" description="Your Premier IoT Device Store - Technical sophistication meets user-friendly design">
     
     <!-- Hero Section - Full Width (Section 4.1) -->
-    <section class="hero bg-gradient-to-r from-brand-primary via-brand-primary-600 to-brand-secondary relative overflow-hidden">
-        <div class="absolute inset-0 opacity-10">
-            <img src="${pageContext.request.contextPath}/images/hero.png" 
-                 alt="" 
-                 class="w-full h-full object-cover"
-                 aria-hidden="true">
-        </div>
-        <div class="container relative z-10 text-center py-16 md:py-24">
-            <div class="max-w-4xl mx-auto">
-                <h1 class="text-display-xl font-extrabold text-white mb-6 animate-fade-in-up drop-shadow-2xl">
+    <section class="py-16 md:py-24 bg-neutral-900 text-white">
+        <div class="container grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,480px)] items-center">
+            <div class="space-y-6 text-center lg:text-left">
+                <p class="inline-flex items-center justify-center lg:justify-start gap-2 text-xs font-semibold uppercase tracking-wide text-white/80">
+                    <span class="inline-flex h-2 w-2 rounded-full bg-brand-secondary"></span>
+                    Built for engineers, trusted by teams worldwide
+                </p>
+                <h1 class="text-display-xl font-extrabold leading-tight">
                     Your Premier IoT Device Store
                 </h1>
-                <p class="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto mb-8 animate-fade-in-up animation-delay-200">
-                    Technical sophistication meets user-friendly design
+                <p class="text-lg md:text-xl text-neutral-200 max-w-2xl mx-auto lg:mx-0">
+                    Technical sophistication meets human-centred design so you can specify, compare, and deploy the right IoT hardware with confidence.
                 </p>
-                <div class="flex flex-wrap justify-center gap-4 animate-fade-in-up animation-delay-400">
-                    <a href="${pageContext.request.contextPath}/browse.jsp" class="btn btn--primary btn--lg">
+                <div class="flex flex-col sm:flex-row sm:justify-start gap-3 sm:gap-4 max-w-xl mx-auto lg:mx-0">
+                    <a href="${pageContext.request.contextPath}/browse.jsp" class="btn btn--primary btn--lg sm:flex-1" aria-label="Browse IoTBay products">
                         Browse Products
                     </a>
-                    <a href="${pageContext.request.contextPath}/about.jsp" class="btn btn--secondary btn--lg">
+                    <a href="${pageContext.request.contextPath}/about.jsp" class="btn btn--secondary btn--lg sm:flex-1" aria-label="Learn more about IoTBay">
                         Learn More
                     </a>
                 </div>
-                <div class="mt-8 animate-fade-in-up animation-delay-600">
-                    <p class="text-white/80 text-sm font-medium">
-                        ✓ Trusted by 10,000+ Engineers Worldwide
-                    </p>
-                </div>
+                <dl class="grid gap-4 sm:grid-cols-2 text-left max-w-2xl mx-auto lg:mx-0">
+                    <div class="rounded-lg bg-white/10 p-4" role="group" aria-label="Certified hardware">
+                        <dt class="text-sm font-semibold text-white">Certified hardware</dt>
+                        <dd class="mt-1 text-sm text-neutral-200">All devices verified for industrial and enterprise deployments.</dd>
+                    </div>
+                    <div class="rounded-lg bg-white/10 p-4" role="group" aria-label="Expert support">
+                        <dt class="text-sm font-semibold text-white">Expert support</dt>
+                        <dd class="mt-1 text-sm text-neutral-200">Access implementation guides and 24/7 specialist assistance.</dd>
+                    </div>
+                </dl>
             </div>
+            <figure class="relative">
+                <img src="${pageContext.request.contextPath}/images/hero.png"
+                     alt="IoT gateways, sensors, and modules arranged on a workbench"
+                     class="w-full h-auto rounded-2xl shadow-xl object-cover">
+                <figcaption class="sr-only">Photo illustrating the range of IoT hardware available at IoTBay.</figcaption>
+            </figure>
         </div>
     </section>
 
@@ -72,9 +81,9 @@
                     </div>
                     <h3 class="text-xl font-semibold text-neutral-900 mb-2">Industrial</h3>
                     <ul class="text-sm text-neutral-600 space-y-1 mb-4">
-                        <li>• Sensors</li>
-                        <li>• Controllers</li>
-                        <li>• Connectivity</li>
+                        <li>Sensors</li>
+                        <li>Controllers</li>
+                        <li>Connectivity</li>
                     </ul>
                     <span class="text-brand-primary font-medium group-hover:underline inline-flex items-center">
                         Explore →
@@ -93,9 +102,9 @@
                     </div>
                     <h3 class="text-xl font-semibold text-neutral-900 mb-2">Warehouse</h3>
                     <ul class="text-sm text-neutral-600 space-y-1 mb-4">
-                        <li>• RFID Systems</li>
-                        <li>• Automation</li>
-                        <li>• Monitoring</li>
+                        <li>RFID Systems</li>
+                        <li>Automation</li>
+                        <li>Monitoring</li>
                     </ul>
                     <span class="text-brand-primary font-medium group-hover:underline inline-flex items-center">
                         Explore →
@@ -114,9 +123,9 @@
                     </div>
                     <h3 class="text-xl font-semibold text-neutral-900 mb-2">Agriculture</h3>
                     <ul class="text-sm text-neutral-600 space-y-1 mb-4">
-                        <li>• Environmental Sensors</li>
-                        <li>• Irrigation</li>
-                        <li>• Livestock Monitoring</li>
+                        <li>Environmental Sensors</li>
+                        <li>Irrigation</li>
+                        <li>Livestock Monitoring</li>
                     </ul>
                     <span class="text-brand-primary font-medium group-hover:underline inline-flex items-center">
                         Explore →
@@ -135,9 +144,9 @@
                     </div>
                     <h3 class="text-xl font-semibold text-neutral-900 mb-2">Smart Home</h3>
                     <ul class="text-sm text-neutral-600 space-y-1 mb-4">
-                        <li>• Security Systems</li>
-                        <li>• Energy Management</li>
-                        <li>• Home Automation</li>
+                        <li>Security Systems</li>
+                        <li>Energy Management</li>
+                        <li>Home Automation</li>
                     </ul>
                     <span class="text-brand-primary font-medium group-hover:underline inline-flex items-center">
                         Explore →

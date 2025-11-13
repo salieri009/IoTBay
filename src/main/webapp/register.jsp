@@ -18,57 +18,70 @@
 </head>
 <body class="min-h-screen bg-neutral-50">
     <main class="min-h-screen flex items-center justify-center py-12 px-4">
-        <div class="max-w-4xl w-full">
-            <div class="card p-8">
+        <div class="max-w-5xl w-full">
+            <div class="rounded-2xl border border-neutral-200 bg-white shadow-sm p-8">
                 <div class="text-center mb-8">
-                    <h1 class="text-3xl font-bold text-neutral-900 mb-2">Join IoT Bay</h1>
-                    <p class="text-neutral-600">Create your account to start shopping for IoT solutions</p>
+                    <h1 class="text-display-l font-bold text-neutral-900 mb-2">Join IoT Bay</h1>
+                    <p class="text-lg text-neutral-600">Create your account to start shopping for IoT solutions</p>
                 </div>
                 
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
                     <!-- Benefits Section -->
-                    <div class="space-y-6">
-                        <div class="text-center">
-                            <img src="<%= contextPath %>/images/wewantyou.png" alt="Join IoT Bay" class="w-full max-w-sm mx-auto mb-6" />
-                        </div>
+                    <aside class="space-y-6">
+                        <figure class="text-center">
+                            <img src="<%= contextPath %>/images/wewantyou.png" alt="Join IoT Bay community" class="w-full max-w-sm mx-auto mb-6 rounded-lg" />
+                            <figcaption class="sr-only">Illustration representing the IoT Bay community</figcaption>
+                        </figure>
                         
-                        <div class="bg-primary-50 p-6 rounded-lg">
-                            <h3 class="text-xl font-semibold text-neutral-900 mb-4">Why join IoT Bay?</h3>
-                            <ul class="space-y-3">
-                                <li class="flex items-center text-neutral-700">
-                                    <svg class="w-5 h-5 text-success mr-3" fill="currentColor" viewBox="0 0 20 20">
+                        <div class="rounded-2xl border border-neutral-200 bg-neutral-50 p-6">
+                            <h2 class="text-xl font-semibold text-neutral-900 mb-4">Why join IoT Bay?</h2>
+                            <dl class="space-y-4">
+                                <div class="flex items-start gap-3">
+                                    <svg class="w-5 h-5 text-success flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                                         <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                                     </svg>
-                                    Exclusive access to latest IoT products
-                                </li>
-                                <li class="flex items-center text-neutral-700">
-                                    <svg class="w-5 h-5 text-success mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                    <div>
+                                        <dt class="text-sm font-medium text-neutral-900">Exclusive access</dt>
+                                        <dd class="text-sm text-neutral-600 mt-1">Latest IoT products and early releases</dd>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <svg class="w-5 h-5 text-success flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                                         <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                                     </svg>
-                                    Member-only discounts and deals
-                                </li>
-                                <li class="flex items-center text-neutral-700">
-                                    <svg class="w-5 h-5 text-success mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                    <div>
+                                        <dt class="text-sm font-medium text-neutral-900">Member discounts</dt>
+                                        <dd class="text-sm text-neutral-600 mt-1">Special pricing and promotional deals</dd>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <svg class="w-5 h-5 text-success flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                                         <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                                     </svg>
-                                    Fast and secure checkout
-                                </li>
-                                <li class="flex items-center text-neutral-700">
-                                    <svg class="w-5 h-5 text-success mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                    <div>
+                                        <dt class="text-sm font-medium text-neutral-900">Secure checkout</dt>
+                                        <dd class="text-sm text-neutral-600 mt-1">Fast and encrypted payment processing</dd>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-3">
+                                    <svg class="w-5 h-5 text-success flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                                         <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                                     </svg>
-                                    Order tracking and history
-                                </li>
-                            </ul>
+                                    <div>
+                                        <dt class="text-sm font-medium text-neutral-900">Order tracking</dt>
+                                        <dd class="text-sm text-neutral-600 mt-1">Real-time updates and order history</dd>
+                                    </div>
+                                </div>
+                            </dl>
                         </div>
-                    </div>
+                    </aside>
                     
                     <!-- Registration Form -->
-                    <div class="space-y-6">
-                        <form class="space-y-6" id="registerForm" action="<%= contextPath %>/api/auth/register" method="post">
+                    <div class="space-y-8">
+                        <form class="space-y-8" id="registerForm" action="<%= contextPath %>/api/auth/register" method="post">
                             <!-- Account Information -->
-                            <div class="space-y-4">
-                                <h3 class="text-lg font-semibold text-neutral-900 border-b border-neutral-200 pb-2">Account Information</h3>
+                            <fieldset class="space-y-4">
+                                <legend class="text-lg font-semibold text-neutral-900 border-b border-neutral-200 pb-2 w-full">Account information</legend>
                                 
                                 <div class="form-group">
                                     <label for="email" class="form-label">Email Address *</label>
@@ -101,9 +114,11 @@
                                 </div>
                             </div>
                             
+                            </fieldset>
+                            
                             <!-- Personal Information -->
-                            <div class="space-y-4">
-                                <h3 class="text-lg font-semibold text-neutral-900 border-b border-neutral-200 pb-2">Personal Information</h3>
+                            <fieldset class="space-y-4">
+                                <legend class="text-lg font-semibold text-neutral-900 border-b border-neutral-200 pb-2 w-full">Personal information</legend>
                                 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div class="form-group">
@@ -131,9 +146,11 @@
                                 </div>
                             </div>
                             
+                            </fieldset>
+                            
                             <!-- Address Information -->
-                            <div class="space-y-4">
-                                <h3 class="text-lg font-semibold text-neutral-900 border-b border-neutral-200 pb-2">Address Information</h3>
+                            <fieldset class="space-y-4">
+                                <legend class="text-lg font-semibold text-neutral-900 border-b border-neutral-200 pb-2 w-full">Address information</legend>
                                 
                                 <div class="form-group">
                                     <label for="addressLine1" class="form-label">Address Line 1 *</label>
@@ -154,34 +171,38 @@
                                 </div>
                             </div>
                             
+                            </fieldset>
+                            
                             <!-- Payment Method -->
-                            <div class="space-y-4">
-                                <h3 class="text-lg font-semibold text-neutral-900 border-b border-neutral-200 pb-2">Payment Method</h3>
+                            <fieldset class="space-y-4">
+                                <legend class="text-lg font-semibold text-neutral-900 border-b border-neutral-200 pb-2 w-full">Payment method</legend>
                                 
                                 <div class="form-group">
-                                    <label for="paymentMethod" class="form-label">Preferred Payment Method</label>
-                                    <select name="paymentMethod" id="paymentMethod" class="form-select">
+                                    <label for="paymentMethod" class="form-label">Preferred payment method</label>
+                                    <select name="paymentMethod" id="paymentMethod" class="form-select" aria-describedby="paymentMethod-help">
                                         <option value="CreditCard">Credit Card</option>
                                         <option value="PayPal">PayPal</option>
                                         <option value="BankTransfer">Bank Transfer</option>
                                     </select>
+                                    <div id="paymentMethod-help" class="form-help text-xs text-neutral-500 mt-1">You can change this later in your account settings</div>
                                 </div>
-                            </div>
+                            </fieldset>
                             
                             <!-- Terms and Conditions -->
                             <div class="space-y-4">
                                 <label class="checkbox">
-                                    <input type="checkbox" name="tos" id="tos" class="checkbox__input" required>
+                                    <input type="checkbox" name="tos" id="tos" class="checkbox__input" required aria-describedby="tos-help">
                                     <span class="checkbox__mark"></span>
                                     <span class="checkbox__label">
-                                        I agree to the <a href="terms.jsp" class="text-primary-600 hover:text-primary-700">Terms of Service</a> 
-                                        and <a href="privacy.jsp" class="text-primary-600 hover:text-primary-700">Privacy Policy</a>
+                                        I agree to the <a href="terms.jsp" class="text-brand-primary hover:text-brand-primary-600">Terms of Service</a> 
+                                        and <a href="privacy.jsp" class="text-brand-primary hover:text-brand-primary-600">Privacy Policy</a>
                                     </span>
                                 </label>
+                                <div id="tos-help" class="sr-only">Required to create an account</div>
                             </div>
                             
                             <input type="hidden" name="from" value="register" />
-                            <button type="submit" class="btn btn--primary btn--full">Create Account</button>
+                            <button type="submit" class="btn btn--primary btn--lg w-full">Create account</button>
                         </form>
                         
                         <div class="text-center">

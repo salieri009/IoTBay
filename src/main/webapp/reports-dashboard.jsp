@@ -171,7 +171,7 @@
                     <div class="card p-6">
                         <div class="flex items-center justify-between mb-6">
                             <h3 class="text-lg font-semibold text-neutral-900">Recent Orders</h3>
-                            <a href="<%= contextPath %>/orderList.jsp" class="btn btn--outline btn--sm">View All</a>
+                            <a href="<%= contextPath %>/orderhistory" class="btn btn--outline btn--sm">View All</a>
                         </div>
                         
                         <div class="overflow-x-auto">

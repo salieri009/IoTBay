@@ -32,7 +32,15 @@
     double shipping = subtotal >= 50.0 ? 0.0 : 15.0; // Free shipping over $50
     double total = subtotal + tax + shipping;
     String contextPath = request.getContextPath();
-    
+
+    double freeShippingDelta = subtotal >= 50.0 ? 0.0 : 50.0 - subtotal;
+    String cartSummary = totalItems == 0 ? "Your cart is currently empty." : totalItems + (totalItems == 1 ? " item" : " items") + " in your cart.";
+    String subtotalFormatted = String.format("%1$,.2f", subtotal);
+    String taxFormatted = String.format("%1$,.2f", tax);
+    String shippingFormatted = shipping == 0.0 ? "Free" : String.format("%1$,.2f", shipping);
+    String totalFormatted = String.format("%1$,.2f", total);
+    String freeShippingDeltaFormatted = String.format("%1$,.2f", freeShippingDelta);
+
     // Expose to EL
     request.setAttribute("cartItems", cartItems);
     request.setAttribute("subtotal", subtotal);
@@ -40,40 +48,62 @@
     request.setAttribute("shipping", shipping);
     request.setAttribute("total", total);
     request.setAttribute("totalItems", totalItems);
+    request.setAttribute("cartSummary", cartSummary);
+    request.setAttribute("subtotalFormatted", subtotalFormatted);
+    request.setAttribute("taxFormatted", taxFormatted);
+    request.setAttribute("shippingFormatted", shippingFormatted);
+    request.setAttribute("totalFormatted", totalFormatted);
+    request.setAttribute("freeShippingDeltaFormatted", freeShippingDeltaFormatted);
 %>
 
 <t:base title="Shopping Cart - IoT Bay" description="Review and manage your selected IoT products">
-    <main class="cart-page py-8">
-        <div class="container">
-            <!-- Breadcrumb Navigation (Section 4.4) -->
-            <nav class="breadcrumb mb-6" aria-label="Breadcrumb">
-                <ol class="flex items-center gap-2 text-sm text-neutral-600">
-                    <li>
-                        <a href="${pageContext.request.contextPath}/" class="hover:text-brand-primary">Home</a>
-                    </li>
-                    <li>/</li>
+    <main class="py-12">
+        <div class="container space-y-10">
+            <!-- Breadcrumb Navigation -->
+            <nav aria-label="Breadcrumb">
+                <ol class="flex flex-wrap items-center gap-2 text-sm text-neutral-600">
+                    <li><a href="${pageContext.request.contextPath}/" class="hover:text-brand-primary">Home</a></li>
+                    <li aria-hidden="true">/</li>
                     <li class="text-neutral-900 font-medium" aria-current="page">Shopping Cart</li>
                 </ol>
             </nav>
-            
-            <!-- Cart Header (Section 4.4) -->
-            <div class="mb-8">
-                <h1 class="text-display-md font-bold text-neutral-900 mb-2">Shopping Cart</h1>
-                <p class="text-lg text-neutral-600">
-                    <span id="cart-item-count"><c:out value="${totalItems}" /></span> 
-                    <c:choose>
-                        <c:when test="${totalItems == 1}">item</c:when>
-                        <c:otherwise>items</c:otherwise>
-                    </c:choose> in your cart
-                </p>
-            </div>
 
-            <!-- Compatibility Warnings Section (Section 4.4) -->
-            <div id="compatibility-warnings-container" class="mb-6" role="region" aria-live="polite" aria-label="Compatibility warnings"></div>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <!-- Cart Items Section (Section 4.4) -->
-                <div class="lg:col-span-2">
+            <!-- Cart Overview -->
+            <section class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,360px)]">
+                <div class="space-y-4">
+                    <h1 class="text-display-l font-bold text-neutral-900 leading-tight">Shopping cart</h1>
+                    <p class="text-lg text-neutral-600" id="cart-summary-text">${cartSummary}</p>
+                    <div class="flex flex-wrap items-center gap-3 text-sm text-neutral-600">
+                        <span class="inline-flex items-center gap-2 rounded-full bg-neutral-100 px-3 py-1 font-medium text-neutral-700" data-cart-summary-badge="subtotal">
+                            <span class="inline-flex h-2 w-2 rounded-full bg-brand-primary"></span>
+                            Subtotal: &#36;${subtotalFormatted}
+                        </span>
+                        <span class="inline-flex items-center gap-2 rounded-full bg-neutral-100 px-3 py-1 font-medium text-neutral-700" data-cart-summary-badge="total">
+                            <span class="inline-flex h-2 w-2 rounded-full bg-brand-secondary"></span>
+                            Estimated total: &#36;${totalFormatted}
+                        </span>
+                    </div>
+                </div>
+                <aside class="rounded-2xl border border-neutral-200 bg-neutral-50 p-6 space-y-4" aria-label="Checkout guidance">
+                    <div>
+                        <h2 class="text-sm font-semibold uppercase tracking-wide text-neutral-700">Next steps</h2>
+                        <p class="mt-2 text-sm text-neutral-600">Review quantities, confirm compatibility, then proceed to checkout. We’ll keep your cart synced across devices when you sign in.</p>
+                    </div>
+                    <ul class="space-y-3 text-sm text-neutral-600">
+                        <li>Items remain reserved for 30 minutes while you complete checkout.</li>
+                        <li>Orders over &#36;100 qualify for free shipping at the payment step.</li>
+                        <li>Need procurement documents? Download quotes directly from checkout.</li>
+                    </ul>
+                    <a href="${pageContext.request.contextPath}/browse" class="btn btn--outline btn--sm">Continue shopping</a>
+                </aside>
+            </section>
+
+            <!-- Compatibility Warnings -->
+            <div id="compatibility-warnings-container" class="rounded-2xl border border-warning-200 bg-warning-50 p-4 hidden" role="region" aria-live="polite" aria-label="Compatibility warnings"></div>
+
+            <div class="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
+                <!-- Cart Items Section -->
+                <div>
                     <c:choose>
                         <c:when test="${cartItems != null && !empty cartItems}">
                             <div class="space-y-4">
@@ -127,7 +157,7 @@
                                                     <!-- Remove Button -->
                                                     <button 
                                                         class="remove-btn flex-shrink-0 p-2 text-neutral-400 hover:text-error transition-colors"
-                                                        onclick="removeItem(${item.id})" 
+                                                        onclick="removeItem(event, ${item.id})" 
                                                         aria-label="Remove ${item.product.name} from cart"
                                                         title="Remove item">
                                                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
@@ -141,12 +171,10 @@
                                                     <div class="quantity-controls flex items-center gap-3">
                                                         <label for="quantity-${item.id}" class="sr-only">Quantity for ${item.product.name}</label>
                                                         <button 
-                                                            class="quantity-btn w-8 h-8 flex items-center justify-center rounded border border-neutral-300 hover:border-brand-primary hover:bg-brand-primary-50 transition-colors"
-                                                            onclick="updateQuantity(${item.id}, ${item.quantity - 1})" 
+                                                            class="btn btn--ghost btn--sm"
+                                                            onclick="updateQuantity(event, ${item.id}, ${item.quantity - 1})" 
                                                             aria-label="Decrease quantity">
-                                                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                                                                <path fill-rule="evenodd" d="M3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd"></path>
-                                                            </svg>
+                                                            <span aria-hidden="true">&minus;</span>
                                                         </button>
                                                         <input 
                                                             type="number" 
@@ -154,17 +182,14 @@
                                                             value="${item.quantity}" 
                                                             min="1" 
                                                             max="${item.product.stockQuantity}"
-                                                            class="quantity-value w-16 text-center border border-neutral-300 rounded py-1"
+                                                            class="quantity-value form-input w-20 text-center"
                                                             readonly
                                                             aria-label="Quantity">
                                                         <button 
-                                                            class="quantity-btn w-8 h-8 flex items-center justify-center rounded border border-neutral-300 hover:border-brand-primary hover:bg-brand-primary-50 transition-colors"
-                                                            onclick="updateQuantity(${item.id}, ${item.quantity + 1})" 
-                                                            aria-label="Increase quantity"
-                                                            <c:if test="${item.quantity >= item.product.stockQuantity}">disabled</c:if>>
-                                                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                                                                <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"></path>
-                                                            </svg>
+                                                            class="btn btn--ghost btn--sm"
+                                                            onclick="updateQuantity(event, ${item.id}, ${item.quantity + 1})" 
+                                                            aria-label="Increase quantity">
+                                                            <span aria-hidden="true">+</span>
                                                         </button>
                                                     </div>
                                                     
@@ -199,43 +224,43 @@
                     </c:choose>
                 </div>
 
-                <!-- Cart Summary Section (Section 4.4) -->
+                <!-- Cart Summary Section -->
                 <c:if test="${cartItems != null && !empty cartItems}">
-                    <div class="lg:col-span-1">
+                    <div>
                         <div class="sticky top-8">
                             <div class="cart-summary-card bg-white rounded-lg shadow-sm border border-neutral-200 p-6">
                                 <h3 class="cart-summary-title text-xl font-semibold text-neutral-900 mb-6">Order Summary</h3>
                                 
                                 <div class="cart-summary-details space-y-4 mb-6">
                                     <div class="summary-row flex justify-between text-sm">
-                                        <span class="text-neutral-600">Subtotal (<c:out value="${totalItems}" /> items)</span>
-                                        <span class="font-medium text-neutral-900">$<fmt:formatNumber value="${subtotal}" pattern="#,##0.00" /></span>
+                                        <span class="text-neutral-600">Subtotal (<span data-cart-summary="items-count"><c:out value="${totalItems}" /></span> items)</span>
+                                        <span class="font-medium text-neutral-900" data-cart-summary="subtotal">&#36;${subtotalFormatted}</span>
                                     </div>
                                     <div class="summary-row flex justify-between text-sm">
                                         <span class="text-neutral-600">Shipping</span>
-                                        <span class="font-medium text-neutral-900">
+                                        <span class="font-medium text-neutral-900" data-cart-summary="shipping">
                                             <c:choose>
                                                 <c:when test="${shipping == 0}">
                                                     <span class="text-success">Free</span>
                                                 </c:when>
                                                 <c:otherwise>
-                                                    $<fmt:formatNumber value="${shipping}" pattern="#,##0.00" />
+                                                    &#36;${shippingFormatted}
                                                 </c:otherwise>
                                             </c:choose>
                                         </span>
                                     </div>
                                     <c:if test="${subtotal < 50}">
-                                        <div class="text-xs text-neutral-500 italic">
-                                            Add $<fmt:formatNumber value="${50 - subtotal}" pattern="#,##0.00" /> more for free shipping
+                                        <div class="text-xs text-neutral-500 italic" data-cart-summary="shipping-note">
+                                            Add &#36;${freeShippingDeltaFormatted} more for free shipping
                                         </div>
                                     </c:if>
                                     <div class="summary-row flex justify-between text-sm">
                                         <span class="text-neutral-600">Tax</span>
-                                        <span class="font-medium text-neutral-900">$<fmt:formatNumber value="${tax}" pattern="#,##0.00" /></span>
+                                        <span class="font-medium text-neutral-900" data-cart-summary="tax">&#36;${taxFormatted}</span>
                                     </div>
                                     <div class="summary-row summary-row--total flex justify-between pt-4 border-t border-neutral-200">
                                         <span class="text-lg font-semibold text-neutral-900">Total</span>
-                                        <span class="text-2xl font-bold text-brand-primary">$<fmt:formatNumber value="${total}" pattern="#,##0.00" /></span>
+                                        <span class="text-2xl font-bold text-brand-primary" data-cart-summary="total">&#36;${totalFormatted}</span>
                                     </div>
                                 </div>
                                 
@@ -293,43 +318,46 @@
             // Check compatibility when cart page loads
             if (typeof CompatibilityEngine !== 'undefined') {
                 CompatibilityEngine.checkCartCompatibility().then(warnings => {
+                    const container = document.getElementById('compatibility-warnings-container');
+                    if (!container) return;
                     if (warnings && warnings.length > 0) {
-                        const container = document.getElementById('compatibility-warnings-container');
-                        if (container) {
-                            CompatibilityEngine.displayWarnings(warnings, container);
-                        }
+                        container.classList.remove('hidden');
+                        CompatibilityEngine.displayWarnings(warnings, container);
+                    } else {
+                        container.classList.add('hidden');
+                        container.innerHTML = '';
                     }
                 });
             }
         });
         
-        function updateQuantity(itemId, newQuantity) {
+        function updateQuantity(event, itemId, newQuantity) {
+            event.preventDefault();
             if (newQuantity < 1) {
-                removeItem(itemId);
+                removeItem(event, itemId);
                 return;
             }
             
-            // Find the button that was clicked
-            const quantityBtn = event.target;
+            const quantityBtn = event.currentTarget;
             const cartItem = quantityBtn.closest('.cart-item');
-            const quantityValue = cartItem.querySelector('.quantity-value');
-            const originalValue = quantityValue.textContent;
+            const quantityInput = cartItem.querySelector('.quantity-value');
+            const originalValue = quantityInput.value;
             
-            // Show loading state (Visibility of System Status - Nielsen's Heuristic 1)
+            const productId = cartItem.getAttribute('data-product-id') || itemId;
+            
             quantityBtn.disabled = true;
-            quantityValue.textContent = '...';
+            quantityInput.value = '…';
             if (typeof showLoading === 'function') {
                 showLoading(quantityBtn);
             }
             
-            // Send AJAX request to update quantity
             const contextPath = '${pageContext.request.contextPath}';
             fetch(contextPath + '/api/cart/update', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: `productId=${itemId}&quantity=${newQuantity}`
+                body: `productId=${productId}&quantity=${newQuantity}`
             })
             .then(response => {
                 if (response.ok) {
@@ -341,34 +369,22 @@
                 }
             })
             .then(data => {
-                // Show success feedback
                 if (typeof showToast === 'function') {
                     showToast('Quantity updated successfully', 'success');
                 }
-                
-                // Check for compatibility warnings after update
-                if (data.compatibilityWarnings && data.compatibilityWarnings.length > 0) {
-                    const container = document.getElementById('compatibility-warnings-container');
-                    if (container && typeof CompatibilityEngine !== 'undefined') {
-                        CompatibilityEngine.displayWarnings(data.compatibilityWarnings, container);
-                    }
+                quantityInput.value = newQuantity;
+                quantityBtn.disabled = false;
+                if (typeof hideLoading === 'function') {
+                    hideLoading(quantityBtn);
                 }
-                
-                // Reload to show updated totals
-                setTimeout(() => location.reload(), 500);
+                refreshCartSummary(data);
             })
             .catch(error => {
                 console.error('Error:', error);
-                // Restore original value (Error Recovery - Nielsen's Heuristic 9)
-                quantityValue.textContent = originalValue;
-                // Show error message
                 if (typeof showToast === 'function') {
                     showToast(error.message || 'Failed to update quantity. Please try again.', 'error');
-                } else {
-                    alert(error.message || 'Failed to update quantity. Please try again.');
                 }
-            })
-            .finally(() => {
+                quantityInput.value = originalValue;
                 quantityBtn.disabled = false;
                 if (typeof hideLoading === 'function') {
                     hideLoading(quantityBtn);
@@ -376,77 +392,130 @@
             });
         }
         
-        function removeItem(itemId) {
+        function removeItem(event, itemId) {
+            event.preventDefault();
             const cartItem = document.querySelector(`[data-item-id="${itemId}"]`) || 
-                           event.target.closest('.cart-item');
-            const productName = cartItem ? cartItem.querySelector('.cart-item-name')?.textContent : 'this item';
+                           event.currentTarget.closest('.cart-item');
+            const productName = cartItem ? cartItem.querySelector('.cart-item-name')?.textContent.trim() : 'this item';
             
-            // Enhanced confirmation dialog (User Control - Nielsen's Heuristic 3)
-            if (confirm(`Are you sure you want to remove "${productName}" from your cart?\n\nThis action cannot be undone.`)) {
-                const removeBtn = event.target.closest('.remove-btn') || event.target;
-                
-                // Show loading state
-                removeBtn.disabled = true;
-                if (typeof showLoading === 'function') {
-                    showLoading(removeBtn);
+            const productId = cartItem ? (cartItem.getAttribute('data-product-id') || itemId) : itemId;
+            
+            if (!confirm(`Remove "${productName}" from your cart?`)) {
+                return;
+            }
+            
+            const removeBtn = event.currentTarget;
+            removeBtn.disabled = true;
+            if (typeof showLoading === 'function') {
+                showLoading(removeBtn);
+            }
+            
+            const contextPath = '${pageContext.request.contextPath}';
+            fetch(contextPath + '/api/cart/remove', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `productId=${productId}`
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
                 }
-                
-                fetch(contextPath + '/api/cart/remove', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: `itemId=${itemId}`
-                })
-                .then(response => {
-                    if (response.ok) {
-                        return response.json();
+                return response.json().then(data => {
+                    throw new Error(data.message || 'Failed to remove item');
+                });
+            })
+            .then(data => {
+                if (typeof showToast === 'function') {
+                    showToast(`"${productName}" removed from cart`, 'success');
+                }
+                cartItem?.remove();
+                if (data) {
+                    refreshCartSummary(data);
+                }
+                const container = document.getElementById('compatibility-warnings-container');
+                if (container) {
+                    if (data && data.compatibilityWarnings && data.compatibilityWarnings.length > 0 && typeof CompatibilityEngine !== 'undefined') {
+                        container.classList.remove('hidden');
+                        CompatibilityEngine.displayWarnings(data.compatibilityWarnings, container);
                     } else {
-                        return response.json().then(data => {
-                            throw new Error(data.message || 'Failed to remove item');
-                        });
+                        container.classList.add('hidden');
+                        container.innerHTML = '';
                     }
-                })
-                .then(data => {
-                    // Show success feedback (Visibility of System Status - Nielsen's Heuristic 1)
-                    if (typeof showToast === 'function') {
-                        showToast(`"${productName}" removed from cart`, 'success');
+                }
+                if (!document.querySelector('.cart-item')) {
+                    location.reload();
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                if (typeof showToast === 'function') {
+                    showToast(error.message || 'Failed to remove item. Please try again.', 'error');
+                } else {
+                    alert(error.message || 'Failed to remove item. Please try again.');
+                }
+            })
+            .finally(() => {
+                removeBtn.disabled = false;
+                if (typeof hideLoading === 'function') {
+                    hideLoading(removeBtn);
+                }
+            });
+        }
+
+        function refreshCartSummary(data) {
+            if (!data) return;
+            const formatCurrency = (value) => new Intl.NumberFormat(undefined, { style: 'currency', currency: 'USD' }).format(value || 0);
+            const itemsCountEl = document.querySelector('[data-cart-summary="items-count"]');
+            const subtotalEl = document.querySelector('[data-cart-summary="subtotal"]');
+            const shippingEl = document.querySelector('[data-cart-summary="shipping"]');
+            const shippingNoteEl = document.querySelector('[data-cart-summary="shipping-note"]');
+            const taxEl = document.querySelector('[data-cart-summary="tax"]');
+            const totalEl = document.querySelector('[data-cart-summary="total"]');
+            const summaryBadges = document.querySelectorAll('[data-cart-summary-badge]');
+            const cartSummaryText = document.getElementById('cart-summary-text');
+
+            if (itemsCountEl && typeof data.totalItems !== 'undefined') {
+                itemsCountEl.textContent = data.totalItems;
+            }
+            if (subtotalEl && typeof data.subtotal !== 'undefined') {
+                subtotalEl.textContent = formatCurrency(data.subtotal);
+            }
+            if (shippingEl && typeof data.shipping !== 'undefined') {
+                shippingEl.textContent = data.shipping <= 0 ? 'Free' : formatCurrency(data.shipping);
+            }
+            if (shippingNoteEl) {
+                if (data.freeShippingDelta && data.freeShippingDelta > 0) {
+                    shippingNoteEl.textContent = `Add ${formatCurrency(data.freeShippingDelta)} more for free shipping`;
+                    shippingNoteEl.classList.remove('hidden');
+                } else {
+                    shippingNoteEl.classList.add('hidden');
+                }
+            }
+            if (taxEl && typeof data.tax !== 'undefined') {
+                taxEl.textContent = formatCurrency(data.tax);
+            }
+            if (totalEl && typeof data.total !== 'undefined') {
+                totalEl.textContent = formatCurrency(data.total);
+            }
+            if (summaryBadges.length) {
+                summaryBadges.forEach((badge) => {
+                    const type = badge.getAttribute('data-cart-summary-badge');
+                    if (type === 'subtotal' && typeof data.subtotal !== 'undefined') {
+                        badge.textContent = `Subtotal: ${formatCurrency(data.subtotal)}`;
                     }
-                    
-                    // Check compatibility after removal
-                    if (data.compatibilityWarnings && data.compatibilityWarnings.length > 0) {
-                        const container = document.getElementById('compatibility-warnings-container');
-                        if (container && typeof CompatibilityEngine !== 'undefined') {
-                            CompatibilityEngine.displayWarnings(data.compatibilityWarnings, container);
-                        }
-                    } else {
-                        // Clear warnings if no items left or no issues
-                        const container = document.getElementById('compatibility-warnings-container');
-                        if (container) {
-                            container.innerHTML = '';
-                        }
-                    }
-                    
-                    // Reload to show updated cart
-                    setTimeout(() => location.reload(), 500);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    // Show error message
-                    if (typeof showToast === 'function') {
-                        showToast(error.message || 'Failed to remove item. Please try again.', 'error');
-                    } else {
-                        alert(error.message || 'Failed to remove item. Please try again.');
-                    }
-                })
-                .finally(() => {
-                    removeBtn.disabled = false;
-                    if (typeof hideLoading === 'function') {
-                        hideLoading(removeBtn);
+                    if (type === 'total' && typeof data.total !== 'undefined') {
+                        badge.textContent = `Estimated total: ${formatCurrency(data.total)}`;
                     }
                 });
+            }
+            if (cartSummaryText) {
+                const noun = data.totalItems === 1 ? 'item' : 'items';
+                cartSummaryText.textContent = data.totalItems === 0 ? 'Your cart is currently empty.' : `${data.totalItems} ${noun} in your cart.`;
             }
         }
     </script>
 </body>
+</html>
 </html>

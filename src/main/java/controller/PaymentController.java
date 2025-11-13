@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -13,6 +14,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import dao.PaymentDAO;
 import dao.PaymentDetailDAO;
@@ -26,6 +30,7 @@ import utils.ValidationUtil;
 public class PaymentController extends HttpServlet {
     private PaymentDAO paymentDAO;
     private PaymentDetailDAO paymentDetailDAO;
+    private final Gson gson = new Gson();
 
     @Override
     public void init() throws ServletException {
@@ -51,23 +56,60 @@ public class PaymentController extends HttpServlet {
             return;
         }
 
+        String acceptHeader = request.getHeader("Accept");
+        boolean isJsonRequest = acceptHeader != null && acceptHeader.contains("application/json");
+
         try {
             if (pathInfo == null || pathInfo.equals("/")) {
                 // List all payments for user
-                listPayments(request, response, user);
-            } else if (pathInfo.startsWith("/view/")) {
-                // View specific payment
-                String paymentId = pathInfo.substring(6);
-                viewPayment(request, response, user, Integer.parseInt(paymentId));
-            } else if (pathInfo.equals("/history")) {
+                if (isJsonRequest) {
+                    listPaymentsJson(response, user);
+                } else {
+                    listPayments(request, response, user);
+                }
+            } else if (pathInfo.startsWith("/view/") || pathInfo.matches("/\\d+")) {
+                // View specific payment - support both /view/{id} and /{id}
+                String paymentIdStr = pathInfo.startsWith("/view/") 
+                    ? pathInfo.substring(6) 
+                    : pathInfo.substring(1);
+                int paymentId = Integer.parseInt(paymentIdStr);
+                if (isJsonRequest) {
+                    viewPaymentJson(response, user, paymentId);
+                } else {
+                    viewPayment(request, response, user, paymentId);
+                }
+            } else if (pathInfo.equals("/history") || pathInfo.equals("/search")) {
                 // Payment history with search
-                searchPayments(request, response, user);
+                if (isJsonRequest) {
+                    searchPaymentsJson(response, user, request);
+                } else {
+                    searchPayments(request, response, user);
+                }
+            } else if (pathInfo.startsWith("/user/")) {
+                // GET /api/payment/user/{userId} - Get user payments
+                String userIdStr = pathInfo.substring(6);
+                int userId = Integer.parseInt(userIdStr);
+                boolean isStaff = "staff".equalsIgnoreCase(user.getRole()) || 
+                                 "admin".equalsIgnoreCase(user.getRole());
+                if (isStaff || user.getId() == userId) {
+                    if (isJsonRequest) {
+                        getUserPaymentsJson(response, userId);
+                    } else {
+                        listPayments(request, response, user);
+                    }
+                } else {
+                    response.sendError(HttpServletResponse.SC_FORBIDDEN);
+                }
             } else {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
             }
         } catch (Exception e) {
-            request.setAttribute("error", "Error processing request: " + e.getMessage());
-            request.getRequestDispatcher("/error.jsp").forward(request, response);
+            if (isJsonRequest) {
+                handleJsonError(response, "Error processing request", e);
+            } else {
+                request.setAttribute("error", "Error processing request: " + e.getMessage());
+                request.getRequestDispatcher("/error.jsp").forward(request, response);
+            }
         }
     }
 
@@ -271,7 +313,7 @@ public class PaymentController extends HttpServlet {
             int paymentId = Integer.parseInt(paymentIdStr);
             Payment payment = paymentDAO.getPaymentById(paymentId);
             payments = (payment != null && payment.getUserId().equals(user.getId())) 
-                ? List.of(payment) : List.of();
+                ? Collections.singletonList(payment) : Collections.emptyList();
         } else if (dateFrom != null && dateTo != null) {
             payments = paymentDAO.getPaymentsByUserIdAndDateRange(user.getId(), dateFrom, dateTo);
         } else {
@@ -310,5 +352,110 @@ public class PaymentController extends HttpServlet {
         } else {
             return "OTHER";
         }
+    }
+    
+    // JSON API methods
+    private void listPaymentsJson(HttpServletResponse response, User user) throws Exception {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        
+        List<Payment> payments = paymentDAO.getPaymentsByUserId(user.getId());
+        
+        JsonObject json = new JsonObject();
+        json.addProperty("success", true);
+        json.add("payments", gson.toJsonTree(payments));
+        json.addProperty("count", payments.size());
+        
+        response.getWriter().write(gson.toJson(json));
+    }
+    
+    private void viewPaymentJson(HttpServletResponse response, User user, int paymentId) throws Exception {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        
+        Payment payment = paymentDAO.getPaymentById(paymentId);
+        
+        if (payment == null || !payment.getUserId().equals(user.getId())) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            JsonObject json = new JsonObject();
+            json.addProperty("success", false);
+            json.addProperty("error", "Payment not found or access denied");
+            response.getWriter().write(gson.toJson(json));
+            return;
+        }
+        
+        PaymentDetail paymentDetail = paymentDetailDAO.getByPaymentId(paymentId);
+        
+        JsonObject json = new JsonObject();
+        json.addProperty("success", true);
+        json.add("payment", gson.toJsonTree(payment));
+        json.add("paymentDetail", gson.toJsonTree(paymentDetail));
+        
+        response.getWriter().write(gson.toJson(json));
+    }
+    
+    private void searchPaymentsJson(HttpServletResponse response, User user, HttpServletRequest request) throws Exception {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        
+        String paymentIdStr = request.getParameter("paymentId");
+        String dateFrom = request.getParameter("dateFrom");
+        String dateTo = request.getParameter("dateTo");
+        String status = request.getParameter("status");
+        
+        List<Payment> payments;
+        
+        if (paymentIdStr != null && !paymentIdStr.trim().isEmpty()) {
+            int paymentId = Integer.parseInt(paymentIdStr);
+            Payment payment = paymentDAO.getPaymentById(paymentId);
+            payments = (payment != null && payment.getUserId().equals(user.getId())) 
+                ? Collections.singletonList(payment) : Collections.emptyList();
+        } else if (dateFrom != null && dateTo != null) {
+            payments = paymentDAO.getPaymentsByUserIdAndDateRange(user.getId(), dateFrom, dateTo);
+        } else {
+            payments = paymentDAO.getPaymentsByUserId(user.getId());
+        }
+        
+        // Filter by status if provided
+        if (status != null && !status.trim().isEmpty()) {
+            final String statusFilter = status.trim();
+            payments = payments.stream()
+                .filter(p -> statusFilter.equalsIgnoreCase(p.getStatus()))
+                .collect(java.util.stream.Collectors.toList());
+        }
+        
+        JsonObject json = new JsonObject();
+        json.addProperty("success", true);
+        json.add("payments", gson.toJsonTree(payments));
+        json.addProperty("count", payments.size());
+        
+        response.getWriter().write(gson.toJson(json));
+    }
+    
+    private void getUserPaymentsJson(HttpServletResponse response, int userId) throws Exception {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        
+        List<Payment> payments = paymentDAO.getPaymentsByUserId(userId);
+        
+        JsonObject json = new JsonObject();
+        json.addProperty("success", true);
+        json.add("payments", gson.toJsonTree(payments));
+        json.addProperty("count", payments.size());
+        json.addProperty("userId", userId);
+        
+        response.getWriter().write(gson.toJson(json));
+    }
+    
+    private void handleJsonError(HttpServletResponse response, String message, Exception e) throws IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        
+        JsonObject json = new JsonObject();
+        json.addProperty("success", false);
+        json.addProperty("error", message + ": " + e.getMessage());
+        
+        response.getWriter().write(gson.toJson(json));
     }
 }

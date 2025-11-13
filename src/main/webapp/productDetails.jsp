@@ -27,236 +27,247 @@
             // 메소드 호출 실패 시 기본값 사용
         }
     }
+
+    boolean inStock = productStock > 0;
+    String stockLabel = inStock ? "In stock (" + productStock + " available)" : "Out of stock";
+    String stockBadgeTone = inStock ? "success" : "error";
+    String formattedPrice = String.format("%1$,.2f", productPrice);
+
     // Expose for EL
     pageContext.setAttribute("pd_name", productName);
     pageContext.setAttribute("pd_desc", productDescription);
     pageContext.setAttribute("pd_price", productPrice);
+    pageContext.setAttribute("pd_priceFormatted", formattedPrice);
     pageContext.setAttribute("pd_stock", productStock);
+    pageContext.setAttribute("pd_inStock", inStock);
+    pageContext.setAttribute("pd_stockLabel", stockLabel);
+    pageContext.setAttribute("pd_stockBadgeTone", stockBadgeTone);
     pageContext.setAttribute("pd_id", productId);
     pageContext.setAttribute("pd_image", productImage);
 %>
 <t:base title="${pd_name} - IoT Bay" description="Product details">
-    <main class="py-8">
-        <div class="container">
+    <main class="py-12">
+        <div class="container space-y-12">
             <!-- Breadcrumb Navigation -->
-            <nav class="mb-8">
-                <ol class="flex items-center gap-2 text-sm text-neutral-600">
+            <nav aria-label="Breadcrumb">
+                <ol class="flex flex-wrap items-center gap-2 text-sm text-neutral-600">
                     <li><a href="${pageContext.request.contextPath}/" class="hover:text-brand-primary">Home</a></li>
-                    <li>/</li>
+                    <li aria-hidden="true">/</li>
                     <li><a href="${pageContext.request.contextPath}/browse" class="hover:text-brand-primary">Products</a></li>
-                    <li>/</li>
-                    <li class="text-neutral-900 font-medium">${pd_name}</li>
+                    <li aria-hidden="true">/</li>
+                    <li class="text-neutral-900 font-medium" aria-current="page">${pd_name}</li>
                 </ol>
             </nav>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                <!-- Product Images Section -->
-                    <div class="product-gallery">
-                    <div class="aspect-square bg-white rounded-lg shadow-lg overflow-hidden mb-4">
+            <section class="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)]">
+                <!-- Product Imagery -->
+                <div class="space-y-4">
+                    <figure class="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
                         <img src="${pageContext.request.contextPath}/${pd_image}" 
                              alt="${pd_name}" 
                              class="w-full h-full object-cover"
-                                 id="mainProductImage"
-                             onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/sample1.png';"/>
-                    </div>
-                    
-                    <!-- Thumbnail Gallery -->
+                             id="mainProductImage"
+                             onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/sample1.png';" />
+                    </figure>
                     <div class="grid grid-cols-4 gap-2">
-                        <div class="aspect-square bg-white rounded border-2 border-brand-primary overflow-hidden cursor-pointer">
+                        <div class="overflow-hidden rounded-xl border-2 border-brand-primary bg-white">
                             <img src="${pageContext.request.contextPath}/${pd_image}" 
-                                 alt="${pd_name}" 
+                                 alt="${pd_name} gallery image" 
                                  class="w-full h-full object-cover">
                         </div>
-                        <div class="aspect-square bg-neutral-100 rounded border overflow-hidden cursor-pointer">
+                        <div class="overflow-hidden rounded-xl border bg-neutral-100">
                             <img src="${pageContext.request.contextPath}/images/sample2.png" 
-                                 alt="${pd_name} view 2" 
+                                 alt="${pd_name} alternate view" 
                                  class="w-full h-full object-cover">
                         </div>
-                        <div class="aspect-square bg-neutral-100 rounded border overflow-hidden cursor-pointer">
+                        <div class="overflow-hidden rounded-xl border bg-neutral-100">
                             <img src="${pageContext.request.contextPath}/images/sample3.png" 
-                                 alt="${product.name} view 3" 
+                                 alt="${pd_name} component detail" 
                                  class="w-full h-full object-cover">
                         </div>
-                        <div class="aspect-square bg-neutral-100 rounded border overflow-hidden cursor-pointer flex items-center justify-center">
-                            <span class="text-neutral-500 text-xs">+2 more</span>
+                        <div class="rounded-xl border bg-neutral-50 flex items-center justify-center text-xs text-neutral-500">
+                            +2 more
                         </div>
                     </div>
                 </div>
 
-                <!-- Product Information Section -->
-                    <div class="product-info">
-                    <div class="mb-4">
-                        <span class="inline-block px-3 py-1 bg-brand-primary text-white text-sm rounded-full mb-4">
-                            IoT Device
+                <!-- Product Information -->
+                <div class="space-y-6" id="product-overview">
+                    <div class="space-y-4">
+                        <span class="inline-flex items-center gap-2 rounded-full bg-neutral-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-neutral-700">
+                            <span class="inline-flex h-2 w-2 rounded-full bg-brand-primary"></span>
+                            Product overview
                         </span>
-                        <h1 class="text-3xl md:text-4xl font-bold text-neutral-900 mb-4">${product.name}</h1>
-                        <div class="flex items-center gap-4 mb-6">
-                            <div class="text-3xl font-bold text-brand-primary">
-                                $<fmt:formatNumber value="${product.price}" pattern="#,##0.00"/>
+                        <h1 class="text-display-l font-bold text-neutral-900 leading-tight">
+                            ${pd_name}
+                        </h1>
+                        <p class="text-neutral-600 leading-relaxed">
+                            ${pd_desc}
+                        </p>
+                    </div>
+
+                    <dl class="grid gap-4 sm:grid-cols-3" aria-label="Product highlights">
+                        <div class="rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm" role="group" aria-label="Price">
+                            <dt class="text-xs font-semibold uppercase tracking-wide text-neutral-500">Price</dt>
+                            <dd class="mt-2 text-2xl font-bold text-neutral-900">&#36;${pd_priceFormatted}</dd>
+                            <dd class="mt-1 text-xs text-neutral-500">All prices include GST.</dd>
+                        </div>
+                        <div class="rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm" role="group" aria-label="Availability">
+                            <dt class="text-xs font-semibold uppercase tracking-wide text-neutral-500">Availability</dt>
+                            <c:choose>
+                                <c:when test="${pd_inStock}">
+                                    <dd class="mt-2 text-sm font-semibold text-success" aria-live="polite">${pd_stockLabel}</dd>
+                                </c:when>
+                                <c:otherwise>
+                                    <dd class="mt-2 text-sm font-semibold text-error" aria-live="polite">${pd_stockLabel}</dd>
+                                </c:otherwise>
+                            </c:choose>
+                            <dd class="mt-1 text-xs text-neutral-500">Ships within 2-3 business days.</dd>
+                        </div>
+                        <div class="rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm" role="group" aria-label="Support">
+                            <dt class="text-xs font-semibold uppercase tracking-wide text-neutral-500">Support</dt>
+                            <dd class="mt-2 text-sm font-semibold text-neutral-900">24/7 specialist assistance</dd>
+                            <dd class="mt-1 text-xs text-neutral-500">Includes onboarding & integration guidance.</dd>
+                        </div>
+                    </dl>
+
+                    <!-- Purchase Section -->
+                    <div class="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm" id="purchase-options">
+                        <div class="flex flex-col gap-6">
+                            <div>
+                                <label for="quantity" class="block text-sm font-medium text-neutral-700 mb-2">Quantity</label>
+                                <div class="flex items-center gap-2">
+                                    <button type="button" onclick="decreaseQuantity()" class="btn btn--ghost btn--sm" aria-label="Decrease quantity">
+                                        <span aria-hidden="true">&minus;</span>
+                                    </button>
+                                    <input type="number" id="quantity" value="1" min="1" max="${pd_stock}" 
+                                           class="form-input w-24 text-center" aria-live="polite">
+                                    <button type="button" onclick="increaseQuantity()" class="btn btn--ghost btn--sm" aria-label="Increase quantity">
+                                        <span aria-hidden="true">+</span>
+                                    </button>
+                                </div>
                             </div>
-                            <div class="text-sm text-neutral-600">
+
+                            <div class="space-y-3">
                                 <c:choose>
-                                    <c:when test="${product.stock > 0}">
-                                        <span class="text-green-600 font-medium">✓ In Stock (${product.stock} available)</span>
+                                    <c:when test="${pd_inStock}">
+                                        <button data-product-id="${pd_id}" 
+                                                data-action="add-to-cart"
+                                                class="add-to-cart-button w-full btn btn--primary btn--lg"
+                                                aria-label="Add ${pd_name} to cart">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m0 0H17"></path>
+                                            </svg>
+                                            Add to Cart
+                                        </button>
+                                        <button class="w-full btn btn--outline btn--lg" type="button">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                                            </svg>
+                                            Add to Wishlist
+                                        </button>
                                     </c:when>
                                     <c:otherwise>
-                                        <span class="text-red-600 font-medium">✗ Out of Stock</span>
+                                        <button disabled class="w-full btn btn--outline btn--lg" aria-disabled="true">
+                                            Currently unavailable
+                                        </button>
                                     </c:otherwise>
                                 </c:choose>
+                            </div>
+
+                            <div class="pt-6 border-t border-neutral-200 space-y-3 text-sm text-neutral-600">
+                                <div class="flex items-center gap-3">
+                                    <svg class="w-5 h-5 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h1.586a1 1 0 01.707.293l1.414 1.414a1 1 0 00.707.293H15a2 2 0 012 2v0M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
+                                    </svg>
+                                    <span>Free shipping on orders over &#36;100.</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <svg class="w-5 h-5 text-brand-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                    <span>2-year warranty included.</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                    </svg>
+                                    <span>30-day return policy.</span>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Product Description -->
-                    <div class="mb-8">
-                        <h3 class="text-lg font-semibold text-neutral-900 mb-3">Description</h3>
-                        <p class="text-neutral-600 leading-relaxed">
-                            ${product.description}
-                        </p>
-                    </div>
-
                     <!-- Key Features -->
-                    <div class="mb-8">
-                        <h3 class="text-lg font-semibold text-neutral-900 mb-4">Key Features</h3>
+                    <div class="space-y-4">
+                        <h2 class="text-lg font-semibold text-neutral-900">Key features</h2>
                         <ul class="space-y-2">
                             <li class="flex items-center gap-3">
-                                <svg class="w-5 h-5 text-green-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <svg class="w-5 h-5 text-success flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                                 </svg>
                                 <span class="text-neutral-700">Wireless connectivity (Wi-Fi & Bluetooth)</span>
                             </li>
                             <li class="flex items-center gap-3">
-                                <svg class="w-5 h-5 text-green-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <svg class="w-5 h-5 text-success flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                                 </svg>
                                 <span class="text-neutral-700">Real-time monitoring and alerts</span>
                             </li>
                             <li class="flex items-center gap-3">
-                                <svg class="w-5 h-5 text-green-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <svg class="w-5 h-5 text-success flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                                 </svg>
                                 <span class="text-neutral-700">Easy setup and configuration</span>
                             </li>
                             <li class="flex items-center gap-3">
-                                <svg class="w-5 h-5 text-green-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <svg class="w-5 h-5 text-success flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                                 </svg>
                                 <span class="text-neutral-700">Energy efficient design</span>
                             </li>
                             <li class="flex items-center gap-3">
-                                <svg class="w-5 h-5 text-green-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <svg class="w-5 h-5 text-success flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
                                 </svg>
                                 <span class="text-neutral-700">Mobile app integration</span>
                             </li>
                         </ul>
                     </div>
+                </div>
+            </section>
 
-                    <!-- Purchase Section -->
-                    <div class="bg-white rounded-lg shadow-lg p-6">
-                        <div class="mb-6">
-                            <label class="block text-sm font-medium text-neutral-700 mb-2">Quantity</label>
-                            <div class="flex items-center gap-3">
-                                <button type="button" onclick="decreaseQuantity()" class="w-10 h-10 bg-neutral-100 rounded border flex items-center justify-center hover:bg-neutral-200">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
-                                    </svg>
-                                </button>
-                                <input type="number" id="quantity" value="1" min="1" max="${pd_stock}" 
-                                       class="w-20 h-10 text-center border rounded focus:outline-none focus:ring-2 focus:ring-brand-primary">
-                                <button type="button" onclick="increaseQuantity()" class="w-10 h-10 bg-neutral-100 rounded border flex items-center justify-center hover:bg-neutral-200">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="space-y-3">
-                            <c:choose>
-                                <c:when test="${product.stock > 0}">
-                                    <button data-product-id="${pd_id}" 
-                                            data-action="add-to-cart"
-                                            class="add-to-cart-button w-full btn btn--primary btn--lg"
-                                            aria-label="Add ${pd_name} to cart">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m0 0H17"></path>
-                                        </svg>
-                                        Add to Cart
-                                    </button>
-                                    <button class="w-full btn btn--outline btn--lg">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                                        </svg>
-                                        Add to Wishlist
-                                    </button>
-                                </c:when>
-                                <c:otherwise>
-                                    <button disabled class="w-full btn btn--disabled btn--lg">
-                                        Out of Stock
-                                    </button>
-                                </c:otherwise>
-                            </c:choose>
-                        </div>
-
-                        <!-- Shipping Info -->
-                        <div class="mt-6 pt-6 border-t border-neutral-200">
-                            <div class="space-y-3 text-sm text-neutral-600">
-                                <div class="flex items-center gap-3">
-                                    <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h1.586a1 1 0 01.707.293l1.414 1.414a1 1 0 00.707.293H15a2 2 0 012 2v0M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
-                                    </svg>
-                                    <span>Free shipping on orders over $100</span>
-                                </div>
-                                <div class="flex items-center gap-3">
-                                    <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
-                                    <span>2-year warranty included</span>
-                                </div>
-                                <div class="flex items-center gap-3">
-                                    <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                                    </svg>
-                                    <span>30-day return policy</span>
-                                </div>
-                            </div>
-                        </div>
+            <!-- Trust Badges Section (Section 2.1) -->
+            <div class="mt-8 mb-8">
+                <div class="flex flex-wrap gap-3">
+                    <div class="trust-badge" title="CE Certified - European Conformity">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>CE Certified</span>
+                    </div>
+                    <div class="trust-badge" title="FCC Approved - Federal Communications Commission">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>FCC Approved</span>
+                    </div>
+                    <div class="trust-badge" title="Works with Home Assistant">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/>
+                        </svg>
+                        <span>Home Assistant</span>
+                    </div>
+                    <div class="trust-badge" title="2-Year Warranty Included">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>2-Year Warranty</span>
                     </div>
                 </div>
             </div>
 
-                    <!-- Trust Badges Section (Section 2.1) -->
-                    <div class="mt-8 mb-8">
-                        <div class="flex flex-wrap gap-3">
-                            <div class="trust-badge" title="CE Certified - European Conformity">
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                                </svg>
-                                <span>CE Certified</span>
-                            </div>
-                            <div class="trust-badge" title="FCC Approved - Federal Communications Commission">
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                                </svg>
-                                <span>FCC Approved</span>
-                            </div>
-                            <div class="trust-badge" title="Works with Home Assistant">
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z"/>
-                                </svg>
-                                <span>Home Assistant</span>
-                            </div>
-                            <div class="trust-badge" title="2-Year Warranty Included">
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                                </svg>
-                                <span>2-Year Warranty</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Product Tabs (Section 4.3) -->
+            <!-- Product Tabs (Section 4.3) -->
             <div class="mt-16">
                 <div class="border-b border-neutral-200">
                     <nav class="flex flex-wrap space-x-8" role="tablist" aria-label="Product information tabs">
@@ -880,112 +891,6 @@
                     </div>
                 </div>
             </section>
-                        </div>
-
-                        <!-- Product Description -->
-                        <div class="product-info__description">
-                            <h3 class="section-title">Description</h3>
-                            <p class="description-text">
-                                <%= product.getDescription() != null ? product.getDescription() : "No description available for this product." %>
-                            </p>
-                        </div>
-
-                        <!-- Product Specifications -->
-                        <div class="product-info__specs">
-                            <h3 class="section-title">Specifications</h3>
-                            <div class="specs-list">
-                                <div class="spec-item">
-                                    <span class="spec-label">Product ID:</span>
-                                    <span class="spec-value">#<%= product.getId() %></span>
-                                </div>
-                                <div class="spec-item">
-                                    <span class="spec-label">Category:</span>
-                                    <span class="spec-value">IoT Device</span>
-                                </div>
-                                <div class="spec-item">
-                                    <span class="spec-label">Availability:</span>
-                                    <span class="spec-value status-available">In Stock</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Add to Cart Section -->
-                        <div class="product-actions">
-                            <div class="quantity-selector">
-                                <label for="quantity" class="quantity-label">Quantity:</label>
-                                <div class="quantity-input">
-                                    <button type="button" class="quantity-btn quantity-btn--minus" onclick="decreaseQuantity()">-</button>
-                                    <input type="number" id="quantity" name="quantity" value="1" min="1" max="10" class="quantity-field">
-                                    <button type="button" class="quantity-btn quantity-btn--plus" onclick="increaseQuantity()">+</button>
-                                </div>
-                            </div>
-
-                            <div class="action-buttons">
-                                <% if (currentUser != null) { %>
-                                    <form class="add-to-cart-form" action="cart" method="post">
-                                        <input type="hidden" name="action" value="add">
-                                        <input type="hidden" name="productId" value="<%= product.getId() %>">
-                                        <input type="hidden" name="productPrice" value="<%= product.getPrice() %>">
-                                        <input type="hidden" id="hiddenQuantity" name="quantity" value="1">
-                                        <button type="submit" class="btn btn--primary btn--lg add-to-cart-btn">
-                                            <svg class="btn-icon" fill="currentColor" viewBox="0 0 20 20">
-                                                <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"></path>
-                                            </svg>
-                                            Add to Cart
-                                        </button>
-                                    </form>
-
-                                    <form class="wishlist-form" action="wishlist" method="post">
-                                        <input type="hidden" name="productId" value="<%= product.getId() %>">
-                                        <button type="submit" class="btn btn--outline btn--lg wishlist-btn">
-                                            <svg class="btn-icon" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"></path>
-                                            </svg>
-                                            Add to Wishlist
-                                        </button>
-                                    </form>
-                                <% } else { %>
-                                    <a href="login.jsp" class="btn btn--primary btn--lg">
-                                        Sign in to Purchase
-                                    </a>
-                                <% } %>
-                            </div>
-                        </div>
-
-                        <!-- Trust Badges -->
-                        <div class="trust-badges">
-                            <div class="trust-badge">
-                                <svg class="trust-badge__icon" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                                </svg>
-                                <span>Secure Payment</span>
-                            </div>
-                            <div class="trust-badge">
-                                <svg class="trust-badge__icon" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"></path>
-                                    <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v6.05A2.5 2.5 0 0115.95 16H17a1 1 0 001-1V8a1 1 0 00-1-1h-3z"></path>
-                                </svg>
-                                <span>Free Shipping</span>
-                            </div>
-                            <div class="trust-badge">
-                                <svg class="trust-badge__icon" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"></path>
-                                </svg>
-                                <span>30-Day Returns</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Related Products Section -->
-            <div class="related-products">
-                <h2 class="section-title">Related Products</h2>
-                <div class="related-products__grid">
-                    <!-- This would be populated by a servlet call to get related products -->
-                    <p class="text-muted">Loading related products...</p>
-                </div>
-            </div>
         </div>
     </main>
 
