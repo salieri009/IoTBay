@@ -279,28 +279,31 @@ public class CartController extends HttpServlet {
     private void handlePageRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
-
-        Integer userId;
-        if (user != null) {
-            userId = user.getId();
-        } else {
-            userId = (Integer) session.getAttribute("guestId");
-        }
-
         try {
-            List<CartItem> cartItems = (userId != null) ? 
-                cartItemDAO.getCartItemsByUserId(userId) : 
-                Collections.emptyList();
-            
-            BigDecimal cartTotal = (userId != null) ? 
-                cartItemDAO.getCartTotal(userId) : 
-                BigDecimal.ZERO;
-            
-            int itemCount = (userId != null) ? 
-                cartItemDAO.getCartItemCount(userId) : 
-                0;
+            HttpSession session = request.getSession(false);
+            User user = (session != null) ? (User) session.getAttribute("user") : null;
+
+            Integer userId;
+            if (user != null) {
+                userId = user.getId();
+            } else {
+                userId = (session != null) ? (Integer) session.getAttribute("guestId") : null;
+            }
+
+            List<CartItem> cartItems = Collections.emptyList();
+            BigDecimal cartTotal = BigDecimal.ZERO;
+            int itemCount = 0;
+
+            if (userId != null) {
+                try {
+                    cartItems = cartItemDAO.getCartItemsByUserId(userId);
+                    cartTotal = cartItemDAO.getCartTotal(userId);
+                    itemCount = cartItemDAO.getCartItemCount(userId);
+                } catch (SQLException e) {
+                    System.err.println("Database error loading cart: " + e.getMessage());
+                    // Continue with empty cart
+                }
+            }
 
             request.setAttribute("cartItems", cartItems);
             request.setAttribute("cartTotal", cartTotal);
@@ -308,10 +311,13 @@ public class CartController extends HttpServlet {
             request.getRequestDispatcher("/cart.jsp").forward(request, response);
         } catch (SQLException e) {
             System.err.println("Database error in cart page: " + e.getMessage());
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database error occurred");
+            request.setAttribute("errorMessage", "Database error occurred");
+            request.getRequestDispatcher("/error.jsp").forward(request, response);
         } catch (Exception e) {
             System.err.println("Unexpected error in cart page: " + e.getMessage());
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unable to load cart items");
+            e.printStackTrace();
+            request.setAttribute("errorMessage", "Unable to load cart: " + e.getMessage());
+            request.getRequestDispatcher("/error.jsp").forward(request, response);
         }
     }
 

@@ -33,11 +33,22 @@ public class LoginController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            String email = utils.SecurityUtil.getValidatedStringParameter(request, "email", 100);
-            String password = utils.SecurityUtil.getValidatedStringParameter(request, "password", 255);
+            String email = request.getParameter("email");
+            String password = request.getParameter("password");
+            
+            // Validate parameters are not empty
+            if (email == null || email.trim().isEmpty() || password == null || password.trim().isEmpty()) {
+                request.setAttribute("errorMessage", "Email and password are required");
+                request.getRequestDispatcher("/login.jsp").forward(request, response);
+                return;
+            }
+            
+            // Validate and sanitize
+            email = utils.SecurityUtil.getValidatedStringParameter(request, "email", 100);
+            password = utils.SecurityUtil.getValidatedStringParameter(request, "password", 255);
             
             // Validate email format
-            if (!utils.SecurityUtil.isValidEmail(email)) {
+            if (email == null || !utils.SecurityUtil.isValidEmail(email)) {
                 request.setAttribute("errorMessage", "Invalid login credentials");
                 request.getRequestDispatcher("/login.jsp").forward(request, response);
                 return;

@@ -38,18 +38,76 @@ public class CheckoutController extends HttpServlet{
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
-
-        Integer userId;
-        if (user != null) {
-            userId = user.getId();
-        } else {
-            userId = (Integer) session.getAttribute("guestId");
-        }
-
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
+            HttpSession session = request.getSession(false);
+            User user = (session != null) ? (User) session.getAttribute("user") : null;
+
+            Integer userId;
+            if (user != null) {
+                userId = user.getId();
+            } else {
+                userId = (session != null) ? (Integer) session.getAttribute("guestId") : null;
+            }
+
+            if (userId == null) {
+                response.sendRedirect(request.getContextPath() + "/login.jsp");
+                return;
+            }
+
+            // Get cart items for checkout page
+            List<CartItem> cartItems = cartItemDao.getCartItemsByUserId(userId);
+            
+            if (cartItems.isEmpty()) {
+                response.sendRedirect(request.getContextPath() + "/cart.jsp?error=Cart is empty");
+                return;
+            }
+
+            // Calculate totals
+            BigDecimal subtotal = cartItems.stream()
+                .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+            
+            BigDecimal shipping = BigDecimal.valueOf(9.95);
+            BigDecimal tax = subtotal.multiply(BigDecimal.valueOf(0.10)); // 10% GST
+            BigDecimal total = subtotal.add(shipping).add(tax);
+
+            request.setAttribute("cartItems", cartItems);
+            request.setAttribute("subtotal", subtotal);
+            request.setAttribute("shipping", shipping);
+            request.setAttribute("tax", tax);
+            request.setAttribute("total", total);
+            request.getRequestDispatcher("/checkout.jsp").forward(request, response);
+        } catch (SQLException e) {
+            System.err.println("Database error loading checkout: " + e.getMessage());
+            request.setAttribute("errorMessage", "Database error occurred");
+            request.getRequestDispatcher("/error.jsp").forward(request, response);
+        } catch (Exception e) {
+            System.err.println("Error loading checkout: " + e.getMessage());
+            e.printStackTrace();
+            request.setAttribute("errorMessage", "Failed to load checkout: " + e.getMessage());
+            request.getRequestDispatcher("/error.jsp").forward(request, response);
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try {
+            HttpSession session = request.getSession(false);
+            User user = (session != null) ? (User) session.getAttribute("user") : null;
+
+            Integer userId;
+            if (user != null) {
+                userId = user.getId();
+            } else {
+                userId = (session != null) ? (Integer) session.getAttribute("guestId") : null;
+            }
+
+            if (userId == null) {
+                response.sendRedirect(request.getContextPath() + "/login.jsp");
+                return;
+            }
+
             // Get cart items
             List<CartItem> cartItems = cartItemDao.getCartItemsByUserId(userId);
 

@@ -128,6 +128,16 @@
         <url-pattern>/orderhistory</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>ProductApiController</servlet-name>
+        <servlet-class>controller.api.ProductApiController</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ProductApiController</servlet-name>
+        <url-pattern>/api/v1/products/*</url-pattern>
+    </servlet-mapping>
+
 
 
     <error-page>

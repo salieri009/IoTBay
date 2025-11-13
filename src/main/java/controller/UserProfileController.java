@@ -47,10 +47,22 @@ public class UserProfileController extends HttpServlet {
         // update user info
         try {
             User freshUser = userDAO.getUserById(user.getId());
+            if (freshUser == null) {
+                request.setAttribute("errorMessage", "User profile not found");
+                request.getRequestDispatcher("/error.jsp").forward(request, response);
+                return;
+            }
             request.setAttribute("user", freshUser);
             request.getRequestDispatcher("/Profiles.jsp").forward(request, response);
+        } catch (SQLException e) {
+            System.err.println("Database error loading profile: " + e.getMessage());
+            request.setAttribute("errorMessage", "Database error occurred");
+            request.getRequestDispatcher("/error.jsp").forward(request, response);
         } catch (Exception e) {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Failed to load profile.");
+            System.err.println("Error loading profile: " + e.getMessage());
+            e.printStackTrace();
+            request.setAttribute("errorMessage", "Failed to load profile: " + e.getMessage());
+            request.getRequestDispatcher("/error.jsp").forward(request, response);
         }
     }
     

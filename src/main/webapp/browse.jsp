@@ -2,6 +2,8 @@
 <%@ page import="java.util.List" %>
 <%@ page import="model.Product" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
 
 <%
@@ -35,6 +37,20 @@
 
     // Expose to EL
     request.setAttribute("category", category);
+    request.setAttribute("pageHeading", pageHeading);
+    request.setAttribute("pageDescription", pageDescription);
+    request.setAttribute("badgeLabel", badgeLabel);
+    request.setAttribute("totalResults", totalResults);
+    request.setAttribute("resultsNoun", resultsNoun);
+    request.setAttribute("resultsSummaryText", resultsSummaryText);
+    request.setAttribute("products", products);
+    request.setAttribute("keyword", keyword);
+    
+    // Category check states
+    request.setAttribute("isIndustrial", category != null && category.equalsIgnoreCase("industrial"));
+    request.setAttribute("isWarehouse", category != null && category.equalsIgnoreCase("warehouse"));
+    request.setAttribute("isAgriculture", category != null && category.equalsIgnoreCase("agriculture"));
+    request.setAttribute("isSmarthome", category != null && category.equalsIgnoreCase("smarthome"));
 %>
 
 <t:base title="Browse Products" description="Browse IoT products across categories and keywords">
@@ -70,28 +86,28 @@
             <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,340px)]">
                 <div class="space-y-4">
                     <h1 class="text-display-m md:text-display-l font-bold text-neutral-900 leading-tight">
-                        <%= pageHeading %>
+                        ${pageHeading}
                     </h1>
                     <p class="text-lg text-neutral-600 max-w-3xl">
-                        <%= pageDescription %>
+                        ${pageDescription}
                     </p>
                     <div class="flex flex-wrap items-center gap-3 text-sm text-neutral-600">
                         <span class="inline-flex items-center gap-2 rounded-full bg-neutral-100 px-3 py-1 font-medium text-neutral-700">
                             <span class="inline-flex h-2 w-2 rounded-full bg-brand-primary"></span>
-                            <%= totalResults %> <%= resultsNoun %>
+                            ${totalResults} ${resultsNoun}
                         </span>
-                        <% if (badgeLabel != null) { %>
+                        <c:if test="${badgeLabel != null && !empty badgeLabel}">
                             <span class="inline-flex items-center gap-2 rounded-full bg-neutral-100 px-3 py-1 font-medium text-neutral-700">
                                 <span class="inline-flex h-2 w-2 rounded-full bg-brand-secondary"></span>
-                                <%= badgeLabel %>
+                                ${badgeLabel}
                             </span>
-                        <% } %>
+                        </c:if>
                     </div>
                 </div>
                 <aside class="rounded-2xl bg-neutral-50 border border-neutral-200 p-6 space-y-4" aria-label="Search guidance">
                     <div>
                         <h2 class="text-sm font-semibold text-neutral-700 uppercase tracking-wide">At a glance</h2>
-                        <p class="mt-2 text-2xl font-bold text-neutral-900"><%= totalResults %> <span class="text-sm font-medium text-neutral-600">results</span></p>
+                        <p class="mt-2 text-2xl font-bold text-neutral-900">${totalResults} <span class="text-sm font-medium text-neutral-600">results</span></p>
                     </div>
                     <ul class="space-y-3 text-sm text-neutral-600">
                         <li>Use filters to focus by category, protocol, voltage, or stock availability.</li>
@@ -110,7 +126,7 @@
                         type="search" 
                         id="productSearch"
                         name="keyword" 
-                        value="<%= keyword != null ? keyword : "" %>"
+                        value="${keyword != null ? keyword : ''}"
                         placeholder="Search products by name, SKU, or capability" 
                         class="form-input flex-1"
                         aria-describedby="search-hint">
@@ -169,7 +185,7 @@
             <!-- Results Count -->
             <div>
                 <p class="text-sm text-neutral-600" id="results-count" aria-live="polite">
-                    <%= resultsSummaryText %>
+                    ${resultsSummaryText}
                 </p>
             </div>
         </div>
@@ -205,22 +221,22 @@
                                 <div class="space-y-2">
                                     <label class="flex items-center gap-2">
                                         <input type="checkbox" name="category" value="industrial" class="form-checkbox" 
-                                               <%= category != null && category.equalsIgnoreCase("industrial") ? "checked" : "" %>>
+                                               ${isIndustrial ? 'checked' : ''}>
                                         <span class="text-sm text-neutral-700">Industrial</span>
                                     </label>
                                     <label class="flex items-center gap-2">
                                         <input type="checkbox" name="category" value="warehouse" class="form-checkbox"
-                                               <%= category != null && category.equalsIgnoreCase("warehouse") ? "checked" : "" %>>
+                                               ${isWarehouse ? 'checked' : ''}>
                                         <span class="text-sm text-neutral-700">Warehouse</span>
                                     </label>
                                     <label class="flex items-center gap-2">
                                         <input type="checkbox" name="category" value="agriculture" class="form-checkbox"
-                                               <%= category != null && category.equalsIgnoreCase("agriculture") ? "checked" : "" %>>
+                                               ${isAgriculture ? 'checked' : ''}>
                                         <span class="text-sm text-neutral-700">Agriculture</span>
                                     </label>
                                     <label class="flex items-center gap-2">
                                         <input type="checkbox" name="category" value="smarthome" class="form-checkbox"
-                                               <%= category != null && category.equalsIgnoreCase("smarthome") ? "checked" : "" %>>
+                                               ${isSmarthome ? 'checked' : ''}>
                                         <span class="text-sm text-neutral-700">Smart Home</span>
                                     </label>
                                 </div>
@@ -321,85 +337,99 @@
                 <div class="lg:col-span-3">
                     <!-- Skeleton Loading State (Section 3.2) -->
                     <div id="products-skeleton" class="product-grid hidden">
-                        <% for (int i = 0; i < 8; i++) { %>
+                        <c:forEach begin="1" end="8" varStatus="loop">
                             <div class="skeleton-card">
                                 <div class="skeleton skeleton-image"></div>
                                 <div class="skeleton skeleton-text skeleton-text--title"></div>
                                 <div class="skeleton skeleton-text"></div>
                                 <div class="skeleton skeleton-text skeleton-text--short"></div>
                             </div>
-                        <% } %>
+                        </c:forEach>
                     </div>
                     
-                    <% if (products != null && !products.isEmpty()) { %>
+                    <c:if test="${products != null && !empty products}">
                         <div class="product-grid" id="products-grid">
-                <% for (Product p : products) { %>
-                    <div class="product-card" 
-                         data-product-id="<%= p.getId() %>" 
-                         data-price="<%= p.getPrice() %>" 
-                         data-name="<%= p.getName().toLowerCase() %>"
-                         tabindex="0"
-                         role="article"
-                         aria-label="Product: <%= p.getName() %>">
-                        <div class="product-card__image-container">
-                            <img class="product-card__image" 
-                                 src="<%= p.getImageUrl() != null && !p.getImageUrl().isEmpty() ? p.getImageUrl() : "images/default-product.png" %>" 
-                                 alt="<%= p.getName() %>" 
-                                 loading="lazy"
-                                 width="300"
-                                 height="300"
-                                 onerror="this.onerror=null;this.src='images/default-product.png';" />
-                            <!-- Stock Badge (Visibility of System Status - Nielsen's Heuristic 1) -->
-                            <% if (p.getStockQuantity() > 0 && p.getStockQuantity() < 5) { %>
-                                <span class="product-card__badge product-card__badge--warning" aria-label="Low stock: <%= p.getStockQuantity() %> remaining">
-                                    Low Stock
-                                </span>
-                            <% } else if (p.getStockQuantity() == 0) { %>
-                                <span class="product-card__badge product-card__badge--error" aria-label="Out of stock">
-                                    Out of Stock
-                                </span>
-                            <% } %>
-                        </div>
-                        <div class="product-card__body">
-                            <div class="product-card__header">
-                                <h3 class="product-card__title"><%= p.getName() %></h3>
-                                <!-- Key Spec Badge (Section 1.1 - Recognition rather than recall) -->
-                                <span class="product-card__spec-badge" title="Communication Protocol">WiFi</span>
-                            </div>
-                            <p class="product-card__description">
-                                <%= p.getDescription() != null && p.getDescription().length() > 100 
-                                    ? p.getDescription().substring(0, 100) + "..." 
-                                    : (p.getDescription() != null ? p.getDescription() : "") %>
-                            </p>
-                            <div class="product-card__footer">
-                                <div class="product-card__price-info">
-                                    <div class="product-card__price">$<%= String.format("%.2f", p.getPrice()) %></div>
-                                    <div class="product-card__stock-status">
-                                        <% if (p.getStockQuantity() > 0) { %>
-                                            <span class="text-success text-sm">✓ In Stock</span>
-                                        <% } else { %>
-                                            <span class="text-error text-sm">✗ Out of Stock</span>
-                                        <% } %>
+                            <c:forEach var="p" items="${products}">
+                                <c:set var="productId" value="${p.id}" />
+                                <c:set var="productName" value="${p.name}" />
+                                <c:set var="productPrice" value="${p.price}" />
+                                <c:set var="productImageUrl" value="${p.imageUrl != null && !empty p.imageUrl ? p.imageUrl : 'images/default-product.png'}" />
+                                <c:set var="productDescription" value="${p.description != null && fn:length(p.description) > 100 ? fn:substring(p.description, 0, 100) : (p.description != null ? p.description : '')}" />
+                                <c:set var="stockQuantity" value="${p.stockQuantity}" />
+                                <c:set var="isLowStock" value="${stockQuantity > 0 && stockQuantity < 5}" />
+                                <c:set var="isOutOfStock" value="${stockQuantity == 0}" />
+                                <c:set var="isInStock" value="${stockQuantity > 0}" />
+                                <fmt:formatNumber var="formattedPrice" value="${productPrice}" pattern="#0.00" />
+                                
+                                <div class="product-card" 
+                                     data-product-id="${productId}" 
+                                     data-price="${productPrice}" 
+                                     data-name="${fn:toLowerCase(productName)}"
+                                     tabindex="0"
+                                     role="article"
+                                     aria-label="Product: ${productName}">
+                                    <div class="product-card__image-container">
+                                        <img class="product-card__image" 
+                                             src="${productImageUrl}" 
+                                             alt="${productName}" 
+                                             loading="lazy"
+                                             width="300"
+                                             height="300"
+                                             onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/default-product.png';" />
+                                        <c:if test="${isLowStock}">
+                                            <span class="product-card__badge product-card__badge--warning" aria-label="Low stock: ${stockQuantity} remaining">
+                                                Low Stock
+                                            </span>
+                                        </c:if>
+                                        <c:if test="${isOutOfStock}">
+                                            <span class="product-card__badge product-card__badge--error" aria-label="Out of stock">
+                                                Out of Stock
+                                            </span>
+                                        </c:if>
+                                    </div>
+                                    <div class="product-card__body">
+                                        <div class="product-card__header">
+                                            <h3 class="product-card__title">${productName}</h3>
+                                            <span class="product-card__spec-badge" title="Communication Protocol">WiFi</span>
+                                        </div>
+                                        <p class="product-card__description">
+                                            ${productDescription}${fn:length(p.description) > 100 ? '...' : ''}
+                                        </p>
+                                        <div class="product-card__footer">
+                                            <div class="product-card__price-info">
+                                                <div class="product-card__price">&#36;${formattedPrice}</div>
+                                                <div class="product-card__stock-status">
+                                                    <c:choose>
+                                                        <c:when test="${isInStock}">
+                                                            <span class="text-success text-sm">✓ In Stock</span>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <span class="text-error text-sm">✗ Out of Stock</span>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </div>
+                                            </div>
+                                            <div class="product-card__actions">
+                                                <a href="product?productId=${productId}" 
+                                                   class="btn btn--outline btn--sm"
+                                                   aria-label="View details for ${productName}">
+                                                    View Details
+                                                </a>
+                                                <button type="button"
+                                                        onclick="if(typeof addToCart === 'function') { addToCart(${productId}, 1); } else { document.querySelector('[data-product-id=\'${productId}\'] .add-to-cart-form')?.submit(); }"
+                                                        class="btn btn--primary btn--sm"
+                                                        aria-label="Add ${productName} to cart"
+                                                        ${isOutOfStock ? 'disabled' : ''}>
+                                                    <c:choose>
+                                                        <c:when test="${isInStock}">Add to Cart</c:when>
+                                                        <c:otherwise>Out of Stock</c:otherwise>
+                                                    </c:choose>
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="product-card__actions">
-                                    <a href="product?productId=<%= p.getId() %>" 
-                                       class="btn btn--outline btn--sm"
-                                       aria-label="View details for <%= p.getName() %>">
-                                        View Details
-                                    </a>
-                                    <button type="button"
-                                            onclick="if(typeof addToCart === 'function') { addToCart(<%= p.getId() %>, 1); } else { document.querySelector('[data-product-id=\'<%= p.getId() %>\'] .add-to-cart-form')?.submit(); }"
-                                            class="btn btn--primary btn--sm"
-                                            aria-label="Add <%= p.getName() %> to cart"
-                                            <%= p.getStockQuantity() == 0 ? "disabled" : "" %>>
-                                        <%= p.getStockQuantity() > 0 ? "Add to Cart" : "Out of Stock" %>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                        <% } %>
+                            </c:forEach>
                         </div>
                         
                         <!-- Pagination (Section 4.2) -->
@@ -476,8 +506,9 @@
                                 <span class="text-sm text-neutral-600">per page</span>
                             </div>
                         </nav>
-                    <% } else { %>
-                        <!-- Empty State (Section 4.2) -->
+                    </c:if>
+                    <c:if test="${products == null || empty products}">
+                        <!-- Empty State -->
                         <div class="empty-state text-center py-16">
                             <div class="empty-state__icon mb-6">
                                 <svg class="w-24 h-24 mx-auto text-neutral-400" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
@@ -486,18 +517,21 @@
                             </div>
                             <h3 class="text-2xl font-bold text-neutral-900 mb-4">No products found</h3>
                             <p class="text-lg text-neutral-600 mb-8 max-w-md mx-auto">
-                                <% if (keyword != null && !keyword.trim().isEmpty()) { %>
-                                    We couldn't find any products matching "<%= keyword %>". Try adjusting your search terms or filters.
-                                <% } else { %>
-                                    There are no products available matching your current filters. Try adjusting your filter criteria.
-                                <% } %>
+                                <c:choose>
+                                    <c:when test="${keyword != null && !empty keyword}">
+                                        We couldn't find any products matching "${keyword}". Try adjusting your search terms or filters.
+                                    </c:when>
+                                    <c:otherwise>
+                                        There are no products available matching your current filters. Try adjusting your filter criteria.
+                                    </c:otherwise>
+                                </c:choose>
                             </p>
                             <div class="flex flex-wrap justify-center gap-4">
                                 <button onclick="clearFilters()" class="btn btn--outline">Clear all filters</button>
                                 <a href="${pageContext.request.contextPath}/browse.jsp" class="btn btn--primary">Browse all products</a>
                             </div>
                         </div>
-                    <% } %>
+                    </c:if>
                 </div>
             </div>
         </div>
@@ -546,7 +580,7 @@
             }
             
             // Preserve search keyword
-            const keyword = '<%= keyword != null ? keyword : "" %>';
+            const keyword = '${keyword != null ? keyword : ""}';
             if (keyword) {
                 params.append('keyword', keyword);
             }
@@ -559,7 +593,7 @@
         function clearFilters() {
             const form = document.getElementById('filtersForm');
             form.reset();
-            const keyword = '<%= keyword != null ? keyword : "" %>';
+            const keyword = '${keyword != null ? keyword : ""}';
             const url = '${pageContext.request.contextPath}/browse' + (keyword ? '?keyword=' + encodeURIComponent(keyword) : '');
             window.location.href = url;
         }

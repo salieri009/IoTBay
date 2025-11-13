@@ -33,16 +33,34 @@ public class ProductDetailsController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            int productId = Integer.parseInt(request.getParameter("productId"));
-            Product product = productDAO.getProductById(productId);
-            if (product != null) {
-                request.setAttribute("product", product);
-                request.getRequestDispatcher("productDetails.jsp").forward(request, response);
-            } else {
-                response.sendRedirect("error.jsp");
+            String productIdParam = request.getParameter("productId");
+            if (productIdParam == null || productIdParam.isEmpty()) {
+                productIdParam = request.getParameter("id");
+            }
+            
+            if (productIdParam == null || productIdParam.isEmpty()) {
+                request.setAttribute("errorMessage", "Product ID is required");
+                request.getRequestDispatcher("error.jsp").forward(request, response);
+                return;
+            }
+            
+            try {
+                int productId = Integer.parseInt(productIdParam);
+                Product product = productDAO.getProductById(productId);
+                if (product != null) {
+                    request.setAttribute("product", product);
+                    request.getRequestDispatcher("productDetails.jsp").forward(request, response);
+                } else {
+                    request.setAttribute("errorMessage", "Product not found");
+                    request.getRequestDispatcher("error.jsp").forward(request, response);
+                }
+            } catch (NumberFormatException e) {
+                request.setAttribute("errorMessage", "Invalid product ID format");
+                request.getRequestDispatcher("error.jsp").forward(request, response);
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            request.setAttribute("errorMessage", "An error occurred: " + e.getMessage());
+            request.getRequestDispatcher("error.jsp").forward(request, response);
         }
     }
 }
