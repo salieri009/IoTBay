@@ -149,9 +149,21 @@ public class UserDAOImpl implements UserDAO {
         statement.setString(8, user.getAddressLine2());
         statement.setString(9, user.getDateOfBirth() != null ? user.getDateOfBirth().toString() : null);
         statement.setString(10, user.getPaymentMethod());
-        statement.setString(11, DateTimeParser.toText(user.getCreatedAt()));
-        statement.setString(12, DateTimeParser.toText(user.getUpdatedAt()));
+        statement.setString(11, user.getCreatedAt() != null ? user.getCreatedAt().toString() : null);
+        statement.setString(12, user.getUpdatedAt() != null ? user.getUpdatedAt().toString() : null);
         statement.setString(13, user.getRole());
         statement.setBoolean(14, user.isActive());
+    }
+    
+    @Override
+    public int getTotalUserCount() throws SQLException {
+        String query = "SELECT COUNT(*) FROM Users";
+        try (PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet rs = statement.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+            return 0;
+        }
     }
 }

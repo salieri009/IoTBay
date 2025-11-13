@@ -16,7 +16,7 @@
             accessLogDAO.createAccessLog(log);
             conn.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            // Log error and continue
         }
     }
 

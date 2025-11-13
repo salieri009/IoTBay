@@ -1,109 +1,325 @@
-# IoTBay Web Application
+<div align="center">
 
-This is a web-based IoT device management and purchasing application developed using **JSP**, **JavaBeans (MVC Model)**, **Maven**, and **Jetty server**.
+![Header](https://capsule-render.vercel.app/api?type=waving&color=0:0a95ff,100:22c55e&height=200&section=header&text=IoTBay&fontSize=80&fontColor=ffffff&fontAlignY=35&desc=Smart%20Technology%20Store%20for%20IoT%20Devices&descAlignY=65&descSize=24&animation=fadeIn)
 
----
+**Technical Sophistication Meets User-Friendly Design**
 
-## 🚀 How to Deploy and Run the Project
+[![Language](https://img.shields.io/badge/Language-Korean-blue)](README.ko.md)
+[![English](https://img.shields.io/badge/English-Documentation-green)](README.en.md)
+[![日本語](https://img.shields.io/badge/日本語-ドキュメント-orange)](README.ja.md)
 
-### 1. Prerequisites
-
-- Java JDK 8 or higher installed
-- Maven installed
-- Internet connection to download Maven dependencies
-- (Optional) IntelliJ IDEA, Eclipse, or VS Code for editing
+</div>
 
 ---
 
-### 2. Project Setup
+<div align="center">
 
-1. **Build the Project**  
-   In the project root directory (where `pom.xml` is located), run:
+## 📋 Project Information
 
+**Course**: 41025 Information Systems Development (ISD)  
+**Assignment**: Assignment 2 - Autumn 2025  
+**Institution**: University of Technology Sydney (UTS)  
+**Project Type**: E-commerce Web Application for IoT Devices
+
+[![Java](https://img.shields.io/badge/Java-ED8B00?style=flat&logo=java&logoColor=white)](https://www.java.com/)
+[![JSP](https://img.shields.io/badge/JSP-2.3+-orange?style=flat)](https://www.oracle.com/java/technologies/jspt.html)
+[![Maven](https://img.shields.io/badge/Maven-3.6+-C71A36?style=flat&logo=apache-maven&logoColor=white)](https://maven.apache.org/)
+[![License](https://img.shields.io/badge/License-Academic-blue)](LICENSE)
+
+</div>
+
+---
+
+## 🚀 Overview
+
+A modern, responsive **e-commerce platform** specifically designed for **Internet of Things (IoT) devices and components**. Built with **JSP**, **Java MVC**, **Maven**, and **Jetty server**, featuring a comprehensive design system, dark mode support, and WCAG 2.1 AA accessibility compliance.
+
+**Core Philosophy**: Technical sophistication meets user-friendly design, ensuring complex IoT product information is presented in an intuitive, accessible, and trustworthy manner.
+
+### ✨ Key Features
+
+- 🛒 **Full E-commerce Functionality**: Product browsing, shopping cart, checkout, and order management
+- 🔐 **Secure Authentication**: Role-based access control (Customer, Staff, Admin)
+- 📱 **Responsive Design**: Mobile-first approach with modern UI/UX
+- 🌙 **Dark Mode**: Complete dark theme support
+- ♿ **Accessibility**: WCAG 2.1 AA compliant with enhanced keyboard navigation
+- 🎨 **Modern Design System**: Component-based architecture with CSS Custom Properties
+- 🔍 **Advanced Search**: Multi-dimensional filtering (protocol, voltage, use case)
+- ⚡ **Performance Optimized**: Optimistic UI, skeleton loading, image optimization
+
+---
+
+## 🎯 Project Objectives
+
+- ✅ Implement a fully functional e-commerce platform for IoT devices
+- ✅ Demonstrate proficiency in JSP/Servlet web development
+- ✅ Apply MVC architecture patterns
+- ✅ Implement secure user authentication and authorization
+- ✅ Create an intuitive and modern user interface
+- ✅ Demonstrate database design and data access patterns
+- ✅ Ensure accessibility compliance (WCAG 2.1 AA)
+- ✅ Optimize for performance and user experience
+
+---
+
+## 🏃 Quick Start
+
+### Prerequisites
+
+- **Java JDK 8+** installed
+- **Maven 3.6+** installed
+- **Internet connection** for dependencies
+
+### Installation & Setup
+
+1. **Clone the Repository**
+   ```bash
+   git clone <repository-url>
+   cd IoTBay
+   ```
+
+2. **Build the Project**
    ```bash
    mvn clean install
    ```
 
-2. **Run Using Maven Jetty Plugin**  
-   Start the Jetty server directly with:
-
+3. **Run the Application**
    ```bash
    mvn jetty:run
    ```
 
-3. **Access the Application**  
-   Open your browser and visit:
+4. **Access the Application**
    ```
    http://localhost:8080/
    ```
 
+### Default Login Credentials
+
+#### Customer Account
+- **Email**: `customer@iotbay.com`
+- **Password**: `password123`
+
+#### Staff Account
+- **Email**: `staff@iotbay.com`
+- **Password**: `staff123`
+
 ---
 
-### 3. Project Structure
+## 📁 Project Structure
 
 ```
-/src/main/java/model/         → JavaBeans (data models like User.java, Product.java, Order.java, etc.)
-/src/main/resources/          → (reserved for config files if needed)
-/src/main/webapp/             → Frontend files (JSP + assets)
-/src/main/webapp/components/  → Reusable JSP components (header.jsp, footer.jsp)
-/src/main/webapp/css/         → CSS files (e.g., styles.css)
-/src/main/webapp/images/      → Image assets
-/src/main/webapp/WEB-INF/     → Protected resources (web.xml, etc.)
-/src/main/webapp/index.jsp    → Landing page (Home)
-/src/main/webapp/login.jsp    → Login page
-/src/main/webapp/logout.jsp   → Logout page
-/src/main/webapp/register.jsp → Registration page
-/src/main/webapp/welcome.jsp  → Welcome page
-/pom.xml                      → Maven configuration file
-/target/                      → Compiled build output (generated automatically)
+IoTBay/
+├── src/main/java/
+│   ├── controller/           # Servlets (MVC Controllers)
+│   ├── dao/                  # Data Access Objects
+│   │   ├── stub/            # Stub implementations for testing
+│   │   └── impl/            # Database implementations
+│   ├── model/               # JavaBeans (User, Product, Order, etc.)
+│   ├── service/             # Business Logic Layer
+│   └── utils/               # Utility classes
+├── src/main/webapp/
+│   ├── components/          # Reusable JSP components
+│   │   ├── header.jsp      # Navigation header
+│   │   ├── footer.jsp      # Site footer
+│   │   └── layout/         # Layout tags
+│   ├── css/                # Stylesheets
+│   │   └── modern-theme.css # Design system
+│   ├── js/                 # JavaScript functionality
+│   │   └── main.js         # Core interactions
+│   └── *.jsp               # JSP pages
+├── design plan/            # Design system documentation
+│   ├── UI_UXdoc.md         # UI/UX specification
+│   ├── improvement.md      # UX improvement plan
+│   └── *.md                # Other design docs
+└── pom.xml                 # Maven configuration
 ```
 
-- **Controllers**: Handle HTTP requests (Servlets)
-- **Models**: JavaBeans representing entities like User, Product, Order
-- **Views**: JSP pages
+---
+
+## 🛠️ Tech Stack
+
+### Backend
+![Java](https://img.shields.io/badge/Java-ED8B00?style=flat&logo=java&logoColor=white)
+![JSP](https://img.shields.io/badge/JSP-2.3+-orange?style=flat)
+![Maven](https://img.shields.io/badge/Maven-3.6+-C71A36?style=flat&logo=apache-maven&logoColor=white)
+![Jetty](https://img.shields.io/badge/Jetty-Embedded-FFA500?style=flat)
+
+- **Java**: JDK 8 or higher
+- **JSP**: JavaServer Pages 2.3+
+- **Servlets**: Java Servlet API 3.1+
+- **Maven**: Build automation and dependency management
+- **Jetty**: Embedded web server (development)
+- **Architecture**: MVC (Model-View-Controller) Pattern
+- **Data Access**: DAO (Data Access Object) Pattern
+
+### Frontend
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=flat&logo=javascript&logoColor=black)
+
+- **HTML5**: Semantic markup with ARIA attributes
+- **CSS3**: Modern styling with CSS Custom Properties
+- **JavaScript**: ES6+ for interactivity and optimistic UI
+- **Design System**: Custom CSS framework with component-based architecture
+- **Responsive Design**: Mobile-first approach with breakpoints
+
+### Database
+![SQLite](https://img.shields.io/badge/SQLite-003B57?style=flat&logo=sqlite&logoColor=white)
+![JDBC](https://img.shields.io/badge/JDBC-Data%20Access-orange?style=flat)
+
+- **SQLite**: Lightweight relational database (development)
+- **JDBC**: Database connectivity
+- **DAO Pattern**: Abstraction layer for data access
+
+### Security & Quality
+![Security](https://img.shields.io/badge/Security-SHA256-green?style=flat)
+![Accessibility](https://img.shields.io/badge/Accessibility-WCAG%202.1%20AA-blue?style=flat)
+
+- **Password Hashing**: SHA-256 with salt
+- **Session Management**: Secure session handling
+- **Role-Based Access Control**: Customer, Staff, Admin roles
+- **Input Validation**: SQL injection and XSS prevention
+- **Accessibility**: WCAG 2.1 AA compliant
 
 ---
 
-### 4. Common Commands
+## 📋 Assignment Requirements
 
-| Task             | Command         |
-| ---------------- | --------------- |
-| Clean project    | `mvn clean`     |
-| Compile project  | `mvn compile`   |
-| Package WAR file | `mvn package`   |
-| Run project      | `mvn jetty:run` |
+### Functional Requirements
+
+#### 1. 👥 User Management
+- ✅ User registration and authentication
+- ✅ Profile management
+- ✅ Role-based access control (Customer, Staff, Admin)
+- ✅ Session management
+
+#### 2. 📦 Product Management
+- ✅ Product catalog with categories (Industrial, Warehouse, Agriculture, Smart Home)
+- ✅ Product search and multi-dimensional filtering
+- ✅ Product details pages with technical specifications
+- ✅ Inventory management with stock indicators
+
+#### 3. 🛒 E-commerce Features
+- ✅ Shopping cart functionality with compatibility checking
+- ✅ Checkout process with progress indicator
+- ✅ Order management and tracking
+- ✅ Order history with detailed information
+
+#### 4. 🔧 Administrative Features
+- ✅ User management dashboard
+- ✅ Product management interface
+- ✅ Order processing and analytics
+- ✅ Access logging for security auditing
+
+### Technical Requirements
+
+- ✅ **MVC Architecture**: Clean separation of concerns
+- ✅ **DAO Pattern**: Abstraction layer for data access
+- ✅ **Security**: Secure authentication and authorization
+- ✅ **Responsive Design**: Mobile-first approach
+- ✅ **Modern UI/UX**: Design system principles
+- ✅ **Error Handling**: Comprehensive validation and error recovery
+- ✅ **Access Logging**: Security auditing and analytics
+
+### Design Requirements
+
+- ✅ **Consistent Design System**: Unified components across all pages
+- ✅ **Responsive Layout**: Mobile, tablet, and desktop support
+- ✅ **Accessibility**: WCAG 2.1 AA compliance
+- ✅ **Dark Mode**: Complete theme support
+- ✅ **Modern Interface**: Clean, intuitive, and professional
 
 ---
 
-### 5. Stopping the Server
+## 🎨 Design System
 
-To stop Jetty server, simply press:  
-`Ctrl + C` in your terminal.
+IoTBay features a comprehensive design system built with **CSS Custom Properties**, ensuring consistency and maintainability across the entire application.
 
----
+### Color Palette
 
-### 6. Notes
+- **Primary Blue** (`#0a95ff`): Trust, technology, professionalism
+- **Secondary Green** (`#22c55e`): Success, energy, innovation
+- **Accent Orange** (`#f97316`): Attention, warnings, CTAs
 
-- Default server port: **8080**
-- If 8080 is already in use, you can change it by adding this to your `pom.xml` under `<configuration>`:
-  ```xml
-  <httpConnector>
-    <port>8090</port>
-  </httpConnector>
-  ```
+### Key Design Features
 
----
+- 🎯 **Component-Based Architecture**: Reusable UI components
+- 🌈 **CSS Custom Properties**: Dynamic theming support
+- 📱 **Responsive Grid System**: Mobile-first breakpoints
+- ♿ **Accessibility First**: ARIA attributes, keyboard navigation
+- 🎭 **Dark Mode**: Complete theme switching
+- ⚡ **Performance**: Optimized animations and loading states
 
-# 🛠 Technologies Used
-
-- Java (JSP + Servlets)
-- Maven
-- Jetty Maven Plugin
-- HTML/CSS (inside JSPs)
-- MVC architecture
+For detailed design documentation, see:
+- [Design System](design%20plan/DESIGN_SYSTEM.md)
+- [UI/UX Documentation](designplan/UI_UXdoc.md)
+- [Component Architecture](design%20plan/COMPONENT_ARCHITECTURE.md)
 
 ---
 
-# 📄 License
+## 📚 Development Guidelines
 
-This project is for academic purposes.
+### Code Standards
+
+- ✅ Follow Java naming conventions
+- ✅ Use meaningful variable and method names
+- ✅ Implement proper error handling
+- ✅ Add comments for complex logic
+- ✅ Maintain consistent code formatting
+
+### Testing
+
+- ✅ Test all user flows
+- ✅ Verify authentication and authorization
+- ✅ Test responsive design on multiple devices
+- ✅ Validate form inputs
+- ✅ Test error scenarios
+- ✅ Accessibility testing (keyboard navigation, screen readers)
+
+### Documentation
+
+- ✅ Maintain up-to-date README
+- ✅ Document API endpoints
+- ✅ Include inline code comments
+- ✅ Update design system documentation
+
+---
+
+## 📖 Documentation
+
+<div align="center">
+
+| Language | Documentation | Description |
+|:--------:|:------------:|:-----------|
+| 🇰🇷 | [한국어](README.ko.md) | 한국어 전체 문서 |
+| 🇺🇸 | [English](README.en.md) | Full documentation in English |
+| 🇯🇵 | [日本語](README.ja.md) | 日本語完全ドキュメント |
+
+</div>
+
+### Additional Resources
+
+- [UI/UX Design Documentation](designplan/UI_UXdoc.md) - Comprehensive UX specification
+- [Design System](design%20plan/DESIGN_SYSTEM.md) - Visual design guidelines
+- [Component Architecture](design%20plan/COMPONENT_ARCHITECTURE.md) - Component structure
+- [Developer Documentation](design%20plan/DEVELOPER_DOCUMENTATION.md) - Development guide
+- [Improvement Plan](designplan/improvement.md) - UX improvement recommendations
+
+---
+
+## 📄 License
+
+This project is developed for **academic purposes** as part of **UTS 41025 ISD Assignment 2 Autumn 2025**. All code and documentation are intended for educational use only.
+
+---
+
+<div align="center">
+
+![Footer](https://capsule-render.vercel.app/api?type=waving&color=0:0a95ff,100:22c55e&height=100&section=footer&text=IoTBay%20-%20Smart%20Technology%20Store&fontSize=20&fontColor=ffffff&fontAlignY=50&animation=twinkling)
+
+**Built with ❤️ for IoT Enthusiasts**
+
+[![UTS](https://img.shields.io/badge/UTS-41025%20ISD-blue)](https://www.uts.edu.au/)
+[![Assignment](https://img.shields.io/badge/Assignment-2%20Autumn%202025-green)](README.md)
+
+</div>

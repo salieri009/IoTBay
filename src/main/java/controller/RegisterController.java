@@ -112,7 +112,7 @@ public class RegisterController extends HttpServlet {
             User newUser = new User(
                 0, // id (auto-increment)
                 email,
-                password,
+                hashedPassword,  // Use hashed password instead of plain text
                 firstName,
                 lastName,
                 phone,
@@ -134,7 +134,7 @@ public class RegisterController extends HttpServlet {
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Register error: " + e.getMessage());
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             response.getWriter().write("Registration failed: " + e.getMessage());
         }

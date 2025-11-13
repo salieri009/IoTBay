@@ -1,15 +1,19 @@
 package controller;
 
-import dao.ProductDAOImpl;
-import dao.interfaces.ProductDAO;
-import db.DBConnection;
-
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import dao.ProductDAOImpl;
+import dao.interfaces.ProductDAO;
+import db.DBConnection;
 
 @WebServlet("/manage/products/delete")
 public class DeleteProductController extends HttpServlet {
@@ -55,7 +59,7 @@ public class DeleteProductController extends HttpServlet {
             productDAO.deleteProduct(id);
             response.sendRedirect(request.getContextPath() + "/manage/products");
         } catch (NumberFormatException | SQLException e) {
-            e.printStackTrace();
+            System.err.println("Delete product error: " + e.getMessage());
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             response.getWriter().write("{\"error\":\"Failed to delete product: " + e.getMessage() + "\"}");
         }

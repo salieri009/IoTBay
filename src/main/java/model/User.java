@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class User implements Serializable {
-    private final int id;
+    private int id;
     private String email;
     private String firstName;
     private String lastName;
@@ -24,6 +24,10 @@ public class User implements Serializable {
     private LocalDateTime updatedAt;
     private String role;
     private boolean isActive;
+
+    // Default constructor
+    public User() {
+    }
 
     public User(int id, String email, String password, String firstName, String lastName,
                 String phone, String postalCode, String addressLine1, String addressLine2,
@@ -48,9 +52,45 @@ public class User implements Serializable {
         this.role = role;
         this.isActive = isActive;
     }
-
-    public int getId() {
-        return id;
+    
+    // Constructor with Timestamp parameters (for compatibility)
+    public User(int id, String email, String passwordHash, String firstName, 
+               String lastName, String phone, String dob, boolean isActive,
+               java.sql.Timestamp createdAt, java.sql.Timestamp updatedAt, String role) {
+        this.id = id;
+        this.email = email;
+        this.password = passwordHash;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+        if (dob != null) {
+            this.dateOfBirth = LocalDate.parse(dob);
+        }
+        this.isActive = isActive;
+        if (createdAt != null) {
+            this.createdAt = createdAt.toLocalDateTime();
+        }
+        if (updatedAt != null) {
+            this.updatedAt = updatedAt.toLocalDateTime();
+        }
+        this.role = role;
+    }
+    
+    // Constructor without ID (for new users)
+    public User(String email, String passwordHash, String firstName, 
+               String lastName, String phone, String dob, String role) {
+        this.email = email;
+        this.password = passwordHash;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+        if (dob != null) {
+            this.dateOfBirth = LocalDate.parse(dob);
+        }
+        this.role = role;
+        this.isActive = true;
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 
     public String getEmail() {
@@ -84,6 +124,39 @@ public class User implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
+    
+    public int getId() {
+        return id;
+    }
+    
+    public void setId(int id) {
+        this.id = id;
+    }
+    
+    public int getUserId() {
+        return id;
+    }
+    
+    public void setUserId(int id) {
+        this.id = id;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    // Alias methods for compatibility
+    public String getPhoneNumber() {
+        return phone;
+    }
+
+    public void setPhoneNumber(String phone) {
+        this.phone = phone;
+    }
 
     // public String getGender() {
     //     return gender;
@@ -109,22 +182,6 @@ public class User implements Serializable {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
     public String getRole() {
         return role;
     }
@@ -140,6 +197,33 @@ public class User implements Serializable {
     public void setActive(boolean active) {
         isActive = active;
     }
+    
+    // Additional methods for compatibility
+    public String getDob() {
+        return dateOfBirth != null ? dateOfBirth.toString() : null;
+    }
+    
+    public void setDob(String dob) {
+        if (dob != null && !dob.trim().isEmpty()) {
+            this.dateOfBirth = LocalDate.parse(dob);
+        }
+    }
+    
+    public java.sql.Timestamp getCreatedAt() {
+        return createdAt != null ? java.sql.Timestamp.valueOf(createdAt) : null;
+    }
+    
+    public void setCreatedAt(java.sql.Timestamp createdAt) {
+        this.createdAt = createdAt != null ? createdAt.toLocalDateTime() : null;
+    }
+    
+    public java.sql.Timestamp getUpdatedAt() {
+        return updatedAt != null ? java.sql.Timestamp.valueOf(updatedAt) : null;
+    }
+    
+    public void setUpdatedAt(java.sql.Timestamp updatedAt) {
+        this.updatedAt = updatedAt != null ? updatedAt.toLocalDateTime() : null;
+    }
 
     public void deactivate() {
         this.isActive = false;
@@ -154,51 +238,32 @@ public class User implements Serializable {
     }
 
     public String getPostalCode() {
-        // TODO Auto-generated method stub
         return postalCode;
     }
 
-    public String getPhone() {
-        // TODO Auto-generated method stub
-        return phone;
-    }
-
-
     public String getAddressLine1() {
-        // TODO Auto-generated method stub
         return addressLine1;
     }
 
     public String getAddressLine2() {
-        // TODO Auto-generated method stub
         return addressLine2;
     }
 
     public void setPostalCode(String postalCode) {
-        // TODO Auto-generated method stub
         this.postalCode = postalCode;
     }
-    public void setPhone(String phone) {
-        // TODO Auto-generated method stub
-        this.phone = phone;
-    }
     public void setAddressLine1(String addressLine1) {
-        // TODO Auto-generated method stub
         this.addressLine1 = addressLine1;
     }
     public void setAddressLine2(String addressLine2) {
-        // TODO Auto-generated method stub
         this.addressLine2 = addressLine2;
     }
     public void setPaymentMethod(String paymentMethod) {
-        // TODO Auto-generated method stub
         this.paymentMethod = paymentMethod;
     }
     
 
     public String getPaymentMethod() {
-        // TODO Auto-generated method stub
         return paymentMethod;
-    
     }
 }

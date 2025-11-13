@@ -136,4 +136,36 @@ public class AccessLogDAOImpl implements AccessLogDAO {
             timestamp
         );
     }
+    
+    @Override
+    public List<AccessLog> getAccessLogsByDateRange(LocalDate startDate, LocalDate endDate) throws SQLException {
+        String query = "SELECT id, user_id, action, timestamp, ip_address, user_agent " +
+                      "FROM access_logs WHERE DATE(timestamp) BETWEEN ? AND ? ORDER BY timestamp DESC";
+        
+        List<AccessLog> logs = new ArrayList<>();
+        
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setString(1, startDate.toString());
+            pstmt.setString(2, endDate.toString());
+            
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    logs.add(createAccessLogFromResultSet(rs));
+                }
+            }
+        }
+        
+        return logs;
+    }
+
+    private AccessLog createAccessLogFromResultSet(ResultSet rs) throws SQLException {
+        return new AccessLog(
+            rs.getInt("id"),
+            rs.getInt("user_id"),
+            rs.getString("action"),
+            rs.getString("ip_address"),
+            rs.getString("user_agent"),
+            rs.getTimestamp("timestamp").toLocalDateTime()
+        );
+    }
 }

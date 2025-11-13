@@ -1,422 +1,227 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.List" %>
+<%@ page contentType="text/html; charset=UTF-8" language="java" isELIgnored="false" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ page import="model.User" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %>
+
+<%
+    User user = (User) session.getAttribute("user");
+    if (user == null || !"staff".equalsIgnoreCase(user.getRole())) {
+        response.sendRedirect("../../login.jsp");
+        return;
+    }
+    String contextPath = request.getContextPath();
+    
+    // Mock user data
+    List<User> users = new ArrayList<>();
+    users.add(new User(1, "john.doe@example.com", "password123", "John", "Doe", "+61 400 000 001", "2000", "1 George St", "Sydney NSW", null, "Card", null, null, "customer", true));
+    users.add(new User(2, "jane.smith@example.com", "password456", "Jane", "Smith", "+61 400 000 002", "2001", "2 Pitt St", "Sydney NSW", null, "PayPal", null, null, "customer", true));
+    users.add(new User(3, "admin@iotbay.com", "admin123", "Admin", "User", "+61 400 000 003", "2002", "3 Admin St", "Sydney NSW", null, "Card", null, null, "staff", true));
+%>
 
 <!DOCTYPE html>
-<html>
+<html lang="en" data-theme="light">
 <head>
-    <title>Manage Users</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Manage users and customer accounts">
+    <title>Manage Users | IoT Bay - Staff Portal</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="<%= contextPath %>/css/modern-theme.css">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body>
-    <h1>Manage Users</h1>
-    <div style="text-align: right;">
-        <button id="main-create-btn" class="create-btn" onclick="openCreateModal()">Create New User</button>
-    </div>  
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Email</th>
-                <th>Password</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Gender</th>
-                <th>Favourite Color</th>
-                <th>DOB</th>
-                <th>Time Created</th>
-                <th>Time Updated</th>
-                <th>Role</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-        <%
-            List<User> users = (List<User>) request.getAttribute("users");
-            if (users != null && !users.isEmpty()) {
-                for (User user : users) {
-        %>
-            <tr>
-                <td><%= user.getId() %></td>
-                <td><%= user.getEmail() %></td>
-                <td><%= user.getPassword() %></td>
-                <td><%= user.getFirstName() %></td>
-                <td><%= user.getLastName() %></td>
-                <td><%= user.getGender() %></td>
-                <td><%= user.getFavoriteColor() %></td>
-                <td><%= user.getDateOfBirth() %></td>
-                <td><%= user.getCreatedAt() %></td>
-                <td class="updatedAtTime"><%= user.getUpdatedAt() %></td>
-                <td><%= user.getRole() %></td>
-                <td class="actionbtns">
-                    <button class="edit-btn" onclick="openEditModal(
-                        '<%= user.getId() %>',
-                        '<%= user.getEmail().replace("'", "\\'") %>',
-                        '<%= user.getPassword().replace("'", "\\'") %>',
-                        '<%= user.getFirstName().replace("'", "\\'") %>',
-                        '<%= user.getLastName().replace("'", "\\'") %>',
-                        '<%= user.getGender().replace("'", "\\'") %>',
-                        '<%= user.getFavoriteColor().replace("'", "\\'") %>',
-                        '<%= user.getDateOfBirth() %>',
-                        '<%= user.getCreatedAt() %>',
-                        '<%= user.getUpdatedAt() %>',
-                        '<%= user.getRole().replace("'", "\\'") %>'
-                    )">Edit</button>                    
-                    <form action="<%=request.getContextPath()%>/manage/users/delete" method="post" style="display:inline;">
-                        <input type="hidden" name="id" value="<%= user.getId() %>">
-                        <button type="submit" class="delete-btn">Delete</button>
-                    </form>                    
-                </td>
-            </tr>
-        <%
-                }
-            } else {
-        %>
-            <tr>
-                <td colspan="5" style="text-align:center;">No users available.</td>
-            </tr>
-        <%
-            }
-        %>
-        </tbody>
-    </table>
-    <div id="createUserModal" class="modal" style="display:none;">
-        <div class="modal-content">
-            <span class="close" onclick="closeCreateModal()">&times;</span>
-            <form action="/manage/users" method="post">
-                <input type="hidden" name="user_id"><br>
-            
-                <label>Email:</label>
-                <input type="email" name="email" required><br>
-            
-                <label>Password:</label>
-                <input type="password" name="password" required><br>
-            
-                <label>First Name:</label>
-                <input type="text" name="firstName" required><br>
-            
-                <label>Last Name:</label>
-                <input type="text" name="lastName" required><br>
-            
-                <label>Gender:</label>
-                <select name="gender" required>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
-                </select><br>
-            
-                <label>Favourite Color:</label>
-                <input type="text" name="favouriteColor"><br>
-            
-                <label>Date of Birth:</label>
-                <input type="date" id="create_dateOfBirth" name="dateOfBirth" required><br>
-            
-                <label>Role:</label>
-                <select name="role" required>
-                    <option value="customer">Customer</option>
-                    <option value="staff">Staff</option>
-                </select><br>
-            
-                <button type="submit" id="submit-modal-btn" class="create-btn">Create</button>
-            </form>            
-        </div>
-    </div>
-        <!-- EDIT PRODUCT MODAL -->
-        <div id="editUserModal" class="modal" style="display:none;">
-            <div class="modal-content">
-                <span class="close" onclick="closeEditModal()">&times;</span>
-                <form action="/manage/users/update" method="post">
-                    <input type="hidden" name="user_id" id="edit_id">
-                
-                    <label>Email:</label>
-                    <input type="email" name="email" id="edit_email" required>
-                
-                    <label>Password:</label>
-                    <input type="password" name="password" id="edit_password" required>
-                
-                    <label>First Name:</label>
-                    <input type="text" name="firstName" id="edit_firstName" required>
-                
-                    <label>Last Name:</label>
-                    <input type="text" name="lastName" id="edit_lastName" required>
-                
-                    <label>Gender:</label>
-                    <select name="gender" id="edit_gender" required>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                        <option value="Other">Other</option>
-                    </select>
-                
-                    <label>Favourite Color:</label>
-                    <input type="text" name="favoriteColor" id="edit_favoriteColor">
-                
-                    <label>Date of Birth:</label>
-                    <input type="date" name="dateOfBirth" id="edit_dateOfBirth" required>
-                    <input type="hidden" name="createdAt" id="edit_createdAt">
-                    <input type="hidden" name="updatedAt" id="edit_updatedAt">
-
-                    <label>Role:</label>
-                    <select name="role" id="edit_role" required>
-                        <option value="staff">Staff</option>
-                        <option value="customer">Customer</option>
-                    </select>
-                    <input type="hidden" name="isActive" id="edit_isActive" value="true"> <!-- default true -->
-                    <br>
-                    <button type="submit" class="update-btn">Update</button>
-                </form>                
+<body class="antialiased bg-neutral-50 text-neutral-900 min-h-screen flex flex-col">
+    
+    <!-- Header -->
+    <jsp:include page="../components/header.jsp" />
+    
+    <main class="flex-1">
+        <!-- Page Header -->
+        <section class="py-12 bg-gradient-to-br from-blue-50 via-white to-purple-50">
+            <div class="container">
+                <div class="max-w-6xl mx-auto">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h1 class="text-display-lg text-neutral-900 mb-2">
+                                Manage <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-brand-secondary">Users</span>
+                            </h1>
+                            <p class="text-lg text-neutral-600">
+                                Manage customer accounts and user permissions
+                            </p>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <button class="btn btn--secondary">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                                Export Users
+                            </button>
+                            <button class="btn btn--primary">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                </svg>
+                                Add User
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-        <style>
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-        }
-        table {
-            border-collapse: collapse;
-            width: 90%;
-            margin: 20px auto;
-        }
-        th, td {
-            border: 1px solid #888;
-            padding: 10px;
-            text-align: left;
-        }
-        th {
-            background-color: #eee;
-        }
-        h1 {
-            text-align: center;
-            margin-top: 30px;
-        }
-        td.actionbtns {
-            min-width: 150px
-        }
-        td.updatedAtTime {
-            max-width: 150px;
-            word-break: break-all;
-            white-space: normal;
-            overflow-wrap: break-word;
-        }
+        </section>
 
-        input[type="text"],
-        input[type="number"],
-        input[type="date"],
-        input[type="email"],
-        input[type="password"],
-        textarea {
-            width: 100%;
-            padding: 8px 12px;
-            margin: 6px 0 12px 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 14px;
-            box-sizing: border-box;
-        }
+        <!-- Users Management -->
+        <section class="py-12">
+            <div class="container">
+                <div class="max-w-6xl mx-auto">
+                    <!-- Filters and Search -->
+                    <div class="card p-6 mb-8">
+                        <div class="flex flex-col md:flex-row gap-4 items-center">
+                            <div class="flex-1">
+                                <div class="relative">
+                                    <input type="text" placeholder="Search users..." class="form-input pr-10">
+                                    <svg class="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-neutral-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <select class="form-select">
+                                    <option>All Roles</option>
+                                    <option>Customer</option>
+                                    <option>Staff</option>
+                                </select>
+                                <select class="form-select">
+                                    <option>All Status</option>
+                                    <option>Active</option>
+                                    <option>Inactive</option>
+                                </select>
+                                <button class="btn btn--outline">Filter</button>
+                            </div>
+                        </div>
+                    </div>
 
-        label {
-            font-weight: bold;
-            margin-top: 8px;
-            display: block;
-        }
-
-        /* Modal Styling */
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: rgba(0,0,0,0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 999;
-        }
-
-        .modal-content {
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            width: 400px;
-            max-width: 90%;
-            max-height: 92vh; /* prevents it from exceeding screen height */
-            overflow-y: auto;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.25);
-            position: relative;
-        }
-
-
-        /* Close Button */
-        .close {
-            position: absolute;
-            top: 12px;
-            right: 16px;
-            font-size: 24px;
-            cursor: pointer;
-            color: #666;
-        }
-
-        .close:hover {
-            color: #000;
-        }
-
-        /* Table Styling */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-            background-color: white;
-            border-radius: 6px;
-            overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-
-        th, td {
-            padding: 12px 16px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-            word-wrap: break-word;
-            max-width: 200px;
-        }
-
-        th {
-            background-color: #f2f2f2;
-            font-weight: bold;
-        }
-
-        /* Action Button Styling Inside Table */
-        .table-actions button {
-            margin-right: 6px;
-            font-size: 12px;
-            padding: 6px 10px;
-            background-color: #28a745;
-        }
-
-        .table-actions button.delete-btn {
-            background-color: #dc3545;
-        }
-        .create-btn {
-            background-color: #007BFF; /* Blue */
-            color: white;
-            border: none;
-            padding: 8px 20px;
-            font-size: 16px;
-            border-radius: 5px;
-            text-align: right;
-            cursor: pointer;
-            font-weight: 600;
-            box-shadow: 0 3px 6px rgba(0,123,255,0.4);
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
-        }
-        .create-btn:hover {
-            background-color: #0056b3;
-            box-shadow: 0 5px 10px rgba(0,86,179,0.6);
-        }
-        .create-btn:active {
-            background-color: #004494;
-            box-shadow: 0 2px 5px rgba(0,68,148,0.8);
-        }
-        #main-create-btn {
-            margin: 0 25px;
-        }
-        #submit-modal-btn {
-            float: right;
-        }
-            .edit-btn {
-              background-color: #007bff;
-              color: white;
-              border: none;
-              padding: 6px 14px;
-              font-size: 14px;
-              border-radius: 4px;
-              cursor: pointer;
-              transition: background-color 0.3s ease;
-            }
-            .edit-btn:hover {
-              background-color: #0062ff;
-            }
-          
-            .delete-btn {
-              background-color: #f44336; /* Red */
-              color: white;
-              border: none;
-              padding: 6px 14px;
-              font-size: 14px;
-              border-radius: 4px;
-              cursor: pointer;
-              transition: background-color 0.3s ease;
-            }
-            .delete-btn:hover {
-              background-color: #d32f2f;
-            }
-          
-            /* Optional: add spacing between buttons */
-            .edit-btn, .delete-btn {
-              margin-right: 8px;
-            }
-
-            .update-btn {
-            background-color: #007BFF; /* Blue */
-            color: white;
-            border: none;
-            padding: 8px 20px;
-            margin-top: 15px;
-            font-size: 16px;
-            float: right;
-            border-radius: 5px;
-            text-align: right;
-            cursor: pointer;
-            font-weight: 600;
-            box-shadow: 0 3px 6px rgba(0,123,255,0.4);
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
-        }
-        .update-btn:hover {
-            background-color: #0056b3;
-            box-shadow: 0 5px 10px rgba(0,86,179,0.6);
-        }
-        .update-btn:active {
-            background-color: #004494;
-            box-shadow: 0 2px 5px rgba(0,68,148,0.8);
-        }
-
-          </style>
+                    <!-- Users Table -->
+                    <div class="card overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead class="bg-neutral-50">
+                                    <tr>
+                                        <th class="text-left py-4 px-6 font-medium text-neutral-700">
+                                            <input type="checkbox" class="rounded border-neutral-300">
+                                        </th>
+                                        <th class="text-left py-4 px-6 font-medium text-neutral-700">User</th>
+                                        <th class="text-left py-4 px-6 font-medium text-neutral-700">Email</th>
+                                        <th class="text-left py-4 px-6 font-medium text-neutral-700">Role</th>
+                                        <th class="text-left py-4 px-6 font-medium text-neutral-700">Status</th>
+                                        <th class="text-left py-4 px-6 font-medium text-neutral-700">Joined</th>
+                                        <th class="text-left py-4 px-6 font-medium text-neutral-700">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-neutral-200">
+                                    <c:forEach var="userItem" items="<%= users %>">
+                                        <tr class="hover:bg-neutral-50">
+                                            <td class="py-4 px-6">
+                                                <input type="checkbox" class="rounded border-neutral-300">
+                                            </td>
+                                            <td class="py-4 px-6">
+                                                <div class="flex items-center gap-3">
+                                                    <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                                                        ${fn:toUpperCase(userItem.firstName.substring(0,1))}${fn:toUpperCase(userItem.lastName.substring(0,1))}
+                                                    </div>
+                                                    <div>
+                                                        <p class="font-medium text-neutral-900">${userItem.firstName} ${userItem.lastName}</p>
+                                                        <p class="text-sm text-neutral-600">ID: ${userItem.id}</p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="py-4 px-6">
+                                                <p class="text-neutral-900">${userItem.email}</p>
+                                                <p class="text-sm text-neutral-600">${userItem.phone}</p>
+                                            </td>
+                                            <td class="py-4 px-6">
+                                                <span class="badge ${userItem.role == 'staff' ? 'badge--info' : 'badge--secondary'}">
+                                                    ${userItem.role}
+                                                </span>
+                                            </td>
+                                            <td class="py-4 px-6">
+                                                <span class="badge badge--success">Active</span>
+                                            </td>
+                                            <td class="py-4 px-6">
+                                                <p class="text-neutral-900">Mar 15, 2024</p>
+                                            </td>
+                                            <td class="py-4 px-6">
+                                                <div class="flex items-center gap-2">
+                                                    <button class="btn btn--ghost btn--sm" onclick="editUser(${userItem.id})">
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                                                        </svg>
+                                                    </button>
+                                                    <button class="btn btn--ghost btn--sm" onclick="viewUser(${userItem.id})">
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                                        </svg>
+                                                    </button>
+                                                    <button class="btn btn--ghost btn--sm text-red-600" onclick="deleteUser(${userItem.id})">
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <!-- Pagination -->
+                        <div class="px-6 py-4 border-t border-neutral-200">
+                            <div class="flex items-center justify-between">
+                                <p class="text-sm text-neutral-600">
+                                    Showing <span class="font-medium">1</span> to <span class="font-medium">3</span> of <span class="font-medium">3</span> results
+                                </p>
+                                <div class="flex items-center gap-2">
+                                    <button class="btn btn--ghost btn--sm" disabled>Previous</button>
+                                    <button class="btn btn--primary btn--sm">1</button>
+                                    <button class="btn btn--ghost btn--sm" disabled>Next</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Footer -->
+    <jsp:include page="../components/footer.jsp" />
+    
+    <!-- JavaScript -->
+    <script src="<%= contextPath %>/js/main.js"></script>
+    
     <script>
-        function openCreateModal() {
-            document.getElementById('createUserModal').style.display = 'block';
+        function editUser(userId) {
+            // Implement edit user functionality
+            console.log('Edit user:', userId);
         }
-    
-        function closeCreateModal() {
-            document.getElementById('createUserModal').style.display = 'none';
+        
+        function viewUser(userId) {
+            // Implement view user functionality
+            console.log('View user:', userId);
         }
-        function openEditModal(id, email, password, firstName, lastName, gender, favoriteColor, dateOfBirth, createdAt, updatedAt, role) {
-            document.getElementById('edit_id').value = id;
-            document.getElementById('edit_email').value = email;
-            document.getElementById('edit_password').value = password;
-            document.getElementById('edit_firstName').value = firstName;
-            document.getElementById('edit_lastName').value = lastName;
-            document.getElementById('edit_gender').value = gender;
-            document.getElementById('edit_favoriteColor').value = favoriteColor;
-            document.getElementById('edit_dateOfBirth').value = dateOfBirth;
-            document.getElementById('edit_createdAt').value = createdAt;
-            document.getElementById('edit_updatedAt').value = updatedAt;
-            document.getElementById('edit_role').value = role;
-            document.getElementById('edit_isActive').value = "true";
-
-            document.getElementById('editUserModal').style.display = 'block';
+        
+        function deleteUser(userId) {
+            if (confirm('Are you sure you want to delete this user?')) {
+                // Implement delete user functionality
+                console.log('Delete user:', userId);
+            }
         }
-
-
-        function closeEditModal() {
-            document.getElementById('editUserModal').style.display = 'none';
-        }
-        document.addEventListener("DOMContentLoaded", function () {
-            const today = new Date().toISOString().split('T')[0];
-
-            const createDOB = document.getElementById("create_dateOfBirth");
-            const editDOB = document.getElementById("edit_dateOfBirth");
-
-            if (createDOB) createDOB.max = today;
-            if (editDOB) editDOB.max = today;
-        });
-</script>
-    
+    </script>
 </body>
 </html>

@@ -92,7 +92,7 @@ public class UserDAOStub implements UserDAO {
                         updatedUser.getAddressLine2(),
                         updatedUser.getDateOfBirth(),
                         updatedUser.getPaymentMethod(),
-                        users.get(i).getCreatedAt(), // 기존 생성일 유지
+                        users.get(i).getCreatedAt().toLocalDateTime(), // 기존 생성일 유지
                         LocalDateTime.now(), // 수정일 갱신
                         updatedUser.getRole(),
                         updatedUser.isActive()
@@ -105,5 +105,10 @@ public class UserDAOStub implements UserDAO {
     @Override
     public void deleteUser(int id) throws SQLException {
         users.removeIf(user -> user.getId() == id);
+    }
+
+    @Override
+    public int getTotalUserCount() throws SQLException {
+        return users.size();
     }
 }

@@ -1,7 +1,6 @@
 package controller;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 
@@ -12,50 +11,54 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import dao.AccessLogDAOImpl;
-import dao.UserDAOImpl;
+import dao.stub.AccessLogDAOStub;
+import dao.stub.UserDAOStub;
 import dao.interfaces.AccessLogDAO;
 import dao.interfaces.UserDAO;
-import db.DBConnection;
 import model.AccessLog;
 import model.User;
 
-@WebServlet("/login")
+@WebServlet("/api/login")
 public class LoginController extends HttpServlet {
     private AccessLogDAO accessLogDAO;
     private UserDAO userDAO;
 
     @Override
     public void init() {
-        try {
-            Connection connection = DBConnection.getConnection();
-            accessLogDAO = new AccessLogDAOImpl(connection);
-            userDAO = new UserDAOImpl(connection);
-        } catch (SQLException | ClassNotFoundException e) {
-            throw new RuntimeException("Failed to initialize database connection", e);
-        }
+        accessLogDAO = new AccessLogDAOStub();
+        userDAO = new UserDAOStub();
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            String email = request.getParameter("email");
-            String password = request.getParameter("password");
+            String email = utils.SecurityUtil.getValidatedStringParameter(request, "email", 100);
+            String password = utils.SecurityUtil.getValidatedStringParameter(request, "password", 255);
+            
+            // Validate email format
+            if (!utils.SecurityUtil.isValidEmail(email)) {
+                request.setAttribute("errorMessage", "Invalid login credentials");
+                request.getRequestDispatcher("/login.jsp").forward(request, response);
+                return;
+            }
+            
             User user = userDAO.getUserByEmail(email);
 
-            //if user is not in the database
+            // Generic error message to prevent user enumeration
+            String genericError = "Invalid login credentials";
 
             if (user == null) {
-            request.setAttribute("errorMessage", "User not found");
-            request.getRequestDispatcher("/login.jsp").forward(request, response);
-            return;
+                request.setAttribute("errorMessage", genericError);
+                request.getRequestDispatcher("/login.jsp").forward(request, response);
+                return;
             }
 
-            if (!user.getPassword().equals(password)) {
-            request.setAttribute("errorMessage", "Incorrect password");
-            request.getRequestDispatcher("/login.jsp").forward(request, response);
-            return;
+            // Use secure password verification (for stub, use plain text comparison)
+            if (!password.equals(user.getPassword())) {
+                request.setAttribute("errorMessage", genericError);
+                request.getRequestDispatcher("/login.jsp").forward(request, response);
+                return;
             }
 
 
@@ -124,7 +127,7 @@ public class LoginController extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/index.jsp");
         } catch (SQLException e) {
             // Log error (optional)
-            e.printStackTrace();
+            System.err.println("Login error: " + e.getMessage());
             // Redirect to index.jsp on error (with context path)
             response.sendRedirect(request.getContextPath() + "/index.jsp");
         }

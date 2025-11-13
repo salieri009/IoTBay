@@ -93,11 +93,11 @@ public class UpdateUserController extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/manage/users");
 
         } catch (SQLException | NumberFormatException e) {
-            e.printStackTrace();
+            System.err.println("Update user error: " + e.getMessage());
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             response.getWriter().write("{\"error\": \"Failed to update user: " + e.getMessage() + "\"}");
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Update user error: " + e.getMessage());
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.getWriter().write("{\"error\": \"Invalid input: " + e.getMessage() + "\"}");
         }

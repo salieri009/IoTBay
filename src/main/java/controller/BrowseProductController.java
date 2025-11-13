@@ -8,14 +8,16 @@ import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import dao.ProductDAOImpl;
 import dao.interfaces.ProductDAO;
 import db.DBConnection;
 import model.Product;
 
-@WebServlet("/search")
+@WebServlet({"/search", "/browse"})
 public class BrowseProductController extends HttpServlet {
     private ProductDAO productDAO;
 
@@ -64,7 +66,7 @@ public class BrowseProductController extends HttpServlet {
             request.getRequestDispatcher("browse.jsp").forward(request, response);
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println("Browse product error: " + e.getMessage());
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             response.getWriter().write("{\"error\":\"Database error: " + e.getMessage() + "\"}");
         } catch (NumberFormatException e) {

@@ -1,20 +1,21 @@
 package controller;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 
-import dao.OrderDAO;
 import dao.CartItemDAO;
+import dao.OrderDAO;
 import db.DBConnection;
 import model.CartItem;
 import model.Order;
@@ -57,10 +58,10 @@ public class CheckoutController extends HttpServlet{
                 return;
             }
 
-            // Calculate total
-            double totalAmount = cartItems.stream()
-                .mapToDouble(item -> item.getPrice() * item.getQuantity()) // You need getPrice() in CartItem
-                .sum();
+            // Calculate total using BigDecimal for accurate monetary calculations
+            BigDecimal totalAmount = cartItems.stream()
+                .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
 
             // Create order
             Order order = new Order(0, userId, LocalDateTime.now(), "Pending", totalAmount);
@@ -71,8 +72,14 @@ public class CheckoutController extends HttpServlet{
 
             response.sendRedirect("index.jsp");
 
+        } catch (SQLException e) {
+            System.err.println("Database error during checkout: " + e.getMessage());
+            response.sendRedirect("cart.jsp?error=Database error occurred");
+        } catch (NumberFormatException e) {
+            System.err.println("Invalid number format during checkout: " + e.getMessage());
+            response.sendRedirect("cart.jsp?error=Invalid data format");
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("Unexpected checkout error: " + e.getMessage());
             response.sendRedirect("cart.jsp?error=Checkout failed");
         }
     }

@@ -94,4 +94,19 @@ public class AccessLogDAOStub implements AccessLogDAO {
         }
         return result;
     }
+
+    @Override
+    public List<AccessLog> getAccessLogsByDateRange(LocalDate startDate, LocalDate endDate) throws SQLException {
+        List<AccessLog> result = new ArrayList<>();
+        for (AccessLog log : logs) {
+            if (log.getTimestamp() != null) {
+                LocalDate logDate = log.getTimestamp().toLocalDate();
+                if ((logDate.isEqual(startDate) || logDate.isAfter(startDate)) &&
+                    (logDate.isEqual(endDate) || logDate.isBefore(endDate))) {
+                    result.add(log);
+                }
+            }
+        }
+        return result;
+    }
 }

@@ -61,20 +61,81 @@
 
 <script>
 function deleteAccount() {
-    if (!confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+    // First confirmation
+    if (!confirm('⚠️ WARNING: This will permanently delete your account.\n\nAll your data, orders, and information will be lost forever.\n\nAre you absolutely sure you want to continue?')) {
         return;
     }
+    
+    // Second confirmation with more details
+    const confirmMessage = 'This is your final warning!\n\n' +
+                          'Deleting your account will:\n' +
+                          '• Permanently remove all your personal information\n' +
+                          '• Delete your order history\n' +
+                          '• Remove all saved preferences\n' +
+                          '• This action CANNOT be undone\n\n' +
+                          'Type "DELETE" to confirm:';
+    
+    const userInput = prompt(confirmMessage);
+    if (userInput !== 'DELETE') {
+        if (userInput !== null) {
+            alert('Account deletion cancelled. Your account is safe.');
+        }
+        return;
+    }
+    
+    // Show loading state
+    const deleteBtn = document.querySelector('.delete-btn');
+    const originalText = deleteBtn.innerHTML;
+    deleteBtn.innerHTML = '<div class="loading mr-2"></div> Deleting account...';
+    deleteBtn.disabled = true;
+    deleteBtn.style.opacity = '0.6';
+    deleteBtn.style.cursor = 'not-allowed';
+    
+    if (typeof showLoading === 'function') {
+        showLoading(deleteBtn);
+    }
+    
     fetch('<%=request.getContextPath()%>/api/Profiles', {
         method: 'DELETE',
         credentials: 'same-origin'
     })
-    .then(response => response.text())
-    .then(msg => {
-        alert(msg);
-        // Redirect to goodbye page after deletion
-        window.location.href = '<%=request.getContextPath()%>/goodbye.jsp';
+    .then(response => {
+        if (response.ok) {
+            return response.text();
+        } else {
+            throw new Error('Failed to delete account. Please try again or contact support.');
+        }
     })
-    .catch(err => alert('An error occurred while deleting your account: ' + err));
+    .then(msg => {
+        // Show success message
+        if (typeof showToast === 'function') {
+            showToast('Account deleted successfully', 'success');
+        }
+        // Redirect to goodbye page after short delay
+        setTimeout(() => {
+            window.location.href = '<%=request.getContextPath()%>/goodbye.jsp';
+        }, 1000);
+    })
+    .catch(err => {
+        console.error('Error:', err);
+        // Reset button
+        deleteBtn.innerHTML = originalText;
+        deleteBtn.disabled = false;
+        deleteBtn.style.opacity = '1';
+        deleteBtn.style.cursor = 'pointer';
+        
+        if (typeof hideLoading === 'function') {
+            hideLoading(deleteBtn);
+        }
+        
+        // Show error message
+        const errorMsg = err.message || 'An error occurred while deleting your account. Please try again or contact support.';
+        if (typeof showToast === 'function') {
+            showToast(errorMsg, 'error');
+        } else {
+            alert(errorMsg);
+        }
+    });
 }
 </script>
 </body>

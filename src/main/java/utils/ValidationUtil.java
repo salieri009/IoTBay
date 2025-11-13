@@ -1,9 +1,16 @@
 package utils;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.regex.Pattern;
 
 public class ValidationUtil {
+
+    // String validation method
+    public static boolean isValidString(String str) {
+        return str != null && !str.trim().isEmpty();
+    }
 
     // Name validation (English, Korean, spaces, hyphens allowed)
     public static String validateName(String name, String fieldName) {
@@ -184,5 +191,240 @@ public class ValidationUtil {
         if (statusError != null) return statusError;
 
         return null;
+    }
+
+    // Payment validation
+    public static String validatePayment(String amount, String paymentMethod,
+                                       String cardNumber, String expiryDate, String cvv) {
+        if (!isValidAmount(amount)) {
+            return "Invalid payment amount";
+        }
+
+        if (paymentMethod == null || paymentMethod.trim().isEmpty()) {
+            return "Payment method is required";
+        }
+
+        if ("CREDIT_CARD".equals(paymentMethod) || "DEBIT_CARD".equals(paymentMethod)) {
+            if (!isValidCardNumber(cardNumber)) {
+                return "Invalid card number";
+            }
+            if (!isValidExpiryDate(expiryDate)) {
+                return "Invalid expiry date";
+            }
+            if (!isValidCVV(cvv)) {
+                return "Invalid CVV";
+            }
+        }
+
+        return null; // Valid
+    }
+
+    // Shipment validation
+    public static String validateShipment(String shipmentMethod, String address, String shipmentDate) {
+        if (shipmentMethod == null || shipmentMethod.trim().isEmpty()) {
+            return "Shipment method is required";
+        }
+
+        if (address == null || address.trim().length() < 10) {
+            return "Valid address is required (minimum 10 characters)";
+        }
+
+        if (shipmentDate != null && !shipmentDate.trim().isEmpty()) {
+            try {
+                LocalDate.parse(shipmentDate);
+            } catch (DateTimeParseException e) {
+                return "Invalid shipment date format";
+            }
+        }
+
+        return null; // Valid
+    }
+
+    // Review validation
+    public static String validateReview(String rating, String comment, String title) {
+        if (rating == null || rating.trim().isEmpty()) {
+            return "Rating is required";
+        }
+
+        try {
+            int ratingValue = Integer.parseInt(rating);
+            if (ratingValue < 1 || ratingValue > 5) {
+                return "Rating must be between 1 and 5";
+            }
+        } catch (NumberFormatException e) {
+            return "Invalid rating format";
+        }
+
+        if (comment != null && comment.trim().length() > 1000) {
+            return "Comment must be less than 1000 characters";
+        }
+
+        if (title != null && title.trim().length() > 100) {
+            return "Title must be less than 100 characters";
+        }
+
+        return null; // Valid
+    }
+
+    // Utility validation methods
+    public static boolean isValidAmount(String amount) {
+        if (amount == null || amount.trim().isEmpty()) {
+            return false;
+        }
+
+        try {
+            BigDecimal value = new BigDecimal(amount);
+            return value.compareTo(BigDecimal.ZERO) > 0;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    public static boolean isValidCardNumber(String cardNumber) {
+        if (cardNumber == null) return false;
+
+        // Remove spaces and dashes
+        String cleaned = cardNumber.replaceAll("[\\s-]", "");
+
+        // Check if it's all digits and appropriate length
+        return cleaned.matches("\\d{13,19}");
+    }
+
+    public static boolean isValidExpiryDate(String expiryDate) {
+        if (expiryDate == null) return false;
+
+        // Expect MM/YY or MM/YYYY format
+        Pattern pattern = Pattern.compile("^(0[1-9]|1[0-2])/([0-9]{2}|[0-9]{4})$");
+        return pattern.matcher(expiryDate).matches();
+    }
+
+    public static boolean isValidCVV(String cvv) {
+        if (cvv == null) return false;
+
+        // CVV should be 3 or 4 digits
+        return cvv.matches("\\d{3,4}");
+    }
+    
+    // ============================================
+    // Enhanced Validation Methods
+    // Based on improvement.md recommendations
+    // ============================================
+    
+    /**
+     * Validate IoT product specification fields
+     * Context-aware validation for technical products
+     */
+    public static String validateProductSpecification(String protocol, String voltage, String operatingRange) {
+        if (protocol != null && !protocol.trim().isEmpty()) {
+            String[] validProtocols = {"LoRaWAN", "Zigbee", "WiFi", "Bluetooth", "MQTT", "HTTP", "CoAP", "Modbus"};
+            boolean isValid = false;
+            for (String valid : validProtocols) {
+                if (valid.equalsIgnoreCase(protocol.trim())) {
+                    isValid = true;
+                    break;
+                }
+            }
+            if (!isValid) {
+                return "Invalid communication protocol. Valid protocols: " + String.join(", ", validProtocols);
+            }
+        }
+        
+        if (voltage != null && !voltage.trim().isEmpty()) {
+            // Validate voltage format (e.g., "12V DC", "5V USB", "24V AC")
+            if (!voltage.matches("^\\d+(\\.\\d+)?\\s*V\\s*(DC|AC|USB|Battery)$")) {
+                return "Voltage must be in format: 'XXV DC/AC/USB/Battery' (e.g., '12V DC', '5V USB')";
+            }
+        }
+        
+        if (operatingRange != null && !operatingRange.trim().isEmpty()) {
+            // Validate temperature range format (e.g., "-40°C to 85°C")
+            if (!operatingRange.matches("^-?\\d+°C\\s+to\\s+-?\\d+°C$")) {
+                return "Operating range must be in format: 'XX°C to YY°C' (e.g., '-40°C to 85°C')";
+            }
+        }
+        
+        return null; // Valid
+    }
+    
+    /**
+     * Enhanced email validation with business email check
+     * Based on improvement.md Section 4.2
+     */
+    public static String validateBusinessEmail(String email) {
+        String basicError = validateEmail(email);
+        if (basicError != null) {
+            return basicError;
+        }
+        
+        // Check for common personal email domains (optional warning, not error)
+        String[] personalDomains = {"gmail.com", "yahoo.com", "hotmail.com", "outlook.com"};
+        String domain = email.substring(email.indexOf("@") + 1).toLowerCase();
+        
+        for (String personal : personalDomains) {
+            if (domain.equals(personal)) {
+                // Return warning message (not error - still valid)
+                return "WARNING: Business email is recommended for order confirmations and technical updates.";
+            }
+        }
+        
+        return null; // Valid
+    }
+    
+    /**
+     * Validate product quantity with context
+     * Provides helpful guidance for IoT-specific requirements
+     */
+    public static String validateProductQuantity(String quantityStr, int availableStock, String productName) {
+        if (quantityStr == null || quantityStr.trim().isEmpty()) {
+            return "Quantity is required";
+        }
+        
+        try {
+            int quantity = Integer.parseInt(quantityStr);
+            
+            if (quantity <= 0) {
+                return "Quantity must be greater than zero";
+            }
+            
+            if (quantity > 100) {
+                return "Maximum quantity per order is 100. For bulk orders, please contact sales.";
+            }
+            
+            if (quantity > availableStock) {
+                return String.format("Only %d units of %s are available in stock. Please adjust your quantity.", 
+                                    availableStock, productName);
+            }
+            
+            // IoT-specific: Warn about odd quantities for paired products
+            if (quantity % 2 != 0 && productName != null && 
+                (productName.toLowerCase().contains("pair") || 
+                 productName.toLowerCase().contains("sensor") && productName.toLowerCase().contains("gateway"))) {
+                return "WARNING: This product is typically sold in pairs. Consider ordering an even quantity.";
+            }
+            
+            return null; // Valid
+            
+        } catch (NumberFormatException e) {
+            return "Quantity must be a valid number";
+        }
+    }
+    
+    /**
+     * Validate compatibility data format
+     * For JSON compatibility strings
+     */
+    public static String validateCompatibilityJson(String compatibilityJson) {
+        if (compatibilityJson == null || compatibilityJson.trim().isEmpty()) {
+            return null; // Optional field
+        }
+        
+        // Basic JSON structure validation
+        if (!compatibilityJson.trim().startsWith("{") && !compatibilityJson.trim().startsWith("[")) {
+            return "Compatibility data must be valid JSON format";
+        }
+        
+        // TODO: Add more sophisticated JSON validation if needed
+        
+        return null; // Valid
     }
 }
