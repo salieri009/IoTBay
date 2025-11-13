@@ -24,8 +24,15 @@
         <link rel="stylesheet" href="<c:url value='/css/${customCSS}' />">
     </c:if>
 
+    <!-- Resource Hints for Performance (Section 3.4) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    
+    <!-- Preload Critical Resources -->
+    <link rel="preload" href="<c:url value='/css/modern-theme.css' />" as="style">
+    <link rel="preload" href="<c:url value='/js/main.js' />" as="script">
+    
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <script>
@@ -37,22 +44,72 @@
     </script>
 </head>
 <body class="antialiased bg-neutral-50 text-neutral-900 min-h-screen flex flex-col">
-    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-brand-primary text-white px-4 py-2 rounded-md z-50">
-        Skip to main content
-    </a>
+    <!-- Enhanced Skip Links (Section 8.1 - Enhanced Keyboard Navigation) -->
+    <div class="skip-links" role="navigation" aria-label="Skip navigation">
+        <a href="#main-content" class="skip-link">
+            Skip to main content
+        </a>
+        <a href="#site-navigation" class="skip-link">
+            Skip to navigation
+        </a>
+        <a href="#site-search" class="skip-link">
+            Skip to search
+        </a>
+    </div>
+
+    <!-- ARIA Live Region for Dynamic Announcements (Section 8.2 - Screen Reader Optimization) -->
+    <div 
+        id="aria-live-announcements" 
+        class="sr-only" 
+        aria-live="polite" 
+        aria-atomic="true"
+        role="status"
+        aria-relevant="additions text"
+    >
+        <!-- Dynamically updated content for screen readers -->
+    </div>
+
+    <!-- ARIA Live Region for Urgent Announcements (Errors) -->
+    <div 
+        id="aria-live-errors" 
+        class="sr-only" 
+        aria-live="assertive" 
+        aria-atomic="true"
+        role="alert"
+        aria-relevant="additions text"
+    >
+        <!-- Urgent error messages for screen readers -->
+    </div>
 
     <jsp:include page="/components/header.jsp" />
 
-    <main id="main-content" class="flex-1">
+    <main id="main-content" class="flex-1" role="main" aria-label="Main content">
         <jsp:doBody/>
     </main>
 
     <jsp:include page="/components/footer.jsp" />
 
-    <div id="toast-container" class="fixed top-4 right-4 z-50 space-y-2" role="region" aria-label="Notifications"></div>
-    <div id="loading-overlay" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+    <!-- Toast Notifications Container (Enhanced ARIA) -->
+    <div 
+        id="toast-container" 
+        class="fixed top-4 right-4 z-50 space-y-2" 
+        role="region" 
+        aria-label="Notifications"
+        aria-live="polite"
+        aria-atomic="false"
+    ></div>
+    
+    <!-- Loading Overlay (Enhanced ARIA) -->
+    <div 
+        id="loading-overlay" 
+        class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center"
+        role="status"
+        aria-live="polite"
+        aria-busy="true"
+        aria-label="Loading content"
+    >
         <div class="loading-spinner bg-white p-6 rounded-lg shadow-lg">
-            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-primary mx-auto"></div>
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-primary mx-auto" aria-hidden="true"></div>
             <p class="mt-2 text-sm text-neutral-600">Loading...</p>
         </div>
     </div>

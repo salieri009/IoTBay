@@ -3,7 +3,6 @@ package controller;
 import dao.SupplierDAOImpl;
 import db.DBConnection;
 import model.Supplier;
-import model.User;
 import utils.InputValidator;
 
 import javax.servlet.ServletException;

@@ -1,7 +1,6 @@
 package controller;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 
@@ -18,7 +17,6 @@ import dao.interfaces.AccessLogDAO;
 import dao.interfaces.UserDAO;
 import model.AccessLog;
 import model.User;
-import utils.PasswordUtil;
 
 @WebServlet("/api/login")
 public class LoginController extends HttpServlet {

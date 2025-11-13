@@ -176,8 +176,8 @@
                             <c:choose>
                                 <c:when test="${product.stock > 0}">
                                     <button data-product-id="${pd_id}" 
-                                            onclick="if(typeof addToCart === 'function') { addToCart(${pd_id}, parseInt(document.getElementById('quantity').value)); } else { this.closest('form')?.submit(); }" 
-                                            class="w-full btn btn--primary btn--lg"
+                                            data-action="add-to-cart"
+                                            class="add-to-cart-button w-full btn btn--primary btn--lg"
                                             aria-label="Add ${pd_name} to cart">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m0 0H17"></path>
@@ -256,30 +256,45 @@
                         </div>
                     </div>
 
-                    <!-- Product Tabs -->
+                    <!-- Product Tabs (Section 4.3) -->
             <div class="mt-16">
                 <div class="border-b border-neutral-200">
-                    <nav class="flex space-x-8" role="tablist">
-                        <button class="tab-button active py-4 px-1 border-b-2 border-brand-primary text-brand-primary font-medium" 
-                                onclick="showTab('specifications')" 
-                                role="tab" 
-                                aria-selected="true"
-                                aria-controls="specifications-panel">
+                    <nav class="flex flex-wrap space-x-8" role="tablist" aria-label="Product information tabs">
+                        <button 
+                            class="tab-button active py-4 px-1 border-b-2 border-brand-primary text-brand-primary font-medium transition-colors" 
+                            onclick="showTab('specifications')" 
+                            role="tab" 
+                            id="specifications-tab"
+                            aria-selected="true"
+                            aria-controls="specifications-panel">
                             Specifications
                         </button>
-                        <button class="tab-button py-4 px-1 border-b-2 border-transparent text-neutral-500 hover:text-neutral-700" 
-                                onclick="showTab('reviews')" 
-                                role="tab" 
-                                aria-selected="false"
-                                aria-controls="reviews-panel">
-                            Reviews (12)
+                        <button 
+                            class="tab-button py-4 px-1 border-b-2 border-transparent text-neutral-500 hover:text-neutral-700 hover:border-neutral-300 transition-colors" 
+                            onclick="showTab('compatibility')" 
+                            role="tab" 
+                            id="compatibility-tab"
+                            aria-selected="false"
+                            aria-controls="compatibility-panel">
+                            Compatibility
                         </button>
-                        <button class="tab-button py-4 px-1 border-b-2 border-transparent text-neutral-500 hover:text-neutral-700" 
-                                onclick="showTab('support')" 
-                                role="tab" 
-                                aria-selected="false"
-                                aria-controls="support-panel">
-                            Support
+                        <button 
+                            class="tab-button py-4 px-1 border-b-2 border-transparent text-neutral-500 hover:text-neutral-700 hover:border-neutral-300 transition-colors" 
+                            onclick="showTab('documentation')" 
+                            role="tab" 
+                            id="documentation-tab"
+                            aria-selected="false"
+                            aria-controls="documentation-panel">
+                            Documentation
+                        </button>
+                        <button 
+                            class="tab-button py-4 px-1 border-b-2 border-transparent text-neutral-500 hover:text-neutral-700 hover:border-neutral-300 transition-colors" 
+                            onclick="showTab('reviews')" 
+                            role="tab" 
+                            id="reviews-tab"
+                            aria-selected="false"
+                            aria-controls="reviews-panel">
+                            Reviews (12)
                         </button>
                     </nav>
                 </div>
@@ -443,58 +458,393 @@
                                     </dl>
                                 </div>
                             </details>
+                            
+                            <!-- Expand/Collapse Controls -->
+                            <div class="mt-6 flex gap-3 pt-6 border-t border-neutral-200">
+                                <button 
+                                    type="button" 
+                                    onclick="expandAllSpecs()" 
+                                    class="btn btn--ghost btn--sm"
+                                    aria-label="Expand all specifications">
+                                    Expand All
+                                </button>
+                                <button 
+                                    type="button" 
+                                    onclick="collapseAllSpecs()" 
+                                    class="btn btn--ghost btn--sm"
+                                    aria-label="Collapse all specifications">
+                                    Collapse All
+                                </button>
+                                <button 
+                                    type="button" 
+                                    onclick="printSpecs()" 
+                                    class="btn btn--ghost btn--sm"
+                                    aria-label="Print specifications">
+                                    Print Specs
+                                </button>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Reviews Tab -->
-                    <div id="reviews" class="tab-panel hidden">
+                    <!-- Compatibility Tab (Section 4.3) -->
+                    <div id="compatibility" class="tab-panel hidden" role="tabpanel" aria-labelledby="compatibility-tab">
                         <div class="bg-white rounded-lg shadow p-6">
-                            <h3 class="text-xl font-semibold text-neutral-900 mb-6">Customer Reviews</h3>
-                            <div class="space-y-6">
-                                <!-- Sample Review -->
-                                <div class="border-b border-neutral-200 pb-6">
-                                    <div class="flex items-center gap-2 mb-2">
-                                        <div class="flex text-yellow-400">
-                                            ★★★★★
+                            <h3 class="text-xl font-semibold text-neutral-900 mb-6">Compatibility Matrix</h3>
+                            
+                            <!-- Compatible Gateways -->
+                            <div class="mb-8">
+                                <h4 class="font-semibold text-neutral-900 mb-4">Compatible Gateways</h4>
+                                <div class="space-y-3">
+                                    <div class="flex items-center gap-3 p-3 bg-success-50 rounded-lg border border-success-200">
+                                        <svg class="w-5 h-5 text-success flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        <div class="flex-1">
+                                            <span class="font-medium text-neutral-900">Gateway X (LoRaWAN)</span>
+                                            <p class="text-sm text-neutral-600">Fully compatible with all features</p>
                                         </div>
-                                        <span class="font-medium">John D.</span>
-                                        <span class="text-neutral-500 text-sm">Verified Purchase</span>
                                     </div>
-                                    <p class="text-neutral-700 mb-2">
-                                        "Excellent product! Easy to set up and works perfectly with my smart home system. The app interface is intuitive and the device is very reliable."
-                                    </p>
-                                    <span class="text-neutral-500 text-sm">2 weeks ago</span>
+                                    <div class="flex items-center gap-3 p-3 bg-success-50 rounded-lg border border-success-200">
+                                        <svg class="w-5 h-5 text-success flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        <div class="flex-1">
+                                            <span class="font-medium text-neutral-900">Gateway Y (Multi-protocol)</span>
+                                            <p class="text-sm text-neutral-600">Compatible with LoRaWAN mode</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-3 p-3 bg-error-50 rounded-lg border border-error-200">
+                                        <svg class="w-5 h-5 text-error flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        <div class="flex-1">
+                                            <span class="font-medium text-neutral-900">Gateway Z (Zigbee only)</span>
+                                            <p class="text-sm text-neutral-600">Not compatible - different protocol</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Compatible Platforms -->
+                            <div class="mb-8">
+                                <h4 class="font-semibold text-neutral-900 mb-4">Compatible Platforms</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <div class="flex items-center gap-3 p-3 bg-success-50 rounded-lg border border-success-200">
+                                        <svg class="w-5 h-5 text-success flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        <span class="font-medium text-neutral-900">Home Assistant</span>
+                                    </div>
+                                    <div class="flex items-center gap-3 p-3 bg-success-50 rounded-lg border border-success-200">
+                                        <svg class="w-5 h-5 text-success flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        <span class="font-medium text-neutral-900">AWS IoT Core</span>
+                                    </div>
+                                    <div class="flex items-center gap-3 p-3 bg-success-50 rounded-lg border border-success-200">
+                                        <svg class="w-5 h-5 text-success flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        <span class="font-medium text-neutral-900">Azure IoT Hub</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Power Supply Compatibility -->
+                            <div class="mb-8">
+                                <h4 class="font-semibold text-neutral-900 mb-4">Power Supply Compatibility</h4>
+                                <div class="space-y-3">
+                                    <div class="flex items-center gap-3 p-3 bg-success-50 rounded-lg border border-success-200">
+                                        <svg class="w-5 h-5 text-success flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        <div class="flex-1">
+                                            <span class="font-medium text-neutral-900">12V DC Power Adapter (included)</span>
+                                            <p class="text-sm text-neutral-600">Recommended power supply</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-3 p-3 bg-success-50 rounded-lg border border-success-200">
+                                        <svg class="w-5 h-5 text-success flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        <div class="flex-1">
+                                            <span class="font-medium text-neutral-900">12V Battery Pack</span>
+                                            <p class="text-sm text-neutral-600">Portable power option</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-3 p-3 bg-warning-50 rounded-lg border border-warning-200">
+                                        <svg class="w-5 h-5 text-warning flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                                        </svg>
+                                        <div class="flex-1">
+                                            <span class="font-medium text-neutral-900">24V DC</span>
+                                            <p class="text-sm text-neutral-600">Requires voltage regulator (not included)</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Compatibility Checker Tool -->
+                            <div class="mt-8 p-6 bg-neutral-50 rounded-lg border border-neutral-200">
+                                <h4 class="font-semibold text-neutral-900 mb-4">Check Your Setup</h4>
+                                <p class="text-sm text-neutral-600 mb-4">
+                                    Verify compatibility with your existing IoT infrastructure
+                                </p>
+                                <button 
+                                    type="button" 
+                                    onclick="openCompatibilityChecker()" 
+                                    class="btn btn--primary btn--sm"
+                                    aria-label="Open compatibility checker tool">
+                                    Check Your Setup
+                                </button>
+                            </div>
+                            
+                            <div class="mt-6">
+                                <a href="#" class="text-brand-primary hover:underline text-sm font-medium">
+                                    View Full Compatibility Matrix →
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Documentation Tab (Section 4.3) -->
+                    <div id="documentation" class="tab-panel hidden" role="tabpanel" aria-labelledby="documentation-tab">
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-xl font-semibold text-neutral-900 mb-6">Product Documentation</h3>
+                            
+                            <div class="space-y-6">
+                                <!-- Quick Start Guide -->
+                                <div class="border border-neutral-200 rounded-lg p-4 hover:border-brand-primary transition-colors">
+                                    <div class="flex items-start justify-between">
+                                        <div class="flex-1">
+                                            <h4 class="font-semibold text-neutral-900 mb-2">Quick Start Guide</h4>
+                                            <p class="text-sm text-neutral-600 mb-3">
+                                                Get up and running in minutes with our step-by-step setup guide
+                                            </p>
+                                            <div class="flex flex-wrap gap-2">
+                                                <a href="#" class="btn btn--outline btn--sm" aria-label="Download Quick Start Guide PDF">
+                                                    <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                                        <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                                    </svg>
+                                                    Download PDF
+                                                </a>
+                                                <a href="#" class="btn btn--ghost btn--sm" aria-label="View Quick Start Guide online">
+                                                    View Online
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 
-                                <div class="text-center">
-                                    <button class="btn btn--outline">Load More Reviews</button>
+                                <!-- Full Datasheet -->
+                                <div class="border border-neutral-200 rounded-lg p-4 hover:border-brand-primary transition-colors">
+                                    <div class="flex items-start justify-between">
+                                        <div class="flex-1">
+                                            <h4 class="font-semibold text-neutral-900 mb-2">Full Datasheet</h4>
+                                            <p class="text-sm text-neutral-600 mb-3">
+                                                Complete technical specifications and performance data
+                                            </p>
+                                            <div class="flex flex-wrap gap-2">
+                                                <a href="#" class="btn btn--outline btn--sm" aria-label="Download Full Datasheet PDF">
+                                                    <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                                        <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                                    </svg>
+                                                    Download PDF
+                                                </a>
+                                                <a href="#" class="btn btn--ghost btn--sm" aria-label="View Full Datasheet in embedded viewer">
+                                                    Embedded Viewer
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Integration Guides -->
+                                <div class="border border-neutral-200 rounded-lg p-4">
+                                    <h4 class="font-semibold text-neutral-900 mb-4">Integration Guides</h4>
+                                    <ul class="space-y-2">
+                                        <li>
+                                            <a href="#" class="text-brand-primary hover:underline flex items-center gap-2">
+                                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                                    <path fill-rule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                                </svg>
+                                                Home Assistant Integration
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#" class="text-brand-primary hover:underline flex items-center gap-2">
+                                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                                    <path fill-rule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                                </svg>
+                                                AWS IoT Setup Guide
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#" class="text-brand-primary hover:underline flex items-center gap-2">
+                                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                                    <path fill-rule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+                                                </svg>
+                                                API Documentation
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                
+                                <!-- Code Examples -->
+                                <div class="border border-neutral-200 rounded-lg p-4">
+                                    <h4 class="font-semibold text-neutral-900 mb-4">Code Examples</h4>
+                                    <div class="flex flex-wrap gap-2 mb-4">
+                                        <button type="button" onclick="showCodeExample('python')" class="btn btn--outline btn--sm">Python</button>
+                                        <button type="button" onclick="showCodeExample('javascript')" class="btn btn--outline btn--sm">JavaScript</button>
+                                        <button type="button" onclick="showCodeExample('arduino')" class="btn btn--outline btn--sm">Arduino</button>
+                                    </div>
+                                    <div id="code-example-container" class="bg-neutral-900 text-neutral-100 rounded p-4 font-mono text-sm">
+                                        <div class="flex items-center justify-between mb-2">
+                                            <span class="text-neutral-400">Select a language to view code example</span>
+                                            <button 
+                                                type="button" 
+                                                onclick="copyCodeExample()" 
+                                                class="btn btn--ghost btn--sm text-neutral-400 hover:text-white"
+                                                aria-label="Copy code to clipboard">
+                                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                                    <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z"></path>
+                                                    <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z"></path>
+                                                </svg>
+                                                Copy
+                                            </button>
+                                        </div>
+                                        <pre id="code-example" class="text-neutral-300"></pre>
+                                    </div>
+                                </div>
+                                
+                                <!-- Firmware Updates -->
+                                <div class="border border-neutral-200 rounded-lg p-4">
+                                    <h4 class="font-semibold text-neutral-900 mb-2">Firmware Updates</h4>
+                                    <p class="text-sm text-neutral-600 mb-4">
+                                        Current Version: <span class="font-medium text-neutral-900">v2.1.3</span>
+                                    </p>
+                                    <div class="flex flex-wrap gap-2">
+                                        <a href="#" class="btn btn--outline btn--sm">Download Latest</a>
+                                        <a href="#" class="btn btn--ghost btn--sm">Update Instructions</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Support Tab -->
-                    <div id="support" class="tab-panel hidden">
+
+                    <!-- Reviews Tab - Enhanced (Section 4.3) -->
+                    <div id="reviews" class="tab-panel hidden" role="tabpanel" aria-labelledby="reviews-tab">
                         <div class="bg-white rounded-lg shadow p-6">
-                            <h3 class="text-xl font-semibold text-neutral-900 mb-6">Product Support</h3>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div>
-                                    <h4 class="font-medium text-neutral-900 mb-3">Documentation</h4>
-                                    <ul class="space-y-2">
-                                        <li><a href="#" class="text-brand-primary hover:underline">Quick Start Guide</a></li>
-                                        <li><a href="#" class="text-brand-primary hover:underline">User Manual (PDF)</a></li>
-                                        <li><a href="#" class="text-brand-primary hover:underline">API Documentation</a></li>
-                                        <li><a href="#" class="text-brand-primary hover:underline">Troubleshooting</a></li>
-                                    </ul>
+                            <div class="mb-6">
+                                <div class="flex items-center gap-4 mb-4">
+                                    <div>
+                                        <div class="text-4xl font-bold text-neutral-900">4.5</div>
+                                        <div class="text-sm text-neutral-600">out of 5.0</div>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="flex items-center gap-2 mb-2">
+                                            <div class="flex text-yellow-400">
+                                                ★★★★★
+                                            </div>
+                                            <span class="text-sm text-neutral-600">(128 reviews)</span>
+                                        </div>
+                                        <div class="space-y-1 text-sm">
+                                            <div class="flex items-center gap-2">
+                                                <span class="w-20 text-right">5 stars</span>
+                                                <div class="flex-1 bg-neutral-200 rounded-full h-2">
+                                                    <div class="bg-yellow-400 h-2 rounded-full" style="width: 85%"></div>
+                                                </div>
+                                                <span class="w-12 text-neutral-600">85%</span>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <span class="w-20 text-right">4 stars</span>
+                                                <div class="flex-1 bg-neutral-200 rounded-full h-2">
+                                                    <div class="bg-yellow-400 h-2 rounded-full" style="width: 10%"></div>
+                                                </div>
+                                                <span class="w-12 text-neutral-600">10%</span>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <span class="w-20 text-right">3 stars</span>
+                                                <div class="flex-1 bg-neutral-200 rounded-full h-2">
+                                                    <div class="bg-yellow-400 h-2 rounded-full" style="width: 3%"></div>
+                                                </div>
+                                                <span class="w-12 text-neutral-600">3%</span>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <span class="w-20 text-right">2 stars</span>
+                                                <div class="flex-1 bg-neutral-200 rounded-full h-2">
+                                                    <div class="bg-yellow-400 h-2 rounded-full" style="width: 1%"></div>
+                                                </div>
+                                                <span class="w-12 text-neutral-600">1%</span>
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <span class="w-20 text-right">1 star</span>
+                                                <div class="flex-1 bg-neutral-200 rounded-full h-2">
+                                                    <div class="bg-yellow-400 h-2 rounded-full" style="width: 1%"></div>
+                                                </div>
+                                                <span class="w-12 text-neutral-600">1%</span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div>
-                                    <h4 class="font-medium text-neutral-900 mb-3">Support Options</h4>
-                                    <ul class="space-y-2">
-                                        <li><a href="#" class="text-brand-primary hover:underline">Contact Technical Support</a></li>
-                                        <li><a href="#" class="text-brand-primary hover:underline">Community Forum</a></li>
-                                        <li><a href="#" class="text-brand-primary hover:underline">Video Tutorials</a></li>
-                                        <li><a href="#" class="text-brand-primary hover:underline">Warranty Information</a></li>
-                                    </ul>
+                                
+                                <button 
+                                    type="button" 
+                                    onclick="openReviewModal()" 
+                                    class="btn btn--primary"
+                                    aria-label="Write a review">
+                                    Write a Review
+                                </button>
+                            </div>
+                            
+                            <div class="space-y-6">
+                                <!-- Sample Review -->
+                                <div class="border-b border-neutral-200 pb-6">
+                                    <div class="flex items-start justify-between mb-3">
+                                        <div class="flex items-center gap-3">
+                                            <div class="flex text-yellow-400 text-sm">
+                                                ★★★★★
+                                            </div>
+                                            <div>
+                                                <span class="font-medium text-neutral-900">John D.</span>
+                                                <span class="text-sm text-neutral-500 ml-2">Verified Purchase</span>
+                                            </div>
+                                        </div>
+                                        <span class="text-sm text-neutral-500">2 weeks ago</span>
+                                    </div>
+                                    <p class="text-neutral-700 mb-3">
+                                        "Excellent sensor, easy integration with Home Assistant. The documentation was clear and the device has been running reliably for 3 months now."
+                                    </p>
+                                    <div class="flex items-center gap-4 text-sm">
+                                        <button 
+                                            type="button" 
+                                            onclick="markReviewHelpful(1)" 
+                                            class="text-neutral-600 hover:text-brand-primary flex items-center gap-1"
+                                            aria-label="Mark review as helpful">
+                                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                                <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.834a1 1 0 001.1 1h2.312a1 1 0 00.944-.724l1.562-4.874a1 1 0 00-.944-1.276H8.333a1 1 0 00-1 .667v-.834a1 1 0 00-1 1v1.834a1 1 0 001 1h1V11.5a1.5 1.5 0 011.5-1.5h5.379a2.25 2.25 0 011.852.97l.803 1.278A2.25 2.25 0 0118 13.818v1.682a1 1 0 01-1 1h-1.5a1.5 1.5 0 01-1.5-1.5v-6a1.5 1.5 0 011.5-1.5H17a1 1 0 001-1V9.667a1 1 0 00-1-1h-5.379a2.25 2.25 0 01-1.852-.97l-.803-1.278A2.25 2.25 0 009.379 6H6.5a1 1 0 00-1 1v3.333z"></path>
+                                            </svg>
+                                            Helpful (12)
+                                        </button>
+                                        <button 
+                                            type="button" 
+                                            onclick="replyToReview(1)" 
+                                            class="text-neutral-600 hover:text-brand-primary"
+                                            aria-label="Reply to review">
+                                            Reply
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="text-center">
+                                    <button 
+                                        type="button" 
+                                        onclick="loadMoreReviews()" 
+                                        class="btn btn--outline"
+                                        aria-label="Load more reviews">
+                                        Load More Reviews
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -641,6 +991,31 @@
 
     <script src="js/main.js"></script>
     <script>
+        // Add to cart handler
+        function handleAddToCart(button) {
+            const productId = parseInt(button.getAttribute('data-product-id'));
+            const quantity = parseInt(document.getElementById('quantity').value) || 1;
+            if (typeof OptimisticUI !== 'undefined' && typeof OptimisticUI.addToCart === 'function') {
+                OptimisticUI.addToCart(productId, quantity);
+            } else {
+                const form = button.closest('form');
+                if (form) {
+                    form.submit();
+                }
+            }
+        }
+        
+        // Initialize add to cart buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            const addToCartButtons = document.querySelectorAll('.add-to-cart-button');
+            addToCartButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    handleAddToCart(this);
+                });
+            });
+        });
+        
         // Quantity control functions
         function increaseQuantity() {
             const quantityInput = document.getElementById('quantity');
