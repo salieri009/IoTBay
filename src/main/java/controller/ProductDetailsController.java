@@ -1,31 +1,31 @@
 package controller;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.*;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import dao.ProductDAOImpl;
+import config.DIContainer;
 import dao.interfaces.ProductDAO;
-import db.DBConnection;
 import model.Product;
 
-@WebServlet("/product")
+// Note: Mapped in web.xml to avoid conflicts
 public class ProductDetailsController extends HttpServlet {
     private ProductDAO productDAO;
 
     @Override
-    public void init() {
+    public void init() throws ServletException {
         try {
-            Connection connection = DBConnection.getConnection();
-            productDAO = new ProductDAOImpl(connection);
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to init");
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException("Failed to init");
+            // Use DIContainer for dependency injection
+            this.productDAO = DIContainer.get(ProductDAO.class);
+            if (this.productDAO == null) {
+                throw new ServletException("ProductDAO not available in DIContainer");
+            }
+        } catch (Exception e) {
+            throw new ServletException("Failed to initialize ProductDetailsController", e);
         }
     } 
 
@@ -46,6 +46,13 @@ public class ProductDetailsController extends HttpServlet {
             
             try {
                 int productId = Integer.parseInt(productIdParam);
+                
+                if (productDAO == null) {
+                    request.setAttribute("errorMessage", "Service temporarily unavailable");
+                    request.getRequestDispatcher("error.jsp").forward(request, response);
+                    return;
+                }
+                
                 Product product = productDAO.getProductById(productId);
                 if (product != null) {
                     request.setAttribute("product", product);
@@ -57,9 +64,15 @@ public class ProductDetailsController extends HttpServlet {
             } catch (NumberFormatException e) {
                 request.setAttribute("errorMessage", "Invalid product ID format");
                 request.getRequestDispatcher("error.jsp").forward(request, response);
+            } catch (SQLException e) {
+                System.err.println("Database error in ProductDetailsController: " + e.getMessage());
+                request.setAttribute("errorMessage", "Database error occurred");
+                request.getRequestDispatcher("error.jsp").forward(request, response);
             }
         } catch (Exception e) {
-            request.setAttribute("errorMessage", "An error occurred: " + e.getMessage());
+            System.err.println("Unexpected error in ProductDetailsController: " + e.getMessage());
+            e.printStackTrace();
+            request.setAttribute("errorMessage", "An error occurred while loading product details");
             request.getRequestDispatcher("error.jsp").forward(request, response);
         }
     }

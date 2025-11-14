@@ -8,32 +8,32 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import config.DIContainer;
 import dao.CartItemDAO;
 import dao.OrderDAO;
-import db.DBConnection;
 import model.CartItem;
 import model.Order;
 import model.User;
 
-@WebServlet("/checkout")
+// Note: Mapped in web.xml to avoid conflicts
 public class CheckoutController extends HttpServlet{
     private OrderDAO orderDAO;
     private CartItemDAO cartItemDao; 
 
     @Override
-    public void init() {
+    public void init() throws ServletException {
         try {
-            Connection connection = DBConnection.getConnection();
+            // Use DIContainer for dependency injection
+            Connection connection = DIContainer.getConnection();
             orderDAO = new OrderDAO(connection);
             cartItemDao = new CartItemDAO(connection);
-        } catch (SQLException | ClassNotFoundException e) {
-            throw new RuntimeException("Failed to initialize database connection", e);
+        } catch (Exception e) {
+            throw new ServletException("Failed to initialize CheckoutController", e);
         }
     }
 
@@ -58,13 +58,14 @@ public class CheckoutController extends HttpServlet{
             // Get cart items for checkout page
             List<CartItem> cartItems = cartItemDao.getCartItemsByUserId(userId);
             
-            if (cartItems.isEmpty()) {
+            if (cartItems == null || cartItems.isEmpty()) {
                 response.sendRedirect(request.getContextPath() + "/cart.jsp?error=Cart is empty");
                 return;
             }
 
-            // Calculate totals
+            // Calculate totals - handle null items and prices
             BigDecimal subtotal = cartItems.stream()
+                .filter(item -> item != null && item.getPrice() != null)
                 .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
             
@@ -80,7 +81,13 @@ public class CheckoutController extends HttpServlet{
             request.getRequestDispatcher("/checkout.jsp").forward(request, response);
         } catch (SQLException e) {
             System.err.println("Database error loading checkout: " + e.getMessage());
-            request.setAttribute("errorMessage", "Database error occurred");
+            e.printStackTrace();
+            request.setAttribute("errorMessage", "Database error occurred while loading checkout");
+            request.getRequestDispatcher("/error.jsp").forward(request, response);
+        } catch (NullPointerException e) {
+            System.err.println("Null pointer error in checkout: " + e.getMessage());
+            e.printStackTrace();
+            request.setAttribute("errorMessage", "Error loading checkout: Missing required data");
             request.getRequestDispatcher("/error.jsp").forward(request, response);
         } catch (Exception e) {
             System.err.println("Error loading checkout: " + e.getMessage());
@@ -111,13 +118,14 @@ public class CheckoutController extends HttpServlet{
             // Get cart items
             List<CartItem> cartItems = cartItemDao.getCartItemsByUserId(userId);
 
-            if (cartItems.isEmpty()) {
+            if (cartItems == null || cartItems.isEmpty()) {
                 response.sendRedirect("cart.jsp?error=Cart is empty");
                 return;
             }
 
             // Calculate total using BigDecimal for accurate monetary calculations
             BigDecimal totalAmount = cartItems.stream()
+                .filter(item -> item != null && item.getPrice() != null)
                 .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 

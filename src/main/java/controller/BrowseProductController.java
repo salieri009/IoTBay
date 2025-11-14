@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,7 +16,7 @@ import dao.interfaces.ProductDAO;
 import db.DBConnection;
 import model.Product;
 
-@WebServlet({"/search", "/browse"})
+// Note: Mapped in web.xml to avoid conflicts
 public class BrowseProductController extends HttpServlet {
     private ProductDAO productDAO;
 

@@ -1,34 +1,34 @@
 package controller;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import dao.UserDAOImpl;
+import config.DIContainer;
 import dao.interfaces.UserDAO;
-import db.DBConnection;
 import model.User;
 import utils.ValidationUtil;
 
-@WebServlet("/api/Profiles")
+// Note: Mapped in web.xml to avoid conflicts
 public class UserProfileController extends HttpServlet {
     private UserDAO userDAO;
 
     @Override
     public void init() throws ServletException {
         try {
-            Connection conn = DBConnection.getConnection();
-            userDAO = new UserDAOImpl(conn);
-        } catch (SQLException | ClassNotFoundException e) {
-            throw new ServletException("DB init failed", e);
+            // Use DIContainer for dependency injection
+            userDAO = DIContainer.get(UserDAO.class);
+            if (userDAO == null) {
+                throw new ServletException("UserDAO not available in DIContainer");
+            }
+        } catch (Exception e) {
+            throw new ServletException("Failed to initialize UserProfileController", e);
         }
     }
 

@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,7 +17,7 @@ import dao.interfaces.UserDAO;
 import model.AccessLog;
 import model.User;
 
-@WebServlet("/api/login")
+// Note: Mapped in web.xml to avoid conflicts
 public class LoginController extends HttpServlet {
     private AccessLogDAO accessLogDAO;
     private UserDAO userDAO;
@@ -43,12 +42,18 @@ public class LoginController extends HttpServlet {
                 return;
             }
             
-            // Validate and sanitize
-            email = utils.SecurityUtil.getValidatedStringParameter(request, "email", 100);
-            password = utils.SecurityUtil.getValidatedStringParameter(request, "password", 255);
+            // Validate and sanitize - handle potential exceptions
+            try {
+                email = utils.SecurityUtil.getValidatedStringParameter(request, "email", 100);
+                password = utils.SecurityUtil.getValidatedStringParameter(request, "password", 255);
+            } catch (IllegalArgumentException e) {
+                request.setAttribute("errorMessage", "Invalid input format");
+                request.getRequestDispatcher("/login.jsp").forward(request, response);
+                return;
+            }
             
             // Validate email format
-            if (email == null || !utils.SecurityUtil.isValidEmail(email)) {
+            if (!utils.SecurityUtil.isValidEmail(email)) {
                 request.setAttribute("errorMessage", "Invalid login credentials");
                 request.getRequestDispatcher("/login.jsp").forward(request, response);
                 return;

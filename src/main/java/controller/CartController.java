@@ -10,15 +10,14 @@ import java.util.List;
 import java.util.Random;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import config.DIContainer;
 import dao.CartItemDAO;
 import dao.ProductDAO;
-import db.DBConnection;
 import model.CartItem;
 import model.Product;
 import model.User;
@@ -27,21 +26,22 @@ import service.CartService.CartOperationResult;
 import service.CartService.CartSummary;
 import utils.ResponseUtil;
 
-@WebServlet({"/cart", "/api/cart/*"})
+// Note: Mapped in web.xml to avoid conflicts
 public class CartController extends HttpServlet {
     private CartItemDAO cartItemDAO;
     private ProductDAO productDAO;
     private CartService cartService;
 
     @Override
-    public void init() {
+    public void init() throws ServletException {
         try {
-            Connection connection = DBConnection.getConnection();
+            // Use DIContainer for dependency injection
+            Connection connection = DIContainer.getConnection();
             cartItemDAO = new CartItemDAO(connection);
             productDAO = new ProductDAO(connection);
             cartService = new CartService(cartItemDAO, productDAO);
-        } catch (SQLException | ClassNotFoundException e) {
-            throw new RuntimeException("Failed to initialize database connection", e);
+        } catch (Exception e) {
+            throw new ServletException("Failed to initialize CartController", e);
         }
     }
 
@@ -297,11 +297,21 @@ public class CartController extends HttpServlet {
             if (userId != null) {
                 try {
                     cartItems = cartItemDAO.getCartItemsByUserId(userId);
+                    if (cartItems == null) {
+                        cartItems = Collections.emptyList();
+                    }
                     cartTotal = cartItemDAO.getCartTotal(userId);
+                    if (cartTotal == null) {
+                        cartTotal = BigDecimal.ZERO;
+                    }
                     itemCount = cartItemDAO.getCartItemCount(userId);
-                } catch (SQLException e) {
-                    System.err.println("Database error loading cart: " + e.getMessage());
+                } catch (Exception e) {
+                    System.err.println("Error loading cart: " + e.getMessage());
+                    e.printStackTrace();
                     // Continue with empty cart
+                    cartItems = Collections.emptyList();
+                    cartTotal = BigDecimal.ZERO;
+                    itemCount = 0;
                 }
             }
 
@@ -309,10 +319,14 @@ public class CartController extends HttpServlet {
             request.setAttribute("cartTotal", cartTotal);
             request.setAttribute("itemCount", itemCount);
             request.getRequestDispatcher("/cart.jsp").forward(request, response);
-        } catch (SQLException e) {
-            System.err.println("Database error in cart page: " + e.getMessage());
-            request.setAttribute("errorMessage", "Database error occurred");
-            request.getRequestDispatcher("/error.jsp").forward(request, response);
+        } catch (NullPointerException e) {
+            System.err.println("Null pointer error in cart page: " + e.getMessage());
+            e.printStackTrace();
+            // Set safe defaults and continue
+            request.setAttribute("cartItems", Collections.emptyList());
+            request.setAttribute("cartTotal", BigDecimal.ZERO);
+            request.setAttribute("itemCount", 0);
+            request.getRequestDispatcher("/cart.jsp").forward(request, response);
         } catch (Exception e) {
             System.err.println("Unexpected error in cart page: " + e.getMessage());
             e.printStackTrace();

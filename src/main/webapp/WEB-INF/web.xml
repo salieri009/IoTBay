@@ -87,6 +87,11 @@
         <servlet-name>CartController</servlet-name>
         <url-pattern>/cart</url-pattern>
     </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>CartController</servlet-name>
+        <url-pattern>/api/cart/*</url-pattern>
+    </servlet-mapping>
 
     <servlet>
         <servlet-name>CheckoutController</servlet-name>

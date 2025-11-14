@@ -1,11 +1,13 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" isELIgnored="false" %>
+<%@ page import="javax.servlet.http.HttpSession" %>
+<%@ page import="model.User" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
-<%@ page import="model.User" %>
 
 <%
-    User user = (User) session.getAttribute("user");
+    HttpSession sessionObj = request.getSession(false);
+    User user = (sessionObj != null) ? (User) sessionObj.getAttribute("user") : null;
     if (user == null) {
         response.sendRedirect("login.jsp");
         return;

@@ -1,23 +1,47 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" isELIgnored="false" %>
-<%@ page import="java.util.*, model.*" %>
+<%@ page import="java.util.*" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="javax.servlet.http.HttpSession" %>
+<%@ page import="model.*" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
 
 <%
-    User user = (User) session.getAttribute("user");
+    HttpSession sessionObj = request.getSession(false);
+    User user = (sessionObj != null) ? (User) sessionObj.getAttribute("user") : null;
     if (user == null) {
         response.sendRedirect("login.jsp");
         return;
     }
     
-    List<CartItem> cartItems = (List<CartItem>) session.getAttribute("cartItems");
+    // Get cartItems from request attribute (set by CheckoutController)
+    List<CartItem> cartItems = (List<CartItem>) request.getAttribute("cartItems");
+    if (cartItems == null) {
+        // Fallback to session if not in request
+        cartItems = (sessionObj != null) ? (List<CartItem>) sessionObj.getAttribute("cartItems") : new ArrayList<>();
+    }
+    
+    // Calculate totals from request attributes if available
+    java.math.BigDecimal subtotalBD = (java.math.BigDecimal) request.getAttribute("subtotal");
+    java.math.BigDecimal shippingBD = (java.math.BigDecimal) request.getAttribute("shipping");
+    java.math.BigDecimal taxBD = (java.math.BigDecimal) request.getAttribute("tax");
+    java.math.BigDecimal totalBD = (java.math.BigDecimal) request.getAttribute("total");
+    
     double totalAmount = 0.0;
-    if (cartItems != null) {
+    if (cartItems != null && !cartItems.isEmpty()) {
         for (CartItem item : cartItems) {
-            totalAmount += item.getProduct().getPrice() * item.getQuantity();
+            if (item != null && item.getProduct() != null && item.getProduct().getPrice() != null) {
+                totalAmount += item.getProduct().getPrice() * item.getQuantity();
+            }
         }
     }
+    
+    // Use values from request attributes if available (set by CheckoutController)
+    double subtotal = (subtotalBD != null) ? subtotalBD.doubleValue() : totalAmount;
+    double tax = (taxBD != null) ? taxBD.doubleValue() : (subtotal * 0.1);
+    double shipping = (shippingBD != null) ? shippingBD.doubleValue() : (subtotal >= 50.0 ? 0.0 : 15.0);
+    double total = (totalBD != null) ? totalBD.doubleValue() : (subtotal + tax + shipping);
     
     String error = (String) request.getAttribute("error");
     String success = (String) request.getAttribute("success");
@@ -25,12 +49,13 @@
     // Expose values for EL/JSTL inside the layout body
     request.setAttribute("cartItems", cartItems);
     request.setAttribute("totalAmount", totalAmount);
+    request.setAttribute("subtotal", subtotal);
+    request.setAttribute("tax", tax);
+    request.setAttribute("shipping", shipping);
+    request.setAttribute("total", total);
 %>
 
 <%
-    double tax = totalAmount * 0.1;
-    double shipping = totalAmount >= 50.0 ? 0.0 : 15.0;
-    double total = totalAmount + tax + shipping;
     String totalFormatted = String.format("%1$,.2f", total);
     String subtotalFormatted = String.format("%1$,.2f", totalAmount);
     String taxFormatted = String.format("%1$,.2f", tax);

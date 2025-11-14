@@ -1,5 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="javax.servlet.http.HttpSession" %>
 <%@ page import="model.CartItem" %>
 <%@ page import="model.User" %>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
@@ -7,25 +9,32 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <%
-    User user = (User) session.getAttribute("user");
+    HttpSession sessionObj = request.getSession(false);
+    User user = (sessionObj != null) ? (User) sessionObj.getAttribute("user") : null;
     Integer userId;
 
     if (user != null) {
         userId = user.getId();
     } else {
-        userId = (Integer) session.getAttribute("guestId");
+        userId = (sessionObj != null) ? (Integer) sessionObj.getAttribute("guestId") : null;
     }
 
     // cartItems should already be set as a request attribute by a servlet
     List<CartItem> cartItems = (List<CartItem>) request.getAttribute("cartItems");
+    if (cartItems == null) {
+        cartItems = new java.util.ArrayList<>();
+    }
     
     // Calculate totals
     double subtotal = 0.0;
     int totalItems = 0;
-    if (cartItems != null) {
+    if (cartItems != null && !cartItems.isEmpty()) {
         for (CartItem item : cartItems) {
-            subtotal += item.getSubtotal(item.getPrice());
-            totalItems += item.getQuantity();
+            if (item != null && item.getPrice() != null) {
+                // Use getSubtotal() which uses item's own price, or convert BigDecimal to double
+                subtotal += item.getSubtotal().doubleValue();
+                totalItems += item.getQuantity();
+            }
         }
     }
     double tax = subtotal * 0.1; // 10% tax

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,8 +16,8 @@ import utils.ResponseUtil;
 /**
  * 최신 트렌드: RESTful API with JSON Response
  * Modern API Design Patterns
+ * Note: Mapped in web.xml to avoid conflicts
  */
-@WebServlet("/api/v1/products/*")
 public class ProductApiController extends HttpServlet {
     private ProductDAO productDAO;
     
@@ -26,6 +25,9 @@ public class ProductApiController extends HttpServlet {
     public void init() throws ServletException {
         // 의존성 주입 패턴 사용
         this.productDAO = DIContainer.get(ProductDAO.class);
+        if (this.productDAO == null) {
+            throw new ServletException("ProductDAO not available in DIContainer");
+        }
     }
     
     @Override
@@ -33,25 +35,53 @@ public class ProductApiController extends HttpServlet {
             throws ServletException, IOException {
         
         String pathInfo = request.getPathInfo();
+        String requestURI = request.getRequestURI();
+        String contextPath = request.getContextPath();
+        String servletPath = request.getServletPath(); // /api/v1/products
         
         try {
+            // If pathInfo is null, try to extract from requestURI
             if (pathInfo == null || pathInfo.equals("/")) {
+                // Check if there's an ID in the requestURI after the servlet path
+                String remainingPath = requestURI.substring(contextPath.length() + servletPath.length());
+                if (remainingPath != null && !remainingPath.isEmpty() && !remainingPath.equals("/")) {
+                    // Extract ID from remaining path
+                    String[] parts = remainingPath.split("/");
+                    if (parts.length > 0 && !parts[0].isEmpty()) {
+                        try {
+                            int productId = Integer.parseInt(parts[0]);
+                            handleGetProductById(productId, response);
+                            return;
+                        } catch (NumberFormatException e) {
+                            ResponseUtil.sendError(response, 400, "Invalid product ID format");
+                            return;
+                        }
+                    }
+                }
                 // GET /api/v1/products - Get all products
                 handleGetAllProducts(response);
             } else {
                 // GET /api/v1/products/{id} - Get product by ID
                 String[] pathParts = pathInfo.split("/");
-                if (pathParts.length == 2) {
-                    int productId = Integer.parseInt(pathParts[1]);
-                    handleGetProductById(productId, response);
+                // pathParts[0] is empty string, pathParts[1] should be the ID
+                if (pathParts.length >= 2 && !pathParts[1].isEmpty()) {
+                    try {
+                        int productId = Integer.parseInt(pathParts[1]);
+                        handleGetProductById(productId, response);
+                    } catch (NumberFormatException e) {
+                        ResponseUtil.sendError(response, 400, "Invalid product ID format");
+                    }
                 } else {
-                    ResponseUtil.sendError(response, 400, "Invalid product ID");
+                    // No ID provided, return all products
+                    handleGetAllProducts(response);
                 }
             }
         } catch (NumberFormatException e) {
             ResponseUtil.sendError(response, 400, "Invalid product ID format");
         } catch (Exception e) {
-            ResponseUtil.sendError(response, 500, "Internal server error");
+            System.err.println("Error in ProductApiController: " + e.getMessage());
+            e.printStackTrace();
+            ResponseUtil.sendError(response, 500, "Internal server error: " + e.getMessage());
         }
     }
     

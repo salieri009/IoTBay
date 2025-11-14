@@ -7,7 +7,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,7 +18,7 @@ import model.User;
 import utils.PasswordUtil;
 import utils.ValidationUtil;
 
-@WebServlet("/api/auth/register")
+// Note: Mapped in web.xml to avoid conflicts
 public class RegisterController extends HttpServlet {
     private UserDAO userDAO;
 

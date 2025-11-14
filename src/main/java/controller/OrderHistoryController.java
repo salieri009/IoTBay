@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,7 +20,7 @@ import model.Order;
 import model.User;
 import service.OrderService;
 
-@WebServlet("/orderhistory")
+// Note: Mapped in web.xml to avoid conflicts
 public class OrderHistoryController extends HttpServlet {
     private OrderDAO orderDAO;
     private OrderService orderService;
