@@ -84,13 +84,14 @@
         <!-- Urgent error messages for screen readers -->
     </div>
 
-    <c:import url="/components/header.jsp" />
+    <%-- Use new Atomic Design components --%>
+    <c:import url="/components/organisms/header/header.jsp" />
 
     <main id="main-content" class="flex-1" role="main" aria-label="Main content">
         <jsp:doBody/>
     </main>
 
-    <c:import url="/components/footer.jsp" />
+    <c:import url="/components/organisms/footer/footer.jsp" />
 
     <!-- Toast Notifications Container (Enhanced ARIA) -->
     <div 

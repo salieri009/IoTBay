@@ -2,49 +2,65 @@
    IoTBay Future-Forward Design System
    ===================================== */
 
+/* Import Atomic Design Components */
+@import url('atomic-components.css');
+
 /* === DESIGN TOKENS === */
+/* Refactored based on KickoffLabs best practices: https://kickofflabs.com/blog/landing-page-fonts-colors/ */
 :root {
-  /* === BRAND COLORS === */
-  /* Per UI_UXdoc.md Section 5.1 - Primary Blue (#0a95ff): Trust, technology, professionalism */
-  --brand-primary: #0a95ff;      /* Primary Blue per UI_UXdoc.md */
-  --brand-primary-50: #e6f5ff;
-  --brand-primary-100: #ccebff;
+  /* === COLOR SYSTEM (1-3 Colors Maximum) === */
+  /* Primary CTA Color - Strong, high-contrast for call-to-action buttons */
+  --color-cta: #0a95ff;
+  --color-cta-hover: #0873cc;
+  --color-cta-active: #065999;
+  --color-cta-light: #e6f5ff;
+  --color-cta-dark: #043966;
+  
+  /* Legacy support - map to new CTA color */
+  --brand-primary: var(--color-cta);
+  --brand-primary-50: var(--color-cta-light);
+  --brand-primary-100: var(--color-cta-light);
   --brand-primary-200: #99d7ff;
   --brand-primary-300: #66c3ff;
   --brand-primary-400: #33afff;
-  --brand-primary-500: #0a95ff;
-  --brand-primary-600: #0873cc;
-  --brand-primary-700: #065999;
-  --brand-primary-800: #043966;
+  --brand-primary-500: var(--color-cta);
+  --brand-primary-600: var(--color-cta-hover);
+  --brand-primary-700: var(--color-cta-active);
+  --brand-primary-800: var(--color-cta-dark);
   --brand-primary-900: #021a33;
   
-  /* Per UI_UXdoc.md Section 5.1 - Secondary Green (#22c55e): Success, energy, innovation */
-  --brand-secondary: #22c55e;    /* Secondary Green per UI_UXdoc.md */
-  --brand-secondary-50: #f0fdf4;
-  --brand-secondary-100: #dcfce7;
-  --brand-secondary-200: #bbf7d0;
-  --brand-secondary-300: #86efac;
-  --brand-secondary-400: #4ade80;
-  --brand-secondary-500: #22c55e;
-  --brand-secondary-600: #16a34a;
-  --brand-secondary-700: #15803d;
-  --brand-secondary-800: #166534;
-  --brand-secondary-900: #14532d;
+  /* Complementary Color (Optional) - Subtle, doesn't overpower CTA */
+  --color-complement: #64748b;
+  --color-complement-light: #94a3b8;
+  --color-complement-dark: #475569;
   
-  /* Per UI_UXdoc.md Section 5.1 - Accent Orange (#f97316): Attention, warnings, CTAs */
-  --brand-accent: #f97316;       /* Accent Orange per UI_UXdoc.md */
-  --brand-accent-50: #fff7ed;
-  --brand-accent-100: #ffedd5;
-  --brand-accent-200: #fed7aa;
-  --brand-accent-300: #fdba74;
-  --brand-accent-400: #fb923c;
-  --brand-accent-500: #f97316;
-  --brand-accent-600: #ea580c;
-  --brand-accent-700: #c2410c;
-  --brand-accent-800: #9a3412;
-  --brand-accent-900: #7c2d12;
+  /* Legacy support - map secondary to complement */
+  --brand-secondary: var(--color-complement);
+  --brand-secondary-50: var(--neutral-50);
+  --brand-secondary-100: var(--neutral-100);
+  --brand-secondary-200: var(--neutral-200);
+  --brand-secondary-300: var(--neutral-300);
+  --brand-secondary-400: var(--neutral-400);
+  --brand-secondary-500: var(--color-complement);
+  --brand-secondary-600: var(--color-complement-dark);
+  --brand-secondary-700: var(--neutral-700);
+  --brand-secondary-800: var(--neutral-800);
+  --brand-secondary-900: var(--neutral-900);
   
-  --brand-gradient: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
+  /* Legacy support - map accent to complement */
+  --brand-accent: var(--color-complement);
+  --brand-accent-50: var(--neutral-50);
+  --brand-accent-100: var(--neutral-100);
+  --brand-accent-200: var(--neutral-200);
+  --brand-accent-300: var(--neutral-300);
+  --brand-accent-400: var(--neutral-400);
+  --brand-accent-500: var(--color-complement);
+  --brand-accent-600: var(--color-complement-dark);
+  --brand-accent-700: var(--neutral-700);
+  --brand-accent-800: var(--neutral-800);
+  --brand-accent-900: var(--neutral-900);
+  
+  --brand-gradient: linear-gradient(135deg, var(--color-cta) 0%, var(--color-complement) 100%);
 
   /* === NEUTRAL SYSTEM === */
   --neutral-0: #ffffff;
@@ -79,9 +95,11 @@
   --info-light: #e6f5ff;
   --info-dark: #0873cc;
 
-  /* === TYPOGRAPHY SYSTEM === */
-  --font-sans: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace;
+  /* === TYPOGRAPHY SYSTEM (Single Font Family) === */
+  /* Following KickoffLabs: Use ONE font family, vary with weight/size/style */
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-sans: var(--font-family);  /* Legacy support */
+  --font-mono: var(--font-family);  /* Use same font, style differently if needed */
   
   --text-xs: 0.75rem;       /* 12px */
   --text-sm: 0.875rem;      /* 14px */
@@ -110,42 +128,45 @@
   --leading-relaxed: 1.625;
   --leading-loose: 2;
 
-  /* === SPACING SCALE === */
+  /* === SPACING SCALE (4px Base Unit) === */
+  /* Following 4px rule: All spacing must be multiples of 4px */
   --space-0: 0;
-  --space-px: 1px;
-  --space-0_5: 0.125rem;    /* 2px */
-  --space-1: 0.25rem;       /* 4px */
-  --space-1_5: 0.375rem;    /* 6px */
-  --space-2: 0.5rem;        /* 8px */
-  --space-2_5: 0.625rem;    /* 10px */
-  --space-3: 0.75rem;       /* 12px */
-  --space-3_5: 0.875rem;    /* 14px */
-  --space-4: 1rem;          /* 16px */
-  --space-5: 1.25rem;       /* 20px */
-  --space-6: 1.5rem;        /* 24px */
-  --space-7: 1.75rem;       /* 28px */
-  --space-8: 2rem;          /* 32px */
-  --space-9: 2.25rem;       /* 36px */
-  --space-10: 2.5rem;       /* 40px */
-  --space-11: 2.75rem;      /* 44px */
-  --space-12: 3rem;         /* 48px */
-  --space-14: 3.5rem;       /* 56px */
-  --space-16: 4rem;         /* 64px */
-  --space-20: 5rem;         /* 80px */
-  --space-24: 6rem;         /* 96px */
-  --space-28: 7rem;         /* 112px */
-  --space-32: 8rem;         /* 128px */
-  --space-36: 9rem;         /* 144px */
-  --space-40: 10rem;        /* 160px */
-  --space-44: 11rem;        /* 176px */
-  --space-48: 12rem;        /* 192px */
-  --space-52: 13rem;        /* 208px */
-  --space-56: 14rem;        /* 224px */
-  --space-60: 15rem;        /* 240px */
-  --space-64: 16rem;        /* 256px */
-  --space-72: 18rem;        /* 288px */
-  --space-80: 20rem;        /* 320px */
-  --space-96: 24rem;        /* 384px */
+  --space-1: 0.25rem;       /* 4px - Minimum spacing */
+  --space-2: 0.5rem;        /* 8px - Tight spacing */
+  --space-3: 0.75rem;       /* 12px - Compact spacing */
+  --space-4: 1rem;          /* 16px - Base spacing */
+  --space-5: 1.25rem;       /* 20px - Medium spacing */
+  --space-6: 1.5rem;        /* 24px - Comfortable spacing */
+  --space-8: 2rem;          /* 32px - Large spacing */
+  --space-10: 2.5rem;       /* 40px - Extra large spacing */
+  --space-12: 3rem;         /* 48px - Section spacing */
+  --space-16: 4rem;         /* 64px - Large section spacing */
+  --space-20: 5rem;         /* 80px - Hero spacing */
+  --space-24: 6rem;         /* 96px - Extra large section */
+  
+  /* Legacy support - map non-4px multiples to nearest 4px multiple */
+  --space-px: var(--space-1);      /* 1px → 4px */
+  --space-0_5: var(--space-1);     /* 2px → 4px */
+  --space-1_5: var(--space-2);     /* 6px → 8px */
+  --space-2_5: var(--space-2);     /* 10px → 8px */
+  --space-3_5: var(--space-4);     /* 14px → 16px */
+  --space-7: var(--space-8);       /* 28px → 32px */
+  --space-9: var(--space-8);       /* 36px → 32px */
+  --space-11: var(--space-12);     /* 44px → 48px */
+  --space-14: var(--space-16);     /* 56px → 64px */
+  --space-28: var(--space-24);     /* 112px → 96px */
+  --space-32: var(--space-24);     /* 128px → 96px */
+  --space-36: var(--space-40);     /* 144px → 160px (nearest) */
+  --space-40: 10rem;               /* 160px - OK */
+  --space-44: var(--space-40);      /* 176px → 160px */
+  --space-48: 12rem;               /* 192px - OK */
+  --space-52: var(--space-48);     /* 208px → 192px */
+  --space-56: var(--space-60);     /* 224px → 240px (nearest) */
+  --space-60: 15rem;               /* 240px - OK */
+  --space-64: 16rem;               /* 256px - OK */
+  --space-72: 18rem;               /* 288px - OK */
+  --space-80: 20rem;               /* 320px - OK */
+  --space-96: 24rem;               /* 384px - OK */
 
   /* === BORDER SYSTEM === */
   --border-0: 0;
@@ -264,7 +285,7 @@ html {
 }
 
 body {
-  font-family: var(--font-sans);
+  font-family: var(--font-family);  /* Single font family */
   font-size: var(--text-base);
   font-weight: var(--weight-normal);
   line-height: var(--leading-normal);
@@ -279,8 +300,8 @@ body {
 
 /* === FOCUS MANAGEMENT === */
 :focus {
-  outline: 2px solid var(--brand-primary);
-  outline-offset: 2px;
+  outline: 2px solid var(--color-cta);  /* Use CTA color for focus */
+  outline-offset: var(--space-1);  /* 4px */
 }
 
 :focus:not(:focus-visible) {
@@ -288,8 +309,8 @@ body {
 }
 
 :focus-visible {
-  outline: 2px solid var(--brand-primary);
-  outline-offset: 2px;
+  outline: 2px solid var(--color-cta);
+  outline-offset: var(--space-1);  /* 4px */
 }
 
 /* === SELECTION === */
@@ -596,19 +617,23 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Button Variants */
+/* Primary CTA Button - Uses CTA color only */
 .btn--primary {
-  background: var(--brand-gradient);
+  background: var(--color-cta);  /* Single CTA color, not gradient */
   border-color: transparent;
   color: var(--neutral-0);
   box-shadow: var(--shadow-sm);
+  padding: var(--space-3) var(--space-6);  /* 12px 24px - 4px multiples */
 }
 
 .btn--primary:hover {
+  background: var(--color-cta-hover);
   transform: translateY(-1px);
   box-shadow: var(--shadow-md);
 }
 
 .btn--primary:active {
+  background: var(--color-cta-active);
   transform: translateY(0);
   box-shadow: var(--shadow-sm);
 }
@@ -720,6 +745,10 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: var(--shadow-sm);
   overflow: hidden;
   transition: all var(--duration-300) var(--ease-out);
+  padding: var(--space-6);  /* 24px - 4px multiple */
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);  /* 16px - 4px multiple */
 }
 
 .card:hover {
@@ -728,19 +757,29 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .card__header {
-  padding: var(--space-6);
+  padding: var(--space-4) var(--space-6);  /* 16px 24px - 4px multiples */
   border-bottom: var(--border) solid var(--neutral-200);
   background-color: var(--neutral-25);
+  margin-bottom: var(--space-2);  /* 8px - 4px multiple */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);  /* 16px - 4px multiple */
 }
 
 .card__body {
-  padding: var(--space-6);
+  padding: var(--space-4) var(--space-6);  /* 16px 24px - 4px multiples */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);  /* 16px - 4px multiple */
 }
 
 .card__footer {
-  padding: var(--space-6);
+  padding: var(--space-4) var(--space-6);  /* 16px 24px - 4px multiples */
   border-top: var(--border) solid var(--neutral-200);
   background-color: var(--neutral-25);
+  margin-top: var(--space-2);  /* 8px - 4px multiple */
 }
 
 .card--elevated {
@@ -780,10 +819,10 @@ h1, h2, h3, h4, h5, h6 {
 .form-textarea {
   display: block;
   width: 100%;
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-3) var(--space-4);  /* 12px 16px - 4px multiples */
   border: var(--border) solid var(--neutral-300);
   border-radius: var(--radius-lg);
-  font-family: inherit;
+  font-family: var(--font-family);  /* Single font family */
   font-size: var(--text-base);
   line-height: var(--leading-normal);
   color: var(--neutral-900);
@@ -795,8 +834,8 @@ h1, h2, h3, h4, h5, h6 {
 .form-select:focus,
 .form-textarea:focus {
   outline: none;
-  border-color: var(--brand-primary);
-  box-shadow: 0 0 0 3px var(--brand-primary-100);
+  border-color: var(--color-cta);  /* Use CTA color for focus */
+  box-shadow: 0 0 0 3px var(--color-cta-light);
 }
 
 .form-input:disabled,

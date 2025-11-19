@@ -1,0 +1,121 @@
+/* =====================================
+   Atom: Button
+   ===================================== */
+
+/* Base Button Styles */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);  /* 8px - 4px multiple */
+  border: none;
+  border-radius: var(--radius-2);  /* 8px */
+  font-family: var(--font-family);  /* Single font family */
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--text-base);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* Button Variants */
+.btn--primary {
+  background: var(--color-cta);  /* CTA color only */
+  color: var(--neutral-white);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn--primary:hover:not(:disabled) {
+  background: var(--color-cta-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn--primary:active:not(:disabled) {
+  background: var(--color-cta-active);
+  transform: translateY(0);
+}
+
+.btn--secondary {
+  background: transparent;
+  border: 1px solid var(--neutral-300);
+  color: var(--neutral-700);
+}
+
+.btn--secondary:hover:not(:disabled) {
+  background: var(--neutral-50);
+  border-color: var(--neutral-400);
+  color: var(--neutral-900);
+}
+
+.btn--outline {
+  background: transparent;
+  border: 1px solid var(--color-cta);
+  color: var(--color-cta);
+}
+
+.btn--outline:hover:not(:disabled) {
+  background: var(--color-cta);
+  color: var(--neutral-white);
+}
+
+.btn--ghost {
+  background: transparent;
+  border: none;
+  color: var(--neutral-600);
+}
+
+.btn--ghost:hover:not(:disabled) {
+  background: var(--neutral-100);
+  color: var(--neutral-900);
+}
+
+/* Button Sizes (4px-based padding) */
+.btn--small {
+  padding: var(--space-2) var(--space-4);  /* 8px 16px */
+  font-size: var(--text-sm);
+  min-height: 32px;  /* 8 × 4px */
+}
+
+.btn--medium {
+  padding: var(--space-3) var(--space-6);  /* 12px 24px */
+  font-size: var(--text-base);
+  min-height: 40px;  /* 10 × 4px */
+}
+
+.btn--large {
+  padding: var(--space-4) var(--space-8);  /* 16px 32px */
+  font-size: var(--text-lg);
+  min-height: 48px;  /* 12 × 4px */
+}
+
+/* Full Width */
+.btn--full {
+  width: 100%;
+}
+
+/* Disabled State */
+.btn:disabled,
+.btn[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  pointer-events: none;
+}
+
+/* Focus State */
+.btn:focus-visible {
+  outline: 2px solid var(--color-cta);
+  outline-offset: var(--space-1);  /* 4px */
+}
+
+/* Icon in Button */
+.btn .icon {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+}
+

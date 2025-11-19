@@ -317,7 +317,12 @@
                         <div class="bg-white rounded-lg shadow p-6">
                             <h3 class="text-xl font-semibold text-neutral-900 mb-6">Technical Specifications</h3>
                             
-                            <!-- Essential Specs (Always Visible) -->
+                            <%-- Essential Specs Accordion --%>
+                            <jsp:include page="/components/molecules/accordion/accordion.jsp">
+                                <jsp:param name="id" value="essential-specs" />
+                                <jsp:param name="title" value="Essential Specifications" />
+                                <jsp:param name="open" value="true" />
+                            </jsp:include>
                             <div class="mb-6">
                                 <h4 class="font-semibold text-neutral-900 mb-4">Essential Specifications</h4>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -389,8 +394,15 @@
                                 </div>
                             </div>
                             
-                            <!-- Detailed Specifications (Collapsible) -->
-                            <details class="spec-details">
+                            </jsp:include>
+                            
+                            <%-- Detailed Specifications Accordion --%>
+                            <jsp:include page="/components/molecules/accordion/accordion.jsp">
+                                <jsp:param name="id" value="detailed-specs" />
+                                <jsp:param name="title" value="Detailed Specifications" />
+                                <jsp:param name="open" value="false" />
+                            </jsp:include>
+                            <details class="spec-details" style="display: none;">
                                 <summary class="spec-summary cursor-pointer font-medium text-neutral-700 py-3 border-t border-neutral-200">
                                     <span>Detailed Specifications</span>
                                     <svg class="w-5 h-5 inline-block ml-2 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -444,8 +456,15 @@
                                 </div>
                             </details>
                             
-                            <!-- Advanced Configuration (Collapsible) -->
-                            <details class="spec-details">
+                            </jsp:include>
+                            
+                            <%-- Advanced Configuration Accordion --%>
+                            <jsp:include page="/components/molecules/accordion/accordion.jsp">
+                                <jsp:param name="id" value="advanced-config" />
+                                <jsp:param name="title" value="Advanced Configuration" />
+                                <jsp:param name="open" value="false" />
+                            </jsp:include>
+                            <details class="spec-details" style="display: none;">
                                 <summary class="spec-summary cursor-pointer font-medium text-neutral-700 py-3 border-t border-neutral-200">
                                     <span>Advanced Configuration</span>
                                     <svg class="w-5 h-5 inline-block ml-2 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -596,7 +615,12 @@
                                 </div>
                             </div>
                             
-                            <!-- Compatibility Checker Tool -->
+                            <%-- Compatibility Checker Component --%>
+                            <jsp:include page="/components/molecules/compatibility-checker/compatibility-checker.jsp">
+                                <jsp:param name="productId" value="${pd_id}" />
+                            </jsp:include>
+                            
+                            <!-- Legacy Compatibility Checker Tool (hidden) -->
                             <div class="mt-8 p-6 bg-neutral-50 rounded-lg border border-neutral-200">
                                 <h4 class="font-semibold text-neutral-900 mb-4">Check Your Setup</h4>
                                 <p class="text-sm text-neutral-600 mb-4">

@@ -1,0 +1,60 @@
+/* =====================================
+   Atom: Skeleton Loader
+   ===================================== */
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--neutral-200) 0%,
+    var(--neutral-100) 50%,
+    var(--neutral-200) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s ease-in-out infinite;
+  border-radius: var(--radius-1); /* 4px */
+}
+
+.skeleton--rounded {
+  border-radius: var(--radius-full);
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.skeleton-text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2); /* 8px */
+}
+
+.skeleton-card {
+  background: var(--neutral-white);
+  border: 1px solid var(--neutral-200);
+  border-radius: var(--radius-2); /* 8px */
+  padding: var(--space-4); /* 16px */
+}
+
+.skeleton-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.skeleton-list-item {
+  display: flex;
+  align-items: flex-start;
+}
+
+/* Accessibility: Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+    background: var(--neutral-200);
+  }
+}
+

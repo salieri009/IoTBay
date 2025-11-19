@@ -44,8 +44,9 @@
         Skip to main content
     </a>
     
+    <%-- Use new Atomic Design components --%>
     <!-- Header -->
-    <jsp:include page="../header.jsp" />
+    <c:import url="/components/organisms/header/header.jsp" />
     
     <!-- Main Content -->
     <main id="main-content" class="flex-1">
@@ -54,7 +55,7 @@
     </main>
     
     <!-- Footer -->
-    <jsp:include page="../footer.jsp" />
+    <c:import url="/components/organisms/footer/footer.jsp" />
     
     <!-- Toast Notifications Container -->
     <div id="toast-container" class="fixed top-4 right-4 z-50 space-y-2" role="region" aria-label="Notifications"></div>

@@ -44,7 +44,7 @@
 <body class="antialiased bg-neutral-50 text-neutral-900 min-h-screen flex flex-col">
     
     <!-- Header -->
-    <jsp:include page="components/header.jsp" />
+    <c:import url="/components/organisms/header/header.jsp" />
     
     <main class="flex-1">
         <!-- Page Header -->
@@ -200,7 +200,7 @@
     </main>
     
     <!-- Footer -->
-    <jsp:include page="components/footer.jsp" />
+    <c:import url="/components/organisms/footer/footer.jsp" />
     
     <!-- JavaScript -->
     <script src="<%= contextPath %>/js/main.js"></script>

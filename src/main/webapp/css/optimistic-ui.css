@@ -1,0 +1,57 @@
+/* =====================================
+   Optimistic UI Feedback Styles
+   ===================================== */
+
+.optimistic-feedback {
+  position: fixed;
+  bottom: var(--space-6); /* 24px */
+  right: var(--space-6); /* 24px */
+  padding: var(--space-3) var(--space-6); /* 12px 24px */
+  border-radius: var(--radius-2); /* 8px */
+  font-family: var(--font-family);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--neutral-white);
+  box-shadow: var(--shadow-lg);
+  z-index: var(--z-notification);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all var(--transition-normal);
+  pointer-events: none;
+  max-width: 300px;
+}
+
+.optimistic-feedback--visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.optimistic-feedback--success {
+  background: var(--semantic-success);
+}
+
+.optimistic-feedback--error {
+  background: var(--semantic-error);
+}
+
+.optimistic-feedback--info {
+  background: var(--color-cta);
+}
+
+.optimistic-feedback--warning {
+  background: var(--semantic-warning);
+}
+
+/* Accessibility: Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  .optimistic-feedback {
+    transition: opacity var(--transition-fast);
+    transform: none;
+  }
+  
+  .optimistic-feedback--visible {
+    transform: none;
+  }
+}
+

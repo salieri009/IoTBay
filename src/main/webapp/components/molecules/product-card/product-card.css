@@ -1,0 +1,100 @@
+/* =====================================
+   Molecule: Product Card
+   ===================================== */
+
+.product-card {
+  background: var(--neutral-white);
+  border: 1px solid var(--neutral-200);
+  border-radius: var(--radius-3);  /* 12px */
+  padding: var(--space-4);  /* 16px - 4px multiple */
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);  /* 16px - 4px multiple */
+  transition: all var(--transition-normal);
+  box-shadow: var(--shadow-sm);
+}
+
+.product-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.product-card__image {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: var(--radius-2);  /* 8px */
+}
+
+.product-card__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-normal);
+}
+
+.product-card:hover .product-card__image img {
+  transform: scale(1.05);
+}
+
+.product-card__image .badge {
+  position: absolute;
+  top: var(--space-2);  /* 8px */
+  right: var(--space-2);  /* 8px */
+}
+
+.product-card__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);  /* 8px */
+}
+
+.product-card__name {
+  font-family: var(--font-family);
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--neutral-900);
+  margin: 0;
+}
+
+.product-card__name a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.product-card__name a:hover {
+  color: var(--color-cta);
+}
+
+.product-card__category {
+  font-family: var(--font-family);
+  font-size: var(--text-sm);
+  color: var(--neutral-600);
+  margin: 0;
+}
+
+.product-card__price {
+  font-family: var(--font-family);
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-cta);
+  margin: 0;
+}
+
+.product-card__actions {
+  display: flex;
+  gap: var(--space-2);  /* 8px - 4px multiple */
+  margin-top: auto;
+}
+
+/* Size Variants */
+.product-card--small {
+  padding: var(--space-3);  /* 12px */
+}
+
+.product-card--large {
+  padding: var(--space-6);  /* 24px */
+}
+

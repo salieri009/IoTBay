@@ -157,7 +157,7 @@
         </div>
     </section>
 
-    <!-- Featured Products - Product Grid (Section 4.1) -->
+    <!-- Featured Products - Bento Grid Layout (Section 4.1) -->
     <section class="py-12 bg-neutral-50">
         <div class="container">
             <div class="text-center mb-12">
@@ -167,104 +167,41 @@
                 </p>
             </div>
             
-            <!-- Skeleton Loading State (Section 3.2) -->
-            <div id="featured-products-skeleton" class="product-grid hidden">
+            <!-- Skeleton Loading State (Section 3.2) - Using Atomic Design Skeleton -->
+            <div id="featured-products-skeleton" class="product-grid hidden" data-product-grid>
                 <c:forEach begin="1" end="4" varStatus="loop">
-                    <div class="skeleton-card">
-                        <div class="skeleton skeleton-image"></div>
-                        <div class="skeleton skeleton-text skeleton-text--title"></div>
-                        <div class="skeleton skeleton-text"></div>
-                        <div class="skeleton skeleton-text skeleton-text--short"></div>
-                    </div>
+                    <jsp:include page="/components/atoms/skeleton/skeleton.jsp">
+                        <jsp:param name="type" value="card" />
+                    </jsp:include>
                 </c:forEach>
             </div>
             
-            <div class="product-grid" id="featured-products-grid">
+            <%-- Bento Grid for Featured Products --%>
+            <%
+              int columns = 4;
+              String gap = "medium";
+              String gridClass = "bento-grid bento-grid--cols-" + columns + " bento-grid--gap-" + gap;
+            %>
+            <div class="<%= gridClass %>" id="featured-products-grid" data-product-grid>
                 <c:choose>
                     <c:when test="${featuredProducts != null && !empty featuredProducts}">
                         <c:forEach var="p" items="${featuredProducts}" end="3">
-                            <div class="product-card" 
+                            <div class="bento-grid-item" 
                                  data-product-id="${p.id}" 
-                                 data-price="${p.price}" 
-                                 data-name="${fn:toLowerCase(p.name)}"
-                                 tabindex="0"
-                                 role="article"
-                                 aria-label="Product: ${p.name}">
-                                <div class="product-card__image-container">
-                                    <img class="product-card__image" 
-                                         src="${p.imageUrl != null && !empty p.imageUrl ? p.imageUrl : 'images/default-product.png'}" 
-                                         alt="${p.name}" 
-                                         loading="lazy"
-                                         width="300"
-                                         height="300"
-                                         onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/default-product.png';" />
-                                    <!-- Stock Badge (Visibility of System Status - Nielsen's Heuristic 1) -->
-                                    <c:if test="${p.stockQuantity > 0 && p.stockQuantity < 5}">
-                                        <span class="product-card__badge product-card__badge--warning" aria-label="Low stock: ${p.stockQuantity} remaining">
-                                            Low Stock
-                                        </span>
-                                    </c:if>
-                                    <c:if test="${p.stockQuantity == 0}">
-                                        <span class="product-card__badge product-card__badge--error" aria-label="Out of stock">
-                                            Out of Stock
-                                        </span>
-                                    </c:if>
-                                </div>
-                                <div class="product-card__body">
-                                    <div class="product-card__header">
-                                        <h3 class="product-card__title">${p.name}</h3>
-                                        <!-- Key Spec Badge (Section 1.1 - Recognition rather than recall) -->
-                                        <span class="product-card__spec-badge" title="Communication Protocol">LoRaWAN</span>
-                                    </div>
-                                    <p class="product-card__description">
-                                        <c:choose>
-                                            <c:when test="${fn:length(p.description) > 100}">
-                                                ${fn:substring(p.description, 0, 100)}...
-                                            </c:when>
-                                            <c:otherwise>
-                                                ${p.description}
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </p>
-                                    <div class="product-card__footer">
-                                        <div class="product-card__price-info">
-                                            <div class="product-card__price">$<fmt:formatNumber value="${p.price}" pattern="#.00" /></div>
-                                            <div class="product-card__stock-status">
-                                                <c:choose>
-                                                    <c:when test="${p.stockQuantity > 0}">
-                                                        <span class="text-success text-sm">✓ In Stock</span>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <span class="text-error text-sm">✗ Out of Stock</span>
-                                                    </c:otherwise>
-                                                </c:choose>
-                                            </div>
-                                        </div>
-                                        <div class="product-card__actions">
-                                            <a href="${pageContext.request.contextPath}/product?productId=${p.id}" 
-                                               class="btn btn--outline btn--sm"
-                                               aria-label="View details for ${p.name}">
-                                                View Details
-                                            </a>
-                                            <button type="button"
-                                                    onclick="if(typeof OptimisticUI !== 'undefined' && typeof OptimisticUI.addToCart === 'function') { OptimisticUI.addToCart(${p.id}, 1); } else { window.location.href='${pageContext.request.contextPath}/productDetails.jsp?id=${p.id}'; }"
-                                                    class="btn btn--primary btn--sm"
-                                                    aria-label="Add ${p.name} to cart"
-                                                    <c:if test="${p.stockQuantity == 0}">disabled</c:if>>
-                                                <c:choose>
-                                                    <c:when test="${p.stockQuantity > 0}">Add to Cart</c:when>
-                                                    <c:otherwise>Out of Stock</c:otherwise>
-                                                </c:choose>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
+                                 data-product-name="${p.name}"
+                                 data-product-price="${p.price}"
+                                 data-product-image="${p.imageUrl}">
+                                <c:set var="product" value="${p}" scope="request" />
+                                <jsp:include page="/components/molecules/product-card/product-card.jsp">
+                                    <jsp:param name="showQuickView" value="true" />
+                                    <jsp:param name="size" value="medium" />
+                                </jsp:include>
                             </div>
                         </c:forEach>
                     </c:when>
                     <c:otherwise>
                         <!-- Fallback Featured Products (if no data from controller) -->
-                        <div class="product-card">
+                        <div class="bento-grid-item">
                             <div class="product-card__image-container">
                                 <img src="${pageContext.request.contextPath}/images/sample1.png" 
                                      alt="Smart Industrial Sensor" 

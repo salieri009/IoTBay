@@ -234,7 +234,7 @@
 </head>
 <body>
     <!-- Include Header -->
-    <jsp:include page="../../components/header.jsp" />
+    <c:import url="/components/organisms/header/header.jsp" />
     
     <main class="dashboard-container">
         <!-- Dashboard Header -->
@@ -469,7 +469,7 @@
         </div>
     </main>
 
-    <jsp:include page="../../components/footer.jsp" />
+    <c:import url="/components/organisms/footer/footer.jsp" />
     <script src="<%=request.getContextPath()%>/js/main.js"></script>
     
     <script>

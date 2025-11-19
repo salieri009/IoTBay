@@ -1,0 +1,84 @@
+/* =====================================
+   Molecule: Accordion
+   ===================================== */
+
+.accordion {
+  border: 1px solid var(--neutral-200);
+  border-radius: var(--radius-2); /* 8px */
+  overflow: hidden;
+  margin-bottom: var(--space-2); /* 8px */
+}
+
+.accordion-header {
+  margin: 0;
+}
+
+.accordion-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3); /* 12px */
+  padding: var(--space-4) var(--space-6); /* 16px 24px */
+  background: var(--neutral-white);
+  border: none;
+  text-align: left;
+  font-family: var(--font-family);
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--neutral-900);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  min-height: 44px; /* Minimum touch target */
+}
+
+.accordion-button:hover {
+  background: var(--neutral-50);
+}
+
+.accordion-button:focus-visible {
+  outline: 2px solid var(--color-cta);
+  outline-offset: -2px;
+}
+
+.accordion-button .icon {
+  transition: transform var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.accordion-button--open .icon:last-child {
+  transform: rotate(180deg);
+}
+
+.accordion-title {
+  flex: 1;
+}
+
+.accordion-panel {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height var(--transition-normal);
+}
+
+.accordion-panel--open {
+  max-height: 2000px; /* Large enough for most content */
+}
+
+.accordion-content {
+  padding: var(--space-4) var(--space-6); /* 16px 24px */
+  border-top: 1px solid var(--neutral-200);
+  background: var(--neutral-50);
+}
+
+/* Accessibility: Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  .accordion-button .icon,
+  .accordion-panel {
+    transition: none;
+  }
+  
+  .accordion-panel--open {
+    max-height: none;
+  }
+}
+

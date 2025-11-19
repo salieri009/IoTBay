@@ -1,0 +1,18 @@
+/* =====================================
+   Atom: Label
+   ===================================== */
+
+.label {
+  display: block;
+  font-family: var(--font-family);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--neutral-700);
+  margin-bottom: var(--space-1);  /* 4px */
+}
+
+.label--required .label__required {
+  color: var(--semantic-error);
+  margin-left: var(--space-1);  /* 4px */
+}
+

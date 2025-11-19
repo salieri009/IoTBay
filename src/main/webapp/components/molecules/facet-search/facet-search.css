@@ -1,0 +1,96 @@
+/* =====================================
+   Molecule: Facet Search
+   ===================================== */
+
+.facet-search {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4); /* 16px */
+  background: var(--neutral-white);
+  border: 1px solid var(--neutral-200);
+  border-radius: var(--radius-3); /* 12px */
+  padding: var(--space-6); /* 24px */
+}
+
+.facet-search__price-range {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4); /* 16px */
+}
+
+.facet-search__price-inputs {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2); /* 8px */
+}
+
+.facet-search__price-inputs .input-wrapper {
+  flex: 1;
+}
+
+.facet-search__price-separator {
+  font-family: var(--font-family);
+  font-size: var(--text-sm);
+  color: var(--neutral-600);
+  flex-shrink: 0;
+}
+
+.facet-search__categories,
+.facet-search__stock {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3); /* 12px */
+}
+
+.facet-search__checkbox-label,
+.facet-search__radio-label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3); /* 12px */
+  padding: var(--space-2) var(--space-3); /* 8px 12px */
+  border-radius: var(--radius-1); /* 4px */
+  cursor: pointer;
+  transition: background var(--transition-fast);
+  min-height: 44px; /* Minimum touch target */
+}
+
+.facet-search__checkbox-label:hover,
+.facet-search__radio-label:hover {
+  background: var(--neutral-50);
+}
+
+.facet-search__checkbox,
+.facet-search__radio {
+  width: 20px; /* 5 × 4px */
+  height: 20px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.facet-search__checkbox-text,
+.facet-search__radio-text {
+  flex: 1;
+  font-family: var(--font-family);
+  font-size: var(--text-sm);
+  color: var(--neutral-700);
+}
+
+.facet-search__checkbox-count {
+  font-family: var(--font-family);
+  font-size: var(--text-xs);
+  color: var(--neutral-500);
+  flex-shrink: 0;
+}
+
+/* Checked state */
+.facet-search__checkbox:checked + .facet-search__checkbox-text,
+.facet-search__radio:checked + .facet-search__radio-text {
+  color: var(--color-cta);
+  font-weight: var(--font-weight-medium);
+}
+
+.facet-search__checkbox:checked ~ .facet-search__checkbox-count,
+.facet-search__radio:checked ~ .facet-search__checkbox-count {
+  color: var(--color-cta);
+}
+

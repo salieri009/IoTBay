@@ -243,7 +243,7 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     <!-- Product cards will be dynamically loaded here -->
                     <c:forEach var="product" items="${popularProducts}" begin="0" end="7">
-                        <jsp:include page="components/product-card.jsp">
+                        <jsp:include page="/components/molecules/product-card/product-card.jsp">
                             <jsp:param name="product" value="${product}" />
                             <jsp:param name="cardSize" value="sm" />
                         </jsp:include>

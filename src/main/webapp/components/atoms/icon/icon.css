@@ -1,0 +1,33 @@
+/* =====================================
+   Atom: Icon
+   ===================================== */
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: currentColor;
+}
+
+.icon--small {
+  width: 0.875rem;  /* 14px */
+  height: 0.875rem;
+}
+
+.icon--medium {
+  width: 1rem;  /* 16px */
+  height: 1rem;
+}
+
+.icon--large {
+  width: 1.5rem;  /* 24px */
+  height: 1.5rem;
+}
+
+.icon svg {
+  width: 100%;
+  height: 100%;
+  fill: currentColor;
+}
+

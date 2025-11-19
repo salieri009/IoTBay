@@ -32,7 +32,7 @@
 </head>
 <body class="antialiased bg-neutral-50 text-neutral-900 min-h-screen flex flex-col">
     
-    <jsp:include page="../components/header.jsp" />
+    <c:import url="/components/organisms/header/header.jsp" />
     
     <main class="flex-1">
         <section class="py-12 bg-gradient-to-br from-blue-50 via-white to-purple-50">
@@ -111,7 +111,7 @@
         </section>
     </main>
     
-    <jsp:include page="../components/footer.jsp" />
+    <c:import url="/components/organisms/footer/footer.jsp" />
     <script src="<%= contextPath %>/js/main.js"></script>
 </body>
 </html>

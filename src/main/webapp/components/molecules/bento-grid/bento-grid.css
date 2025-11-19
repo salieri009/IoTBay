@@ -1,0 +1,94 @@
+/* =====================================
+   Molecule: Bento Grid
+   ===================================== */
+
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--bento-cols, 4), 1fr);
+  gap: var(--bento-gap, var(--space-6)); /* 24px */
+}
+
+/* Responsive columns */
+.bento-grid--cols-2 {
+  --bento-cols: 2;
+}
+
+.bento-grid--cols-3 {
+  --bento-cols: 3;
+}
+
+.bento-grid--cols-4 {
+  --bento-cols: 4;
+}
+
+.bento-grid--cols-5 {
+  --bento-cols: 5;
+}
+
+.bento-grid--cols-6 {
+  --bento-cols: 6;
+}
+
+/* Gap sizes */
+.bento-grid--gap-small {
+  --bento-gap: var(--space-4); /* 16px */
+}
+
+.bento-grid--gap-medium {
+  --bento-gap: var(--space-6); /* 24px */
+}
+
+.bento-grid--gap-large {
+  --bento-gap: var(--space-8); /* 32px */
+}
+
+/* Responsive behavior */
+@media (max-width: 1023px) {
+  .bento-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 767px) {
+  .bento-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Bento Grid Item */
+.bento-grid-item {
+  background: var(--neutral-white);
+  border: 1px solid var(--neutral-200);
+  border-radius: var(--radius-3); /* 12px */
+  padding: var(--space-6); /* 24px */
+  transition: all var(--transition-normal);
+  box-shadow: var(--shadow-sm);
+}
+
+.bento-grid-item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-cta);
+}
+
+/* Span options */
+.bento-grid-item--span-2 {
+  grid-column: span 2;
+}
+
+.bento-grid-item--span-3 {
+  grid-column: span 3;
+}
+
+.bento-grid-item--span-full {
+  grid-column: 1 / -1;
+}
+
+/* Responsive span adjustments */
+@media (max-width: 1023px) {
+  .bento-grid-item--span-2,
+  .bento-grid-item--span-3 {
+    grid-column: span 1;
+  }
+}
+

@@ -196,8 +196,45 @@
     <section class="py-8">
         <div class="container">
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-                <!-- Filters Sidebar (Section 4.2) -->
-                <aside class="lg:col-span-1" id="filters-sidebar" role="complementary" aria-label="Filter products">
+                <!-- Filters Sidebar (Desktop) / Bottom Sheet (Mobile) -->
+                <%-- Desktop: Sidebar --%>
+                <aside class="lg:col-span-1 hidden lg:block" id="filters-sidebar-desktop" role="complementary" aria-label="Filter products">
+                    <div class="filters-panel bg-white rounded-lg shadow-sm border border-neutral-200 p-6 sticky top-8">
+                        <jsp:include page="/components/molecules/facet-search/facet-search.jsp">
+                            <jsp:param name="id" value="facet-search-desktop" />
+                            <jsp:param name="onFilterChange" value="handleFilterChange" />
+                        </jsp:include>
+                    </div>
+                </aside>
+                
+                <%-- Mobile: Bottom Sheet Trigger --%>
+                <div class="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-neutral-200 shadow-lg">
+                    <button id="filter-trigger-mobile" 
+                            class="w-full py-4 px-6 flex items-center justify-between"
+                            aria-label="Open filters"
+                            aria-expanded="false">
+                        <span class="font-semibold text-neutral-900">Filters</span>
+                        <jsp:include page="/components/atoms/icon/icon.jsp">
+                            <jsp:param name="name" value="filter" />
+                            <jsp:param name="size" value="medium" />
+                        </jsp:include>
+                    </button>
+                </div>
+                
+                <%-- Mobile: Bottom Sheet --%>
+                <jsp:include page="/components/organisms/bottom-sheet/bottom-sheet.jsp">
+                    <jsp:param name="id" value="filter-sheet-mobile" />
+                    <jsp:param name="title" value="Filter Products" />
+                    <jsp:param name="trigger" value="#filter-trigger-mobile" />
+                </jsp:include>
+                    <jsp:include page="/components/molecules/facet-search/facet-search.jsp">
+                        <jsp:param name="id" value="facet-search-mobile" />
+                        <jsp:param name="onFilterChange" value="handleFilterChange" />
+                    </jsp:include>
+                </jsp:include>
+                
+                <%-- Legacy filters panel (hidden, for reference) --%>
+                <aside class="lg:col-span-1 hidden" id="filters-sidebar" role="complementary" aria-label="Filter products">
                     <div class="filters-panel bg-white rounded-lg shadow-sm border border-neutral-200 p-6 sticky top-8 space-y-6">
                         <div class="flex items-center justify-between">
                             <h2 class="text-lg font-semibold text-neutral-900">Filters</h2>

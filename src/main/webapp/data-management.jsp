@@ -451,7 +451,7 @@
         }
     </style>
     
-    <jsp:include page="components/header.jsp" />
+    <c:import url="/components/organisms/header/header.jsp" />
     
     <main class="admin-layout">
         <div class="admin-container">
@@ -704,7 +704,7 @@
         </div>
     </main>
     
-    <jsp:include page="components/footer.jsp" />
+    <c:import url="/components/organisms/footer/footer.jsp" />
     
     <script>
         // File Upload Handling

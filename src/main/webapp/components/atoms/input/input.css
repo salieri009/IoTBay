@@ -1,0 +1,64 @@
+/* =====================================
+   Atom: Input
+   ===================================== */
+
+.input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.input {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);  /* 12px 16px - 4px multiples */
+  border: 1px solid var(--neutral-300);
+  border-radius: var(--radius-2);  /* 8px */
+  font-family: var(--font-family);  /* Single font family */
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  color: var(--neutral-900);
+  background-color: var(--neutral-white);
+  transition: all var(--transition-fast);
+  outline: none;
+}
+
+.input:focus {
+  border-color: var(--color-cta);  /* CTA color for focus */
+  box-shadow: 0 0 0 3px var(--color-cta-light);
+}
+
+.input:disabled {
+  background-color: var(--neutral-100);
+  color: var(--neutral-500);
+  cursor: not-allowed;
+}
+
+.input:readonly {
+  background-color: var(--neutral-50);
+  cursor: default;
+}
+
+/* Error State */
+.input--error {
+  border-color: var(--semantic-error);
+}
+
+.input--error:focus {
+  box-shadow: 0 0 0 3px var(--semantic-error-bg);
+}
+
+.input-error {
+  margin-top: var(--space-1);  /* 4px */
+  font-size: var(--text-sm);
+  color: var(--semantic-error);
+  font-family: var(--font-family);
+}
+
+/* Success State */
+.input--success {
+  border-color: var(--semantic-success);
+}
+
+.input--success:focus {
+  box-shadow: 0 0 0 3px var(--semantic-success-bg);
+}
+

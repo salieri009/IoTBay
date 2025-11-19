@@ -358,7 +358,7 @@
     </main>
     
     <!-- Footer -->
-    <jsp:include page="components/footer.jsp" />
+    <c:import url="/components/organisms/footer/footer.jsp" />
     
     <!-- JavaScript -->
     <script src="<%= contextPath %>/js/main.js"></script>

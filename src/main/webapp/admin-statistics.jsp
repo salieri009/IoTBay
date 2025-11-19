@@ -23,7 +23,7 @@
 </head>
 <body>
     <!-- Include Header -->
-    <jsp:include page="components/header.jsp" />
+    <c:import url="/components/organisms/header/header.jsp" />
 
     <!-- Admin Navigation Breadcrumb -->
     <nav class="py-4 bg-neutral-100">
@@ -218,7 +218,7 @@
         </div>
     </section>
 
-    <jsp:include page="components/footer.jsp" />
+    <c:import url="/components/organisms/footer/footer.jsp" />
     
     <script src="js/main.js"></script>
     <script>
