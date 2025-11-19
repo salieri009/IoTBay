@@ -114,32 +114,7 @@
         <span class="text-sm">On Sale</span>
       </label>
     </div>
-  </details>
-</div>
-               onchange="<%= onFilterChange %>('stock')"
-               aria-label="Show all products">
-        <span class="facet-search__radio-text">All Products</span>
-      </label>
-      <label class="facet-search__radio-label">
-        <input type="radio" 
-               name="stock" 
-               value="in-stock"
-               class="facet-search__radio"
-               onchange="<%= onFilterChange %>('stock')"
-               aria-label="Show only in-stock products">
-        <span class="facet-search__radio-text">In Stock Only</span>
-      </label>
-      <label class="facet-search__radio-label">
-        <input type="radio" 
-               name="stock" 
-               value="low-stock"
-               class="facet-search__radio"
-               onchange="<%= onFilterChange %>('stock')"
-               aria-label="Show only low stock products">
-        <span class="facet-search__radio-text">Low Stock</span>
-      </label>
-    </div>
-  </jsp:include>
+</details>
   
   <%-- Clear Filters --%>
   <jsp:include page="/components/atoms/button/button.jsp">

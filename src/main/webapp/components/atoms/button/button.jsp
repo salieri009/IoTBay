@@ -56,14 +56,41 @@
   String attributes = request.getParameter("attributes");
   String htmlType = request.getParameter("htmlType") != null ? request.getParameter("htmlType") : "button";
   
-  // Build CSS classes
-  String buttonClass = "btn btn--" + type + " btn--" + size;
+  // Build Tailwind classes
+  StringBuilder sb = new StringBuilder();
+  sb.append("inline-flex items-center justify-center rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed ");
+  
+  // Size
+  if ("small".equals(size)) {
+      sb.append("px-3 py-1.5 text-sm ");
+  } else if ("large".equals(size)) {
+      sb.append("px-6 py-3 text-lg ");
+  } else {
+      sb.append("px-4 py-2 text-base ");
+  }
+  
+  // Type
+  if ("secondary".equals(type)) {
+      sb.append("bg-neutral-200 text-neutral-900 hover:bg-neutral-300 focus:ring-neutral-500 ");
+  } else if ("outline".equals(type)) {
+      sb.append("border border-neutral-300 text-neutral-700 hover:bg-neutral-50 focus:ring-neutral-500 ");
+  } else if ("ghost".equals(type)) {
+      sb.append("text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900 focus:ring-neutral-500 ");
+  } else if ("danger".equals(type)) {
+      sb.append("bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 ");
+  } else { // primary
+      sb.append("bg-brand-primary text-white hover:bg-brand-primary/90 focus:ring-brand-primary ");
+  }
+  
   if (fullWidth) {
-    buttonClass += " btn--full";
+      sb.append("w-full ");
   }
+  
   if (extraClass != null) {
-    buttonClass += " " + extraClass;
+      sb.append(extraClass);
   }
+  
+  String buttonClass = sb.toString();
 %>
 
 <c:choose>

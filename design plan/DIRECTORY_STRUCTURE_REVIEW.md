@@ -1,8 +1,8 @@
 # IoTBay Documentation Directory Structure Review
-## 20-Year Technical Writer Perspective
+## 30-Year Technical Writer Perspective
 
 **Review Date**: 2025  
-**Reviewer**: Senior Technical Writer (20 Years Experience)  
+**Reviewer**: Principal Technical Writer (30 Years Experience)  
 **Project**: IoTBay E-commerce Platform
 
 ---
@@ -15,25 +15,47 @@ This document provides a comprehensive review of the IoTBay documentation direct
 
 ## Current Structure Analysis
 
-### Current Directory Structure
+### Current Directory Structure (post-2025 reorganisation)
 ```
 design plan/
+├── README.md
+├── DIRECTORY_STRUCTURE_REVIEW.md
 ├── en/
-│   ├── 41025 ISD Assignment 2 Autumn 2025.pdf
-│   ├── API_DOCUMENTATION.en.md
-│   ├── COMPONENT_ARCHITECTURE.en.md
-│   ├── DATABASE_DESIGN.en.md
-│   ├── DESIGN_SYSTEM.en.md
-│   ├── DEVELOPER_DOCUMENTATION.en.md
-│   ├── FEATURES.en.md
-│   ├── JSP_DEVELOPER_DOCUMENTATION.en.md
-│   ├── MODERN_DESIGN_SYSTEM.en.md
-│   ├── UI_UX_DOCUMENTATION.en.md
-│   └── UX_IMPROVEMENT_PLAN.en.md
-├── ja/
-│   └── [Same structure with .md extension]
-└── ko/
-    └── [Same structure with .md extension]
+│   ├── README.md
+│   ├── 1_strategy/
+│   │   ├── UX_IMPROVEMENT_PLAN.en.md
+│   │   ├── FRONTEND_REFACTORING_EXECUTION.en.md
+│   │   ├── FRONTEND_REFACTORING_SESSION_SUMMARY.en.md
+│   │   ├── ATOMIC_DESIGN_IMPLEMENTATION_PLAN.en.md
+│   │   └── 41025_ISD_TEST01.md
+│   ├── 2_architecture/
+│   │   ├── DESIGN_SYSTEM.en.md
+│   │   ├── MODERN_DESIGN_SYSTEM.en.md
+│   │   ├── COMPONENT_ARCHITECTURE.en.md
+│   │   ├── API_DOCUMENTATION.en.md
+│   │   ├── DATABASE_DESIGN.en.md
+│   │   ├── DEVELOPER_DOCUMENTATION.en.md
+│   │   ├── JSP_DEVELOPER_DOCUMENTATION.en.md
+│   │   ├── UI_UX_DOCUMENTATION.en.md
+│   │   ├── FEATURES.en.md
+│   │   ├── COLOR_REFACTORING_GUIDE.en.md
+│   │   └── 41025_ISD_TEST02.md
+│   ├── 3_execution/
+│   │   ├── ATOMIC_DESIGN_EXECUTION_SUMMARY.en.md
+│   │   ├── ATOMIC_DESIGN_MIGRATION_GUIDE.en.md
+│   │   ├── FRONTEND_REFACTORING_COMPLETE.en.md
+│   │   ├── MIGRATION_COMPLETE.en.md
+│   │   ├── REFACTORING_EXECUTION_SUMMARY.en.md
+│   │   ├── DEDUPLICATION_SUMMARY.en.md
+│   │   └── CLEANUP_SUMMARY.en.md
+│   ├── 4_reviews/
+│   │   ├── FRONTEND_REVIEW_REPORT.en.md
+│   │   ├── CSS_REVIEW_REPORT.en.md
+│   │   └── ATOMIC_COMPONENTS_CSS_REVIEW.en.md
+│   └── 5_reference/
+│       └── 41025 ISD Assignment 2 Autumn 2025.pdf
+├── ja/ (removed in 2025 reorg)
+└── ko/ (removed in 2025 reorg)
 ```
 
 ---

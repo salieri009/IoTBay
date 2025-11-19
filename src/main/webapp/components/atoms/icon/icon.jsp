@@ -24,7 +24,16 @@
   String ariaLabel = request.getParameter("ariaLabel");
   boolean ariaHidden = !"false".equalsIgnoreCase(request.getParameter("ariaHidden"));
   
-  String iconClass = "icon icon--" + size;
+  String iconClass = "inline-block fill-current ";
+  if ("small".equals(size)) {
+      iconClass += "w-4 h-4";
+  } else if ("large".equals(size)) {
+      iconClass += "w-6 h-6";
+  } else if ("xlarge".equals(size)) {
+      iconClass += "w-8 h-8";
+  } else {
+      iconClass += "w-5 h-5";
+  }
 %>
 
 <span class="${iconClass}" 
@@ -33,7 +42,7 @@
       role="img">
   <%-- Icon SVG will be inserted here --%>
   <%-- For now, using a placeholder - implement with actual SVG sprites or inline SVG --%>
-  <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+  <svg class="w-full h-full" viewBox="0 0 24 24" fill="currentColor">
     <use href="#icon-${name}" />
   </svg>
 </span>

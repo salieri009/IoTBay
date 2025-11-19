@@ -1,41 +1,27 @@
-<%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ page contentType="text/html; charset=UTF-8" language="java" isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
 
-<%
-    String contextPath = request.getContextPath();
-    String errorMessage = (String) request.getAttribute("errorMessage");
-%>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign In - IoT Bay</title>
-    <meta name="description" content="Sign in to your IoT Bay account">
-    <link rel="stylesheet" href="<%= contextPath %>/css/modern-theme.css">
-</head>
-<body>
+<t:base title="Sign In - IoT Bay" description="Sign in to your IoT Bay account">
     <main class="min-h-screen flex items-center justify-center bg-neutral-50 py-12 px-4">
-        <!-- Auth Card: PC max-width 440px/padding 40px, Mobile 100%/padding 20px -->
-        <div class="auth-card-container">
-            <div class="auth-card">
+        <!-- Auth Card -->
+        <div class="w-full max-w-[440px]">
+            <div class="bg-white rounded-2xl shadow-sm border border-neutral-200 p-6 md:p-10">
                 <div class="text-center mb-8">
-                    <h1 class="text-display-m font-bold text-neutral-900 mb-2">Welcome back</h1>
+                    <h1 class="text-2xl md:text-3xl font-bold text-neutral-900 mb-2">Welcome back</h1>
                     <p class="text-lg text-neutral-600">Sign in to your IoT Bay account</p>
                 </div>
                 
-                <% if (errorMessage != null) { %>
-                <div class="alert alert--error mb-6" role="alert" aria-live="polite">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
-                    </svg>
-                    <span><%= errorMessage %></span>
-                </div>
-                <% } %>
+                <c:if test="${not empty errorMessage}">
+                    <div class="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-start gap-3" role="alert">
+                        <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                        </svg>
+                        <span>${errorMessage}</span>
+                    </div>
+                </c:if>
                 
-                <form class="space-y-6" method="post" action="<%= contextPath %>/api/login" id="loginForm">
+                <form class="space-y-6" method="post" action="${pageContext.request.contextPath}/api/login" id="loginForm">
                     <fieldset class="space-y-6">
                         <legend class="sr-only">Sign in to your account</legend>
                         
@@ -49,170 +35,58 @@
                             <jsp:param name="id" value="email" />
                         </jsp:include>
                         
-                        <jsp:include page="/components/molecules/form-field/form-field.jsp">
-                            <jsp:param name="label" value="Password" />
-                            <jsp:param name="name" value="password" />
-                            <jsp:param name="type" value="password" />
-                            <jsp:param name="placeholder" value="Enter your password" />
-                            <jsp:param name="required" value="true" />
-                            <jsp:param name="helpText" value="Case-sensitive password" />
-                            <jsp:param name="id" value="password" />
-                        </jsp:include>
-                        
-                        <div class="flex items-center justify-between">
-                            <label class="checkbox">
-                                <input type="checkbox" name="remember" class="checkbox__input" aria-describedby="remember-help">
-                                <span class="checkbox__mark"></span>
-                                <span class="checkbox__label">Remember me</span>
-                            </label>
-                            <a href="forgot-password.jsp" class="text-sm text-brand-primary hover:text-brand-primary-600">Forgot password?</a>
+                        <div class="space-y-1">
+                            <jsp:include page="/components/molecules/form-field/form-field.jsp">
+                                <jsp:param name="label" value="Password" />
+                                <jsp:param name="name" value="password" />
+                                <jsp:param name="type" value="password" />
+                                <jsp:param name="placeholder" value="••••••••" />
+                                <jsp:param name="required" value="true" />
+                                <jsp:param name="id" value="password" />
+                            </jsp:include>
+                            <div class="flex justify-end">
+                                <a href="forgot-password.jsp" class="text-sm font-medium text-brand-primary hover:text-brand-primary-700 transition-colors">
+                                    Forgot password?
+                                </a>
+                            </div>
                         </div>
-                        <div id="remember-help" class="sr-only">Keep you signed in on this device</div>
                         
-                        <input type="hidden" name="source" value="logins" />
-                        <button type="submit" class="btn btn--primary btn--lg w-full" id="submitBtn">Sign in</button>
+                        <div class="flex items-center">
+                            <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-brand-primary focus:ring-brand-primary border-neutral-300 rounded">
+                            <label for="remember-me" class="ml-2 block text-sm text-neutral-900">
+                                Remember me
+                            </label>
+                        </div>
                     </fieldset>
+                    
+                    <div class="pt-2">
+                        <jsp:include page="/components/atoms/button/button.jsp">
+                            <jsp:param name="type" value="primary" />
+                            <jsp:param name="htmlType" value="submit" />
+                            <jsp:param name="text" value="Sign in" />
+                            <jsp:param name="fullWidth" value="true" />
+                            <jsp:param name="size" value="large" />
+                        </jsp:include>
+                    </div>
                 </form>
                 
-                <div class="mt-6 text-center">
-                    <p class="text-sm text-neutral-600">Don't have an account? <a href="register.jsp" class="text-brand-primary hover:text-brand-primary-600 font-medium">Sign up</a></p>
+                <div class="mt-8 pt-6 border-t border-neutral-200 text-center">
+                    <p class="text-neutral-600">
+                        Don't have an account? 
+                        <a href="${pageContext.request.contextPath}/register.jsp" class="font-medium text-brand-primary hover:text-brand-primary-700 transition-colors">
+                            Create account
+                        </a>
+                    </p>
+                </div>
+            </div>
+            
+            <div class="mt-8 text-center text-sm text-neutral-500">
+                <p>&copy; 2024 IoT Bay. All rights reserved.</p>
+                <div class="mt-2 space-x-4">
+                    <a href="#" class="hover:text-neutral-900 transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-neutral-900 transition-colors">Terms of Service</a>
                 </div>
             </div>
         </div>
     </main>
-
-    <script src="<%= contextPath %>/js/main.js"></script>
-    <script>
-        // Form submission with loading state and better error handling
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const submitBtn = document.getElementById('submitBtn');
-            const originalText = submitBtn.textContent;
-            const emailInput = document.getElementById('email');
-            const passwordInput = document.getElementById('password');
-            
-            // Basic validation
-            let hasErrors = false;
-            
-            if (!emailInput.value.trim()) {
-                showFieldError('emailError', 'Email address is required');
-                hasErrors = true;
-            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value)) {
-                showFieldError('emailError', 'Please enter a valid email address');
-                hasErrors = true;
-            } else {
-                hideFieldError('emailError');
-            }
-            
-            if (!passwordInput.value) {
-                showFieldError('passwordError', 'Password is required');
-                hasErrors = true;
-            } else {
-                hideFieldError('passwordError');
-            }
-            
-            if (hasErrors) {
-                return;
-            }
-            
-            // Show loading state
-            submitBtn.textContent = 'Signing in...';
-            submitBtn.disabled = true;
-            if (typeof showLoading === 'function') {
-                showLoading(submitBtn);
-            }
-            
-            // Submit form
-            const formData = new FormData(this);
-            
-            fetch(this.action, {
-                method: 'POST',
-                body: formData,
-                redirect: 'manual'  // Don't follow redirects automatically
-            })
-            .then(response => {
-                // Check for redirect (302) - successful login
-                // When redirect: 'manual', successful redirects return status 0 and type 'opaqueredirect'
-                if (response.type === 'opaqueredirect' || response.status === 0 || response.status === 302 || response.redirected) {
-                    // Successful login - redirect occurred
-                    if (typeof showToast === 'function') {
-                        showToast('Login successful! Redirecting...', 'success');
-                    }
-                    setTimeout(() => {
-                        window.location.href = '<%= contextPath %>/';
-                    }, 500);
-                    return null; // Don't process further
-                }
-                
-                // Not redirected, check for error in response
-                if (response.ok) {
-                    return response.text();
-                } else {
-                    return response.text().then(text => {
-                        throw new Error('Login failed');
-                    });
-                }
-            })
-            .then(html => {
-                // Only process HTML if we didn't redirect
-                if (html) {
-                    // Check if response contains error indicators
-                    if (html.includes('error') || html.includes('Invalid') || html.includes('errorMessage')) {
-                        throw new Error('Invalid email or password. Please try again.');
-                    }
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                
-                // Reset button
-                submitBtn.textContent = originalText;
-                submitBtn.disabled = false;
-                if (typeof hideLoading === 'function') {
-                    hideLoading(submitBtn);
-                }
-                
-                // Show helpful error message
-                let errorMsg = 'Login failed. ';
-                if (error.message.includes('email') || error.message.includes('Email')) {
-                    errorMsg += 'The email address you entered is not registered. Would you like to <a href="register.jsp">create an account</a>?';
-                } else if (error.message.includes('password') || error.message.includes('Password')) {
-                    errorMsg += 'The password you entered is incorrect. Please try again or <a href="forgot-password.jsp">reset your password</a>.';
-                } else {
-                    errorMsg += 'Please check your email and password and try again.';
-                }
-                
-                // Show error in password field
-                showFieldError('passwordError', errorMsg);
-                
-                // Focus on password field
-                passwordInput.focus();
-            });
-        });
-        
-        function showFieldError(fieldId, message) {
-            const errorDiv = document.getElementById(fieldId);
-            if (errorDiv) {
-                errorDiv.innerHTML = message;
-                errorDiv.style.display = 'block';
-                const input = errorDiv.previousElementSibling;
-                if (input && input.classList) {
-                    input.classList.add('form-input--error');
-                }
-            }
-        }
-        
-        function hideFieldError(fieldId) {
-            const errorDiv = document.getElementById(fieldId);
-            if (errorDiv) {
-                errorDiv.style.display = 'none';
-                const input = errorDiv.previousElementSibling;
-                if (input && input.classList) {
-                    input.classList.remove('form-input--error');
-                }
-            }
-        }
-    </script>
-</body>
-</html>
+</t:base>

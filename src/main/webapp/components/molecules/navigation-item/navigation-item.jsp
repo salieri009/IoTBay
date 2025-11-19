@@ -37,18 +37,18 @@
 %>
 
 <li role="none">
-  <a href="${href}" 
+  <a href="${param.href}" 
      class="${linkClass}"
      role="menuitem"
-     <c:if test="${!empty ariaLabel}">aria-label="${ariaLabel}"</c:if>
+     <c:if test="${!empty param.ariaLabel}">aria-label="${param.ariaLabel}"</c:if>
      <c:if test="${active}">aria-current="page"</c:if>>
-    <c:if test="${!empty icon}">
+    <c:if test="${!empty param.icon}">
       <jsp:include page="/components/atoms/icon/icon.jsp">
-        <jsp:param name="name" value="${icon}" />
+        <jsp:param name="name" value="${param.icon}" />
         <jsp:param name="size" value="small" />
       </jsp:include>
     </c:if>
-    <span>${text}</span>
+    <span>${param.text}</span>
   </a>
 </li>
 

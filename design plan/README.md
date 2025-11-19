@@ -1,140 +1,77 @@
-# IoTBay Design Plan Documentation
+# IoTBay Design Plan Library
 
 **Project**: IoTBay E-commerce Platform  
 **Course**: 41025 Information Systems Development (ISD)  
-**Assignment**: Assignment 2 - Autumn 2025  
-**Institution**: University of Technology Sydney (UTS)
+**Assignment**: A2 – Autumn 2025, University of Technology Sydney
+
+> Curated like a 30-year technical writer: every artifact has a defined home, owner, and relationship to the rest of the system.
 
 ---
 
-## 📚 Documentation Index
-
-This directory contains comprehensive design and development documentation for the IoTBay platform. All documents are available in English (en), Japanese (ja), and Korean (ko).
-
----
-
-## 📁 Document Categories
-
-### 🏗️ Architecture & System Design
-- **COMPONENT_ARCHITECTURE** - Component-based architecture and structure
-- **DATABASE_DESIGN** - Database schema and design patterns
-- **DEVELOPER_DOCUMENTATION** - General developer guide
-
-### 🎨 Design & User Experience
-- **DESIGN_SYSTEM** - Complete design system (colors, typography, components)
-- **UI_UX_DOCUMENTATION** - Comprehensive UI/UX design specifications
-- **UX_IMPROVEMENT_PLAN** - UX improvement recommendations and roadmap
-
-### 💻 Development Guides
-- **JSP_DEVELOPER_DOCUMENTATION** - JSP-specific development guide
-- **API_DOCUMENTATION** - RESTful API documentation
-
-### 📋 Features & Requirements
-- **FEATURES** - Complete feature list and requirements
-
-### 📄 Assignment
-- **41025 ISD Assignment 2 Autumn 2025.pdf** - Original assignment brief
-
----
-
-## 🗺️ Document Relationships
+## 1. Directory Map
 
 ```
-Assignment PDF
-    │
-    ├──→ FEATURES (Requirements)
-    │       │
-    │       ├──→ DEVELOPER_DOCUMENTATION (Implementation)
-    │       ├──→ API_DOCUMENTATION (API Spec)
-    │       └──→ DATABASE_DESIGN (Data Model)
-    │
-    ├──→ DESIGN_SYSTEM (Visual Design)
-    │       │
-    │       ├──→ UI_UX_DOCUMENTATION (UX Patterns)
-    │       └──→ UX_IMPROVEMENT_PLAN (Future Enhancements)
-    │
-    └──→ COMPONENT_ARCHITECTURE (Component Structure)
-            │
-            └──→ JSP_DEVELOPER_DOCUMENTATION (JSP Implementation)
+design plan/
+├── README.md                        ← You are here
+├── DIRECTORY_STRUCTURE_REVIEW.md    ← Audit log of structural decisions
+├── en/                              ← Primary language (detailed)
+│   ├── 1_strategy/                  ← Roadmaps & intent
+│   ├── 2_architecture/              ← Systems, specs, tokens
+│   ├── 3_execution/                 ← Migration logs & outcomes
+│   ├── 4_reviews/                   ← Audits & findings
+│   └── 5_reference/                 ← Source references (assignment brief, etc.)
+├── ja/                              ← Japanese summaries
+└── ko/                              ← Korean summaries
 ```
 
----
+### English Collections
 
-## 📖 Quick Start Guide
+| Folder | Purpose | Representative Documents |
+|--------|---------|--------------------------|
+| `1_strategy/` | Vision, refactoring intent, UX playbooks | `UX_IMPROVEMENT_PLAN.en.md`, `FRONTEND_REFACTORING_EXECUTION.en.md`, `FRONTEND_REFACTORING_SESSION_SUMMARY.en.md`, `ATOMIC_DESIGN_IMPLEMENTATION_PLAN.en.md`, `41025_ISD_TEST01.md` |
+| `2_architecture/` | Source-of-truth specs (design tokens, APIs, DB) | `DESIGN_SYSTEM.en.md`, `MODERN_DESIGN_SYSTEM.en.md`, `COMPONENT_ARCHITECTURE.en.md`, `API_DOCUMENTATION.en.md`, `DATABASE_DESIGN.en.md`, `COLOR_REFACTORING_GUIDE.en.md`, `UI_UX_DOCUMENTATION.en.md`, `41025_ISD_TEST02.md` |
+| `3_execution/` | What actually shipped—migration guides, completion memos | `ATOMIC_DESIGN_EXECUTION_SUMMARY.en.md`, `ATOMIC_DESIGN_MIGRATION_GUIDE.en.md`, `FRONTEND_REFACTORING_COMPLETE.en.md`, `MIGRATION_COMPLETE.en.md`, `DEDUPLICATION_SUMMARY.en.md`, `CLEANUP_SUMMARY.en.md` |
+| `4_reviews/` | Independent assessments and QA | `CSS_REVIEW_REPORT.en.md`, `FRONTEND_REVIEW_REPORT.en.md`, `ATOMIC_COMPONENTS_CSS_REVIEW.en.md` |
+| `5_reference/` | Canonical references | `41025 ISD Assignment 2 Autumn 2025.pdf` |
 
-### For Designers
-1. Start with **DESIGN_SYSTEM** for design tokens and components
-2. Review **UI_UX_DOCUMENTATION** for UX patterns
-3. Check **UX_IMPROVEMENT_PLAN** for future enhancements
-
-### For Developers
-1. Read **DEVELOPER_DOCUMENTATION** for overview
-2. Review **COMPONENT_ARCHITECTURE** for structure
-3. Reference **JSP_DEVELOPER_DOCUMENTATION** for JSP specifics
-4. Use **API_DOCUMENTATION** for API endpoints
-
-### For Architects
-1. Review **DATABASE_DESIGN** for data model
-2. Study **COMPONENT_ARCHITECTURE** for system structure
-3. Reference **DEVELOPER_DOCUMENTATION** for architecture patterns
+### Localised Sets
+- `ja/` and `ko/` mirror the architectural essentials (design system, developer guides, UX plan).  
+- Naming policy: `DOCUMENT_NAME.en.md` for English, `DOCUMENT_NAME.md` for translations inside their locale.
 
 ---
 
-## 🌐 Language Versions
+## 2. How to Use This Library
 
-All documents are available in three languages:
-- **English (en)**: Primary language, most comprehensive
-- **Japanese (ja)**: 日本語版
-- **Korean (ko)**: 한국어版
-
-File naming convention:
-- English: `DOCUMENT_NAME.en.md`
-- Japanese: `DOCUMENT_NAME.md` (in `ja/` directory)
-- Korean: `DOCUMENT_NAME.md` (in `ko/` directory)
+| Role | Read This First | Then... |
+|------|-----------------|---------|
+| **Product / UX** | `1_strategy/UX_IMPROVEMENT_PLAN.en.md` | `2_architecture/UI_UX_DOCUMENTATION.en.md`, `2_architecture/DESIGN_SYSTEM.en.md` |
+| **Front-end Dev** | `2_architecture/COMPONENT_ARCHITECTURE.en.md` | `2_architecture/JSP_DEVELOPER_DOCUMENTATION.en.md`, `3_execution/FRONTEND_REFACTORING_COMPLETE.en.md`, `4_reviews/CSS_REVIEW_REPORT.en.md` |
+| **Back-end / API** | `2_architecture/API_DOCUMENTATION.en.md` | `2_architecture/DATABASE_DESIGN.en.md`, `1_strategy/FRONTEND_REFACTORING_EXECUTION.en.md` |
+| **Program Manager** | `1_strategy/FRONTEND_REFACTORING_SESSION_SUMMARY.en.md` | `3_execution/MIGRATION_COMPLETE.en.md`, `4_reviews/FRONTEND_REVIEW_REPORT.en.md` |
 
 ---
 
-## 📝 Document Status
+## 3. Maintenance Protocol
 
-| Document | Version | Last Updated | Status |
-|----------|---------|--------------|--------|
-| DESIGN_SYSTEM | Current | 2025 | ✅ Active |
-| UI_UX_DOCUMENTATION | 2.0 | 2025 | ✅ Active |
-| UX_IMPROVEMENT_PLAN | 1.0 | 2025 | ✅ Active |
-| DEVELOPER_DOCUMENTATION | Current | 2025 | ✅ Active |
-| JSP_DEVELOPER_DOCUMENTATION | Current | 2025 | ✅ Active |
-| API_DOCUMENTATION | Current | 2025 | ✅ Active |
-| COMPONENT_ARCHITECTURE | Current | 2025 | ✅ Active |
-| DATABASE_DESIGN | Current | 2025 | ✅ Active |
-| FEATURES | 2.0 | 2025 | ✅ Active |
-| MODERN_DESIGN_SYSTEM | 1.0.0 | Dec 2024 | ⚠️ Review (may be outdated) |
+1. **Authoring** – Draft in English (`*.en.md`).  
+2. **Categorise** – Place under the correct `en/<n_category>/` folder.  
+3. **Cross-link** – Reference related docs in the “Related Work” section of each file.  
+4. **Translate** (if required) – Drop language-specific copies into `ja/` or `ko/`.  
+5. **Log Changes** – Update `DIRECTORY_STRUCTURE_REVIEW.md` when the information architecture changes.
+
+Update cadence:
+- Major roadmap/design shifts → immediately
+- Execution logs → at project closure
+- Reviews → per audit cycle
 
 ---
 
-## 🔄 Maintenance
-
-### Update Frequency
-- **Major Updates**: When significant features are added
-- **Minor Updates**: Monthly review for accuracy
-- **Critical Updates**: Immediately when breaking changes occur
-
-### Review Process
-1. Technical review by development team
-2. Design review by UX/UI team
-3. Documentation review by technical writer
-4. Final approval before publication
+## 4. Related Resources
+- `DIRECTORY_STRUCTURE_REVIEW.md` – historical rationale for the current layout.
+- `design plan/en/5_reference/` – assignment brief and any source mandates.
 
 ---
 
-## 📞 Contact
-
-For questions or suggestions about documentation:
-- Create an issue in the project repository
-- Contact the development team
-- Refer to individual document authors listed in each document
-
----
-
-**Last Updated**: 2025  
-**Maintained By**: IoTBay Development Team
+**Maintainer**: IoTBay Documentation Team  
+**Last reorganised**: 2025-?? (see git history for precise timestamp)
 

@@ -1,51 +1,29 @@
-<%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ page contentType="text/html; charset=UTF-8" language="java" isELIgnored="false" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
 
-<%
-    String contextPath = request.getContextPath();
-%>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Account - IoT Bay</title>
-    <meta name="description" content="Create your IoT Bay account to access exclusive IoT products and services">
-    <link rel="stylesheet" href="<%= contextPath %>/css/modern-theme.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-</head>
-<body class="min-h-screen bg-neutral-50">
-    <main class="min-h-screen flex items-center justify-center py-12 px-4">
-        <!-- Auth Card Container: PC max-width 440px/padding 40px, Mobile 100%/padding 20px -->
-        <div class="auth-card-container" style="max-width: 100%;">
-            <div class="auth-card" style="max-width: 100%;">
-                <div class="text-center mb-8">
-                    <h1 class="text-display-l font-bold text-neutral-900 mb-2">Join IoT Bay</h1>
-                    <p class="text-lg text-neutral-600">Create your account to start shopping for IoT solutions</p>
-                </div>
-                
-                <!-- Register Form Layout: 2-column on desktop -->
-                <div class="grid grid-cols-1 lg:grid-cols-2" style="gap: 12px;">
-                    <!-- Responsive gap: Mobile 12px, PC 24px -->
-                    <style>
-                        @media (min-width: 768px) {
-                            .grid { gap: 24px !important; }
-                        }
-                    </style>
-                    <!-- Benefits Section -->
-                    <aside class="space-y-6">
-                        <figure class="text-center">
-                            <img src="<%= contextPath %>/images/wewantyou.png" alt="Join IoT Bay community" class="w-full max-w-sm mx-auto mb-6 rounded-lg" />
-                            <figcaption class="sr-only">Illustration representing the IoT Bay community</figcaption>
+<t:base title="Create Account - IoT Bay" description="Create your IoT Bay account to access exclusive IoT products and services">
+    <main class="min-h-screen flex items-center justify-center bg-neutral-50 py-12 px-4">
+        <!-- Auth Card Container -->
+        <div class="w-full max-w-5xl">
+            <div class="bg-white rounded-2xl shadow-sm border border-neutral-200 overflow-hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-2">
+                    <!-- Benefits Section (Sidebar) -->
+                    <div class="bg-neutral-50 p-8 lg:p-12 border-b lg:border-b-0 lg:border-r border-neutral-200">
+                        <div class="text-center lg:text-left mb-8">
+                            <h1 class="text-3xl font-bold text-neutral-900 mb-2">Join IoT Bay</h1>
+                            <p class="text-lg text-neutral-600">Create your account to start shopping for IoT solutions</p>
+                        </div>
+                        
+                        <figure class="text-center mb-8">
+                            <img src="${pageContext.request.contextPath}/images/wewantyou.png" alt="Join IoT Bay community" class="w-full max-w-xs mx-auto rounded-lg shadow-sm" />
                         </figure>
                         
-                        <div class="rounded-2xl border border-neutral-200 bg-neutral-50 p-6">
-                            <h2 class="text-xl font-semibold text-neutral-900 mb-4">Why join IoT Bay?</h2>
+                        <div class="space-y-6">
+                            <h2 class="text-xl font-semibold text-neutral-900">Why join IoT Bay?</h2>
                             <dl class="space-y-4">
                                 <div class="flex items-start gap-3">
-                                    <svg class="w-5 h-5 text-success flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                    <svg class="w-5 h-5 text-success flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                                     </svg>
                                     <div>
@@ -54,7 +32,7 @@
                                     </div>
                                 </div>
                                 <div class="flex items-start gap-3">
-                                    <svg class="w-5 h-5 text-success flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                    <svg class="w-5 h-5 text-success flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                                     </svg>
                                     <div>
@@ -63,7 +41,7 @@
                                     </div>
                                 </div>
                                 <div class="flex items-start gap-3">
-                                    <svg class="w-5 h-5 text-success flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                    <svg class="w-5 h-5 text-success flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                                     </svg>
                                     <div>
@@ -71,18 +49,9 @@
                                         <dd class="text-sm text-neutral-600 mt-1">Fast and encrypted payment processing</dd>
                                     </div>
                                 </div>
-                                <div class="flex items-start gap-3">
-                                    <svg class="w-5 h-5 text-success flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                                    </svg>
-                                    <div>
-                                        <dt class="text-sm font-medium text-neutral-900">Order tracking</dt>
-                                        <dd class="text-sm text-neutral-600 mt-1">Real-time updates and order history</dd>
-                                    </div>
-                                </div>
                             </dl>
                         </div>
-                    </aside>
+                    </div>
                     
                     <!-- Registration Form -->
                     <div class="space-y-8">

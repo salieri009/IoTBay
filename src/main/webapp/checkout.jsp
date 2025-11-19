@@ -1,76 +1,64 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" isELIgnored="false" %>
-<%@ page import="java.util.*" %>
-<%@ page import="java.util.ArrayList" %>
-<%@ page import="javax.servlet.http.HttpSession" %>
-<%@ page import="model.*" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
 
-<%
-    HttpSession sessionObj = request.getSession(false);
-    User user = (sessionObj != null) ? (User) sessionObj.getAttribute("user") : null;
-    if (user == null) {
-        response.sendRedirect("login.jsp");
-        return;
-    }
-    
-    // Get cartItems from request attribute (set by CheckoutController)
-    List<CartItem> cartItems = (List<CartItem>) request.getAttribute("cartItems");
-    if (cartItems == null) {
-        // Fallback to session if not in request
-        cartItems = (sessionObj != null) ? (List<CartItem>) sessionObj.getAttribute("cartItems") : new ArrayList<>();
-    }
-    
-    // Calculate totals from request attributes if available
-    java.math.BigDecimal subtotalBD = (java.math.BigDecimal) request.getAttribute("subtotal");
-    java.math.BigDecimal shippingBD = (java.math.BigDecimal) request.getAttribute("shipping");
-    java.math.BigDecimal taxBD = (java.math.BigDecimal) request.getAttribute("tax");
-    java.math.BigDecimal totalBD = (java.math.BigDecimal) request.getAttribute("total");
-    
-    double totalAmount = 0.0;
-    if (cartItems != null && !cartItems.isEmpty()) {
-        for (CartItem item : cartItems) {
-            if (item != null && item.getProduct() != null && item.getProduct().getPrice() != null) {
-                totalAmount += item.getProduct().getPrice() * item.getQuantity();
-            }
-        }
-    }
-    
-    // Use values from request attributes if available (set by CheckoutController)
-    double subtotal = (subtotalBD != null) ? subtotalBD.doubleValue() : totalAmount;
-    double tax = (taxBD != null) ? taxBD.doubleValue() : (subtotal * 0.1);
-    double shipping = (shippingBD != null) ? shippingBD.doubleValue() : (subtotal >= 50.0 ? 0.0 : 15.0);
-    double total = (totalBD != null) ? totalBD.doubleValue() : (subtotal + tax + shipping);
-    
-    String error = (String) request.getAttribute("error");
-    String success = (String) request.getAttribute("success");
+<c:if test="${empty sessionScope.user}">
+    <c:redirect url="login.jsp" />
+</c:if>
 
-    // Expose values for EL/JSTL inside the layout body
-    request.setAttribute("cartItems", cartItems);
-    request.setAttribute("totalAmount", totalAmount);
-    request.setAttribute("subtotal", subtotal);
-    request.setAttribute("tax", tax);
-    request.setAttribute("shipping", shipping);
-    request.setAttribute("total", total);
-%>
+<%-- Data Preparation --%>
+<c:set var="cartItems" value="${requestScope.cartItems}" />
+<c:if test="${empty cartItems}">
+    <c:set var="cartItems" value="${sessionScope.cartItems}" />
+</c:if>
 
-<%
-    String totalFormatted = String.format("%1$,.2f", total);
-    String subtotalFormatted = String.format("%1$,.2f", totalAmount);
-    String taxFormatted = String.format("%1$,.2f", tax);
-    String shippingFormatted = shipping == 0.0 ? "Free" : String.format("%1$,.2f", shipping);
-    int itemCount = cartItems != null ? cartItems.size() : 0;
-    request.setAttribute("totalFormatted", totalFormatted);
-    request.setAttribute("subtotalFormatted", subtotalFormatted);
-    request.setAttribute("taxFormatted", taxFormatted);
-    request.setAttribute("shippingFormatted", shippingFormatted);
-    request.setAttribute("itemCount", itemCount);
-%>
+<c:set var="subtotal" value="${requestScope.subtotal}" />
+<c:if test="${empty subtotal}">
+    <c:set var="subtotal" value="0.0" />
+    <c:forEach items="${cartItems}" var="item">
+        <c:set var="subtotal" value="${subtotal + (item.product.price * item.quantity)}" />
+    </c:forEach>
+</c:if>
+
+<c:set var="shipping" value="${requestScope.shipping}" />
+<c:if test="${empty shipping}">
+    <c:set var="shipping" value="${subtotal >= 50 ? 0.0 : 15.0}" />
+</c:if>
+
+<c:set var="tax" value="${requestScope.tax}" />
+<c:if test="${empty tax}">
+    <c:set var="tax" value="${subtotal * 0.1}" />
+</c:if>
+
+<c:set var="total" value="${requestScope.total}" />
+<c:if test="${empty total}">
+    <c:set var="total" value="${subtotal + tax + shipping}" />
+</c:if>
+
+<c:set var="itemCount" value="${fn:length(cartItems)}" />
+
+<%-- Formatted Variables for View --%>
+<c:set var="totalFormatted">
+    <fmt:formatNumber value="${total}" pattern="#,##0.00" />
+</c:set>
+<c:set var="subtotalFormatted">
+    <fmt:formatNumber value="${subtotal}" pattern="#,##0.00" />
+</c:set>
+<c:set var="taxFormatted">
+    <fmt:formatNumber value="${tax}" pattern="#,##0.00" />
+</c:set>
+<c:set var="shippingFormatted">
+    <c:choose>
+        <c:when test="${shipping == 0}">Free</c:when>
+        <c:otherwise><fmt:formatNumber value="${shipping}" pattern="#,##0.00" /></c:otherwise>
+    </c:choose>
+</c:set>
 
 <t:base title="Checkout - IoT Bay" description="Secure checkout and order review">
     <main class="py-12">
-        <div class="container space-y-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
             <!-- Breadcrumb Navigation -->
             <nav aria-label="Breadcrumb">
                 <ol class="flex flex-wrap items-center gap-2 text-sm text-neutral-600">
