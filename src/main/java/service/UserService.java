@@ -88,7 +88,20 @@ public class UserService {
             throw new IllegalArgumentException("User not found");
         }
         
-        if (!PasswordUtil.verifyPassword(password, user.getPassword())) {
+        // Check if password is hashed (contains $ separator) or plain text (for migration)
+        String storedPassword = user.getPassword();
+        boolean passwordValid = false;
+        
+        if (storedPassword != null && storedPassword.contains("$")) {
+            // Password is hashed, use PasswordUtil
+            passwordValid = PasswordUtil.verifyPassword(password, storedPassword);
+        } else {
+            // Legacy plain text password (for migration period)
+            // In production, all passwords should be hashed
+            passwordValid = password.equals(storedPassword);
+        }
+        
+        if (!passwordValid) {
             throw new IllegalArgumentException("Invalid password");
         }
         

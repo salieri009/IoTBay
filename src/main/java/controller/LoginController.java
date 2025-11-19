@@ -48,9 +48,15 @@ public class LoginController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
+            // Debug: Log all parameters
+            logger.log(Level.FINE, "Login attempt - Parameters: email=" + request.getParameter("email") + 
+                    ", password=" + (request.getParameter("password") != null ? "***" : "null") +
+                    ", csrfToken=" + request.getParameter("csrfToken"));
+            
             // CSRF protection
             if (!utils.SecurityUtil.validateCSRFToken(request)) {
-                request.setAttribute("errorMessage", "Invalid security token. Please try again.");
+                logger.log(Level.WARNING, "CSRF validation failed for login attempt");
+                request.setAttribute("errorMessage", "Invalid security token. Please refresh the page and try again.");
                 request.getRequestDispatcher("/login.jsp").forward(request, response);
                 return;
             }
@@ -60,6 +66,9 @@ public class LoginController extends HttpServlet {
             
             // Validate parameters are not empty
             if (email == null || email.trim().isEmpty() || password == null || password.trim().isEmpty()) {
+                logger.log(Level.WARNING, "Login attempt with empty credentials - email: " + 
+                        (email != null ? email : "null") + ", password: " + 
+                        (password != null ? "provided" : "null"));
                 request.setAttribute("errorMessage", "Email and password are required");
                 request.getRequestDispatcher("/login.jsp").forward(request, response);
                 return;

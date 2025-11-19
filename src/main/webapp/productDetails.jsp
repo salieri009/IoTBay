@@ -6,7 +6,7 @@
     Product product = (Product) request.getAttribute("product");
     User currentUser = (User) session.getAttribute("user");
     
-    // 기본�??�정
+    // 기본�??�정
     String productName = "Sample IoT Device";
     String productDescription = "A high-quality IoT device for smart automation and monitoring. Features advanced connectivity, robust build quality, and seamless integration with popular IoT platforms.";
     double productPrice = 199.99;
@@ -14,7 +14,7 @@
     int productId = 0;
     String productImage = "images/sample1.png";
     
-    // product 객체가 ?�으�??�제 값을 ?�용
+    // product 객체가 ?�으�??�제 값을 ?�용
     if (product != null) {
         try {
             productName = product.getName() != null ? product.getName() : productName;
@@ -24,7 +24,7 @@
             productId = product.getId();
             productImage = product.getImageUrl() != null && !product.getImageUrl().isEmpty() ? product.getImageUrl() : productImage;
         } catch (Exception e) {
-            // 메소???�출 ?�패 ??기본�??�용
+            // 메소???�출 ?�패 ??기본�??�용
         }
     }
 
@@ -63,7 +63,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
                 <!-- Left Panel: Product Images (7 columns, sticky) -->
                 <article class="lg:col-span-7 space-y-12">
-                    <!-- Product Imagery -->
+                <!-- Product Imagery -->
                     <jsp:include page="/components/organisms/product-gallery/product-gallery.jsp">
                         <jsp:param name="mainImageUrl" value="${pageContext.request.contextPath}/${pd_image}" />
                         <jsp:param name="productName" value="${pd_name}" />
@@ -73,9 +73,9 @@
                     <section class="space-y-6">
                         <div class="flex items-center gap-3">
                             <span class="inline-flex items-center gap-2 rounded-full bg-brand-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-primary">
-                                <span class="inline-flex h-2 w-2 rounded-full bg-brand-primary"></span>
-                                Product overview
-                            </span>
+                            <span class="inline-flex h-2 w-2 rounded-full bg-brand-primary"></span>
+                            Product overview
+                        </span>
                         </div>
                         <h1 class="text-4xl font-bold text-neutral-900 tracking-tight">
                             ${pd_name}
@@ -91,27 +91,27 @@
                             <div class="bg-white rounded-xl border border-neutral-200 p-6 shadow-sm">
                                 <dt class="text-xs font-semibold uppercase tracking-wide text-neutral-500 mb-2">Price</dt>
                                 <dd class="text-3xl font-bold text-neutral-900">&#36;${pd_priceFormatted}</dd>
-                                <dd class="mt-1 text-xs text-neutral-500">All prices include GST.</dd>
-                            </div>
+                            <dd class="mt-1 text-xs text-neutral-500">All prices include GST.</dd>
+                        </div>
                             <div class="bg-white rounded-xl border border-neutral-200 p-6 shadow-sm">
                                 <dt class="text-xs font-semibold uppercase tracking-wide text-neutral-500 mb-2">Availability</dt>
-                                <c:choose>
-                                    <c:when test="${pd_inStock}">
-                                            <dd class="mt-2 text-sm font-semibold text-success" aria-live="polite">${pd_stockLabel}</dd>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <dd class="mt-2 text-sm font-semibold text-error" aria-live="polite">${pd_stockLabel}</dd>
-                                        </c:otherwise>
-                                    </c:choose>
-                                    <dd class="mt-1 text-xs text-neutral-500">Ships within 2-3 business days.</dd>
-                                </div>
+                            <c:choose>
+                                <c:when test="${pd_inStock}">
+                                    <dd class="mt-2 text-sm font-semibold text-success" aria-live="polite">${pd_stockLabel}</dd>
+                                </c:when>
+                                <c:otherwise>
+                                    <dd class="mt-2 text-sm font-semibold text-error" aria-live="polite">${pd_stockLabel}</dd>
+                                </c:otherwise>
+                            </c:choose>
+                            <dd class="mt-1 text-xs text-neutral-500">Ships within 2-3 business days.</dd>
+                        </div>
                             </div>
                             <div class="bg-white rounded-xl border border-neutral-200 p-6 shadow-sm">
                                 <dt class="text-xs font-semibold uppercase tracking-wide text-neutral-500 mb-2">Support</dt>
                                 <dd class="text-sm font-semibold text-neutral-900">24/7 specialist assistance</dd>
-                                <dd class="mt-1 text-xs text-neutral-500">Includes onboarding & integration guidance.</dd>
-                            </div>
-                        </dl>
+                            <dd class="mt-1 text-xs text-neutral-500">Includes onboarding & integration guidance.</dd>
+                        </div>
+                    </dl>
                     </section>
 
                     <!-- Technical Specifications (Collapsible) -->
@@ -142,12 +142,12 @@
                                             <dt class="font-medium text-neutral-900">Range</dt>
                                             <dd>Up to 100m (outdoor), 30m (indoor)</dd>
                                         </div>
-                                        <div>
+                            <div>
                                             <dt class="font-medium text-neutral-900">Encryption</dt>
                                             <dd>WPA2/WPA3 Personal</dd>
                                         </div>
-                                    </div>
                                 </div>
+                            </div>
                             </details>
 
                             <!-- Power -->
@@ -157,7 +157,7 @@
                                     <span class="transition-transform group-open:rotate-180">
                                         <svg class="w-5 h-5 text-neutral-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                                        </svg>
+                                            </svg>
                                     </span>
                                 </summary>
                                 <div class="px-4 pb-4 text-neutral-600 space-y-2">
@@ -185,7 +185,7 @@
                                     <span class="transition-transform group-open:rotate-180">
                                         <svg class="w-5 h-5 text-neutral-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                                        </svg>
+                                            </svg>
                                     </span>
                                 </summary>
                                 <div class="px-4 pb-4 text-neutral-600 space-y-2">
@@ -205,7 +205,7 @@
                                     </div>
                                 </div>
                             </details>
-                        </div>
+                            </div>
                     </section>
 
                     <!-- Use Cases -->
@@ -222,7 +222,7 @@
                                     <h3 class="font-semibold text-neutral-900">Smart Home Automation</h3>
                                     <p class="text-sm text-neutral-600 mt-1">Control lights, temperature, and security systems remotely.</p>
                                 </div>
-                            </div>
+                                </div>
                             <div class="flex gap-4 p-4 rounded-lg bg-white border border-neutral-200">
                                 <div class="flex-shrink-0 w-10 h-10 rounded-full bg-green-50 flex items-center justify-center text-green-600">
                                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -261,8 +261,8 @@
                                             <span class="sr-only">Increase quantity</span>
                                             +
                                         </button>
-                                    </div>
-                                </div>
+                        </div>
+                    </div>
 
                                 <div class="grid grid-cols-1 gap-3">
                                     <button type="submit" class="w-full flex justify-center items-center px-4 py-3 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-brand-primary hover:bg-brand-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors" ${!pd_inStock ? 'disabled' : ''}>
@@ -276,25 +276,25 @@
 
                             <div class="border-t border-neutral-200 pt-4">
                                 <ul class="space-y-3 text-sm text-neutral-600">
-                                    <li class="flex items-center gap-3">
+                            <li class="flex items-center gap-3">
                                         <div class="flex-shrink-0 w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center">
                                             <svg class="h-4 w-4 text-neutral-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                                            </svg>
+                                </svg>
                                         </div>
                                         <span>Secure payment processing</span>
-                                    </li>
-                                    <li class="flex items-center gap-3">
+                            </li>
+                            <li class="flex items-center gap-3">
                                         <div class="flex-shrink-0 w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center">
                                             <svg class="h-4 w-4 text-neutral-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-                                            </svg>
+                                </svg>
                                         </div>
                                         <span>Fast & reliable shipping</span>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
 
                         <!-- Specifications -->
                         <div class="bg-white rounded-xl border border-neutral-200 p-6 shadow-sm space-y-4">
@@ -397,42 +397,42 @@
                                 </summary>
                                 <div class="p-6 bg-white">
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                        <div>
+                                    <div>
                                             <h4 class="font-medium text-neutral-900 mb-4">Communication</h4>
                                             <dl class="space-y-3 text-sm">
                                                 <div class="flex justify-between border-b border-neutral-100 pb-2">
                                                     <dt class="text-neutral-500">Protocol</dt>
                                                     <dd class="font-medium text-neutral-900">WiFi 802.11 b/g/n/ac</dd>
-                                                </div>
+                                            </div>
                                                 <div class="flex justify-between border-b border-neutral-100 pb-2">
                                                     <dt class="text-neutral-500">Bluetooth</dt>
                                                     <dd class="font-medium text-neutral-900">5.0 LE</dd>
-                                                </div>
+                                            </div>
                                                 <div class="flex justify-between border-b border-neutral-100 pb-2">
                                                     <dt class="text-neutral-500">Range</dt>
                                                     <dd class="font-medium text-neutral-900">Up to 100m indoor</dd>
-                                                </div>
-                                            </dl>
-                                        </div>
-                                        <div>
+                                            </div>
+                                        </dl>
+                                    </div>
+                                    <div>
                                             <h4 class="font-medium text-neutral-900 mb-4">Power</h4>
                                             <dl class="space-y-3 text-sm">
                                                 <div class="flex justify-between border-b border-neutral-100 pb-2">
                                                     <dt class="text-neutral-500">Input</dt>
                                                     <dd class="font-medium text-neutral-900">DC 5V/2A</dd>
-                                                </div>
+                                            </div>
                                                 <div class="flex justify-between border-b border-neutral-100 pb-2">
                                                     <dt class="text-neutral-500">Consumption</dt>
                                                     <dd class="font-medium text-neutral-900">2.5W max</dd>
-                                                </div>
+                                            </div>
                                                 <div class="flex justify-between border-b border-neutral-100 pb-2">
                                                     <dt class="text-neutral-500">Battery Life</dt>
                                                     <dd class="font-medium text-neutral-900">6+ months</dd>
-                                                </div>
-                                            </dl>
-                                        </div>
+                                            </div>
+                                        </dl>
                                     </div>
                                 </div>
+                            </div>
                             </details>
                             
                             <details class="group border-b border-neutral-200 last:border-0">
@@ -441,38 +441,38 @@
                                     <span class="ml-6 flex-shrink-0">
                                         <svg class="w-5 h-5 text-neutral-500 transform group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                                        </svg>
+                                    </svg>
                                     </span>
                                 </summary>
                                 <div class="p-6 bg-white">
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                        <div>
+                                    <div>
                                             <h4 class="font-medium text-neutral-900 mb-4">Environmental</h4>
                                             <dl class="space-y-3 text-sm">
                                                 <div class="flex justify-between border-b border-neutral-100 pb-2">
                                                     <dt class="text-neutral-500">IP Rating</dt>
                                                     <dd class="font-medium text-neutral-900">IP65</dd>
-                                                </div>
+                                            </div>
                                                 <div class="flex justify-between border-b border-neutral-100 pb-2">
                                                     <dt class="text-neutral-500">Operating Temp</dt>
                                                     <dd class="font-medium text-neutral-900">-40°C to 85°C</dd>
-                                                </div>
-                                            </dl>
-                                        </div>
-                                        <div>
+                                            </div>
+                                        </dl>
+                                    </div>
+                                    <div>
                                             <h4 class="font-medium text-neutral-900 mb-4">Physical</h4>
                                             <dl class="space-y-3 text-sm">
                                                 <div class="flex justify-between border-b border-neutral-100 pb-2">
                                                     <dt class="text-neutral-500">Dimensions</dt>
                                                     <dd class="font-medium text-neutral-900">85 x 55 x 25 mm</dd>
-                                                </div>
+                                            </div>
                                                 <div class="flex justify-between border-b border-neutral-100 pb-2">
                                                     <dt class="text-neutral-500">Weight</dt>
                                                     <dd class="font-medium text-neutral-900">120g</dd>
-                                                </div>
-                                            </dl>
-                                        </div>
+                                            </div>
+                                        </dl>
                                     </div>
+                                </div>
                                 </div>
                             </details>
                         </div>
@@ -496,18 +496,18 @@
                                         <span class="font-medium text-neutral-900">AWS IoT Core</span>
                                     </div>
                                     <p class="text-sm text-neutral-600">Certified device, ready for provisioning.</p>
-                                </div>
+                                    </div>
                                 <div class="p-4 bg-yellow-50 rounded-lg border border-yellow-100">
                                     <div class="flex items-center gap-3 mb-2">
                                         <svg class="w-5 h-5 text-yellow-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
                                         <span class="font-medium text-neutral-900">Zigbee</span>
-                                    </div>
+                                </div>
                                     <p class="text-sm text-neutral-600">Requires separate bridge (not included).</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-
+                            
                     <!-- Documentation Tab -->
                     <div id="documentation" class="tab-panel hidden space-y-8" role="tabpanel" aria-labelledby="documentation-tab">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -519,7 +519,7 @@
                                         </svg>
                                     </div>
                                     <span class="text-xs font-semibold uppercase tracking-wide text-neutral-500">PDF</span>
-                                </div>
+                            </div>
                                 <h3 class="text-lg font-semibold text-neutral-900 mb-2">Quick Start Guide</h3>
                                 <p class="text-sm text-neutral-600">Step-by-step instructions to get your device up and running in minutes.</p>
                             </a>
@@ -528,17 +528,17 @@
                                     <div class="p-3 bg-brand-primary/10 rounded-lg text-brand-primary group-hover:bg-brand-primary group-hover:text-white transition-colors">
                                         <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-                                        </svg>
-                                    </div>
+                                                    </svg>
+                                            </div>
                                     <span class="text-xs font-semibold uppercase tracking-wide text-neutral-500">API</span>
-                                </div>
+                                        </div>
                                 <h3 class="text-lg font-semibold text-neutral-900 mb-2">Developer API Docs</h3>
                                 <p class="text-sm text-neutral-600">Complete API reference for integrating with custom applications.</p>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
         </div>
     </main>
 

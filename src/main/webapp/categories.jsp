@@ -44,7 +44,7 @@
                         <div class="category-card__image">
                             <img src="${pageContext.request.contextPath}/images/categories/smart-home.jpg" 
                                  alt="Smart Home Devices" 
-                                 class="w-full h-64 object-cover rounded-t-lg">
+                                 class="w-full h-48 object-cover rounded-t-lg">
                             <div class="category-card__overlay">
                                 <span class="category-card__count">120+ Products</span>
                             </div>
@@ -75,7 +75,7 @@
                         <div class="category-card__image">
                             <img src="${pageContext.request.contextPath}/images/categories/industrial.jpg" 
                                  alt="Industrial IoT Solutions" 
-                                 class="w-full h-64 object-cover rounded-t-lg">
+                                 class="w-full h-48 object-cover rounded-t-lg">
                             <div class="category-card__overlay">
                                 <span class="category-card__count">85+ Products</span>
                             </div>
@@ -106,7 +106,7 @@
                         <div class="category-card__image">
                             <img src="${pageContext.request.contextPath}/images/categories/agriculture.jpg" 
                                  alt="Agricultural IoT Solutions" 
-                                 class="w-full h-64 object-cover rounded-t-lg">
+                                 class="w-full h-48 object-cover rounded-t-lg">
                             <div class="category-card__overlay">
                                 <span class="category-card__count">65+ Products</span>
                             </div>
@@ -168,7 +168,7 @@
                         <div class="category-card__image">
                             <img src="${pageContext.request.contextPath}/images/categories/healthcare.jpg" 
                                  alt="Healthcare IoT Solutions" 
-                                 class="w-full h-64 object-cover rounded-t-lg">
+                                 class="w-full h-48 object-cover rounded-t-lg">
                             <div class="category-card__overlay">
                                 <span class="category-card__count">35+ Products</span>
                             </div>
@@ -199,7 +199,7 @@
                         <div class="category-card__image">
                             <img src="${pageContext.request.contextPath}/images/categories/transportation.jpg" 
                                  alt="Transportation IoT Solutions" 
-                                 class="w-full h-64 object-cover rounded-t-lg">
+                                 class="w-full h-48 object-cover rounded-t-lg">
                             <div class="category-card__overlay">
                                 <span class="category-card__count">28+ Products</span>
                             </div>

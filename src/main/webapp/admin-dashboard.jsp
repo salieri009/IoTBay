@@ -362,10 +362,10 @@
             </div>
             <nav style="display: flex; flex-direction: column; gap: 8px;">
                 <a href="admin-dashboard.jsp" style="color: #FFFFFF; padding: 12px; border-radius: 8px; text-decoration: none; background: rgba(255,255,255,0.1);">Dashboard</a>
-                <a href="/WEB-INF/views/manage-users.jsp" style="color: rgba(255,255,255,0.8); padding: 12px; border-radius: 8px; text-decoration: none;">User Management</a>
-                <a href="/WEB-INF/views/manage-products.jsp" style="color: rgba(255,255,255,0.8); padding: 12px; border-radius: 8px; text-decoration: none;">Product Management</a>
-                <a href="/WEB-INF/views/manage-suppliers.jsp" style="color: rgba(255,255,255,0.8); padding: 12px; border-radius: 8px; text-decoration: none;">Supplier Management</a>
-                <a href="/api/manage/access-logs" style="color: rgba(255,255,255,0.8); padding: 12px; border-radius: 8px; text-decoration: none;">Access Logs</a>
+                <a href="<%=request.getContextPath()%>/manage-users.jsp" style="color: rgba(255,255,255,0.8); padding: 12px; border-radius: 8px; text-decoration: none;">User Management</a>
+                <a href="<%=request.getContextPath()%>/manage-products.jsp" style="color: rgba(255,255,255,0.8); padding: 12px; border-radius: 8px; text-decoration: none;">Product Management</a>
+                <a href="<%=request.getContextPath()%>/manage-suppliers.jsp" style="color: rgba(255,255,255,0.8); padding: 12px; border-radius: 8px; text-decoration: none;">Supplier Management</a>
+                <a href="<%=request.getContextPath()%>/manage-access-logs.jsp" style="color: rgba(255,255,255,0.8); padding: 12px; border-radius: 8px; text-decoration: none;">Access Logs</a>
             </nav>
         </aside>
         
@@ -436,7 +436,7 @@
                 <!-- Supplier Information Management -->
                 <div class="management-card">
                     <div class="card-header">
-                        <h3 class="card-title">?è¢ Supplier Management</h3>
+                        <h3 class="card-title">?ÔøΩÔøΩ Supplier Management</h3>
                         <p class="card-description">Manage supplier information, contracts, and relationships</p>
                     </div>
                     <div class="card-body">
@@ -474,7 +474,7 @@
                 <!-- Data Management -->
                 <div class="management-card">
                     <div class="card-header">
-                        <h3 class="card-title">?íæ Data Management</h3>
+                        <h3 class="card-title">?ÔøΩÔøΩ Data Management</h3>
                         <p class="card-description">Bulk import/export operations and data analytics</p>
                     </div>
                     <div class="card-body">
@@ -512,7 +512,7 @@
                 <!-- BI & Reporting -->
                 <div class="management-card">
                     <div class="card-header">
-                        <h3 class="card-title">?ìä BI & Reporting</h3>
+                        <h3 class="card-title">?ÔøΩÔøΩ BI & Reporting</h3>
                         <p class="card-description">Business intelligence and advanced analytics</p>
                     </div>
                     <div class="card-body">
@@ -553,7 +553,7 @@
                 <!-- Inventory Management -->
                 <div class="management-card">
                     <div class="card-header">
-                        <h3 class="card-title">?ì¶ Inventory Control</h3>
+                        <h3 class="card-title">?ÔøΩÔøΩ Inventory Control</h3>
                         <p class="card-description">Real-time inventory tracking and management</p>
                     </div>
                     <div class="card-body">
@@ -591,7 +591,7 @@
                 <!-- Order Management -->
                 <div class="management-card">
                     <div class="card-header">
-                        <h3 class="card-title">?õçÔ∏?Order Management</h3>
+                        <h3 class="card-title">?ÔøΩÔøΩÔøΩ?Order Management</h3>
                         <p class="card-description">Comprehensive order processing and fulfillment</p>
                     </div>
                     <div class="card-body">
@@ -629,7 +629,7 @@
                 <!-- User Management -->
                 <div class="management-card">
                     <div class="card-header">
-                        <h3 class="card-title">?ë• User Administration</h3>
+                        <h3 class="card-title">?ÔøΩÔøΩ User Administration</h3>
                         <p class="card-description">User accounts, roles, and access control</p>
                     </div>
                     <div class="card-body">

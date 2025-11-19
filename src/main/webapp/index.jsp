@@ -125,9 +125,9 @@
                                         <a href="${pageContext.request.contextPath}/productDetails.jsp?id=2" class="btn btn--outline btn--sm">View Details</a>
                                         <button type="button" onclick="if(typeof OptimisticUI !== 'undefined' && typeof OptimisticUI.addToCart === 'function') { OptimisticUI.addToCart(2, 1); }" class="btn btn--primary btn--sm">Add to Cart</button>
                                     </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                         </div>
                         
                         <div class="l-grid__col-12 l-grid__col-md-6 l-grid__col-lg-3">

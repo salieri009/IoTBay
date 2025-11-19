@@ -441,5 +441,4 @@
             });
         });
     </script>
-</body>
-</html>
+</t:base>

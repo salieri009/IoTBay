@@ -220,7 +220,7 @@
                 <li class="rounded-2xl border border-neutral-700 bg-neutral-800 p-8 text-center" role="group" aria-label="Team member: Sarah Chen">
                     <figure class="mb-6">
                         <div class="w-32 h-32 bg-gradient-to-br from-brand-primary to-brand-secondary rounded-full mx-auto flex items-center justify-center">
-                            <img src="${pageContext.request.contextPath}/images/welcome.png" 
+                            <img src="${pageContext.request.contextPath}/images/team/sarah-chen.jpg" 
                                  alt="Sarah Chen, CEO & Founder" 
                                  class="w-28 h-28 rounded-full object-cover">
                         </div>
@@ -237,7 +237,7 @@
                 <li class="rounded-2xl border border-neutral-700 bg-neutral-800 p-8 text-center" role="group" aria-label="Team member: Marcus Wong">
                     <figure class="mb-6">
                         <div class="w-32 h-32 bg-gradient-to-br from-success to-success-600 rounded-full mx-auto flex items-center justify-center">
-                            <img src="${pageContext.request.contextPath}/images/sample1.png" 
+                            <img src="${pageContext.request.contextPath}/images/team/marcus-wong.jpg" 
                                  alt="Marcus Wong, Chief Technology Officer" 
                                  class="w-28 h-28 rounded-full object-cover">
                         </div>
@@ -254,7 +254,7 @@
                 <li class="rounded-2xl border border-neutral-700 bg-neutral-800 p-8 text-center" role="group" aria-label="Team member: Emily Rodriguez">
                     <figure class="mb-6">
                         <div class="w-32 h-32 bg-gradient-to-br from-warning to-warning-600 rounded-full mx-auto flex items-center justify-center">
-                            <img src="${pageContext.request.contextPath}/images/sample2.png" 
+                            <img src="${pageContext.request.contextPath}/images/team/emily-rodriguez.jpg" 
                                  alt="Emily Rodriguez, Head of Sales" 
                                  class="w-28 h-28 rounded-full object-cover">
                         </div>
@@ -271,7 +271,7 @@
                 <li class="rounded-2xl border border-neutral-700 bg-neutral-800 p-8 text-center" role="group" aria-label="Team member: David Kim">
                     <figure class="mb-6">
                         <div class="w-32 h-32 bg-gradient-to-br from-accent to-accent-600 rounded-full mx-auto flex items-center justify-center">
-                            <img src="${pageContext.request.contextPath}/images/sample3.png" 
+                            <img src="${pageContext.request.contextPath}/images/team/david-kim.jpg" 
                                  alt="David Kim, Head of Engineering" 
                                  class="w-28 h-28 rounded-full object-cover">
                         </div>
@@ -288,7 +288,7 @@
                 <li class="rounded-2xl border border-neutral-700 bg-neutral-800 p-8 text-center" role="group" aria-label="Team member: Lisa Thompson">
                     <figure class="mb-6">
                         <div class="w-32 h-32 bg-gradient-to-br from-info to-info-600 rounded-full mx-auto flex items-center justify-center">
-                            <img src="${pageContext.request.contextPath}/images/welcome.png" 
+                            <img src="${pageContext.request.contextPath}/images/team/lisa-thompson.jpg" 
                                  alt="Lisa Thompson, Customer Success Manager" 
                                  class="w-28 h-28 rounded-full object-cover">
                         </div>
@@ -305,7 +305,7 @@
                 <li class="rounded-2xl border border-neutral-700 bg-neutral-800 p-8 text-center" role="group" aria-label="Team member: Alex Patel">
                     <figure class="mb-6">
                         <div class="w-32 h-32 bg-gradient-to-br from-brand-secondary to-brand-secondary-600 rounded-full mx-auto flex items-center justify-center">
-                            <img src="${pageContext.request.contextPath}/images/sample1.png" 
+                            <img src="${pageContext.request.contextPath}/images/team/alex-patel.jpg" 
                                  alt="Alex Patel, DevOps Engineer" 
                                  class="w-28 h-28 rounded-full object-cover">
                         </div>

@@ -3,6 +3,9 @@
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
 
 <%
+    // Ensure session is created before generating CSRF token
+    HttpSession session = request.getSession(true);
+    
     // Generate CSRF token for form submission
     String csrfToken = utils.SecurityUtil.generateCSRFToken(request);
     pageContext.setAttribute("csrfToken", csrfToken);
@@ -27,53 +30,61 @@
                     </div>
                 </c:if>
                 
-                <form class="space-y-6" method="post" action="${pageContext.request.contextPath}/api/login" id="loginForm">
+                <form class="space-y-6" method="post" action="${pageContext.request.contextPath}/api/login" id="loginForm" enctype="application/x-www-form-urlencoded">
                     <input type="hidden" name="csrfToken" value="${csrfToken}" />
-                    <fieldset class="space-y-6">
-                        <legend class="sr-only">Sign in to your account</legend>
-                        
-                        <jsp:include page="/components/molecules/form-field/form-field.jsp">
-                            <jsp:param name="label" value="Email address" />
-                            <jsp:param name="name" value="email" />
-                            <jsp:param name="type" value="email" />
-                            <jsp:param name="placeholder" value="your.email@example.com" />
-                            <jsp:param name="required" value="true" />
-                            <jsp:param name="helpText" value="Enter the email address associated with your account" />
-                            <jsp:param name="id" value="email" />
-                        </jsp:include>
-                        
-                        <div class="space-y-1">
-                            <jsp:include page="/components/molecules/form-field/form-field.jsp">
-                                <jsp:param name="label" value="Password" />
-                                <jsp:param name="name" value="password" />
-                                <jsp:param name="type" value="password" />
-                                <jsp:param name="placeholder" value="********" />
-                                <jsp:param name="required" value="true" />
-                                <jsp:param name="id" value="password" />
-                            </jsp:include>
-                            <div class="flex justify-end">
-                                <a href="forgot-password.jsp" class="text-sm font-medium text-brand-primary hover:text-brand-primary-700 transition-colors">
-                                    Forgot password?
-                                </a>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-center">
-                            <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-brand-primary focus:ring-brand-primary border-neutral-300 rounded">
-                            <label for="remember-me" class="ml-2 block text-sm text-neutral-900">
-                                Remember me
-                            </label>
-                        </div>
-                    </fieldset>
                     
+                    <!-- Email Field -->
+                    <div class="form-field">
+                        <label for="email" class="block text-sm font-medium text-neutral-900 mb-1">
+                            Email address <span class="text-red-500">*</span>
+                        </label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            required 
+                            autocomplete="email"
+                            placeholder="your.email@example.com"
+                            class="input w-full px-4 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent"
+                            value="${param.email != null ? param.email : ''}" />
+                        <p class="mt-1 text-sm text-neutral-500">Enter the email address associated with your account</p>
+                    </div>
+                    
+                    <!-- Password Field -->
+                    <div class="form-field space-y-1">
+                        <label for="password" class="block text-sm font-medium text-neutral-900 mb-1">
+                            Password <span class="text-red-500">*</span>
+                        </label>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            required 
+                            autocomplete="current-password"
+                            placeholder="********"
+                            class="input w-full px-4 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent" />
+                        <div class="flex justify-end">
+                            <a href="forgot-password.jsp" class="text-sm font-medium text-brand-primary hover:text-brand-primary-700 transition-colors">
+                                Forgot password?
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <!-- Remember Me -->
+                    <div class="flex items-center">
+                        <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-brand-primary focus:ring-brand-primary border-neutral-300 rounded">
+                        <label for="remember-me" class="ml-2 block text-sm text-neutral-900">
+                            Remember me
+                        </label>
+                    </div>
+                    
+                    <!-- Submit Button -->
                     <div class="pt-2">
-                        <jsp:include page="/components/atoms/button/button.jsp">
-                            <jsp:param name="type" value="primary" />
-                            <jsp:param name="htmlType" value="submit" />
-                            <jsp:param name="text" value="Sign in" />
-                            <jsp:param name="fullWidth" value="true" />
-                            <jsp:param name="size" value="large" />
-                        </jsp:include>
+                        <button 
+                            type="submit" 
+                            class="w-full inline-flex items-center justify-center px-6 py-3 text-lg font-medium text-white bg-brand-primary rounded-md hover:bg-brand-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+                            Sign in
+                        </button>
                     </div>
                 </form>
                 

@@ -31,6 +31,9 @@ public class DIContainer {
             synchronized (lock) {
                 if (!initialized) {
                     try {
+                        // Initialize database (create tables and seed test data)
+                        utils.DatabaseInitializer.initialize();
+                        
                         connection = DBConnection.getConnection();
                         initializeDAOs();
                         initialized = true;
