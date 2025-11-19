@@ -46,8 +46,13 @@
                 </p>
             </div>
             
-            <!-- Skeleton Loading State -->
-            <div id="featured-products-skeleton" class="l-grid l-grid--gap-medium hidden" data-product-grid>
+            <!-- Loading State with ARIA -->
+            <div id="featured-products-skeleton" 
+                 class="l-grid l-grid--gap-medium hidden" 
+                 data-product-grid
+                 role="status" 
+                 aria-live="polite" 
+                 aria-label="Loading featured products">
                 <c:forEach begin="1" end="4" varStatus="loop">
                     <div class="l-grid__col-12 l-grid__col-md-6 l-grid__col-lg-3">
                         <jsp:include page="/components/atoms/skeleton/skeleton.jsp">
@@ -57,8 +62,13 @@
                 </c:forEach>
             </div>
             
-            <!-- Product Grid -->
-            <div class="l-grid l-grid--gap-medium" id="featured-products-grid" data-product-grid>
+            <!-- Product Grid with Status Announcement -->
+            <div class="l-grid l-grid--gap-medium" 
+                 id="featured-products-grid" 
+                 data-product-grid
+                 role="region"
+                 aria-label="Featured products"
+                 aria-live="polite">
                 <c:choose>
                     <c:when test="${featuredProducts != null && !empty featuredProducts}">
                         <c:forEach var="p" items="${featuredProducts}" end="3">
@@ -223,4 +233,103 @@
         <jsp:param name="placeholder" value="Enter your email address" />
         <jsp:param name="buttonText" value="Subscribe" />
     </jsp:include>
+    
+    <script>
+        // Nielsen Heuristics Improvements for index.jsp
+        document.addEventListener('DOMContentLoaded', function() {
+            // 1. Visibility of System Status - Show loading state
+            const skeleton = document.getElementById('featured-products-skeleton');
+            const grid = document.getElementById('featured-products-grid');
+            
+            // Show skeleton initially if products are loading
+            if (skeleton && grid && grid.children.length === 0) {
+                skeleton.classList.remove('hidden');
+                // Announce loading to screen readers
+                const liveRegion = document.getElementById('aria-live-announcements');
+                if (liveRegion) {
+                    liveRegion.textContent = 'Loading featured products...';
+                }
+            }
+            
+            // Hide skeleton when products load
+            if (grid && grid.children.length > 0 && skeleton) {
+                skeleton.classList.add('hidden');
+                const liveRegion = document.getElementById('aria-live-announcements');
+                if (liveRegion) {
+                    liveRegion.textContent = `Loaded ${grid.children.length} featured products`;
+                }
+            }
+            
+            // 7. Flexibility and Efficiency - Keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                // Don't trigger if user is typing in an input
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+                    return;
+                }
+                
+                // '/' key focuses search
+                if (e.key === '/' && !e.ctrlKey && !e.metaKey) {
+                    e.preventDefault();
+                    const searchInput = document.querySelector('input[type="search"], input[name="search"], #search');
+                    if (searchInput) {
+                        searchInput.focus();
+                    }
+                }
+                
+                // 'b' key goes to browse
+                if (e.key === 'b' || e.key === 'B') {
+                    e.preventDefault();
+                    window.location.href = '${pageContext.request.contextPath}/browse.jsp';
+                }
+            });
+            
+            // 6. Recognition Rather Than Recall - Add to cart feedback
+            document.addEventListener('click', function(e) {
+                const addToCartBtn = e.target.closest('button[onclick*="addToCart"], .btn[onclick*="addToCart"]');
+                if (addToCartBtn) {
+                    const productName = addToCartBtn.closest('[data-product-name]')?.getAttribute('data-product-name') || 'product';
+                    
+                    // Show optimistic feedback
+                    const toast = document.getElementById('toast-container');
+                    if (toast) {
+                        const toastEl = document.createElement('div');
+                        toastEl.className = 'bg-success text-white px-4 py-3 rounded-lg shadow-lg flex items-center gap-2';
+                        toastEl.innerHTML = `
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                            </svg>
+                            <span>Added "${productName}" to cart</span>
+                        `;
+                        toastEl.setAttribute('role', 'status');
+                        toastEl.setAttribute('aria-live', 'polite');
+                        toast.appendChild(toastEl);
+                        
+                        // Announce to screen readers
+                        const liveRegion = document.getElementById('aria-live-announcements');
+                        if (liveRegion) {
+                            liveRegion.textContent = `Added ${productName} to cart`;
+                        }
+                        
+                        // Remove after 3 seconds
+                        setTimeout(() => {
+                            toastEl.remove();
+                        }, 3000);
+                    }
+                }
+            });
+            
+            // 3. User Control and Freedom - Add skip to main content
+            const skipLink = document.querySelector('.skip-link[href="#main-content"]');
+            if (skipLink) {
+                skipLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const mainContent = document.getElementById('main-content');
+                    if (mainContent) {
+                        mainContent.focus();
+                        mainContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+            }
+        });
+    </script>
 </t:base>

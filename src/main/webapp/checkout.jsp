@@ -1077,5 +1077,172 @@
                 reviewCountry.textContent = countryNames[country] || country;
             }
         }
+        
+        // Nielsen Heuristics Improvements for checkout.jsp
+        document.addEventListener('DOMContentLoaded', function() {
+            // 1. Visibility of System Status - Progress indicator
+            const progressSteps = document.querySelectorAll('[data-step]');
+            const currentStep = document.querySelector('[data-step].active, [data-step][aria-current="step"]');
+            
+            if (progressSteps.length > 0) {
+                // Update progress indicator
+                const stepNumber = currentStep ? parseInt(currentStep.getAttribute('data-step')) : 1;
+                const progressPercent = (stepNumber / progressSteps.length) * 100;
+                
+                // Announce progress to screen readers
+                const liveRegion = document.getElementById('aria-live-announcements');
+                if (liveRegion) {
+                    liveRegion.textContent = `Checkout step ${stepNumber} of ${progressSteps.length}`;
+                }
+            }
+            
+            // 5. Error Prevention - Form validation with inline feedback
+            const checkoutForm = document.querySelector('form[action*="checkout"], form[action*="order"]');
+            if (checkoutForm) {
+                checkoutForm.addEventListener('submit', function(e) {
+                    const requiredFields = checkoutForm.querySelectorAll('[required]');
+                    let isValid = true;
+                    let firstInvalid = null;
+                    
+                    requiredFields.forEach(field => {
+                        if (!field.value.trim()) {
+                            isValid = false;
+                            field.classList.add('border-error', 'border-2');
+                            field.setAttribute('aria-invalid', 'true');
+                            
+                            // Show error message
+                            let errorMsg = field.parentElement.querySelector('.field-error');
+                            if (!errorMsg) {
+                                errorMsg = document.createElement('div');
+                                errorMsg.className = 'field-error text-sm text-error mt-1';
+                                errorMsg.setAttribute('role', 'alert');
+                                field.parentElement.appendChild(errorMsg);
+                            }
+                            errorMsg.textContent = 'This field is required';
+                            
+                            if (!firstInvalid) {
+                                firstInvalid = field;
+                            }
+                        } else {
+                            field.classList.remove('border-error', 'border-2');
+                            field.setAttribute('aria-invalid', 'false');
+                            const errorMsg = field.parentElement.querySelector('.field-error');
+                            if (errorMsg) {
+                                errorMsg.remove();
+                            }
+                        }
+                    });
+                    
+                    if (!isValid) {
+                        e.preventDefault();
+                        if (firstInvalid) {
+                            firstInvalid.focus();
+                            firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            
+                            // Announce error
+                            const liveRegion = document.getElementById('aria-live-errors');
+                            if (liveRegion) {
+                                liveRegion.textContent = 'Please fill in all required fields before continuing';
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // 3. User Control and Freedom - Save draft functionality
+            const saveDraftBtn = document.createElement('button');
+            saveDraftBtn.type = 'button';
+            saveDraftBtn.className = 'btn btn--outline btn--sm mt-4';
+            saveDraftBtn.textContent = 'Save Draft';
+            saveDraftBtn.setAttribute('aria-label', 'Save checkout form as draft');
+            saveDraftBtn.addEventListener('click', function() {
+                const formData = new FormData(checkoutForm);
+                const draft = {};
+                formData.forEach((value, key) => {
+                    draft[key] = value;
+                });
+                localStorage.setItem('checkoutDraft', JSON.stringify(draft));
+                
+                // Show feedback
+                const toast = document.getElementById('toast-container');
+                if (toast) {
+                    const toastEl = document.createElement('div');
+                    toastEl.className = 'bg-success text-white px-4 py-3 rounded-lg shadow-lg';
+                    toastEl.textContent = 'Checkout draft saved';
+                    toastEl.setAttribute('role', 'status');
+                    toastEl.setAttribute('aria-live', 'polite');
+                    toast.appendChild(toastEl);
+                    setTimeout(() => toastEl.remove(), 3000);
+                }
+            });
+            
+            // Add save draft button if form exists
+            if (checkoutForm) {
+                const submitBtn = checkoutForm.querySelector('button[type="submit"]');
+                if (submitBtn) {
+                    submitBtn.parentElement.insertBefore(saveDraftBtn, submitBtn);
+                }
+            }
+            
+            // Load draft if exists
+            const savedDraft = localStorage.getItem('checkoutDraft');
+            if (savedDraft && checkoutForm) {
+                try {
+                    const draft = JSON.parse(savedDraft);
+                    Object.keys(draft).forEach(key => {
+                        const field = checkoutForm.querySelector(`[name="${key}"]`);
+                        if (field && !field.value) {
+                            field.value = draft[key];
+                        }
+                    });
+                } catch (e) {
+                    console.error('Error loading draft:', e);
+                }
+            }
+            
+            // 6. Recognition Rather Than Recall - Auto-fill from profile
+            const useProfileAddressBtn = document.createElement('button');
+            useProfileAddressBtn.type = 'button';
+            useProfileAddressBtn.className = 'btn btn--outline btn--sm mb-4';
+            useProfileAddressBtn.textContent = 'Use Profile Address';
+            useProfileAddressBtn.setAttribute('aria-label', 'Fill address from profile');
+            useProfileAddressBtn.addEventListener('click', function() {
+                // This would typically fetch from user profile
+                const profileAddress = {
+                    fullName: '${user.firstName} ${user.lastName}',
+                    address1: '${user.addressLine1}',
+                    address2: '${user.addressLine2}',
+                    city: '${user.city}',
+                    state: '${user.state}',
+                    postalCode: '${user.postalCode}'
+                };
+                
+                Object.keys(profileAddress).forEach(key => {
+                    const field = document.getElementById(key);
+                    if (field && profileAddress[key]) {
+                        field.value = profileAddress[key];
+                        field.dispatchEvent(new Event('change'));
+                    }
+                });
+            });
+            
+            const addressSection = document.querySelector('fieldset legend');
+            if (addressSection && addressSection.parentElement) {
+                addressSection.parentElement.insertBefore(useProfileAddressBtn, addressSection.parentElement.firstChild);
+            }
+            
+            // 7. Flexibility and Efficiency - Keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+                    return;
+                }
+                
+                // 's' key saves draft
+                if ((e.key === 's' || e.key === 'S') && !e.ctrlKey && !e.metaKey) {
+                    e.preventDefault();
+                    saveDraftBtn.click();
+                }
+            });
+        });
     </script>
 </t:base>

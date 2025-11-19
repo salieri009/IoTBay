@@ -4,7 +4,7 @@
 
 <%
     // Ensure session is created before generating CSRF token
-    HttpSession session = request.getSession(true);
+    request.getSession(true);
     
     // Generate CSRF token for form submission
     String csrfToken = utils.SecurityUtil.generateCSRFToken(request);
@@ -36,7 +36,7 @@
                     <!-- Email Field -->
                     <div class="form-field">
                         <label for="email" class="block text-sm font-medium text-neutral-900 mb-1">
-                            Email address <span class="text-red-500">*</span>
+                            Email address <span class="text-red-500" aria-label="required">*</span>
                         </label>
                         <input 
                             type="email" 
@@ -45,25 +45,43 @@
                             required 
                             autocomplete="email"
                             placeholder="your.email@example.com"
-                            class="input w-full px-4 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent"
+                            aria-describedby="email-help"
+                            aria-invalid="${not empty errorMessage ? 'true' : 'false'}"
+                            class="input w-full px-4 py-2 border ${not empty errorMessage ? 'border-red-300' : 'border-neutral-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent transition-colors"
                             value="${param.email != null ? param.email : ''}" />
-                        <p class="mt-1 text-sm text-neutral-500">Enter the email address associated with your account</p>
+                        <p id="email-help" class="mt-1 text-sm text-neutral-500">Enter the email address associated with your account</p>
                     </div>
                     
                     <!-- Password Field -->
                     <div class="form-field space-y-1">
                         <label for="password" class="block text-sm font-medium text-neutral-900 mb-1">
-                            Password <span class="text-red-500">*</span>
+                            Password <span class="text-red-500" aria-label="required">*</span>
                         </label>
-                        <input 
-                            type="password" 
-                            id="password" 
-                            name="password" 
-                            required 
-                            autocomplete="current-password"
-                            placeholder="********"
-                            class="input w-full px-4 py-2 border border-neutral-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent" />
-                        <div class="flex justify-end">
+                        <div class="relative">
+                            <input 
+                                type="password" 
+                                id="password" 
+                                name="password" 
+                                required 
+                                autocomplete="current-password"
+                                placeholder="********"
+                                aria-describedby="password-help"
+                                aria-invalid="${not empty errorMessage ? 'true' : 'false'}"
+                                class="input w-full px-4 py-2 border ${not empty errorMessage ? 'border-red-300' : 'border-neutral-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent transition-colors" />
+                            <button 
+                                type="button"
+                                id="togglePassword"
+                                class="absolute right-3 top-1/2 transform -translate-y-1/2 text-neutral-500 hover:text-neutral-700 focus:outline-none"
+                                aria-label="Toggle password visibility"
+                                tabindex="0">
+                                <svg id="eyeIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="flex justify-between items-center mt-1">
+                            <p id="password-help" class="text-sm text-neutral-500">Enter your account password</p>
                             <a href="forgot-password.jsp" class="text-sm font-medium text-brand-primary hover:text-brand-primary-700 transition-colors">
                                 Forgot password?
                             </a>
@@ -72,18 +90,26 @@
                     
                     <!-- Remember Me -->
                     <div class="flex items-center">
-                        <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-brand-primary focus:ring-brand-primary border-neutral-300 rounded">
+                        <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-brand-primary focus:ring-brand-primary border-neutral-300 rounded" aria-describedby="remember-help">
                         <label for="remember-me" class="ml-2 block text-sm text-neutral-900">
                             Remember me
                         </label>
                     </div>
+                    <p id="remember-help" class="sr-only">Keep me signed in on this device</p>
                     
                     <!-- Submit Button -->
                     <div class="pt-2">
                         <button 
                             type="submit" 
+                            id="submitBtn"
                             class="w-full inline-flex items-center justify-center px-6 py-3 text-lg font-medium text-white bg-brand-primary rounded-md hover:bg-brand-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
-                            Sign in
+                            <span id="submitText">Sign in</span>
+                            <span id="submitSpinner" class="hidden ml-2">
+                                <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                            </span>
                         </button>
                     </div>
                 </form>
@@ -107,4 +133,79 @@
             </div>
         </div>
     </main>
+    
+    <script>
+        // Password visibility toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const togglePassword = document.getElementById('togglePassword');
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = document.getElementById('eyeIcon');
+            
+            if (togglePassword && passwordInput) {
+                togglePassword.addEventListener('click', function() {
+                    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                    passwordInput.setAttribute('type', type);
+                    
+                    // Update icon
+                    if (type === 'text') {
+                        eyeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path>';
+                    } else {
+                        eyeIcon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>';
+                    }
+                });
+                
+                // Keyboard support
+                togglePassword.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        togglePassword.click();
+                    }
+                });
+            }
+            
+            // Form submission with loading state
+            const loginForm = document.getElementById('loginForm');
+            const submitBtn = document.getElementById('submitBtn');
+            const submitText = document.getElementById('submitText');
+            const submitSpinner = document.getElementById('submitSpinner');
+            
+            if (loginForm && submitBtn) {
+                loginForm.addEventListener('submit', function(e) {
+                    // Show loading state
+                    submitBtn.disabled = true;
+                    if (submitText) submitText.textContent = 'Signing in...';
+                    if (submitSpinner) submitSpinner.classList.remove('hidden');
+                    
+                    // Announce to screen readers
+                    const liveRegion = document.getElementById('aria-live-announcements');
+                    if (liveRegion) {
+                        liveRegion.textContent = 'Signing in, please wait...';
+                    }
+                });
+            }
+            
+            // Keyboard shortcut: Focus search on '/' key
+            document.addEventListener('keydown', function(e) {
+                // Don't trigger if user is typing in an input
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+                    return;
+                }
+                
+                // Focus email field on 'e' key
+                if (e.key === 'e' || e.key === 'E') {
+                    e.preventDefault();
+                    const emailInput = document.getElementById('email');
+                    if (emailInput) {
+                        emailInput.focus();
+                    }
+                }
+            });
+            
+            // Auto-focus email field on page load
+            const emailInput = document.getElementById('email');
+            if (emailInput && !emailInput.value) {
+                emailInput.focus();
+            }
+        });
+    </script>
 </t:base>

@@ -16,7 +16,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data Management | IoT Bay - Staff Portal</title>
-    <link rel="stylesheet" href="<%= contextPath %>/css/modern-theme.css">
+    <link rel="stylesheet" href="<%= contextPath %>/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="antialiased bg-neutral-50 text-neutral-900 min-h-screen flex flex-col">

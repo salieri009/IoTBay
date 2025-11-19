@@ -251,8 +251,12 @@
                 
                 <!-- Product Grid Area (Section 4.2) -->
                 <div class="lg:col-span-3">
-                    <!-- Skeleton Loading State (Section 3.2) -->
-                    <div id="products-skeleton" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 hidden">
+                    <!-- Skeleton Loading State (Section 3.2) - 1. Visibility of System Status -->
+                    <div id="products-skeleton" 
+                         class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 hidden"
+                         role="status"
+                         aria-live="polite"
+                         aria-label="Loading products">
                         <c:forEach begin="1" end="8" varStatus="loop">
                             <div class="animate-pulse bg-white rounded-xl border border-neutral-200 p-4 h-full">
                                 <div class="bg-neutral-200 h-48 rounded-lg mb-4"></div>
@@ -264,7 +268,11 @@
                     </div>
                     
                     <c:if test="${products != null && !empty products}">
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="products-grid">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" 
+                             id="products-grid"
+                             role="region"
+                             aria-label="Product results"
+                             aria-live="polite">
                             <c:forEach var="p" items="${products}">
                                 <c:set var="productId" value="${p.id}" />
                                 <c:set var="productName" value="${p.name}" />
@@ -593,5 +601,100 @@
                 });
             });
         });
+        
+        // Nielsen Heuristics Improvements for browse.jsp
+        document.addEventListener('DOMContentLoaded', function() {
+            // 1. Visibility of System Status - Show search/filter status
+            const resultsText = document.querySelector('[data-results-summary]');
+            const skeleton = document.getElementById('products-skeleton');
+            const grid = document.getElementById('products-grid');
+            
+            // Show loading state
+            if (skeleton && grid) {
+                // Hide skeleton when products load
+                if (grid.children.length > 0) {
+                    skeleton.classList.add('hidden');
+                    const liveRegion = document.getElementById('aria-live-announcements');
+                    if (liveRegion) {
+                        liveRegion.textContent = `Loaded ${grid.children.length} products`;
+                    }
+                }
+            }
+            
+            // 6. Recognition Rather Than Recall - Show active filters
+            const activeFilters = document.querySelectorAll('[data-filter-active="true"]');
+            if (activeFilters.length > 0) {
+                const filterSummary = document.createElement('div');
+                filterSummary.className = 'mb-4 p-3 bg-neutral-100 rounded-lg';
+                filterSummary.innerHTML = `
+                    <span class="text-sm font-medium">Active filters:</span>
+                    <div class="flex flex-wrap gap-2 mt-2">
+                        ${Array.from(activeFilters).map(f => 
+                            `<span class="inline-flex items-center gap-1 px-2 py-1 bg-white rounded text-sm">
+                                ${f.textContent}
+                                <button onclick="clearFilter('${f.getAttribute('data-filter-type')}')" 
+                                        class="text-neutral-500 hover:text-neutral-900" 
+                                        aria-label="Remove filter">×</button>
+                            </span>`
+                        ).join('')}
+                    </div>
+                `;
+                const gridContainer = grid?.parentElement;
+                if (gridContainer) {
+                    gridContainer.insertBefore(filterSummary, grid);
+                }
+            }
+            
+            // 7. Flexibility and Efficiency - Keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+                    return;
+                }
+                
+                // '/' focuses search
+                if (e.key === '/' && !e.ctrlKey && !e.metaKey) {
+                    e.preventDefault();
+                    const searchInput = document.querySelector('input[type="search"], input[name="keyword"]');
+                    if (searchInput) {
+                        searchInput.focus();
+                    }
+                }
+                
+                // 'f' opens filters
+                if ((e.key === 'f' || e.key === 'F') && !e.ctrlKey && !e.metaKey) {
+                    e.preventDefault();
+                    const filterBtn = document.getElementById('filter-trigger-mobile') || 
+                                     document.querySelector('[aria-label*="filter" i]');
+                    if (filterBtn) {
+                        filterBtn.click();
+                    }
+                }
+            });
+            
+            // 9. Help Users Recognize Errors - Better error messages
+            const errorMessages = document.querySelectorAll('.error-message, [role="alert"]');
+            errorMessages.forEach(error => {
+                if (!error.querySelector('.error-help')) {
+                    const helpText = document.createElement('div');
+                    helpText.className = 'error-help mt-2 text-sm text-neutral-600';
+                    helpText.innerHTML = `
+                        <p>Need help? <a href="${pageContext.request.contextPath}/help.jsp" class="text-brand-primary underline">Visit our help center</a></p>
+                    `;
+                    error.appendChild(helpText);
+                }
+            });
+        });
+        
+        function clearFilter(filterType) {
+            // Clear filter logic
+            const filterElement = document.querySelector(`[data-filter-type="${filterType}"]`);
+            if (filterElement) {
+                filterElement.setAttribute('data-filter-active', 'false');
+                // Trigger filter change
+                if (typeof handleFilterChange === 'function') {
+                    handleFilterChange();
+                }
+            }
+        }
     </script>
 </t:base>

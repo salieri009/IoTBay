@@ -276,14 +276,22 @@ public final class SecurityUtil {
             requestToken = request.getHeader("X-CSRF-Token");
         }
         
-        // If no token in session, this might be the first request - allow it but log
+        // If no token in session, this might be the first request
+        // For POST requests, we should have a token, so fail validation
+        // For GET requests, we can be more lenient
         if (sessionToken == null) {
-            logger.info("No CSRF token in session (first request), allowing but generating new token. Session: " + session.getId());
-            // Generate token for next request
-            generateCSRFToken(request);
-            // For first request without token, be lenient (development mode)
-            // In production, you might want to return false here
-            return requestToken == null; // Allow if no token provided (first request)
+            if ("POST".equalsIgnoreCase(request.getMethod())) {
+                // POST request without token in session - this is suspicious
+                logger.warning("CSRF validation failed: POST request without token in session. Session: " + session.getId());
+                // Generate token for next request
+                generateCSRFToken(request);
+                return false;
+            } else {
+                // GET request - generate token for next request
+                logger.info("No CSRF token in session (first GET request), generating new token. Session: " + session.getId());
+                generateCSRFToken(request);
+                return true; // Allow GET requests without token (first visit)
+            }
         }
         
         // If no token in request but session has token, fail validation

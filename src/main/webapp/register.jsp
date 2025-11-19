@@ -439,6 +439,134 @@
                     hideLoading(submitBtn);
                 }
             });
+            
+            // Nielsen Heuristics Improvements for register.jsp
+            // 5. Error Prevention - Password strength indicator
+            const passwordStrengthDiv = document.createElement('div');
+            passwordStrengthDiv.id = 'passwordStrength';
+            passwordStrengthDiv.className = 'mt-2';
+            passwordInput.parentElement.appendChild(passwordStrengthDiv);
+            
+            function updatePasswordStrengthIndicator(strength) {
+                const strengthLabels = {
+                    weak: { text: 'Weak', color: 'text-error', bg: 'bg-error' },
+                    medium: { text: 'Medium', color: 'text-warning', bg: 'bg-warning' },
+                    strong: { text: 'Strong', color: 'text-success', bg: 'bg-success' }
+                };
+                
+                const strengthInfo = strengthLabels[strength] || strengthLabels.weak;
+                passwordStrengthDiv.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <div class="flex-1 h-2 bg-neutral-200 rounded-full overflow-hidden">
+                            <div class="h-full ${strengthInfo.bg} transition-all duration-300" 
+                                 style="width: ${strength === 'weak' ? '33%' : strength === 'medium' ? '66%' : '100%'}"></div>
+                        </div>
+                        <span class="text-sm font-medium ${strengthInfo.color}">${strengthInfo.text}</span>
+                    </div>
+                    <p class="text-xs text-neutral-500 mt-1">Use 8+ characters with mix of letters, numbers, and symbols</p>
+                `;
+            }
+            
+            // 10. Help and Documentation - Contextual help tooltips
+            const helpIcon = document.createElement('button');
+            helpIcon.type = 'button';
+            helpIcon.className = 'inline-flex items-center justify-center w-5 h-5 rounded-full bg-neutral-100 text-neutral-600 hover:bg-neutral-200 ml-2';
+            helpIcon.setAttribute('aria-label', 'Password requirements help');
+            helpIcon.innerHTML = '<svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path></svg>';
+            
+            helpIcon.addEventListener('click', function() {
+                const tooltip = document.createElement('div');
+                tooltip.className = 'absolute z-50 w-64 p-3 bg-neutral-900 text-white text-sm rounded-lg shadow-xl';
+                tooltip.innerHTML = `
+                    <h4 class="font-semibold mb-2">Password Requirements:</h4>
+                    <ul class="space-y-1 list-disc list-inside">
+                        <li>At least 8 characters</li>
+                        <li>Mix of uppercase and lowercase</li>
+                        <li>At least one number</li>
+                        <li>Special characters recommended</li>
+                    </ul>
+                `;
+                tooltip.style.top = helpIcon.offsetTop + helpIcon.offsetHeight + 5 + 'px';
+                tooltip.style.left = helpIcon.offsetLeft + 'px';
+                document.body.appendChild(tooltip);
+                
+                setTimeout(() => tooltip.remove(), 5000);
+            });
+            
+            const passwordLabel = document.querySelector('label[for="password"]');
+            if (passwordLabel) {
+                passwordLabel.appendChild(helpIcon);
+            }
+            
+            // 1. Visibility of System Status - Registration progress
+            const registerForm = document.getElementById('registerForm');
+            if (registerForm) {
+                const progressBar = document.createElement('div');
+                progressBar.className = 'mb-6';
+                progressBar.innerHTML = `
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-medium text-neutral-700">Registration Progress</span>
+                        <span class="text-sm text-neutral-500" id="progressText">0%</span>
+                    </div>
+                    <div class="w-full h-2 bg-neutral-200 rounded-full overflow-hidden">
+                        <div id="progressBar" class="h-full bg-brand-primary transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                `;
+                registerForm.insertBefore(progressBar, registerForm.firstChild);
+                
+                // Update progress as user fills form
+                const requiredFields = registerForm.querySelectorAll('[required]');
+                function updateProgress() {
+                    let filled = 0;
+                    requiredFields.forEach(field => {
+                        if (field.value.trim()) filled++;
+                    });
+                    const percent = Math.round((filled / requiredFields.length) * 100);
+                    document.getElementById('progressBar').style.width = percent + '%';
+                    document.getElementById('progressText').textContent = percent + '%';
+                }
+                
+                requiredFields.forEach(field => {
+                    field.addEventListener('input', updateProgress);
+                    field.addEventListener('change', updateProgress);
+                });
+            }
+            
+            // 9. Help Users Recognize Errors - Better error recovery
+            const errorModal = document.getElementById('errorModal');
+            if (errorModal) {
+                const modalMessage = document.getElementById('modalMessage');
+                if (modalMessage) {
+                    // Add recovery suggestions to error messages
+                    const originalShowModal = showModal;
+                    showModal = function(message) {
+                        let enhancedMessage = message;
+                        
+                        if (message.includes('email') || message.includes('Email')) {
+                            enhancedMessage += '<br><br><strong>Did you mean to:</strong><ul class="list-disc list-inside mt-2"><li><a href="${pageContext.request.contextPath}/login.jsp" class="text-brand-primary underline">Log in instead?</a></li><li><a href="${pageContext.request.contextPath}/forgot-password.jsp" class="text-brand-primary underline">Reset your password?</a></li></ul>';
+                        } else if (message.includes('password')) {
+                            enhancedMessage += '<br><br><strong>Tips:</strong><ul class="list-disc list-inside mt-2"><li>Password must be at least 8 characters</li><li>Use a mix of letters, numbers, and symbols</li><li>Make sure both password fields match</li></ul>';
+                        }
+                        
+                        modalMessage.innerHTML = enhancedMessage;
+                        errorModal.classList.remove('hidden');
+                        errorModal.classList.add('flex');
+                    };
+                }
+            }
+            
+            // 7. Flexibility and Efficiency - Keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+                    return;
+                }
+                
+                // 'h' key shows help
+                if ((e.key === 'h' || e.key === 'H') && !e.ctrlKey && !e.metaKey) {
+                    e.preventDefault();
+                    helpIcon.click();
+                }
+            });
         });
     </script>
 </t:base>
