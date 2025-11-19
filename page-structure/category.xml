@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  {IoTBay Category Pages Structure}
+  {This XML describes category pages: categories.jsp, category-industrial.jsp, etc.}
+  {Purpose: Document category browsing and filtering structure}
+-->
+<pages name="categories" type="category-pages">
+  
+  <!-- {Main Categories Page} -->
+  <page name="categories-main" jsp-file="categories.jsp">
+    
+    <metadata>
+      <title>Product Categories - IoTBay</title>
+      <description>Browse IoT products by category</description>
+      <route>/categories</route>
+      <template>t:base</template>
+    </metadata>
+
+    <structure>
+      
+      <!-- {Page Header} -->
+      <section name="page-header">
+        <breadcrumb>
+          <item name="Home" route="/"/>
+          <item name="Categories" active="true"/>
+        </breadcrumb>
+        <title>Product Categories</title>
+        <description>Explore our wide range of IoT devices and components</description>
+      </section>
+
+      <!-- {Category Grid} -->
+      <section name="category-grid">
+        
+        <categories-grid columns="2" responsive="true">
+          <!-- {2 columns on desktop, 1 on mobile} -->
+          
+          <category-card name="industrial" route="/category-industrial">
+            <image source="/images/categories/industrial.jpg" alt="Industrial IoT"/>
+            <title>Industrial</title>
+            <description>Industrial automation and monitoring solutions for manufacturing and production</description>
+            <product-count>{productCount} products</product-count>
+            <!-- {Number of products in this category} -->
+            <features>
+              <feature>Automation Systems</feature>
+              <feature>Monitoring Sensors</feature>
+              <feature>Control Systems</feature>
+            </features>
+          </category-card>
+          
+          <category-card name="warehouse" route="/category-warehouse">
+            <image source="/images/categories/warehouse.jpg" alt="Warehouse IoT"/>
+            <title>Warehouse</title>
+            <description>Warehouse management and logistics IoT solutions</description>
+            <product-count>{productCount} products</product-count>
+            <features>
+              <feature>Inventory Tracking</feature>
+              <feature>Asset Management</feature>
+              <feature>Logistics Solutions</feature>
+            </features>
+          </category-card>
+          
+          <category-card name="agriculture" route="/category-agriculture">
+            <image source="/images/categories/agriculture.jpg" alt="Agricultural IoT"/>
+            <title>Agriculture</title>
+            <description>Smart farming and agricultural monitoring solutions</description>
+            <product-count>{productCount} products</product-count>
+            <features>
+              <feature>Soil Monitoring</feature>
+              <feature>Crop Management</feature>
+              <feature>Livestock Tracking</feature>
+            </features>
+          </category-card>
+          
+          <category-card name="smarthome" route="/category-smarthome">
+            <image source="/images/categories/smarthome.jpg" alt="Smart Home IoT"/>
+            <title>Smart Home</title>
+            <description>Home automation and smart living solutions</description>
+            <product-count>{productCount} products</product-count>
+            <features>
+              <feature>Home Automation</feature>
+              <feature>Security Systems</feature>
+              <feature>Energy Management</feature>
+            </features>
+          </category-card>
+          
+        </categories-grid>
+        
+      </section>
+
+    </structure>
+
+  </page>
+
+  <!-- {Individual Category Page - Example: Industrial} -->
+  <page name="category-industrial" jsp-file="category-industrial.jsp">
+    
+    <metadata>
+      <title>Industrial IoT Products - IoTBay</title>
+      <description>Browse industrial automation and monitoring IoT devices</description>
+      <route>/category-industrial</route>
+      <template>t:base</template>
+    </metadata>
+
+    <structure>
+      
+      <!-- {Category Header} -->
+      <section name="category-header">
+        <breadcrumb>
+          <item name="Home" route="/"/>
+          <item name="Categories" route="/categories"/>
+          <item name="Industrial" active="true"/>
+        </breadcrumb>
+        
+        <category-hero>
+          <image source="/images/categories/industrial-hero.jpg" alt="Industrial IoT"/>
+          <title>Industrial IoT Solutions</title>
+          <description>Advanced automation and monitoring systems for industrial applications</description>
+        </category-hero>
+      </section>
+
+      <!-- {Category Content - Similar to Browse Page} -->
+      <section name="category-content" type="two-column">
+        
+        <!-- {Left Column: Filters} -->
+        <column name="filters" width="25%">
+          <!-- {Category-specific filters} -->
+          <filter-section name="industrial-filters">
+            <title>Filter Products</title>
+            
+            <filter-group name="subcategory">
+              <title>Subcategory</title>
+              <options>
+                <option value="automation">Automation Systems</option>
+                <option value="monitoring">Monitoring Sensors</option>
+                <option value="control">Control Systems</option>
+                <option value="safety">Safety Systems</option>
+              </options>
+            </filter-group>
+            
+            <filter-group name="protocol">
+              <title>Communication Protocol</title>
+              <options>
+                <option value="modbus">Modbus</option>
+                <option value="profibus">Profibus</option>
+                <option value="ethernet">Industrial Ethernet</option>
+                <option value="wireless">Wireless</option>
+              </options>
+            </filter-group>
+            
+            <filter-group name="voltage">
+              <title>Voltage</title>
+              <options>
+                <option value="12v">12V DC</option>
+                <option value="24v">24V DC</option>
+                <option value="110v">110V AC</option>
+                <option value="220v">220V AC</option>
+              </options>
+            </filter-group>
+            
+            <filter-group name="environmental">
+              <title>Environmental Rating</title>
+              <options>
+                <option value="ip65">IP65</option>
+                <option value="ip67">IP67</option>
+                <option value="ip68">IP68</option>
+                <option value="nema4">NEMA 4</option>
+              </options>
+            </filter-group>
+            
+          </filter-section>
+        </column>
+
+        <!-- {Right Column: Product Grid} -->
+        <column name="products" width="75%">
+          
+          <!-- {Toolbar} -->
+          <toolbar>
+            <results-count>
+              <!-- {Showing X products in Industrial category} -->
+            </results-count>
+            <sort-options>
+              <!-- {Sort by: Price, Name, Newest, Rating} -->
+            </sort-options>
+            <view-toggle>
+              <!-- {Grid/List view toggle} -->
+            </view-toggle>
+          </toolbar>
+
+          <!-- {Product Grid} -->
+          <product-grid columns="3" responsive="true">
+            <!-- {Same product card structure as browse page} -->
+            <products>
+              <product-card>
+                <!-- {Product card component} -->
+              </product-card>
+            </products>
+          </product-grid>
+
+          <!-- {Pagination} -->
+          <pagination>
+            <!-- {Pagination controls} -->
+          </pagination>
+
+        </column>
+
+      </section>
+
+      <!-- {Category Information Section} -->
+      <section name="category-info">
+        <info-card>
+          <title>About Industrial IoT</title>
+          <content>
+            <!-- {Educational content about industrial IoT} -->
+            <paragraph>
+              Industrial IoT (IIoT) solutions enable manufacturers to optimize operations, 
+              improve efficiency, and reduce downtime through real-time monitoring and automation.
+            </paragraph>
+            <features>
+              <feature>Real-time monitoring and data collection</feature>
+              <feature>Predictive maintenance capabilities</feature>
+              <feature>Integration with existing industrial systems</feature>
+              <feature>Scalable solutions for any operation size</feature>
+            </features>
+          </content>
+        </info-card>
+      </section>
+
+    </structure>
+
+  </page>
+
+  <!-- {Refactoring Context} -->
+  <refactoring-context>
+    <current-state>
+      <issues>
+        <issue>Category pages could have better visual hierarchy</issue>
+        <issue>Category-specific filters could be more prominent</issue>
+        <issue>No category description/educational content</issue>
+        <issue>Category images could be more engaging</issue>
+      </issues>
+    </current-state>
+    <target-state>
+      <improvements>
+        <improvement>Add category hero sections with engaging imagery</improvement>
+        <improvement>Implement category-specific filter presets</improvement>
+        <improvement>Add educational content about each category</improvement>
+        <improvement>Create category comparison feature</improvement>
+        <improvement>Add "Featured Products" section for each category</improvement>
+        <improvement>Implement category breadcrumb navigation</improvement>
+        <improvement>Mobile: Stack filters above products, collapsible filter sidebar</improvement>
+      </improvements>
+    </target-state>
+  </refactoring-context>
+
+  <dependencies>
+    <component name="header" file="components/header.jsp"/>
+    <component name="footer" file="components/footer.jsp"/>
+    <component name="category-card" file="components/category-card.jsp"/>
+    <component name="product-card" file="components/product-card.jsp"/>
+    <component name="filter-sidebar" file="components/filter-sidebar.jsp"/>
+    <layout name="base" file="WEB-INF/tags/base.tag"/>
+  </dependencies>
+
+</pages>
+

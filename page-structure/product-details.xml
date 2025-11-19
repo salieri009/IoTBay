@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  {IoTBay Product Details Page Structure}
+  {This XML describes productDetails.jsp - the detailed product view page}
+  {Purpose: Document product detail page structure including specs, images, reviews}
+-->
+<page name="product-details" type="product-detail" jsp-file="productDetails.jsp">
+  
+  <metadata>
+    <title>{Product Name} - IoTBay</title>
+    <description>{Product description for SEO}</description>
+    <route>/product/{productId}</route>
+    <template>t:base</template>
+  </metadata>
+
+  <structure>
+    
+    <!-- {Breadcrumb Navigation} -->
+    <section name="breadcrumb">
+      <path>
+        <item name="Home" route="/"/>
+        <item name="Browse" route="/browse"/>
+        <item name="{Category}" route="/category-{category}"/>
+        <item name="{Product Name}" active="true"/>
+      </path>
+    </section>
+
+    <!-- {Product Main Section} -->
+    <section name="product-main" type="two-column">
+      
+      <!-- {Left Column: Product Images} -->
+      <column name="images" width="50%">
+        <product-gallery>
+          <main-image>
+            <!-- {Large product image, zoomable} -->
+            <image source="/images/products/{productId}/main.jpg" alt="{productName}"/>
+            <zoom enabled="true"/>
+          </main-image>
+          <thumbnail-gallery>
+            <!-- {Thumbnail images for selection} -->
+            <thumbnail source="/images/products/{productId}/thumb1.jpg"/>
+            <thumbnail source="/images/products/{productId}/thumb2.jpg"/>
+            <thumbnail source="/images/products/{productId}/thumb3.jpg"/>
+          </thumbnail-gallery>
+        </product-gallery>
+      </column>
+
+      <!-- {Right Column: Product Info} -->
+      <column name="info" width="50%">
+        
+        <!-- {Product Header} -->
+        <product-header>
+          <name>{Product Name}</name>
+          <!-- {Main product title} -->
+          <category-badge>{Category Name}</category-badge>
+          <!-- {Category tag/badge} -->
+          <rating value="{rating}" count="{reviewCount}"/>
+          <!-- {Star rating and review count} -->
+        </product-header>
+
+        <!-- {Key Specifications - Always Visible} -->
+        <key-specs>
+          <!-- {Essential specs shown prominently} -->
+          <spec name="protocol" label="Protocol" value="{LoRaWAN|Zigbee|WiFi|Bluetooth}"/>
+          <spec name="voltage" label="Voltage" value="{12V|24V|etc}"/>
+          <spec name="range" label="Range" value="{100m|1km|etc}"/>
+        </key-specs>
+
+        <!-- {Pricing and Stock} -->
+        <pricing>
+          <price currency="USD" value="{price}"/>
+          <!-- {Current price} -->
+          <stock status="{inStock|lowStock|outOfStock}" quantity="{stockQuantity}"/>
+          <!-- {Stock status with quantity if available} -->
+          <shipping>
+            <!-- {Shipping information: free shipping, estimated delivery} -->
+            <info>Free shipping on orders over $50</info>
+            <estimated-delivery>Estimated delivery: 3-5 business days</estimated-delivery>
+          </shipping>
+        </pricing>
+
+        <!-- {Trust Indicators} -->
+        <trust-badges>
+          <!-- {Certifications, warranties, compatibility badges} -->
+          <badge type="certification" name="CE"/>
+          <badge type="certification" name="FCC"/>
+          <badge type="warranty" value="2-Year Warranty"/>
+          <badge type="compatibility" value="Works with Home Assistant"/>
+        </trust-badges>
+
+        <!-- {Add to Cart Section} -->
+        <add-to-cart>
+          <quantity-selector min="1" max="{stockQuantity}"/>
+          <!-- {Quantity input/selector} -->
+          <actions>
+            <button type="primary" text="Add to Cart" action="addToCart"/>
+            <button type="secondary" text="Buy Now" action="checkout"/>
+            <button type="icon" icon="heart" text="Add to Wishlist" action="addToWishlist"/>
+          </actions>
+        </add-to-cart>
+
+      </column>
+
+    </section>
+
+    <!-- {Product Details Tabs} -->
+    <section name="product-tabs" type="tabbed-content">
+      
+      <tabs>
+        <tab name="description" active="true">
+          <!-- {Product description tab} -->
+          <title>Description</title>
+          <content>
+            <description>{Full product description text}</description>
+            <features>
+              <!-- {Key features list} -->
+              <feature>{Feature 1}</feature>
+              <feature>{Feature 2}</feature>
+            </features>
+          </content>
+        </tab>
+
+        <tab name="specifications">
+          <!-- {Technical specifications tab - collapsible accordion} -->
+          <title>Specifications</title>
+          <content>
+            <spec-accordion>
+              <!-- {Organized specs in collapsible sections} -->
+              <section name="communication">
+                <title>Communication</title>
+                <specs>
+                  <spec name="protocol" value="{protocol}"/>
+                  <spec name="frequency" value="{frequency}"/>
+                  <spec name="range" value="{range}"/>
+                </specs>
+              </section>
+              <section name="power">
+                <title>Power Requirements</title>
+                <specs>
+                  <spec name="voltage" value="{voltage}"/>
+                  <spec name="current" value="{current}"/>
+                  <spec name="power-consumption" value="{consumption}"/>
+                </specs>
+              </section>
+              <section name="environmental">
+                <title>Environmental</title>
+                <specs>
+                  <spec name="operating-temp" value="{tempRange}"/>
+                  <spec name="humidity" value="{humidityRange}"/>
+                  <spec name="ip-rating" value="{ipRating}"/>
+                </specs>
+              </section>
+            </spec-accordion>
+          </content>
+        </tab>
+
+        <tab name="reviews">
+          <!-- {Customer reviews tab} -->
+          <title>Reviews ({reviewCount})</title>
+          <content>
+            <review-summary>
+              <!-- {Overall rating breakdown} -->
+              <average-rating value="{averageRating}"/>
+              <rating-distribution>
+                <!-- {5-star, 4-star, etc. distribution} -->
+              </rating-distribution>
+            </review-summary>
+            <reviews>
+              <review>
+                <author>{Reviewer Name}</author>
+                <rating value="{rating}"/>
+                <date>{Review Date}</date>
+                <text>{Review Text}</text>
+                <helpful count="{helpfulCount}"/>
+              </review>
+            </reviews>
+            <write-review>
+              <!-- {Form to write new review} -->
+            </write-review>
+          </content>
+        </tab>
+
+        <tab name="documentation">
+          <!-- {Technical documentation tab} -->
+          <title>Documentation</title>
+          <content>
+            <datasheet>
+              <!-- {PDF datasheet viewer} -->
+              <link href="/docs/{productId}/datasheet.pdf" text="Download Datasheet"/>
+            </datasheet>
+            <integration-guide>
+              <!-- {Integration guide with code examples} -->
+              <link href="/docs/{productId}/integration.md" text="Integration Guide"/>
+            </integration-guide>
+            <api-docs>
+              <!-- {API documentation if applicable} -->
+              <link href="/docs/{productId}/api.html" text="API Documentation"/>
+            </api-docs>
+          </content>
+        </tab>
+
+      </tabs>
+
+    </section>
+
+    <!-- {Related Products} -->
+    <section name="related-products">
+      <title>You May Also Like</title>
+      <product-grid columns="4">
+        <!-- {Grid of related/compatible products} -->
+        <products>
+          <product-card>
+            <!-- {Same structure as browse page product cards} -->
+          </product-card>
+        </products>
+      </product-grid>
+    </section>
+
+  </structure>
+
+  <!-- {Refactoring Context} -->
+  <refactoring-context>
+    <current-state>
+      <issues>
+        <issue>Specifications should use progressive disclosure (accordion)</issue>
+        <issue>Image gallery needs better mobile UX</issue>
+        <issue>Trust badges need more prominence</issue>
+        <issue>Reviews section needs filtering and sorting</issue>
+        <issue>Technical documentation should be embedded, not just links</issue>
+      </issues>
+    </current-state>
+    <target-state>
+      <improvements>
+        <improvement>Implement collapsible spec sections with "Expand All" option</improvement>
+        <improvement>Add image zoom and lightbox functionality</improvement>
+        <improvement>Embed PDF viewer for datasheets</improvement>
+        <improvement>Add code syntax highlighting for integration examples</improvement>
+        <improvement>Implement product comparison feature</improvement>
+        <improvement>Add compatibility checker (warns if incompatible with cart items)</improvement>
+      </improvements>
+    </target-state>
+  </refactoring-context>
+
+  <dependencies>
+    <component name="header" file="components/header.jsp"/>
+    <component name="footer" file="components/footer.jsp"/>
+    <component name="product-gallery" file="components/product-gallery.jsp"/>
+    <component name="spec-accordion" file="components/spec-accordion.jsp"/>
+    <component name="review-section" file="components/review-section.jsp"/>
+    <layout name="base" file="WEB-INF/tags/base.tag"/>
+  </dependencies>
+
+</page>
+

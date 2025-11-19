@@ -83,7 +83,8 @@
                 </ol>
             </nav>
 
-            <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,340px)]">
+            <!-- Optimized layout for 1920x1080: 280px sidebar, flexible main content -->
+            <div class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,280px)] xl:grid-cols-[minmax(0,1fr)_minmax(0,320px)]">
                 <div class="space-y-4">
                     <h1 class="text-display-m md:text-display-l font-bold text-neutral-900 leading-tight">
                         ${pageHeading}

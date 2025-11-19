@@ -5,20 +5,45 @@
 /* === DESIGN TOKENS === */
 :root {
   /* === BRAND COLORS === */
-  --brand-primary: #2563eb;      /* Vibrant Blue */
-  --brand-primary-50: #eff6ff;
-  --brand-primary-100: #dbeafe;
-  --brand-primary-200: #bfdbfe;
-  --brand-primary-300: #93c5fd;
-  --brand-primary-400: #60a5fa;
-  --brand-primary-500: #3b82f6;
-  --brand-primary-600: #2563eb;
-  --brand-primary-700: #1d4ed8;
-  --brand-primary-800: #1e40af;
-  --brand-primary-900: #1e3a8a;
+  /* Per UI_UXdoc.md Section 5.1 - Primary Blue (#0a95ff): Trust, technology, professionalism */
+  --brand-primary: #0a95ff;      /* Primary Blue per UI_UXdoc.md */
+  --brand-primary-50: #e6f5ff;
+  --brand-primary-100: #ccebff;
+  --brand-primary-200: #99d7ff;
+  --brand-primary-300: #66c3ff;
+  --brand-primary-400: #33afff;
+  --brand-primary-500: #0a95ff;
+  --brand-primary-600: #0873cc;
+  --brand-primary-700: #065999;
+  --brand-primary-800: #043966;
+  --brand-primary-900: #021a33;
   
-  --brand-secondary: #7c3aed;    /* Purple Accent */
-  --brand-accent: #06b6d4;       /* Cyan Highlight */
+  /* Per UI_UXdoc.md Section 5.1 - Secondary Green (#22c55e): Success, energy, innovation */
+  --brand-secondary: #22c55e;    /* Secondary Green per UI_UXdoc.md */
+  --brand-secondary-50: #f0fdf4;
+  --brand-secondary-100: #dcfce7;
+  --brand-secondary-200: #bbf7d0;
+  --brand-secondary-300: #86efac;
+  --brand-secondary-400: #4ade80;
+  --brand-secondary-500: #22c55e;
+  --brand-secondary-600: #16a34a;
+  --brand-secondary-700: #15803d;
+  --brand-secondary-800: #166534;
+  --brand-secondary-900: #14532d;
+  
+  /* Per UI_UXdoc.md Section 5.1 - Accent Orange (#f97316): Attention, warnings, CTAs */
+  --brand-accent: #f97316;       /* Accent Orange per UI_UXdoc.md */
+  --brand-accent-50: #fff7ed;
+  --brand-accent-100: #ffedd5;
+  --brand-accent-200: #fed7aa;
+  --brand-accent-300: #fdba74;
+  --brand-accent-400: #fb923c;
+  --brand-accent-500: #f97316;
+  --brand-accent-600: #ea580c;
+  --brand-accent-700: #c2410c;
+  --brand-accent-800: #9a3412;
+  --brand-accent-900: #7c2d12;
+  
   --brand-gradient: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
 
   /* === NEUTRAL SYSTEM === */
@@ -37,21 +62,22 @@
   --neutral-950: #020617;
 
   /* === SEMANTIC COLORS === */
-  --success: #10b981;
-  --success-light: #d1fae5;
-  --success-dark: #047857;
+  /* Per UI_UXdoc.md Section 5.1 - Semantic Colors */
+  --success: #22c55e; /* Green - Stock available, order confirmed */
+  --success-light: #dcfce7;
+  --success-dark: #16a34a;
   
-  --warning: #f59e0b;
-  --warning-light: #fef3c7;
-  --warning-dark: #d97706;
+  --warning: #f97316; /* Orange - Low stock, compatibility warnings */
+  --warning-light: #ffedd5;
+  --warning-dark: #ea580c;
   
-  --error: #ef4444;
+  --error: #ef4444; /* Red - Out of stock, errors */
   --error-light: #fee2e2;
   --error-dark: #dc2626;
   
-  --info: #3b82f6;
-  --info-light: #dbeafe;
-  --info-dark: #2563eb;
+  --info: #0a95ff; /* Blue - General information per UI_UXdoc.md */
+  --info-light: #e6f5ff;
+  --info-dark: #0873cc;
 
   /* === TYPOGRAPHY SYSTEM === */
   --font-sans: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -192,7 +218,7 @@
   --container-md: 768px;
   --container-lg: 1024px;
   --container-xl: 1280px;
-  --container-2xl: 1400px;
+  --container-2xl: 1440px; /* Optimized for 1920x1080 desktop resolution */
 }
 
 /* === DARK MODE SUPPORT === */
@@ -291,23 +317,23 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .text-display-xl {
-  font-size: var(--text-6xl);
+  font-size: var(--text-5xl); /* 48px per UI_UXdoc.md Section 5.2 */
   font-weight: var(--weight-black);
-  line-height: var(--leading-none);
+  line-height: 1.167; /* 56px / 48px = 1.167 per UI_UXdoc.md */
   letter-spacing: -0.025em;
 }
 
 .text-display-lg {
-  font-size: var(--text-5xl);
+  font-size: var(--text-4xl); /* 36px per UI_UXdoc.md Section 5.2 */
   font-weight: var(--weight-bold);
-  line-height: var(--leading-tight);
+  line-height: 1.222; /* 44px / 36px = 1.222 per UI_UXdoc.md */
   letter-spacing: -0.025em;
 }
 
 .text-display-md {
-  font-size: var(--text-4xl);
+  font-size: var(--text-3xl); /* 30px per UI_UXdoc.md Section 5.2 */
   font-weight: var(--weight-bold);
-  line-height: var(--leading-tight);
+  line-height: 1.267; /* 38px / 30px = 1.267 per UI_UXdoc.md */
   letter-spacing: -0.025em;
 }
 
@@ -315,6 +341,49 @@ h1, h2, h3, h4, h5, h6 {
   font-size: var(--text-3xl);
   font-weight: var(--weight-bold);
   line-height: var(--leading-tight);
+}
+
+/* Additional Typography Classes per UI_UXdoc.md Section 5.2 */
+.text-display-m {
+  font-size: var(--text-3xl); /* 30px per UI_UXdoc.md */
+  font-weight: var(--weight-bold);
+  line-height: 1.267; /* 38px / 30px */
+}
+
+.text-heading-l {
+  font-size: var(--text-2xl); /* 24px per UI_UXdoc.md */
+  font-weight: var(--weight-semibold);
+  line-height: 1.333; /* 32px / 24px */
+}
+
+.text-heading-m {
+  font-size: var(--text-xl); /* 20px per UI_UXdoc.md */
+  font-weight: var(--weight-semibold);
+  line-height: 1.4; /* 28px / 20px */
+}
+
+.text-body-l {
+  font-size: var(--text-lg); /* 18px per UI_UXdoc.md */
+  font-weight: var(--weight-normal);
+  line-height: 1.556; /* 28px / 18px */
+}
+
+.text-body-m {
+  font-size: var(--text-base); /* 16px per UI_UXdoc.md */
+  font-weight: var(--weight-normal);
+  line-height: 1.5; /* 24px / 16px */
+}
+
+.text-body-s {
+  font-size: var(--text-sm); /* 14px per UI_UXdoc.md */
+  font-weight: var(--weight-normal);
+  line-height: 1.429; /* 20px / 14px */
+}
+
+.text-caption {
+  font-size: var(--text-xs); /* 12px per UI_UXdoc.md */
+  font-weight: var(--weight-normal);
+  line-height: 1.333; /* 16px / 12px */
 }
 
 .text-xl { font-size: var(--text-xl); }
@@ -1260,6 +1329,103 @@ h1, h2, h3, h4, h5, h6 {
 @media (min-width: 1024px) {
   .footer-grid {
     grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-12);
+  }
+}
+
+/* Enhanced Footer Column Styling for Better Readability */
+.footer__column {
+  min-width: 0; /* Prevents overflow */
+  display: flex;
+  flex-direction: column;
+}
+
+.footer__column .footer__title {
+  font-size: 1.125rem;
+  line-height: 1.5rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.025em;
+}
+
+.footer__column .footer__links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.footer__column .footer__links li {
+  margin: 0;
+}
+
+.footer__column .footer__link {
+  display: inline-block;
+  padding: 0.25rem 0.25rem;
+  border-radius: 0.25rem;
+  transition: all 0.2s ease;
+  color: var(--neutral-400);
+  text-decoration: none;
+}
+
+.footer__column .footer__link:hover {
+  color: #ffffff;
+  background-color: rgba(10, 149, 255, 0.1);
+}
+
+.footer__column .footer__link:focus {
+  outline: 2px solid var(--brand-primary);
+  outline-offset: 2px;
+}
+
+/* Contact Section in Footer */
+.footer__contact {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer__contact address {
+  font-style: normal;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.footer__contact .flex {
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.footer__contact svg {
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+  color: var(--brand-primary);
+}
+
+/* Responsive Footer Column Adjustments */
+@media (max-width: 767px) {
+  .footer__column {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 1.5rem;
+  }
+  
+  .footer__column:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  
+  .footer__column .footer__title {
+    margin-bottom: 1rem;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .footer__column {
+    padding-right: 1rem;
   }
 }
 
@@ -2006,6 +2172,20 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
+/* Large Desktop (1920x1080) - Optimized for primary persona */
+@media (min-width: 1920px) {
+  .product-grid {
+    grid-template-columns: repeat(6, 1fr);
+    gap: var(--space-8);
+  }
+  
+  /* Optimized container padding for 1920x1080 */
+  .container {
+    padding-left: var(--space-12);
+    padding-right: var(--space-12);
+  }
+}
+
 .product-card {
   background-color: var(--neutral-0);
   border-radius: var(--radius-xl);
@@ -2020,11 +2200,39 @@ h1, h2, h3, h4, h5, h6 {
   transform: translateY(-4px);
 }
 
+.product-card__image-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1; /* Square images per UI_UXdoc.md Section 4.2 (300x300px) */
+  overflow: hidden;
+  background-color: var(--neutral-100);
+}
+
 .product-card__image {
   width: 100%;
-  height: 160px;
+  height: 100%;
   object-fit: cover;
   background-color: var(--neutral-100);
+  transition: transform var(--duration-300) var(--ease-out);
+}
+
+.product-card:hover .product-card__image {
+  transform: scale(1.05); /* Subtle zoom on hover per UI_UXdoc.md Section 6.1 */
+}
+
+/* Optimized for 1920x1080 desktop - larger product images */
+@media (min-width: 1920px) {
+  .product-card__image-container {
+    aspect-ratio: 1 / 1; /* Maintain square ratio, but larger on big screens */
+  }
+  
+  .product-card__body {
+    padding: var(--space-5); /* Increased padding for better spacing */
+  }
+  
+  .product-card__title {
+    font-size: var(--text-lg); /* Slightly larger title on large screens */
+  }
 }
 
 .product-card__body {

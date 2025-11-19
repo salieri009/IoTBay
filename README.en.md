@@ -10,14 +10,27 @@
 
 ## 📋 Project Information
 
-**Course**: 41025 Information Systems Development (ISD)  
+**Course Code**: 41025  
+**Course Name**: Introduction to Software Development  
+**Credit Points**: 6 Credit Points  
 **Assignment**: Assignment 2 - Autumn 2025  
 **Institution**: University of Technology Sydney (UTS)  
-**Project Type**: E-commerce Web Application for IoT Devices
+**Project Type**: E-commerce Web Application for IoT Devices  
+**Course Handbook**: [41025 - Introduction to Software Development](https://coursehandbook.uts.edu.au/subject/2026/41025)
 
 ---
 
-A modern, responsive web application for IoT device management and e-commerce, developed as part of **UTS (University of Technology Sydney) academic coursework (41025 ISD Assignment 2 Autumn 2025)**. Built with **JSP**, **Java MVC**, **Maven**, and **Jetty server**. Features a comprehensive design system, dark mode support, and responsive grid layouts.
+## 📚 Course Information
+
+This project is developed as part of **41025 - Introduction to Software Development** at the University of Technology Sydney (UTS).
+
+- **Course Code**: 41025
+- **Course Name**: Introduction to Software Development
+- **Credit Points**: 6 Credit Points
+- **Course Handbook**: [View Course Details](https://coursehandbook.uts.edu.au/subject/2026/41025)
+- **Assignment**: Assignment 2 - Autumn 2025
+
+A modern, responsive web application for IoT device management and e-commerce, developed as part of **UTS (University of Technology Sydney) academic coursework (41025 Introduction to Software Development - Assignment 2 Autumn 2025)**. Built with **JSP**, **Java MVC**, **Maven**, and **Jetty server**. Features a comprehensive design system, dark mode support, responsive grid layouts, and enterprise-grade security.
 
 ### Project Objectives
 
@@ -27,6 +40,7 @@ A modern, responsive web application for IoT device management and e-commerce, d
 - Implement secure user authentication and authorization
 - Create an intuitive and modern user interface
 - Demonstrate database design and data access patterns
+- Implement enterprise-grade security measures
 
 ---
 
@@ -36,11 +50,11 @@ A modern, responsive web application for IoT device management and e-commerce, d
 - [Quick Start](#quick-start)
 - [Project Structure](#project-structure)
 - [Design System](#design-system)
+- [Security](#security)
 - [Development](#development)
 - [Configuration](#configuration)
 - [Technology Stack](#technology-stack)
 - [License](#license)
-- [Contributing](#contributing)
 
 ---
 
@@ -71,6 +85,13 @@ A modern, responsive web application for IoT device management and e-commerce, d
 - **User Management**: Customer and staff account management
 - **Product Management**: Inventory and catalog management
 - **Data Management**: System data administration
+
+### Security Features
+- **Server-Side Validation**: Comprehensive input validation
+- **CSRF Protection**: Token-based protection
+- **Rate Limiting**: Request throttling
+- **Secure Error Handling**: Generic error messages
+- **Security Logging**: Audit trail for security events
 
 ---
 
@@ -122,16 +143,18 @@ A modern, responsive web application for IoT device management and e-commerce, d
 ```
 IoTBay/
 ├── src/main/java/
-│   ├── controller/           # Servlets (LoginController, etc.)
+│   ├── controller/           # Servlets (MVC Controllers)
 │   ├── dao/                  # Data Access Objects
 │   │   ├── stub/            # Stub implementations for testing
 │   │   └── impl/            # Database implementations
-│   └── model/               # JavaBeans (User, Product, Order)
+│   ├── model/               # JavaBeans (User, Product, Order)
+│   ├── service/             # Business Logic Layer
+│   ├── utils/               # Utility classes (Security, Validation, Error Handling)
+│   └── config/              # Configuration (DIContainer)
 ├── src/main/webapp/
 │   ├── components/          # Reusable JSP components
 │   │   ├── header.jsp       # Navigation header
 │   │   ├── footer.jsp       # Site footer
-│   │   ├── masthead.jsp     # Hero sections
 │   │   └── layout/          # Layout templates
 │   ├── css/
 │   │   └── modern-theme.css # Main stylesheet with design system
@@ -141,18 +164,11 @@ IoTBay/
 │   ├── WEB-INF/
 │   │   ├── web.xml          # Deployment descriptor
 │   │   └── views/           # Protected JSP pages
-│   ├── index.jsp            # Homepage
-│   ├── login.jsp            # Login page
-│   ├── register.jsp         # Registration page
-│   ├── browse.jsp           # Product browsing
-│   ├── about.jsp            # About page
-│   ├── contact.jsp          # Contact page
-│   ├── Profiles.jsp         # User profile page
-│   ├── category-*.jsp       # Category pages
-│   └── productDetails.jsp   # Product detail page
+│   └── *.jsp                # JSP pages
 ├── design plan/             # Design system documentation
+│   ├── FEATURES.md         # Feature requirements
 │   ├── DESIGN_SYSTEM.md
-│   └── MODERN_DESIGN_SYSTEM.md
+│   └── *.md
 └── pom.xml                  # Maven configuration
 ```
 
@@ -161,9 +177,9 @@ IoTBay/
 ## Design System
 
 ### Color Palette
-- **Primary**: Blue (#3B82F6)
-- **Secondary**: Green (#10B981)
-- **Accent**: Purple (#8B5CF6)
+- **Primary**: Blue (#0a95ff)
+- **Secondary**: Green (#22c55e)
+- **Accent**: Orange (#f97316)
 - **Neutral**: Gray scale (50-900)
 
 ### Typography
@@ -185,6 +201,26 @@ IoTBay/
 
 ---
 
+## Security
+
+### Enterprise-Grade Security Implementation
+
+- **Input Validation**: Comprehensive server-side validation
+- **XSS Prevention**: Enhanced sanitization of all user inputs
+- **SQL Injection Prevention**: Parameterized queries
+- **CSRF Protection**: Token-based protection
+- **Rate Limiting**: Request throttling
+- **Secure Error Handling**: Generic error messages
+- **Security Logging**: Comprehensive audit trail
+
+### Security Utilities
+
+- `SecurityUtil`: Input validation, sanitization, CSRF token management
+- `ErrorAction`: Consistent error handling
+- `ValidationUtil`: Business logic validation
+
+---
+
 ## Development
 
 ### Common Commands
@@ -197,28 +233,6 @@ IoTBay/
 | Package | `mvn package` | Create WAR file |
 | Run | `mvn jetty:run` | Start development server |
 | Stop | `Ctrl + C` | Stop the server |
-
-### Feature Status
-
-#### Completed Features
-- [x] Modern responsive design system
-- [x] Dark/light theme toggle
-- [x] User authentication (login/register)
-- [x] Product browsing with categories
-- [x] Shopping cart functionality
-- [x] User profile management
-- [x] Staff dashboard and admin tools
-- [x] Order management system
-- [x] Contact and about pages
-- [x] Mobile-responsive navigation
-- [x] Interactive dropdown menus
-- [x] Grid-based product layouts
-
-#### In Progress
-- [ ] Payment integration
-- [ ] Email notifications
-- [ ] Advanced search filters
-- [ ] Product reviews and ratings
 
 ---
 
@@ -278,6 +292,8 @@ Currently using **DAO Stubs** for development. To use a real database:
 - **Session Management**: Secure session handling
 - **Role-Based Access Control**: Customer, Staff, Admin roles
 - **Input Validation**: SQL injection and XSS prevention
+- **CSRF Protection**: Token-based protection
+- **Rate Limiting**: Request throttling
 
 ---
 
@@ -318,6 +334,7 @@ Currently using **DAO Stubs** for development. To use a real database:
 - Modern UI/UX following design system principles
 - Error handling and validation
 - Access logging for security auditing
+- Server-side validation and security measures
 
 ### Design Requirements
 
@@ -358,15 +375,4 @@ Currently using **DAO Stubs** for development. To use a real database:
 
 ## License
 
-This project is developed for **academic purposes** as part of **UTS 41025 ISD Assignment 2 Autumn 2025**. All code and documentation are intended for educational use only.
-
----
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
+This project is developed for **academic purposes** as part of **UTS 41025 Introduction to Software Development - Assignment 2 Autumn 2025**. All code and documentation are intended for educational use only.

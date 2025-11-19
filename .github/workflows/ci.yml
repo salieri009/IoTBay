@@ -1,0 +1,86 @@
+name: Continuous Integration
+
+# {CI workflow for pull requests and feature branches}
+# {Runs tests and code quality checks without deployment}
+
+on:
+  pull_request:
+    branches:
+      - main
+      - master
+      - develop
+    # {Run on pull requests to main branches}
+  push:
+    branches-ignore:
+      - main
+      - master
+    # {Run on pushes to feature branches, but not main}
+
+env:
+  JAVA_VERSION: '17'
+  MAVEN_VERSION: '3.9.5'
+
+jobs:
+  # {CI Job: Build and Test}
+  ci:
+    name: CI - Build and Test
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        # {Test on multiple Java versions if needed}
+        java-version: ['17']
+        # {Add more versions like '11', '21' if you need to test compatibility}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK ${{ matrix.java-version }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.java-version }}
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Build with Maven
+        run: mvn clean compile
+        # {Compile code to check for compilation errors}
+
+      - name: Run Unit Tests
+        run: mvn test
+        # {Run all unit tests}
+        continue-on-error: false
+
+      - name: Generate Test Report
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: Maven Tests
+          path: target/surefire-reports/*.xml
+          reporter: java-junit
+          fail-on-error: false
+          # {Generate test report visible in GitHub PR}
+
+      - name: Build WAR file
+        run: mvn package -DskipTests
+        # {Build WAR file to verify packaging works}
+        continue-on-error: false
+
+      - name: Check WAR file exists
+        run: |
+          if [ -f target/*.war ]; then
+            echo "✅ WAR file built successfully"
+            ls -lh target/*.war
+          else
+            echo "❌ WAR file not found"
+            exit 1
+          fi
+

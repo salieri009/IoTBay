@@ -10,14 +10,27 @@
 
 ## 📋 프로젝트 정보
 
-**과목**: 41025 Information Systems Development (ISD)  
+**과목 코드**: 41025  
+**과목명**: Introduction to Software Development  
+**학점**: 6 Credit Points  
 **과제**: Assignment 2 - Autumn 2025  
 **기관**: University of Technology Sydney (UTS)  
-**프로젝트 유형**: IoT 기기 전자상거래 웹 애플리케이션
+**프로젝트 유형**: IoT 기기 전자상거래 웹 애플리케이션  
+**과목 핸드북**: [41025 - Introduction to Software Development](https://coursehandbook.uts.edu.au/subject/2026/41025)
 
 ---
 
-**IoT Bay**는 **UTS (시드니 공과대학교) 학술 과제 (41025 ISD Assignment 2 Autumn 2025)**의 일부로 개발된 IoT 기기 관리 및 전자상거래를 위한 현대적이고 반응형 웹 애플리케이션입니다. **JSP**, **Java MVC**, **Maven**, **Jetty 서버**로 구축되었으며, 포괄적인 디자인 시스템, 다크 모드 지원, 반응형 그리드 레이아웃을 특징으로 합니다.
+## 📚 과목 정보
+
+이 프로젝트는 시드니 공과대학교(UTS)의 **41025 - Introduction to Software Development** 과목의 일부로 개발되었습니다.
+
+- **과목 코드**: 41025
+- **과목명**: Introduction to Software Development
+- **학점**: 6 Credit Points
+- **과목 핸드북**: [과목 상세 정보 보기](https://coursehandbook.uts.edu.au/subject/2026/41025)
+- **과제**: Assignment 2 - Autumn 2025
+
+**IoT Bay**는 **UTS (시드니 공과대학교) 학술 과제 (41025 Introduction to Software Development - Assignment 2 Autumn 2025)**의 일부로 개발된 IoT 기기 관리 및 전자상거래를 위한 현대적이고 반응형 웹 애플리케이션입니다. **JSP**, **Java MVC**, **Maven**, **Jetty 서버**로 구축되었으며, 포괄적인 디자인 시스템, 다크 모드 지원, 반응형 그리드 레이아웃, 엔터프라이즈급 보안 기능을 특징으로 합니다.
 
 ### 프로젝트 목표
 
@@ -27,6 +40,7 @@
 - 안전한 사용자 인증 및 권한 부여 구현
 - 직관적이고 현대적인 사용자 인터페이스 생성
 - 데이터베이스 설계 및 데이터 액세스 패턴 시연
+- 엔터프라이즈급 보안 조치 구현
 
 ---
 
@@ -36,11 +50,11 @@
 - [빠른 시작](#빠른-시작)
 - [프로젝트 구조](#프로젝트-구조)
 - [디자인 시스템](#디자인-시스템)
+- [보안](#보안)
 - [개발](#개발)
 - [설정](#설정)
 - [기술 스택](#기술-스택)
 - [라이선스](#라이선스)
-- [기여하기](#기여하기)
 
 ---
 
@@ -71,6 +85,13 @@
 - **사용자 관리**: 고객 및 직원 계정 관리
 - **제품 관리**: 재고 및 카탈로그 관리
 - **데이터 관리**: 시스템 데이터 관리
+
+### 보안 기능
+- **서버 사이드 검증**: 포괄적인 입력 검증
+- **CSRF 보호**: 토큰 기반 보호
+- **Rate Limiting**: 요청 제한
+- **보안 에러 처리**: 일반적인 에러 메시지
+- **보안 로깅**: 보안 이벤트 감사 추적
 
 ---
 
@@ -122,16 +143,18 @@
 ```
 IoTBay/
 ├── src/main/java/
-│   ├── controller/           # 서블릿 (LoginController 등)
+│   ├── controller/           # 서블릿 (MVC 컨트롤러)
 │   ├── dao/                  # 데이터 접근 객체
 │   │   ├── stub/            # 테스트용 스텁 구현
 │   │   └── impl/            # 데이터베이스 구현
-│   └── model/               # JavaBeans (User, Product, Order)
+│   ├── model/               # JavaBeans (User, Product, Order)
+│   ├── service/             # 비즈니스 로직 계층
+│   ├── utils/               # 유틸리티 클래스 (보안, 검증, 에러 처리)
+│   └── config/              # 설정 (DIContainer)
 ├── src/main/webapp/
 │   ├── components/          # 재사용 가능한 JSP 컴포넌트
 │   │   ├── header.jsp       # 네비게이션 헤더
 │   │   ├── footer.jsp       # 사이트 푸터
-│   │   ├── masthead.jsp     # 히어로 섹션
 │   │   └── layout/          # 레이아웃 템플릿
 │   ├── css/
 │   │   └── modern-theme.css # 디자인 시스템이 포함된 메인 스타일시트
@@ -141,18 +164,10 @@ IoTBay/
 │   ├── WEB-INF/
 │   │   ├── web.xml          # 배포 설명자
 │   │   └── views/           # 보호된 JSP 페이지
-│   ├── index.jsp            # 홈페이지
-│   ├── login.jsp            # 로그인 페이지
-│   ├── register.jsp         # 회원가입 페이지
-│   ├── browse.jsp           # 제품 탐색
-│   ├── about.jsp            # 소개 페이지
-│   ├── contact.jsp          # 연락처 페이지
-│   ├── Profiles.jsp         # 사용자 프로필 페이지
-│   ├── category-*.jsp       # 카테고리 페이지
-│   └── productDetails.jsp   # 제품 상세 페이지
+│   └── *.jsp                # JSP 페이지
 ├── design plan/             # 디자인 시스템 문서
-│   ├── DESIGN_SYSTEM.md
-│   └── MODERN_DESIGN_SYSTEM.md
+│   ├── FEATURES.md         # 기능 요구사항
+│   └── *.md
 └── pom.xml                  # Maven 설정
 ```
 
@@ -161,9 +176,9 @@ IoTBay/
 ## 디자인 시스템
 
 ### 색상 팔레트
-- **Primary**: 파란색 (#3B82F6)
-- **Secondary**: 초록색 (#10B981)
-- **Accent**: 보라색 (#8B5CF6)
+- **Primary**: 파란색 (#0a95ff)
+- **Secondary**: 초록색 (#22c55e)
+- **Accent**: 주황색 (#f97316)
 - **Neutral**: 회색 스케일 (50-900)
 
 ### 타이포그래피
@@ -185,6 +200,26 @@ IoTBay/
 
 ---
 
+## 보안
+
+### 엔터프라이즈급 보안 구현
+
+- **입력 검증**: 포괄적인 서버 사이드 검증
+- **XSS 방지**: 모든 사용자 입력의 향상된 정제
+- **SQL 주입 방지**: 매개변수화된 쿼리
+- **CSRF 보호**: 토큰 기반 보호
+- **Rate Limiting**: 요청 제한
+- **보안 에러 처리**: 일반적인 에러 메시지
+- **보안 로깅**: 포괄적인 감사 추적
+
+### 보안 유틸리티
+
+- `SecurityUtil`: 입력 검증, 정제, CSRF 토큰 관리
+- `ErrorAction`: 일관된 에러 처리
+- `ValidationUtil`: 비즈니스 로직 검증
+
+---
+
 ## 개발
 
 ### 일반 명령어
@@ -197,28 +232,6 @@ IoTBay/
 | 패키징 | `mvn package` | WAR 파일 생성 |
 | 실행 | `mvn jetty:run` | 개발 서버 시작 |
 | 중지 | `Ctrl + C` | 서버 중지 |
-
-### 기능 상태
-
-#### 완료된 기능
-- [x] 현대적인 반응형 디자인 시스템
-- [x] 다크/라이트 테마 전환
-- [x] 사용자 인증 (로그인/회원가입)
-- [x] 카테고리별 제품 탐색
-- [x] 쇼핑 카트 기능
-- [x] 사용자 프로필 관리
-- [x] 직원 대시보드 및 관리 도구
-- [x] 주문 관리 시스템
-- [x] 연락처 및 소개 페이지
-- [x] 모바일 반응형 네비게이션
-- [x] 인터랙티브 드롭다운 메뉴
-- [x] 그리드 기반 제품 레이아웃
-
-#### 진행 중
-- [ ] 결제 통합
-- [ ] 이메일 알림
-- [ ] 고급 검색 필터
-- [ ] 제품 리뷰 및 평점
 
 ---
 
@@ -278,6 +291,8 @@ IoTBay/
 - **세션 관리**: 안전한 세션 처리
 - **역할 기반 접근 제어**: 고객, 직원, 관리자 역할
 - **입력 검증**: SQL 주입 및 XSS 방지
+- **CSRF 보호**: 토큰 기반 보호
+- **Rate Limiting**: 요청 제한
 
 ---
 
@@ -318,6 +333,7 @@ IoTBay/
 - 디자인 시스템 원칙을 따르는 현대적인 UI/UX
 - 오류 처리 및 검증
 - 보안 감사를 위한 접근 로깅
+- 서버 사이드 검증 및 보안 조치
 
 ### 디자인 요구사항
 
@@ -358,15 +374,4 @@ IoTBay/
 
 ## 라이선스
 
-이 프로젝트는 **UTS 41025 ISD Assignment 2 Autumn 2025**의 일부로 **학술적 목적**을 위해 개발되었습니다. 모든 코드와 문서는 교육용으로만 사용됩니다.
-
----
-
-## 기여하기
-
-1. 저장소를 포크하세요
-2. 기능 브랜치를 만드세요 (`git checkout -b feature/amazing-feature`)
-3. 변경사항을 커밋하세요 (`git commit -m 'Add amazing feature'`)
-4. 브랜치에 푸시하세요 (`git push origin feature/amazing-feature`)
-5. Pull Request를 열어주세요
-
+이 프로젝트는 **UTS 41025 Introduction to Software Development - Assignment 2 Autumn 2025**의 일부로 **학술적 목적**을 위해 개발되었습니다. 모든 코드와 문서는 교육용으로만 사용됩니다.

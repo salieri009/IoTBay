@@ -16,9 +16,10 @@
 
 <t:base title="Home" description="Your Premier IoT Device Store - Technical sophistication meets user-friendly design">
     
-    <!-- Hero Section - Full Width (Section 4.1) -->
-    <section class="py-16 md:py-24 bg-neutral-900 text-white">
-        <div class="container grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,480px)] items-center">
+    <!-- Hero Section - Full Width (Section 4.1) - Optimized for 1920x1080 -->
+    <section class="py-16 md:py-24 bg-neutral-900 text-white" style="min-height: 600px;">
+        <!-- Optimized for 1920x1080: Better text/image balance -->
+        <div class="container grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,480px)] xl:grid-cols-[minmax(0,1fr)_minmax(0,560px)] items-center">
             <div class="space-y-6 text-center lg:text-left">
                 <p class="inline-flex items-center justify-center lg:justify-start gap-2 text-xs font-semibold uppercase tracking-wide text-white/80">
                     <span class="inline-flex h-2 w-2 rounded-full bg-brand-secondary"></span>

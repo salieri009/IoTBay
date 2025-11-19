@@ -31,34 +31,82 @@
             </ul>
         </nav>
         
-        <!-- Search Bar (Section 4.1 - Homepage Layout) -->
+        <!-- Enhanced Search Bar (Section 4.1 - Homepage Layout, Section 6.1 - Micro-interactions) -->
         <div class="nav__search" role="search" aria-label="Search products">
-            <form action="<c:url value='/browse.jsp' />" method="get" class="nav__search-form">
+            <form action="<c:url value='/browse.jsp' />" method="get" class="nav__search-form" id="searchForm">
                 <label for="searchInput" class="sr-only">Search products</label>
-                <input 
-                    type="search" 
-                    id="searchInput" 
-                    name="q" 
-                    class="nav__search-input" 
-                    placeholder="Search products..." 
-                    autocomplete="off"
-                    aria-label="Search products"
-                    aria-describedby="searchHelp"
-                >
-                <button 
-                    type="submit" 
-                    class="nav__search-button"
-                    aria-label="Submit search"
-                >
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                    </svg>
-                    <span class="sr-only">Search</span>
-                </button>
-                <div id="searchHelp" class="sr-only">Press Enter to search or use arrow keys to navigate suggestions</div>
+                <div class="nav__search-wrapper">
+                    <!-- Search Icon (Left) -->
+                    <div class="nav__search-icon-left" aria-hidden="true">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </div>
+                    
+                    <input 
+                        type="search" 
+                        id="searchInput" 
+                        name="q" 
+                        class="nav__search-input" 
+                        placeholder="Search IoT devices, sensors, smart home..." 
+                        autocomplete="off"
+                        aria-label="Search products"
+                        aria-describedby="searchHelp"
+                        aria-autocomplete="list"
+                        aria-controls="searchSuggestions"
+                        aria-expanded="false"
+                        spellcheck="false"
+                    >
+                    
+                    <!-- Clear Button (Shown when input has value) -->
+                    <button 
+                        type="button"
+                        class="nav__search-clear"
+                        id="searchClear"
+                        aria-label="Clear search"
+                        style="display: none;"
+                    >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                        <span class="sr-only">Clear search</span>
+                    </button>
+                    
+                    <!-- Search Button (Right) -->
+                    <button 
+                        type="submit" 
+                        class="nav__search-button"
+                        aria-label="Submit search"
+                    >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                        <span class="sr-only">Search</span>
+                    </button>
+                </div>
+                <div id="searchHelp" class="sr-only">Press Enter to search, Arrow keys to navigate suggestions, Escape to close</div>
             </form>
-            <!-- Search Suggestions (Hidden by default) -->
-            <div id="searchSuggestions" class="nav__search-suggestions" role="listbox" aria-label="Search suggestions" aria-hidden="true"></div>
+            
+            <!-- Enhanced Search Suggestions Dropdown -->
+            <div 
+                id="searchSuggestions" 
+                class="nav__search-suggestions" 
+                role="listbox" 
+                aria-label="Search suggestions" 
+                aria-hidden="true"
+                aria-live="polite"
+            >
+                <div class="nav__search-suggestions-header">
+                    <span class="nav__search-suggestions-title">Suggestions</span>
+                    <kbd class="nav__search-keyboard-hint" aria-label="Use arrow keys to navigate">↑↓</kbd>
+                </div>
+                <ul class="nav__search-suggestions-list" role="list">
+                    <!-- Populated via JavaScript -->
+                </ul>
+                <div class="nav__search-suggestions-footer">
+                    <span class="nav__search-suggestions-hint">Press <kbd>Enter</kbd> to search</span>
+                </div>
+            </div>
         </div>
         
         <!-- User Actions (Minimal) - Enhanced Accessibility -->

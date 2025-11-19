@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  {IoTBay User Profile Pages Structure}
+  {This XML describes Profiles.jsp and updateProfile.jsp - user profile management pages}
+  {Purpose: Document profile viewing and editing page structure}
+-->
+<pages name="profile" type="user-profile">
+  
+  <!-- {Profile View Page} -->
+  <page name="profile-view" jsp-file="Profiles.jsp">
+    
+    <metadata>
+      <title>My Profile - IoTBay</title>
+      <description>View and manage your IoTBay account profile</description>
+      <route>/profile</route>
+      <template>t:base</template>
+      <authentication>required</authentication>
+    </metadata>
+
+    <structure>
+      
+      <!-- {Page Header} -->
+      <section name="page-header">
+        <breadcrumb>
+          <item name="Home" route="/"/>
+          <item name="My Account" route="/profile"/>
+          <item name="Profile" active="true"/>
+        </breadcrumb>
+        <title>My Profile</title>
+      </section>
+
+      <!-- {Profile Content - Two Column Layout} -->
+      <section name="profile-content" type="two-column">
+        
+        <!-- {Left Column: Profile Information} -->
+        <column name="profile-info" width="65%">
+          
+          <!-- {Personal Information Card} -->
+          <card name="personal-info">
+            <card-header>
+              <title>Personal Information</title>
+              <action>
+                <button type="secondary" route="/updateProfile" text="Edit"/>
+                <!-- {Link to profile edit page} -->
+              </action>
+            </card-header>
+            
+            <card-content>
+              <info-row>
+                <label>Name</label>
+                <value>{user.firstName} {user.lastName}</value>
+              </info-row>
+              
+              <info-row>
+                <label>Email</label>
+                <value>{user.email}</value>
+                <badge condition="emailVerified" type="verified" text="Verified"/>
+                <!-- {Show verified badge if email is verified} -->
+              </info-row>
+              
+              <info-row>
+                <label>Phone</label>
+                <value>{user.phone || "Not provided"}</value>
+              </info-row>
+              
+              <info-row>
+                <label>Member Since</label>
+                <value>{user.createdAt}</value>
+                <!-- {Account creation date} -->
+              </info-row>
+            </card-content>
+          </card>
+
+          <!-- {Shipping Addresses Card} -->
+          <card name="shipping-addresses">
+            <card-header>
+              <title>Shipping Addresses</title>
+              <action>
+                <button type="primary" action="addAddress" text="Add Address"/>
+              </action>
+            </card-header>
+            
+            <card-content>
+              <addresses>
+                <address-item>
+                  <!-- {List of saved shipping addresses} -->
+                  <address>
+                    <name>{address.fullName}</name>
+                    <street>{address.streetAddress}</street>
+                    <city-state-zip>{address.city}, {address.state} {address.zipCode}</city-state-zip>
+                    <country>{address.country}</country>
+                  </address>
+                  <actions>
+                    <button type="secondary" action="editAddress" text="Edit"/>
+                    <button type="secondary" action="deleteAddress" text="Delete"/>
+                    <button type="primary" condition="!isDefault" action="setDefault" text="Set as Default"/>
+                  </actions>
+                  <badge condition="isDefault" type="default" text="Default"/>
+                </address-item>
+              </addresses>
+              
+              <empty-state condition="noAddresses">
+                <message>No saved addresses</message>
+                <action>
+                  <button type="primary" action="addAddress" text="Add Your First Address"/>
+                </action>
+              </empty-state>
+            </card-content>
+          </card>
+
+          <!-- {Account Settings Card} -->
+          <card name="account-settings">
+            <card-header>
+              <title>Account Settings</title>
+            </card-header>
+            
+            <card-content>
+              <settings-list>
+                <setting-item>
+                  <label>Email Notifications</label>
+                  <toggle name="emailNotifications" value="{user.emailNotifications}"/>
+                  <!-- {Toggle for email notification preferences} -->
+                </setting-item>
+                
+                <setting-item>
+                  <label>Newsletter Subscription</label>
+                  <toggle name="newsletter" value="{user.newsletter}"/>
+                </setting-item>
+                
+                <setting-item>
+                  <label>Two-Factor Authentication</label>
+                  <status condition="2faEnabled" text="Enabled"/>
+                  <action condition="!2faEnabled">
+                    <button type="secondary" action="enable2FA" text="Enable"/>
+                  </action>
+                </setting-item>
+              </settings-list>
+            </card-content>
+          </card>
+
+        </column>
+
+        <!-- {Right Column: Quick Actions & Stats} -->
+        <column name="sidebar" width="35%">
+          
+          <!-- {Account Summary Card} -->
+          <card name="account-summary">
+            <card-header>
+              <title>Account Summary</title>
+            </card-header>
+            
+            <card-content>
+              <stats>
+                <stat>
+                  <label>Total Orders</label>
+                  <value>{orderCount}</value>
+                  <link route="/orders" text="View Orders"/>
+                </stat>
+                
+                <stat>
+                  <label>Wishlist Items</label>
+                  <value>{wishlistCount}</value>
+                  <link route="/wishlist" text="View Wishlist"/>
+                </stat>
+                
+                <stat>
+                  <label>Account Status</label>
+                  <value badge="active">{user.status}</value>
+                  <!-- {Active, Suspended, etc.} -->
+                </stat>
+              </stats>
+            </card-content>
+          </card>
+
+          <!-- {Quick Actions Card} -->
+          <card name="quick-actions">
+            <card-header>
+              <title>Quick Actions</title>
+            </card-header>
+            
+            <card-content>
+              <action-list>
+                <action-item>
+                  <link route="/orders" text="Order History"/>
+                  <icon>orders-icon</icon>
+                </action-item>
+                
+                <action-item>
+                  <link route="/cart" text="Shopping Cart"/>
+                  <icon>cart-icon</icon>
+                </action-item>
+                
+                <action-item>
+                  <link route="/updateProfile" text="Edit Profile"/>
+                  <icon>edit-icon</icon>
+                </action-item>
+                
+                <action-item>
+                  <link route="/deleteaccount" text="Delete Account"/>
+                  <icon>delete-icon</icon>
+                  <warning>Destructive action</warning>
+                </action-item>
+              </action-list>
+            </card-content>
+          </card>
+
+        </column>
+
+      </section>
+
+    </structure>
+
+  </page>
+
+  <!-- {Profile Edit Page} -->
+  <page name="profile-edit" jsp-file="updateProfile.jsp">
+    
+    <metadata>
+      <title>Edit Profile - IoTBay</title>
+      <description>Update your account information</description>
+      <route>/updateProfile</route>
+      <template>t:base</template>
+      <authentication>required</authentication>
+    </metadata>
+
+    <structure>
+      
+      <!-- {Page Header} -->
+      <section name="page-header">
+        <breadcrumb>
+          <item name="Home" route="/"/>
+          <item name="My Account" route="/profile"/>
+          <item name="Edit Profile" active="true"/>
+        </breadcrumb>
+        <title>Edit Profile</title>
+      </section>
+
+      <!-- {Edit Form} -->
+      <section name="edit-form" type="centered" max-width="800px">
+        
+        <form-card>
+          <!-- {Form card container} -->
+          
+          <!-- {Personal Information Section} -->
+          <form-section name="personal-info">
+            <title>Personal Information</title>
+            
+            <field-row>
+              <field-group name="firstName" width="50%">
+                <label>First Name</label>
+                <input type="text" name="firstName" value="{user.firstName}" required="true"/>
+              </field-group>
+              
+              <field-group name="lastName" width="50%">
+                <label>Last Name</label>
+                <input type="text" name="lastName" value="{user.lastName}" required="true"/>
+              </field-group>
+            </field-row>
+            
+            <field-group name="email">
+              <label>Email Address</label>
+              <input type="email" name="email" value="{user.email}" required="true" readonly="true"/>
+              <!-- {Email is read-only, requires separate change process} -->
+              <help-text>To change your email, contact support</help-text>
+            </field-group>
+            
+            <field-group name="phone">
+              <label>Phone Number</label>
+              <input type="tel" name="phone" value="{user.phone}" placeholder="(555) 123-4567"/>
+            </field-group>
+          </form-section>
+
+          <!-- {Change Password Section} -->
+          <form-section name="change-password">
+            <title>Change Password</title>
+            
+            <field-group name="currentPassword">
+              <label>Current Password</label>
+              <input type="password" name="currentPassword" placeholder="Enter current password"/>
+              <!-- {Required to change password} -->
+            </field-group>
+            
+            <field-group name="newPassword">
+              <label>New Password</label>
+              <input type="password" name="newPassword" placeholder="Enter new password"/>
+              <password-strength-meter/>
+            </field-group>
+            
+            <field-group name="confirmPassword">
+              <label>Confirm New Password</label>
+              <input type="password" name="confirmPassword" placeholder="Re-enter new password"/>
+            </field-group>
+            
+            <help-text>Leave blank if you don't want to change your password</help-text>
+          </form-section>
+
+          <!-- {Notification Preferences Section} -->
+          <form-section name="notifications">
+            <title>Notification Preferences</title>
+            
+            <field-group name="emailNotifications">
+              <checkbox name="emailNotifications" checked="{user.emailNotifications}">
+                <label>Receive email notifications</label>
+              </checkbox>
+            </field-group>
+            
+            <field-group name="newsletter">
+              <checkbox name="newsletter" checked="{user.newsletter}">
+                <label>Subscribe to newsletter</label>
+              </checkbox>
+            </field-group>
+          </form-section>
+
+          <!-- {Form Actions} -->
+          <form-actions>
+            <button type="secondary" route="/profile" text="Cancel"/>
+            <!-- {Cancel and return to profile view} -->
+            <button type="primary" action="saveProfile" text="Save Changes"/>
+            <!-- {Save profile changes} -->
+          </form-actions>
+          
+        </form-card>
+        
+      </section>
+
+    </structure>
+
+  </page>
+
+  <!-- {Refactoring Context} -->
+  <refactoring-context>
+    <current-state>
+      <issues>
+        <issue>Profile edit form could have better validation feedback</issue>
+        <issue>No email verification flow</issue>
+        <issue>Address management could be more user-friendly</issue>
+        <issue>No profile picture upload</issue>
+        <issue>Password change requires current password but UI doesn't make this clear</issue>
+      </issues>
+    </current-state>
+    <target-state>
+      <improvements>
+        <improvement>Add real-time form validation with inline feedback</improvement>
+        <improvement>Implement email verification flow</improvement>
+        <improvement>Add profile picture upload with image cropping</improvement>
+        <improvement>Improve address management with inline editing</improvement>
+        <improvement>Add two-factor authentication setup flow</improvement>
+        <improvement>Implement account deletion with confirmation flow</improvement>
+        <improvement>Add activity log/history section</improvement>
+        <improvement>Mobile: Stack form sections vertically</improvement>
+      </improvements>
+    </target-state>
+  </refactoring-context>
+
+  <dependencies>
+    <component name="header" file="components/header.jsp"/>
+    <component name="footer" file="components/footer.jsp"/>
+    <component name="profile-card" file="components/profile-card.jsp"/>
+    <layout name="base" file="WEB-INF/tags/base.tag"/>
+  </dependencies>
+
+</pages>
+

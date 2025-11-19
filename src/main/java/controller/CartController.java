@@ -188,6 +188,12 @@ public class CartController extends HttpServlet {
     private void handleFormSubmission(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
+        // Rate limiting check
+        if (utils.SecurityUtil.isRateLimited(request, 20, 60000)) { // 20 requests per minute
+            utils.ErrorAction.handleRateLimitError(request, response, "CartController.handleFormSubmission");
+            return;
+        }
+        
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
 
@@ -204,41 +210,51 @@ public class CartController extends HttpServlet {
 
         String action = request.getParameter("action");
         try {
+            // Validate action parameter
+            if (action != null && !action.matches("^[a-zA-Z]+$")) {
+                utils.ErrorAction.handleValidationError(request, response, 
+                        "Invalid action parameter", "CartController.handleFormSubmission");
+                return;
+            }
+            
             if ("clear".equals(action)) {
+                // CSRF check for destructive operations
+                if (!utils.SecurityUtil.validateCSRFToken(request)) {
+                    utils.ErrorAction.handleValidationError(request, response, 
+                            "CSRF token validation failed", "CartController.clearCart");
+                    return;
+                }
                 cartItemDAO.clearCartByUserId(userId);
+                utils.ErrorAction.logSecurityEvent("CART_CLEARED", request, 
+                        "Cart cleared for user: " + userId);
                 response.sendRedirect("cart");
                 return;
             }
 
-            // Secure input validation
-            String productIdStr = request.getParameter("productId");
-            String quantityStr = request.getParameter("quantity");
-            String priceStr = request.getParameter("productPrice");
+            // Secure input validation using SecurityUtil
+            int productId = utils.SecurityUtil.getValidatedIntParameter(request, "productId", 1, Integer.MAX_VALUE);
+            int quantity = utils.SecurityUtil.getValidatedIntParameter(request, "quantity", 1, 100);
+            double price = utils.SecurityUtil.getValidatedDoubleParameter(request, "productPrice");
             
-            if (productIdStr == null || quantityStr == null || priceStr == null) {
-                throw new IllegalArgumentException("Missing required parameters");
-            }
-
-            int productId = Integer.parseInt(productIdStr);
-            int quantity = Integer.parseInt(quantityStr);
-            double price = Double.parseDouble(priceStr);
-            
-            // Additional business logic validation
-            if (quantity <= 0 || quantity > 100) {
-                throw new IllegalArgumentException("Quantity must be between 1 and 100");
-            }
-            if (price <= 0) {
-                throw new IllegalArgumentException("Price must be greater than zero");
+            // Validate price range
+            if (price <= 0 || price > 1000000) {
+                utils.ErrorAction.handleValidationError(request, response, 
+                        "Invalid price range", "CartController.handleFormSubmission");
+                return;
             }
 
             // Check product availability
             Product product = productDAO.getProductById(productId);
             if (product == null) {
-                throw new IllegalArgumentException("Product not found");
+                utils.ErrorAction.handleValidationError(request, response, 
+                        "Product not found", "CartController.handleFormSubmission");
+                return;
             }
             
             if (product.getStockQuantity() < quantity) {
-                throw new IllegalArgumentException("Insufficient stock available");
+                utils.ErrorAction.handleValidationError(request, response, 
+                        "Insufficient stock available", "CartController.handleFormSubmission");
+                return;
             }
 
             CartItem existingItem = cartItemDAO.getCartItem(userId, productId);
@@ -246,33 +262,30 @@ public class CartController extends HttpServlet {
             if (existingItem != null) {
                 int updatedQuantity = existingItem.getQuantity() + quantity;
                 if (product.getStockQuantity() < updatedQuantity) {
-                    throw new IllegalArgumentException("Insufficient stock for updated quantity");
+                    utils.ErrorAction.handleValidationError(request, response, 
+                            "Insufficient stock for updated quantity", "CartController.handleFormSubmission");
+                    return;
                 }
                 cartItemDAO.updateCartItemQuantity(userId, productId, updatedQuantity);
             } else {
                 CartItem newItem = new CartItem(userId, productId, quantity, price, LocalDateTime.now());
                 cartItemDAO.addCartItem(newItem);
             }
+            
+            // Log security event
+            utils.ErrorAction.logSecurityEvent("CART_ITEM_ADDED", request, 
+                    "Product ID: " + productId + ", Quantity: " + quantity);
 
             response.setStatus(HttpServletResponse.SC_OK);
             response.sendRedirect("product?productId=" + productId);
 
-        } catch (SQLException e) {
-            System.err.println("Database error in cart operation: " + e.getMessage());
-            request.setAttribute("error", "Database error occurred");
-            request.getRequestDispatcher("/error.jsp").forward(request, response);
-        } catch (NumberFormatException e) {
-            System.err.println("Invalid number format in cart operation: " + e.getMessage());
-            request.setAttribute("error", "Invalid data format");
-            request.getRequestDispatcher("/error.jsp").forward(request, response);
         } catch (IllegalArgumentException e) {
-            System.err.println("Invalid argument in cart operation: " + e.getMessage());
-            request.setAttribute("error", e.getMessage());
-            request.getRequestDispatcher("/error.jsp").forward(request, response);
+            utils.ErrorAction.handleValidationError(request, response, e.getMessage(), 
+                    "CartController.handleFormSubmission");
+        } catch (SQLException e) {
+            utils.ErrorAction.handleDatabaseError(request, response, e, "CartController.handleFormSubmission");
         } catch (Exception e) {
-            System.err.println("Unexpected cart error: " + e.getMessage());
-            request.setAttribute("error", "Cart operation failed");
-            request.getRequestDispatcher("/error.jsp").forward(request, response);
+            utils.ErrorAction.handleServerError(request, response, e, "CartController.handleFormSubmission");
         }
     }
 

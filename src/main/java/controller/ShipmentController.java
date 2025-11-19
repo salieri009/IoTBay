@@ -140,23 +140,44 @@ public class ShipmentController extends HttpServlet {
             return;
         }
         
-        // Input validation
-        String shipmentMethod = InputValidator.validateAndSanitize(
-            request.getParameter("shipmentMethod"), "Shipment method");
-        String address = InputValidator.validateAndSanitize(
-            request.getParameter("address"), "Address");
-        String city = InputValidator.validateAndSanitize(
-            request.getParameter("city"), "City");
-        String state = InputValidator.validateAndSanitize(
-            request.getParameter("state"), "State");
-        String zipCode = InputValidator.validateAndSanitize(
-            request.getParameter("zipCode"), "Zip code");
-        String country = InputValidator.validateAndSanitize(
-            request.getParameter("country"), "Country");
-        String orderIdStr = request.getParameter("orderId");
-        String shipmentDateStr = request.getParameter("shipmentDate");
+        // Rate limiting check
+        if (utils.SecurityUtil.isRateLimited(request, 10, 60000)) { // 10 requests per minute
+            utils.ErrorAction.handleRateLimitError(request, response, "ShipmentController.createShipment");
+            return;
+        }
+
+        // CSRF protection
+        if (!utils.SecurityUtil.validateCSRFToken(request)) {
+            utils.ErrorAction.handleValidationError(request, response,
+                    "CSRF token validation failed", "ShipmentController.createShipment");
+            return;
+        }
+
+        // Secure parameter extraction with validation
+        int orderId = utils.SecurityUtil.getValidatedIntParameter(request, "orderId", 1, Integer.MAX_VALUE);
+        String shipmentMethod = utils.SecurityUtil.getValidatedStringParameter(request, "shipmentMethod", 50);
+        String address = utils.SecurityUtil.getValidatedStringParameter(request, "address", 200);
+        String city = utils.SecurityUtil.getValidatedStringParameter(request, "city", 100);
+        String state = utils.SecurityUtil.getValidatedStringParameter(request, "state", 50);
+        String zipCode = utils.SecurityUtil.getValidatedStringParameter(request, "zipCode", 10);
+        String country = utils.SecurityUtil.getValidatedStringParameter(request, "country", 100);
+        String shipmentDateStr = request.getParameter("shipmentDate"); // Optional
         
-        Integer orderId = Integer.parseInt(orderIdStr);
+        // Sanitize inputs
+        shipmentMethod = utils.SecurityUtil.sanitizeInput(shipmentMethod);
+        address = utils.SecurityUtil.sanitizeInput(address);
+        city = utils.SecurityUtil.sanitizeInput(city);
+        state = utils.SecurityUtil.sanitizeInput(state);
+        zipCode = utils.SecurityUtil.sanitizeInput(zipCode);
+        country = utils.SecurityUtil.sanitizeInput(country);
+        
+        // Validate shipment using ValidationUtil
+        String validationError = utils.ValidationUtil.validateShipment(shipmentMethod, address, shipmentDateStr);
+        if (validationError != null) {
+            utils.ErrorAction.handleValidationError(request, response, validationError,
+                    "ShipmentController.createShipment");
+            return;
+        }
         
         // Verify order exists and belongs to user
         Order order = orderDAO.findById(orderId);
@@ -198,6 +219,10 @@ public class ShipmentController extends HttpServlet {
         }
         
         shipmentDAO.create(shipment);
+        
+        // Log security event
+        utils.ErrorAction.logSecurityEvent("SHIPMENT_CREATED", request,
+                "Shipment created for order: " + orderId);
         
         session.setAttribute("successMessage", "Shipment created successfully");
         response.sendRedirect(request.getContextPath() + "/shipment/list");

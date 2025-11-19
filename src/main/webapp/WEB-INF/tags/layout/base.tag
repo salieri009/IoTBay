@@ -18,7 +18,9 @@
 
     <title><c:choose><c:when test="${title != null}">${title} | IoT Bay</c:when><c:otherwise>IoT Bay - Smart Technology Store</c:otherwise></c:choose></title>
 
-    <link rel="icon" type="image/x-icon" href="<c:url value='/images/favicon.ico' />">
+    <!-- Modern Favicons -->
+    <link rel="icon" type="image/svg+xml" href="<c:url value='/images/favicon.svg' />">
+    <link rel="icon" type="image/x-icon" href="<c:url value='/favicon.ico' />">
     <link rel="stylesheet" href="<c:url value='/css/modern-theme.css' />">
 
     <c:if test="${customCSS != null}">

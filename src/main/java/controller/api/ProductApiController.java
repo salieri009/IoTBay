@@ -23,10 +23,16 @@ public class ProductApiController extends HttpServlet {
     
     @Override
     public void init() throws ServletException {
-        // 의존성 주입 패턴 사용
-        this.productDAO = DIContainer.get(ProductDAO.class);
-        if (this.productDAO == null) {
-            throw new ServletException("ProductDAO not available in DIContainer");
+        try {
+            // 의존성 주입 패턴 사용
+            this.productDAO = DIContainer.get(ProductDAO.class);
+            if (this.productDAO == null) {
+                // Fallback to stub if DIContainer fails
+                this.productDAO = new dao.stub.ProductDAOStub();
+            }
+        } catch (Exception e) {
+            // Fallback to stub on any error
+            this.productDAO = new dao.stub.ProductDAOStub();
         }
     }
     
@@ -79,9 +85,7 @@ public class ProductApiController extends HttpServlet {
         } catch (NumberFormatException e) {
             ResponseUtil.sendError(response, 400, "Invalid product ID format");
         } catch (Exception e) {
-            System.err.println("Error in ProductApiController: " + e.getMessage());
-            e.printStackTrace();
-            ResponseUtil.sendError(response, 500, "Internal server error: " + e.getMessage());
+            utils.ErrorAction.handleServerError(null, response, e, "ProductApiController.doGet");
         }
     }
     

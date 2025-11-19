@@ -59,7 +59,8 @@
                 </ol>
             </nav>
 
-            <section class="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)]">
+            <!-- Optimized for 1920x1080: Better image/info ratio -->
+            <section class="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)] xl:grid-cols-[minmax(0,1fr)_minmax(0,480px)]">
                 <!-- Product Imagery -->
                 <div class="space-y-4">
                     <figure class="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">

@@ -25,7 +25,8 @@
                     <p class="text-lg text-neutral-600">Create your account to start shopping for IoT solutions</p>
                 </div>
                 
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Optimized for 1920x1080 -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-[minmax(0,1fr)_minmax(0,500px)] gap-12">
                     <!-- Benefits Section -->
                     <aside class="space-y-6">
                         <figure class="text-center">

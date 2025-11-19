@@ -99,6 +99,14 @@ public class CheckoutController extends HttpServlet{
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
+        
+        // Rate limiting check
+        if (utils.SecurityUtil.isRateLimited(request, 10, 60000)) { // 10 requests per minute
+            utils.ErrorAction.handleRateLimitError(request, response, "CheckoutController.doPost");
+            return;
+        }
+        
         try {
             HttpSession session = request.getSession(false);
             User user = (session != null) ? (User) session.getAttribute("user") : null;
@@ -115,6 +123,13 @@ public class CheckoutController extends HttpServlet{
                 return;
             }
 
+            // CSRF protection for checkout
+            if (!utils.SecurityUtil.validateCSRFToken(request)) {
+                utils.ErrorAction.handleValidationError(request, response,
+                        "CSRF token validation failed", "CheckoutController.doPost");
+                return;
+            }
+
             // Get cart items
             List<CartItem> cartItems = cartItemDao.getCartItemsByUserId(userId);
 
@@ -123,30 +138,80 @@ public class CheckoutController extends HttpServlet{
                 return;
             }
 
+            // Validate shipping information if provided
+            String shippingAddress = request.getParameter("shippingAddress");
+            String shippingCity = request.getParameter("shippingCity");
+            String shippingPostalCode = request.getParameter("shippingPostalCode");
+            String shippingCountry = request.getParameter("shippingCountry");
+            
+            if (shippingAddress != null && !shippingAddress.trim().isEmpty()) {
+                // Validate shipping address
+                String addressError = utils.ValidationUtil.validateAddress(shippingAddress);
+                if (addressError != null) {
+                    utils.ErrorAction.handleValidationError(request, response, addressError,
+                            "CheckoutController.doPost");
+                    return;
+                }
+                
+                // Sanitize shipping information
+                shippingAddress = utils.SecurityUtil.sanitizeInput(shippingAddress);
+                if (shippingCity != null) {
+                    shippingCity = utils.SecurityUtil.sanitizeInput(shippingCity);
+                }
+                if (shippingPostalCode != null) {
+                    shippingPostalCode = utils.SecurityUtil.sanitizeInput(shippingPostalCode);
+                    // Validate postal code if provided
+                    if (!shippingPostalCode.matches("^\\d{4}$")) {
+                        utils.ErrorAction.handleValidationError(request, response,
+                                "Invalid postal code format", "CheckoutController.doPost");
+                        return;
+                    }
+                }
+                if (shippingCountry != null) {
+                    shippingCountry = utils.SecurityUtil.sanitizeInput(shippingCountry);
+                }
+            }
+
             // Calculate total using BigDecimal for accurate monetary calculations
             BigDecimal totalAmount = cartItems.stream()
                 .filter(item -> item != null && item.getPrice() != null)
                 .map(item -> item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+            
+            // Validate total amount
+            if (totalAmount.compareTo(BigDecimal.ZERO) <= 0) {
+                utils.ErrorAction.handleValidationError(request, response,
+                        "Invalid order total", "CheckoutController.doPost");
+                return;
+            }
+            
+            // Validate total amount is within reasonable range
+            if (totalAmount.compareTo(BigDecimal.valueOf(1000000)) > 0) {
+                utils.ErrorAction.handleValidationError(request, response,
+                        "Order total exceeds maximum allowed amount", "CheckoutController.doPost");
+                return;
+            }
 
             // Create order
             Order order = new Order(0, userId, LocalDateTime.now(), "Pending", totalAmount);
             orderDAO.createOrder(order); 
+
+            // Log security event
+            utils.ErrorAction.logSecurityEvent("ORDER_CREATED", request,
+                    "Order created for user: " + userId + ", Total: " + totalAmount);
 
             // Clear cart after checkout
             cartItemDao.clearCartByUserId(userId);
 
             response.sendRedirect("index.jsp");
 
+        } catch (IllegalArgumentException e) {
+            utils.ErrorAction.handleValidationError(request, response, e.getMessage(),
+                    "CheckoutController.doPost");
         } catch (SQLException e) {
-            System.err.println("Database error during checkout: " + e.getMessage());
-            response.sendRedirect("cart.jsp?error=Database error occurred");
-        } catch (NumberFormatException e) {
-            System.err.println("Invalid number format during checkout: " + e.getMessage());
-            response.sendRedirect("cart.jsp?error=Invalid data format");
+            utils.ErrorAction.handleDatabaseError(request, response, e, "CheckoutController.doPost");
         } catch (Exception e) {
-            System.err.println("Unexpected checkout error: " + e.getMessage());
-            response.sendRedirect("cart.jsp?error=Checkout failed");
+            utils.ErrorAction.handleServerError(request, response, e, "CheckoutController.doPost");
         }
     }
 }

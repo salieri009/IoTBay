@@ -9,6 +9,7 @@ import model.Product;
 import model.User;
 import service.ReviewService;
 import utils.InputValidator;
+import utils.ValidationUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -141,34 +142,68 @@ public class ReviewController extends HttpServlet {
             return;
         }
         
-        // Input validation
-        String productIdStr = request.getParameter("productId");
-        String ratingStr = request.getParameter("rating");
-        String reviewText = InputValidator.validateAndSanitize(
-            request.getParameter("reviewText"), "Review text");
-        String title = InputValidator.validateAndSanitize(
-            request.getParameter("title"), "Review title");
+        // Rate limiting check
+        if (utils.SecurityUtil.isRateLimited(request, 5, 60000)) { // 5 requests per minute
+            utils.ErrorAction.handleRateLimitError(request, response, "ReviewController.createReview");
+            return;
+        }
+
+        // Input validation using SecurityUtil
+        int productId = utils.SecurityUtil.getValidatedIntParameter(request, "productId", 1, Integer.MAX_VALUE);
+        int rating = utils.SecurityUtil.getValidatedIntParameter(request, "rating", 1, 5);
         
-        if (productIdStr == null || ratingStr == null) {
-            request.setAttribute("error", "Product ID and rating are required");
-            request.getRequestDispatcher("/review-form.jsp").forward(request, response);
+        String reviewText = request.getParameter("reviewText");
+        String title = request.getParameter("title");
+        
+        // Sanitize inputs
+        if (reviewText != null) {
+            reviewText = utils.SecurityUtil.sanitizeInput(reviewText);
+            // Validate review text length
+            if (reviewText.length() > 1000) {
+                utils.ErrorAction.handleValidationError(request, response,
+                        "Review text must be less than 1000 characters", "ReviewController.createReview");
+                return;
+            }
+        }
+        if (title != null) {
+            title = utils.SecurityUtil.sanitizeInput(title);
+            // Validate title length
+            if (title.length() > 100) {
+                utils.ErrorAction.handleValidationError(request, response,
+                        "Review title must be less than 100 characters", "ReviewController.createReview");
+                return;
+            }
+        }
+        
+        // Validate rating range (already validated by getValidatedIntParameter, but double-check)
+        if (rating < 1 || rating > 5) {
+            utils.ErrorAction.handleValidationError(request, response,
+                    "Rating must be between 1 and 5", "ReviewController.createReview");
             return;
         }
         
-        Integer productId = Integer.parseInt(productIdStr);
-        Integer rating = Integer.parseInt(ratingStr);
+        // Validate review using ValidationUtil
+        String validationError = ValidationUtil.validateReview(
+                String.valueOf(rating), reviewText, title);
+        if (validationError != null) {
+            utils.ErrorAction.handleValidationError(request, response, validationError,
+                    "ReviewController.createReview");
+            return;
+        }
         
         // Use ReviewService for business logic
         ReviewService.ReviewOperationResult result = reviewService.createReview(
             currentUser.getUserId(), productId, rating, title, reviewText);
         
         if (!result.isSuccess()) {
-            request.setAttribute("error", result.getErrorMessage());
-            Product product = productDAO.findById(productId);
-            request.setAttribute("product", product);
-            request.getRequestDispatcher("/review-form.jsp").forward(request, response);
+            utils.ErrorAction.handleValidationError(request, response, result.getErrorMessage(),
+                    "ReviewController.createReview");
             return;
         }
+        
+        // Log security event
+        utils.ErrorAction.logSecurityEvent("REVIEW_CREATED", request,
+                "Review created for product: " + productId + ", Rating: " + rating);
         
         session.setAttribute("successMessage", result.getMessage());
         response.sendRedirect(request.getContextPath() + "/product/" + productId);

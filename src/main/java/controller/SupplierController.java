@@ -3,7 +3,6 @@ package controller;
 import dao.SupplierDAOImpl;
 import db.DBConnection;
 import model.Supplier;
-import utils.InputValidator;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -95,39 +94,61 @@ public class SupplierController extends HttpServlet {
     private void createSupplier(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException, SQLException {
         
-        // Input validation
-        String contactName = InputValidator.validateAndSanitize(
-            request.getParameter("contactName"), "Contact name");
-        String companyName = InputValidator.validateAndSanitize(
-            request.getParameter("companyName"), "Company name");
-        String email = InputValidator.validateAndSanitize(
-            request.getParameter("email"), "Email");
-        String phone = InputValidator.validateAndSanitize(
-            request.getParameter("phone"), "Phone");
-        String address = InputValidator.validateAndSanitize(
-            request.getParameter("address"), "Address");
-        String city = InputValidator.validateAndSanitize(
-            request.getParameter("city"), "City");
-        String state = InputValidator.validateAndSanitize(
-            request.getParameter("state"), "State");
-        String zipCode = InputValidator.validateAndSanitize(
-            request.getParameter("zipCode"), "Zip code");
-        String country = InputValidator.validateAndSanitize(
-            request.getParameter("country"), "Country");
-        String website = request.getParameter("website");
-        String description = request.getParameter("description");
+        // Rate limiting check
+        if (utils.SecurityUtil.isRateLimited(request, 10, 60000)) { // 10 requests per minute
+            utils.ErrorAction.handleRateLimitError(request, response, "SupplierController.createSupplier");
+            return;
+        }
+
+        // CSRF protection
+        if (!utils.SecurityUtil.validateCSRFToken(request)) {
+            utils.ErrorAction.handleValidationError(request, response,
+                    "CSRF token validation failed", "SupplierController.createSupplier");
+            return;
+        }
+
+        // Secure parameter extraction with validation
+        String contactName = utils.SecurityUtil.getValidatedStringParameter(request, "contactName", 100);
+        String companyName = utils.SecurityUtil.getValidatedStringParameter(request, "companyName", 200);
+        String email = utils.SecurityUtil.getValidatedStringParameter(request, "email", 100);
+        String phone = utils.SecurityUtil.getValidatedStringParameter(request, "phone", 20);
+        String address = utils.SecurityUtil.getValidatedStringParameter(request, "address", 200);
+        String city = utils.SecurityUtil.getValidatedStringParameter(request, "city", 100);
+        String state = utils.SecurityUtil.getValidatedStringParameter(request, "state", 50);
+        String zipCode = utils.SecurityUtil.getValidatedStringParameter(request, "zipCode", 10);
+        String country = utils.SecurityUtil.getValidatedStringParameter(request, "country", 100);
+        String website = request.getParameter("website"); // Optional
+        String description = request.getParameter("description"); // Optional
+        
+        // Sanitize inputs
+        contactName = utils.SecurityUtil.sanitizeInput(contactName);
+        companyName = utils.SecurityUtil.sanitizeInput(companyName);
+        email = utils.SecurityUtil.sanitizeInput(email);
+        phone = utils.SecurityUtil.sanitizeInput(phone);
+        address = utils.SecurityUtil.sanitizeInput(address);
+        city = utils.SecurityUtil.sanitizeInput(city);
+        state = utils.SecurityUtil.sanitizeInput(state);
+        zipCode = utils.SecurityUtil.sanitizeInput(zipCode);
+        country = utils.SecurityUtil.sanitizeInput(country);
+        if (website != null) {
+            website = utils.SecurityUtil.sanitizeInput(website);
+        }
+        if (description != null) {
+            description = utils.SecurityUtil.sanitizeInput(description);
+        }
         
         // Validate email format
-        if (!InputValidator.isValidEmail(email)) {
-            request.setAttribute("error", "Invalid email format");
-            request.getRequestDispatcher("/admin/supplier-form.jsp").forward(request, response);
+        String emailError = utils.ValidationUtil.validateEmail(email);
+        if (emailError != null) {
+            utils.ErrorAction.handleValidationError(request, response, emailError,
+                    "SupplierController.createSupplier");
             return;
         }
         
         // Check if supplier already exists
         if (supplierDAO.findByEmail(email) != null) {
-            request.setAttribute("error", "Supplier with this email already exists");
-            request.getRequestDispatcher("/admin/supplier-form.jsp").forward(request, response);
+            utils.ErrorAction.handleValidationError(request, response,
+                    "Supplier with this email already exists", "SupplierController.createSupplier");
             return;
         }
         
@@ -150,6 +171,10 @@ public class SupplierController extends HttpServlet {
         Supplier createdSupplier = supplierDAO.createSupplier(supplier);
         int supplierId = createdSupplier.getId();
         
+        // Log security event
+        utils.ErrorAction.logSecurityEvent("SUPPLIER_CREATED", request,
+                "Supplier created: " + companyName + ", Email: " + email);
+        
         HttpSession session = request.getSession();
         session.setAttribute("successMessage", "Supplier created successfully");
         response.sendRedirect(request.getContextPath() + "/admin/supplier/view/" + supplierId);
@@ -166,42 +191,62 @@ public class SupplierController extends HttpServlet {
             return;
         }
         
-        // Update supplier details
-        String contactName = InputValidator.validateAndSanitize(
-            request.getParameter("contactName"), "Contact name");
-        String companyName = InputValidator.validateAndSanitize(
-            request.getParameter("companyName"), "Company name");
-        String email = InputValidator.validateAndSanitize(
-            request.getParameter("email"), "Email");
-        String phone = InputValidator.validateAndSanitize(
-            request.getParameter("phone"), "Phone");
-        String address = InputValidator.validateAndSanitize(
-            request.getParameter("address"), "Address");
-        String city = InputValidator.validateAndSanitize(
-            request.getParameter("city"), "City");
-        String state = InputValidator.validateAndSanitize(
-            request.getParameter("state"), "State");
-        String zipCode = InputValidator.validateAndSanitize(
-            request.getParameter("zipCode"), "Zip code");
-        String country = InputValidator.validateAndSanitize(
-            request.getParameter("country"), "Country");
-        String website = request.getParameter("website");
-        String description = request.getParameter("description");
+        // Rate limiting check
+        if (utils.SecurityUtil.isRateLimited(request, 10, 60000)) { // 10 requests per minute
+            utils.ErrorAction.handleRateLimitError(request, response, "SupplierController.updateSupplier");
+            return;
+        }
+
+        // CSRF protection
+        if (!utils.SecurityUtil.validateCSRFToken(request)) {
+            utils.ErrorAction.handleValidationError(request, response,
+                    "CSRF token validation failed", "SupplierController.updateSupplier");
+            return;
+        }
+
+        // Secure parameter extraction with validation
+        String contactName = utils.SecurityUtil.getValidatedStringParameter(request, "contactName", 100);
+        String companyName = utils.SecurityUtil.getValidatedStringParameter(request, "companyName", 200);
+        String email = utils.SecurityUtil.getValidatedStringParameter(request, "email", 100);
+        String phone = utils.SecurityUtil.getValidatedStringParameter(request, "phone", 20);
+        String address = utils.SecurityUtil.getValidatedStringParameter(request, "address", 200);
+        String city = utils.SecurityUtil.getValidatedStringParameter(request, "city", 100);
+        String state = utils.SecurityUtil.getValidatedStringParameter(request, "state", 50);
+        String zipCode = utils.SecurityUtil.getValidatedStringParameter(request, "zipCode", 10);
+        String country = utils.SecurityUtil.getValidatedStringParameter(request, "country", 100);
+        String website = request.getParameter("website"); // Optional
+        String description = request.getParameter("description"); // Optional
+        
+        // Sanitize inputs
+        contactName = utils.SecurityUtil.sanitizeInput(contactName);
+        companyName = utils.SecurityUtil.sanitizeInput(companyName);
+        email = utils.SecurityUtil.sanitizeInput(email);
+        phone = utils.SecurityUtil.sanitizeInput(phone);
+        address = utils.SecurityUtil.sanitizeInput(address);
+        city = utils.SecurityUtil.sanitizeInput(city);
+        state = utils.SecurityUtil.sanitizeInput(state);
+        zipCode = utils.SecurityUtil.sanitizeInput(zipCode);
+        country = utils.SecurityUtil.sanitizeInput(country);
+        if (website != null) {
+            website = utils.SecurityUtil.sanitizeInput(website);
+        }
+        if (description != null) {
+            description = utils.SecurityUtil.sanitizeInput(description);
+        }
         
         // Validate email format
-        if (!InputValidator.isValidEmail(email)) {
-            request.setAttribute("error", "Invalid email format");
-            request.setAttribute("supplier", supplier);
-            request.getRequestDispatcher("/admin/supplier-form.jsp").forward(request, response);
+        String emailError = utils.ValidationUtil.validateEmail(email);
+        if (emailError != null) {
+            utils.ErrorAction.handleValidationError(request, response, emailError,
+                    "SupplierController.updateSupplier");
             return;
         }
         
         // Check if email is already used by another supplier
         Supplier existingSupplier = supplierDAO.findByEmail(email);
-    if (existingSupplier != null && existingSupplier.getSupplierId() != supplierId) {
-            request.setAttribute("error", "Email already used by another supplier");
-            request.setAttribute("supplier", supplier);
-            request.getRequestDispatcher("/admin/supplier-form.jsp").forward(request, response);
+        if (existingSupplier != null && existingSupplier.getSupplierId() != supplierId) {
+            utils.ErrorAction.handleValidationError(request, response,
+                    "Email already used by another supplier", "SupplierController.updateSupplier");
             return;
         }
         
@@ -219,6 +264,10 @@ public class SupplierController extends HttpServlet {
         supplier.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
         
         supplierDAO.update(supplier);
+        
+        // Log security event
+        utils.ErrorAction.logSecurityEvent("SUPPLIER_UPDATED", request,
+                "Supplier updated: " + companyName + ", ID: " + supplierId);
         
         HttpSession session = request.getSession();
         session.setAttribute("successMessage", "Supplier updated successfully");

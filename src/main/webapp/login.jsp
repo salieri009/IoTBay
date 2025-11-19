@@ -125,9 +125,24 @@
             
             fetch(this.action, {
                 method: 'POST',
-                body: formData
+                body: formData,
+                redirect: 'manual'  // Don't follow redirects automatically
             })
             .then(response => {
+                // Check for redirect (302) - successful login
+                // When redirect: 'manual', successful redirects return status 0 and type 'opaqueredirect'
+                if (response.type === 'opaqueredirect' || response.status === 0 || response.status === 302 || response.redirected) {
+                    // Successful login - redirect occurred
+                    if (typeof showToast === 'function') {
+                        showToast('Login successful! Redirecting...', 'success');
+                    }
+                    setTimeout(() => {
+                        window.location.href = '<%= contextPath %>/';
+                    }, 500);
+                    return null; // Don't process further
+                }
+                
+                // Not redirected, check for error in response
                 if (response.ok) {
                     return response.text();
                 } else {
@@ -137,17 +152,13 @@
                 }
             })
             .then(html => {
-                // Check if response contains error indicators
-                if (html.includes('error') || html.includes('Invalid')) {
-                    throw new Error('Invalid email or password. Please try again.');
+                // Only process HTML if we didn't redirect
+                if (html) {
+                    // Check if response contains error indicators
+                    if (html.includes('error') || html.includes('Invalid') || html.includes('errorMessage')) {
+                        throw new Error('Invalid email or password. Please try again.');
+                    }
                 }
-                // Success - redirect or reload
-                if (typeof showToast === 'function') {
-                    showToast('Login successful! Redirecting...', 'success');
-                }
-                setTimeout(() => {
-                    window.location.href = '<%= contextPath %>/';
-                }, 500);
             })
             .catch(error => {
                 console.error('Error:', error);

@@ -16,15 +16,17 @@
 
 ## 📋 Project Information
 
-**Course**: 41025 Information Systems Development (ISD)  
+**Course Code**: 41025  
+**Course Name**: Introduction to Software Development  
+**Credit Points**: 6 Credit Points  
 **Assignment**: Assignment 2 - Autumn 2025  
 **Institution**: University of Technology Sydney (UTS)  
-**Project Type**: E-commerce Web Application for IoT Devices
+**Project Type**: E-commerce Web Application for IoT Devices  
+**Course Handbook**: [41025 - Introduction to Software Development](https://coursehandbook.uts.edu.au/subject/2026/41025)
 
-[![Java](https://img.shields.io/badge/Java-ED8B00?style=flat&logo=java&logoColor=white)](https://www.java.com/)
+[![Java](https://img.shields.io/badge/Java-8+-ED8B00?style=flat&logo=java&logoColor=white)](https://www.java.com/)
 [![JSP](https://img.shields.io/badge/JSP-2.3+-orange?style=flat)](https://www.oracle.com/java/technologies/jspt.html)
 [![Maven](https://img.shields.io/badge/Maven-3.6+-C71A36?style=flat&logo=apache-maven&logoColor=white)](https://maven.apache.org/)
-[![License](https://img.shields.io/badge/License-Academic-blue)](LICENSE)
 
 </div>
 
@@ -39,13 +41,26 @@ A modern, responsive **e-commerce platform** specifically designed for **Interne
 ### ✨ Key Features
 
 - 🛒 **Full E-commerce Functionality**: Product browsing, shopping cart, checkout, and order management
-- 🔐 **Secure Authentication**: Role-based access control (Customer, Staff, Admin)
+- 🔐 **Secure Authentication**: Role-based access control (Customer, Staff, Admin) with enterprise-grade security
 - 📱 **Responsive Design**: Mobile-first approach with modern UI/UX
 - 🌙 **Dark Mode**: Complete dark theme support
 - ♿ **Accessibility**: WCAG 2.1 AA compliant with enhanced keyboard navigation
 - 🎨 **Modern Design System**: Component-based architecture with CSS Custom Properties
 - 🔍 **Advanced Search**: Multi-dimensional filtering (protocol, voltage, use case)
 - ⚡ **Performance Optimized**: Optimistic UI, skeleton loading, image optimization
+- 🔒 **Security**: Server-side validation, CSRF protection, rate limiting, and secure error handling
+
+---
+
+## 📚 Course Information
+
+This project is developed as part of **41025 - Introduction to Software Development** at the University of Technology Sydney (UTS).
+
+- **Course Code**: 41025
+- **Course Name**: Introduction to Software Development
+- **Credit Points**: 6 Credit Points
+- **Course Handbook**: [View Course Details](https://coursehandbook.uts.edu.au/subject/2026/41025)
+- **Assignment**: Assignment 2 - Autumn 2025
 
 ---
 
@@ -59,6 +74,7 @@ A modern, responsive **e-commerce platform** specifically designed for **Interne
 - ✅ Demonstrate database design and data access patterns
 - ✅ Ensure accessibility compliance (WCAG 2.1 AA)
 - ✅ Optimize for performance and user experience
+- ✅ Implement enterprise-grade security measures
 
 ---
 
@@ -116,7 +132,8 @@ IoTBay/
 │   │   └── impl/            # Database implementations
 │   ├── model/               # JavaBeans (User, Product, Order, etc.)
 │   ├── service/             # Business Logic Layer
-│   └── utils/               # Utility classes
+│   ├── utils/               # Utility classes (Security, Validation, Error Handling)
+│   └── config/              # Configuration (DIContainer)
 ├── src/main/webapp/
 │   ├── components/          # Reusable JSP components
 │   │   ├── header.jsp      # Navigation header
@@ -129,7 +146,7 @@ IoTBay/
 │   └── *.jsp               # JSP pages
 ├── design plan/            # Design system documentation
 │   ├── UI_UXdoc.md         # UI/UX specification
-│   ├── improvement.md      # UX improvement plan
+│   ├── FEATURES.md         # Feature requirements
 │   └── *.md                # Other design docs
 └── pom.xml                 # Maven configuration
 ```
@@ -139,11 +156,6 @@ IoTBay/
 ## 🛠️ Tech Stack
 
 ### Backend
-![Java](https://img.shields.io/badge/Java-ED8B00?style=flat&logo=java&logoColor=white)
-![JSP](https://img.shields.io/badge/JSP-2.3+-orange?style=flat)
-![Maven](https://img.shields.io/badge/Maven-3.6+-C71A36?style=flat&logo=apache-maven&logoColor=white)
-![Jetty](https://img.shields.io/badge/Jetty-Embedded-FFA500?style=flat)
-
 - **Java**: JDK 8 or higher
 - **JSP**: JavaServer Pages 2.3+
 - **Servlets**: Java Servlet API 3.1+
@@ -153,10 +165,6 @@ IoTBay/
 - **Data Access**: DAO (Data Access Object) Pattern
 
 ### Frontend
-![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
-![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=flat&logo=javascript&logoColor=black)
-
 - **HTML5**: Semantic markup with ARIA attributes
 - **CSS3**: Modern styling with CSS Custom Properties
 - **JavaScript**: ES6+ for interactivity and optimistic UI
@@ -164,22 +172,18 @@ IoTBay/
 - **Responsive Design**: Mobile-first approach with breakpoints
 
 ### Database
-![SQLite](https://img.shields.io/badge/SQLite-003B57?style=flat&logo=sqlite&logoColor=white)
-![JDBC](https://img.shields.io/badge/JDBC-Data%20Access-orange?style=flat)
-
 - **SQLite**: Lightweight relational database (development)
 - **JDBC**: Database connectivity
 - **DAO Pattern**: Abstraction layer for data access
 
-### Security & Quality
-![Security](https://img.shields.io/badge/Security-SHA256-green?style=flat)
-![Accessibility](https://img.shields.io/badge/Accessibility-WCAG%202.1%20AA-blue?style=flat)
-
+### Security
 - **Password Hashing**: SHA-256 with salt
 - **Session Management**: Secure session handling
 - **Role-Based Access Control**: Customer, Staff, Admin roles
 - **Input Validation**: SQL injection and XSS prevention
-- **Accessibility**: WCAG 2.1 AA compliant
+- **CSRF Protection**: Token-based CSRF protection
+- **Rate Limiting**: Request rate limiting for security
+- **Error Handling**: Secure error handling without information disclosure
 
 ---
 
@@ -220,6 +224,9 @@ IoTBay/
 - ✅ **Modern UI/UX**: Design system principles
 - ✅ **Error Handling**: Comprehensive validation and error recovery
 - ✅ **Access Logging**: Security auditing and analytics
+- ✅ **Server-Side Validation**: Enterprise-grade input validation
+- ✅ **CSRF Protection**: Token-based protection
+- ✅ **Rate Limiting**: Request throttling
 
 ### Design Requirements
 
@@ -254,6 +261,28 @@ For detailed design documentation, see:
 - [Design System](design%20plan/DESIGN_SYSTEM.md)
 - [UI/UX Documentation](designplan/UI_UXdoc.md)
 - [Component Architecture](design%20plan/COMPONENT_ARCHITECTURE.md)
+- [Features Documentation](design%20plan/FEATURES.md)
+
+---
+
+## 🔒 Security Features
+
+### Enterprise-Grade Security Implementation
+
+- **Input Validation**: Comprehensive server-side validation using `SecurityUtil` and `ValidationUtil`
+- **XSS Prevention**: Enhanced sanitization of all user inputs
+- **SQL Injection Prevention**: Parameterized queries and input sanitization
+- **CSRF Protection**: Token-based CSRF protection for state-changing operations
+- **Rate Limiting**: Request throttling to prevent abuse
+- **Secure Error Handling**: Generic error messages to prevent information disclosure
+- **Security Logging**: Comprehensive audit trail for security events
+- **Password Security**: Strong password requirements and secure hashing
+
+### Security Utilities
+
+- `SecurityUtil`: Input validation, sanitization, CSRF token management
+- `ErrorAction`: Consistent error handling without information leakage
+- `ValidationUtil`: Business logic validation for all input fields
 
 ---
 
@@ -303,13 +332,13 @@ For detailed design documentation, see:
 - [Design System](design%20plan/DESIGN_SYSTEM.md) - Visual design guidelines
 - [Component Architecture](design%20plan/COMPONENT_ARCHITECTURE.md) - Component structure
 - [Developer Documentation](design%20plan/DEVELOPER_DOCUMENTATION.md) - Development guide
-- [Improvement Plan](designplan/improvement.md) - UX improvement recommendations
+- [Features Documentation](design%20plan/FEATURES.md) - Complete feature list
 
 ---
 
 ## 📄 License
 
-This project is developed for **academic purposes** as part of **UTS 41025 ISD Assignment 2 Autumn 2025**. All code and documentation are intended for educational use only.
+This project is developed for **academic purposes** as part of **UTS 41025 Introduction to Software Development - Assignment 2 Autumn 2025**. All code and documentation are intended for educational use only.
 
 ---
 
@@ -319,7 +348,6 @@ This project is developed for **academic purposes** as part of **UTS 41025 ISD A
 
 **Built with ❤️ for IoT Enthusiasts**
 
-[![UTS](https://img.shields.io/badge/UTS-41025%20ISD-blue)](https://www.uts.edu.au/)
-[![Assignment](https://img.shields.io/badge/Assignment-2%20Autumn%202025-green)](README.md)
+[![UTS](https://img.shields.io/badge/UTS-41025-blue)](https://coursehandbook.uts.edu.au/subject/2026/41025)
 
 </div>

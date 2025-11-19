@@ -58,37 +58,124 @@ public class ManageUserController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        request.setCharacterEncoding("UTF-8");
 
+        // Authorization check
         if (!isAdmin(request)) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.getWriter().write("{\"error\": \"Access denied\"}");
+            utils.ErrorAction.handleAuthorizationError(request, response, "ManageUserController.doPost");
+            return;
+        }
+
+        // Rate limiting check
+        if (utils.SecurityUtil.isRateLimited(request, 10, 60000)) { // 10 requests per minute
+            utils.ErrorAction.handleRateLimitError(request, response, "ManageUserController.doPost");
+            return;
+        }
+
+        // CSRF protection
+        if (!utils.SecurityUtil.validateCSRFToken(request)) {
+            utils.ErrorAction.handleValidationError(request, response,
+                    "CSRF token validation failed", "ManageUserController.doPost");
             return;
         }
 
         try {
-            String email = request.getParameter("email");
-            String password = request.getParameter("password");
-            String firstName = request.getParameter("firstName");
-            String lastName = request.getParameter("lastName");
-            String phone = request.getParameter("phone");
-            String postalCode = request.getParameter("postalCode");
-            String addressLine1 = request.getParameter("addressLine1");
-            String addressLine2 = request.getParameter("addressLine2");
-            String paymentMethod = request.getParameter("paymentMethod");
-            String dob = request.getParameter("dateOfBirth");
-            String role = request.getParameter("role");
+            // Secure parameter extraction with validation
+            String email = utils.SecurityUtil.getValidatedStringParameter(request, "email", 100);
+            String password = request.getParameter("password"); // Don't sanitize password
+            String firstName = utils.SecurityUtil.getValidatedStringParameter(request, "firstName", 50);
+            String lastName = utils.SecurityUtil.getValidatedStringParameter(request, "lastName", 50);
+            String phone = request.getParameter("phone"); // Optional
+            String postalCode = request.getParameter("postalCode"); // Optional
+            String addressLine1 = request.getParameter("addressLine1"); // Optional
+            String addressLine2 = request.getParameter("addressLine2"); // Optional
+            String paymentMethod = request.getParameter("paymentMethod"); // Optional
+            String dob = utils.SecurityUtil.getValidatedStringParameter(request, "dateOfBirth", 20);
+            String role = utils.SecurityUtil.getValidatedStringParameter(request, "role", 20);
 
-            // 필수 필드 체크
-            if (email == null || password == null || firstName == null || lastName == null || dob == null || role == null) {
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                response.getWriter().write("{\"error\": \"Missing required fields\"}");
+            // Sanitize inputs (except password)
+            email = utils.SecurityUtil.sanitizeInput(email);
+            firstName = utils.SecurityUtil.sanitizeInput(firstName);
+            lastName = utils.SecurityUtil.sanitizeInput(lastName);
+            if (phone != null) {
+                phone = utils.SecurityUtil.sanitizeInput(phone);
+            }
+            if (postalCode != null) {
+                postalCode = utils.SecurityUtil.sanitizeInput(postalCode);
+            }
+            if (addressLine1 != null) {
+                addressLine1 = utils.SecurityUtil.sanitizeInput(addressLine1);
+            }
+            if (addressLine2 != null) {
+                addressLine2 = utils.SecurityUtil.sanitizeInput(addressLine2);
+            }
+            if (paymentMethod != null) {
+                paymentMethod = utils.SecurityUtil.sanitizeInput(paymentMethod);
+            }
+
+            // Validate email format
+            String emailError = utils.ValidationUtil.validateEmail(email);
+            if (emailError != null) {
+                utils.ErrorAction.handleValidationError(request, response, emailError,
+                        "ManageUserController.doPost");
                 return;
             }
+
+            // Validate password strength
+            if (!utils.SecurityUtil.isStrongPassword(password)) {
+                utils.ErrorAction.handleValidationError(request, response,
+                        "Password does not meet security requirements", "ManageUserController.doPost");
+                return;
+            }
+
+            // Validate profile data
+            String profileError = utils.ValidationUtil.validateRegisterUserProfile(
+                    firstName, lastName, phone != null ? phone : "", 
+                    postalCode != null ? postalCode : "", 
+                    addressLine1 != null ? addressLine1 : "");
+            if (profileError != null) {
+                utils.ErrorAction.handleValidationError(request, response, profileError,
+                        "ManageUserController.doPost");
+                return;
+            }
+
+            // Validate date of birth
+            String dobError = utils.ValidationUtil.validateBirthDate(dob);
+            if (dobError != null) {
+                utils.ErrorAction.handleValidationError(request, response, dobError,
+                        "ManageUserController.doPost");
+                return;
+            }
+
+            // Validate role
+            String[] validRoles = {"customer", "staff", "admin"};
+            boolean isValidRole = false;
+            for (String validRole : validRoles) {
+                if (validRole.equalsIgnoreCase(role)) {
+                    isValidRole = true;
+                    break;
+                }
+            }
+            if (!isValidRole) {
+                utils.ErrorAction.handleValidationError(request, response,
+                        "Invalid user role", "ManageUserController.doPost");
+                return;
+            }
+
+            // Check email duplication
+            if (userDAO.getUserByEmail(email) != null) {
+                utils.ErrorAction.handleValidationError(request, response,
+                        "Email already exists", "ManageUserController.doPost");
+                return;
+            }
+
+            // Hash password securely
+            String hashedPassword = utils.PasswordUtil.hashPassword(password);
 
             User user = new User(
                     0, // id (auto-generated)
                     email,
-                    password,
+                    hashedPassword, // Use hashed password
                     firstName,
                     lastName,
                     phone,
@@ -99,18 +186,24 @@ public class ManageUserController extends HttpServlet {
                     paymentMethod,
                     LocalDateTime.now(),
                     LocalDateTime.now(),
-                    role,
+                    role.toLowerCase(),
                     true // isActive
             );
             userDAO.createUser(user);
+            
+            // Log security event
+            utils.ErrorAction.logSecurityEvent("USER_CREATED_BY_ADMIN", request,
+                    "User created: " + email + ", Role: " + role);
+
             response.sendRedirect(request.getContextPath() + "/manage/users");
 
+        } catch (IllegalArgumentException e) {
+            utils.ErrorAction.handleValidationError(request, response, e.getMessage(),
+                    "ManageUserController.doPost");
         } catch (SQLException e) {
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write("{\"error\": \"Database error: " + e.getMessage() + "\"}");
+            utils.ErrorAction.handleDatabaseError(request, response, e, "ManageUserController.doPost");
         } catch (Exception e) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("{\"error\": \"Invalid input: " + e.getMessage() + "\"}");
+            utils.ErrorAction.handleServerError(request, response, e, "ManageUserController.doPost");
         }
     }
 

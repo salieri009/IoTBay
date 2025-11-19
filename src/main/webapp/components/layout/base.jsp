@@ -12,8 +12,9 @@
     <!-- Page Title -->
     <title>${param.title != null ? param.title.concat(' | IoT Bay') : 'IoT Bay - Smart Technology Store'}</title>
     
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/images/favicon.ico">
+    <!-- Modern Favicons -->
+    <link rel="icon" type="image/svg+xml" href="${pageContext.request.contextPath}/images/favicon.svg">
+    <link rel="icon" type="image/x-icon" href="${pageContext.request.contextPath}/favicon.ico">
     
     <!-- CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/modern-theme.css?v=3">

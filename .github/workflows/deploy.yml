@@ -1,0 +1,270 @@
+name: Build and Deploy IoTBay
+
+# {GitHub Actions workflow for building and deploying IoTBay application}
+# {This workflow builds the Maven project and deploys to a server}
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    # {Trigger on push to main/master branches}
+  pull_request:
+    branches:
+      - main
+      - master
+    # {Also run on pull requests for CI validation}
+  workflow_dispatch:
+    # {Allow manual triggering from GitHub Actions UI}
+
+env:
+  # {Environment variables used throughout the workflow}
+  JAVA_VERSION: '17'
+  MAVEN_VERSION: '3.9.5'
+  PROJECT_NAME: 'IoTBay'
+
+jobs:
+  # {Job 1: Build and Test}
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    # {Run on Ubuntu latest for consistent build environment}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        # {Checkout the repository code}
+
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+          cache: 'maven'
+          # {Set up Java JDK and cache Maven dependencies}
+
+      - name: Cache Maven dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+          # {Cache Maven dependencies to speed up builds}
+
+      - name: Build with Maven
+        run: mvn clean package -DskipTests
+        # {Build the project, skip tests for faster build (tests run separately)}
+        # {Note: Remove -DskipTests if you want tests to run during build}
+
+      - name: Run Tests
+        run: mvn test
+        # {Run unit and integration tests}
+        continue-on-error: false
+        # {Fail workflow if tests fail}
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: war-file
+          path: target/*.war
+          retention-days: 7
+          # {Upload the built WAR file as artifact for deployment}
+          # {WAR file is typically in target/ directory after Maven build}
+
+      - name: Generate build report
+        if: always()
+        run: |
+          echo "## Build Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- Java Version: ${{ env.JAVA_VERSION }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Maven Version: ${{ env.MAVEN_VERSION }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Build Status: ${{ job.status }}" >> $GITHUB_STEP_SUMMARY
+          # {Generate summary report visible in GitHub Actions UI}
+
+  # {Job 2: Code Quality Checks}
+  code-quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    # {Separate job for code quality checks}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Run Maven Checkstyle (if configured)
+        run: mvn checkstyle:check || echo "Checkstyle not configured, skipping"
+        continue-on-error: true
+        # {Run code style checks if checkstyle plugin is configured}
+
+      - name: Run Maven SpotBugs (if configured)
+        run: mvn spotbugs:check || echo "SpotBugs not configured, skipping"
+        continue-on-error: true
+        # {Run static analysis if SpotBugs plugin is configured}
+
+  # {Job 3: Deploy to Server}
+  deploy:
+    name: Deploy to Server
+    runs-on: ubuntu-latest
+    needs: [build]
+    # {This job depends on build job completing successfully}
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    # {Only deploy on main/master branch, not on PRs}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: war-file
+          path: ./artifacts
+          # {Download the WAR file from build job}
+
+      - name: Deploy to Tomcat Server (SSH)
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          # {Server hostname/IP from GitHub Secrets}
+          username: ${{ secrets.DEPLOY_USER }}
+          # {SSH username from GitHub Secrets}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          # {SSH private key from GitHub Secrets}
+          port: ${{ secrets.DEPLOY_PORT || 22 }}
+          # {SSH port, default 22}
+          source: "./artifacts/*.war"
+          # {Source: WAR file from artifacts}
+          target: "/tmp"
+          # {Target: Temporary directory on server}
+          strip_components: 0
+          # {Don't strip directory components}
+
+      - name: Deploy WAR to Tomcat
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_SSH_KEY }}
+          port: ${{ secrets.DEPLOY_PORT || 22 }}
+          script: |
+            # {SSH script to deploy WAR file to Tomcat}
+            # {Stop Tomcat, backup old WAR, deploy new WAR, start Tomcat}
+            
+            # Set variables
+            TOMCAT_HOME=${{ secrets.TOMCAT_HOME || '/opt/tomcat' }}
+            APP_NAME="${{ env.PROJECT_NAME }}"
+            WAR_FILE="/tmp/${APP_NAME}.war"
+            DEPLOY_DIR="${TOMCAT_HOME}/webapps"
+            BACKUP_DIR="${TOMCAT_HOME}/backups"
+            
+            # Create backup directory if it doesn't exist
+            mkdir -p ${BACKUP_DIR}
+            
+            # Stop Tomcat
+            echo "Stopping Tomcat..."
+            sudo systemctl stop tomcat || ${TOMCAT_HOME}/bin/shutdown.sh || true
+            
+            # Backup existing WAR file if it exists
+            if [ -f "${DEPLOY_DIR}/${APP_NAME}.war" ]; then
+              echo "Backing up existing WAR file..."
+              cp "${DEPLOY_DIR}/${APP_NAME}.war" "${BACKUP_DIR}/${APP_NAME}-$(date +%Y%m%d-%H%M%S).war"
+            fi
+            
+            # Remove old deployment
+            echo "Removing old deployment..."
+            rm -rf "${DEPLOY_DIR}/${APP_NAME}.war" "${DEPLOY_DIR}/${APP_NAME}"
+            
+            # Copy new WAR file
+            echo "Deploying new WAR file..."
+            cp ${WAR_FILE} "${DEPLOY_DIR}/${APP_NAME}.war"
+            
+            # Set permissions
+            chown tomcat:tomcat "${DEPLOY_DIR}/${APP_NAME}.war" || true
+            chmod 644 "${DEPLOY_DIR}/${APP_NAME}.war"
+            
+            # Start Tomcat
+            echo "Starting Tomcat..."
+            sudo systemctl start tomcat || ${TOMCAT_HOME}/bin/startup.sh
+            
+            # Wait for Tomcat to start
+            sleep 10
+            
+            # Verify deployment
+            echo "Verifying deployment..."
+            if curl -f http://localhost:8080/${APP_NAME}/ > /dev/null 2>&1; then
+              echo "Deployment successful!"
+            else
+              echo "Warning: Deployment verification failed. Check Tomcat logs."
+              exit 1
+            fi
+
+      - name: Deployment Notification
+        if: always()
+        run: |
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "✅ Deployment successful!"
+          else
+            echo "❌ Deployment failed!"
+          fi
+          # {Simple deployment status notification}
+
+  # {Job 4: Database Migration (Optional)}
+  database-migration:
+    name: Database Migration
+    runs-on: ubuntu-latest
+    needs: [build]
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    # {Optional job for database migrations}
+    # {Uncomment and configure if you use database migrations}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Run Database Migrations
+        run: |
+          echo "Database migration step"
+          # {Add your database migration commands here}
+          # {Example: mvn flyway:migrate or custom migration script}
+        continue-on-error: true
+        # {Set to false if migrations are critical}
+
+  # {Job 5: Health Check (Post-Deployment)}
+  health-check:
+    name: Health Check
+    runs-on: ubuntu-latest
+    needs: [deploy]
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    # {Run health checks after deployment}
+
+    steps:
+      - name: Wait for application to be ready
+        run: sleep 30
+        # {Wait for application to fully start}
+
+      - name: Health Check
+        run: |
+          APP_URL="${{ secrets.APP_URL || 'http://localhost:8080/IoTBay' }}"
+          echo "Checking application health at ${APP_URL}..."
+          
+          if curl -f "${APP_URL}/" > /dev/null 2>&1; then
+            echo "✅ Application is healthy!"
+          else
+            echo "❌ Health check failed!"
+            exit 1
+          fi
+          # {Simple health check - adjust URL and endpoint as needed}
+

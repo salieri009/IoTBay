@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  {IoTBay Admin Dashboard Structure}
+  {This XML describes admin-dashboard.jsp and related admin pages}
+  {Purpose: Document admin interface structure, management tools, and analytics}
+-->
+<page name="admin-dashboard" type="admin" jsp-file="admin-dashboard.jsp">
+  
+  <metadata>
+    <title>Admin Dashboard - IoTBay</title>
+    <description>Administrative dashboard for managing IoTBay platform</description>
+    <route>/admin</route>
+    <template>t:base</template>
+    <authentication>required</authentication>
+    <authorization>admin-only</authorization>
+    <!-- {Only users with admin role can access} -->
+  </metadata>
+
+  <structure>
+    
+    <!-- {Admin Navigation Sidebar} -->
+    <section name="admin-sidebar" type="sidebar" position="left">
+      <!-- {Left sidebar navigation for admin sections} -->
+      
+      <sidebar-header>
+        <logo>
+          <image source="/images/logo.png" alt="IoTBay Admin"/>
+        </logo>
+        <title>Admin Panel</title>
+      </sidebar-header>
+      
+      <sidebar-menu>
+        <menu-item route="/admin" active="true">
+          <icon>dashboard-icon</icon>
+          <label>Dashboard</label>
+          <!-- {Main dashboard overview} -->
+        </menu-item>
+        
+        <menu-item route="/admin/users">
+          <icon>users-icon</icon>
+          <label>User Management</label>
+          <!-- {Manage users, roles, permissions} -->
+        </menu-item>
+        
+        <menu-item route="/admin/products">
+          <icon>products-icon</icon>
+          <label>Product Management</label>
+          <!-- {Manage products, inventory, categories} -->
+        </menu-item>
+        
+        <menu-item route="/admin/orders">
+          <icon>orders-icon</icon>
+          <label>Order Management</label>
+          <!-- {View and manage orders} -->
+        </menu-item>
+        
+        <menu-item route="/admin/suppliers">
+          <icon>suppliers-icon</icon>
+          <label>Supplier Management</label>
+          <!-- {Manage suppliers and vendor relationships} -->
+        </menu-item>
+        
+        <menu-item route="/admin/analytics">
+          <icon>analytics-icon</icon>
+          <label>Analytics & Reports</label>
+          <!-- {View analytics, generate reports} -->
+        </menu-item>
+        
+        <menu-item route="/admin/logs">
+          <icon>logs-icon</icon>
+          <label>Access Logs</label>
+          <!-- {View system access logs} -->
+        </menu-item>
+        
+        <menu-item route="/admin/settings">
+          <icon>settings-icon</icon>
+          <label>System Settings</label>
+          <!-- {Platform configuration} -->
+        </menu-item>
+      </sidebar-menu>
+      
+    </section>
+
+    <!-- {Main Dashboard Content} -->
+    <section name="dashboard-content" type="main-content">
+      
+      <!-- {Dashboard Header} -->
+      <dashboard-header>
+        <title>Dashboard Overview</title>
+        <date-range-selector>
+          <!-- {Select time range for statistics: Today, Week, Month, Year, Custom} -->
+        </date-range-selector>
+      </dashboard-header>
+
+      <!-- {Statistics Cards Grid} -->
+      <statistics-grid columns="4">
+        <!-- {Key metrics displayed as cards} -->
+        
+        <stat-card name="total-revenue">
+          <icon>revenue-icon</icon>
+          <label>Total Revenue</label>
+          <value currency="USD">{totalRevenue}</value>
+          <change period="month" value="{revenueChange}" trend="{up|down|neutral}"/>
+          <!-- {Percentage change from previous period} -->
+        </stat-card>
+        
+        <stat-card name="total-orders">
+          <icon>orders-icon</icon>
+          <label>Total Orders</label>
+          <value>{totalOrders}</value>
+          <change period="month" value="{ordersChange}" trend="{up|down|neutral}"/>
+        </stat-card>
+        
+        <stat-card name="total-users">
+          <icon>users-icon</icon>
+          <label>Total Users</label>
+          <value>{totalUsers}</value>
+          <change period="month" value="{usersChange}" trend="{up|down|neutral}"/>
+        </stat-card>
+        
+        <stat-card name="total-products">
+          <icon>products-icon</icon>
+          <label>Total Products</label>
+          <value>{totalProducts}</value>
+          <change period="month" value="{productsChange}" trend="{up|down|neutral}"/>
+        </stat-card>
+        
+      </statistics-grid>
+
+      <!-- {Charts Section} -->
+      <charts-section type="two-column">
+        
+        <!-- {Revenue Chart} -->
+        <chart-card name="revenue-chart" width="66%">
+          <title>Revenue Trend</title>
+          <chart type="line">
+            <!-- {Line chart showing revenue over time} -->
+            <data>
+              <!-- {Revenue data points for selected time range} -->
+            </data>
+          </chart>
+        </chart-card>
+        
+        <!-- {Order Status Chart} -->
+        <chart-card name="order-status" width="34%">
+          <title>Orders by Status</title>
+          <chart type="pie">
+            <!-- {Pie chart showing order status distribution} -->
+            <data>
+              <!-- {Pending, Processing, Shipped, Delivered, Cancelled} -->
+            </data>
+          </chart>
+        </chart-card>
+        
+      </charts-section>
+
+      <!-- {Recent Activity Section} -->
+      <activity-section>
+        <title>Recent Activity</title>
+        
+        <activity-list>
+          <activity-item>
+            <!-- {Recent system activities} -->
+            <icon>order-icon</icon>
+            <description>New order #{orderNumber} placed by {customerName}</description>
+            <timestamp>{timeAgo}</timestamp>
+            <!-- {2 hours ago, 1 day ago, etc.} -->
+            <action>
+              <button type="link" route="/admin/orders/{orderId}" text="View Order"/>
+            </action>
+          </activity-item>
+          
+          <activity-item>
+            <icon>user-icon</icon>
+            <description>New user registered: {userEmail}</description>
+            <timestamp>{timeAgo}</timestamp>
+            <action>
+              <button type="link" route="/admin/users/{userId}" text="View User"/>
+            </action>
+          </activity-item>
+          
+          <activity-item>
+            <icon>product-icon</icon>
+            <description>Product "{productName}" stock is low ({stockQuantity} remaining)</description>
+            <timestamp>{timeAgo}</timestamp>
+            <action>
+              <button type="link" route="/admin/products/{productId}" text="Manage Product"/>
+            </action>
+          </activity-item>
+        </activity-list>
+      </activity-section>
+
+      <!-- {Quick Actions} -->
+      <quick-actions>
+        <title>Quick Actions</title>
+        
+        <action-buttons>
+          <button type="primary" route="/admin/products/new" text="Add New Product"/>
+          <button type="primary" route="/admin/users/new" text="Create User"/>
+          <button type="secondary" route="/admin/analytics" text="View Full Analytics"/>
+          <button type="secondary" route="/admin/reports" text="Generate Report"/>
+        </action-buttons>
+      </quick-actions>
+
+    </section>
+
+  </structure>
+
+  <!-- {Admin Sub-Pages} -->
+  <sub-pages>
+    
+    <!-- {User Management Page} -->
+    <page name="user-management" route="/admin/users">
+      <!-- {List, search, edit, delete users} -->
+      <features>
+        <feature>User list with search and filters</feature>
+        <feature>Edit user details and roles</feature>
+        <feature>Activate/deactivate users</feature>
+        <feature>View user activity and order history</feature>
+      </features>
+    </page>
+
+    <!-- {Product Management Page} -->
+    <page name="product-management" route="/admin/products">
+      <!-- {Manage products, inventory, categories} -->
+      <features>
+        <feature>Product list with search and filters</feature>
+        <feature>Add/edit/delete products</feature>
+        <feature>Manage inventory levels</feature>
+        <feature>Bulk operations (import/export)</feature>
+      </features>
+    </page>
+
+    <!-- {Order Management Page} -->
+    <page name="order-management" route="/admin/orders">
+      <!-- {View and manage all orders} -->
+      <features>
+        <feature>Order list with filters</feature>
+        <feature>View order details</feature>
+        <feature>Update order status</feature>
+        <feature>Process refunds</feature>
+      </features>
+    </page>
+
+    <!-- {Analytics Page} -->
+    <page name="analytics" route="/admin/analytics">
+      <!-- {Detailed analytics and reports} -->
+      <features>
+        <feature>Sales analytics</feature>
+        <feature>User behavior analytics</feature>
+        <feature>Product performance metrics</feature>
+        <feature>Custom report generation</feature>
+      </features>
+    </page>
+
+  </sub-pages>
+
+  <!-- {Refactoring Context} -->
+  <refactoring-context>
+    <current-state>
+      <issues>
+        <issue>Dashboard could have more interactive charts</issue>
+        <issue>No real-time updates for statistics</issue>
+        <issue>Analytics could be more comprehensive</issue>
+        <issue>No export functionality for reports</issue>
+        <issue>Mobile responsiveness needs improvement</issue>
+      </issues>
+    </current-state>
+    <target-state>
+      <improvements>
+        <improvement>Add interactive charts with drill-down capabilities</improvement>
+        <improvement>Implement real-time statistics updates (WebSocket)</improvement>
+        <improvement>Add advanced analytics with custom date ranges</improvement>
+        <improvement>Implement report export (PDF, CSV, Excel)</improvement>
+        <improvement>Add dashboard customization (widget arrangement)</improvement>
+        <improvement>Implement data visualization library (Chart.js, D3.js)</improvement>
+        <improvement>Add alert system for critical metrics (low stock, high order volume)</improvement>
+        <improvement>Mobile: Collapsible sidebar, responsive charts</improvement>
+      </improvements>
+    </target-state>
+  </refactoring-context>
+
+  <dependencies>
+    <component name="header" file="components/header.jsp"/>
+    <component name="admin-sidebar" file="components/admin-sidebar.jsp"/>
+    <component name="stat-card" file="components/stat-card.jsp"/>
+    <component name="chart" file="components/chart.jsp"/>
+    <layout name="base" file="WEB-INF/tags/base.tag"/>
+  </dependencies>
+
+</page>
+

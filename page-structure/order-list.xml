@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  {IoTBay Order History Page Structure}
+  {This XML describes orderList.jsp - the order history and tracking page}
+  {Purpose: Document order listing, filtering, and order detail views}
+-->
+<page name="order-list" type="order-history" jsp-file="orderList.jsp">
+  
+  <metadata>
+    <title>Order History - IoTBay</title>
+    <description>View your order history and track shipments</description>
+    <route>/orders</route>
+    <template>t:base</template>
+    <authentication>required</authentication>
+  </metadata>
+
+  <structure>
+    
+    <!-- {Page Header} -->
+    <section name="page-header">
+      <breadcrumb>
+        <item name="Home" route="/"/>
+        <item name="My Account" route="/profile"/>
+        <item name="Order History" active="true"/>
+      </breadcrumb>
+      <title>Order History</title>
+    </section>
+
+    <!-- {Order List Content} -->
+    <section name="order-list-content">
+      
+      <!-- {Filter and Search Bar} -->
+      <toolbar>
+        <search>
+          <input type="search" placeholder="Search orders by order number or product name..."/>
+          <!-- {Search orders by order number, product name, etc.} -->
+        </search>
+        
+        <filters>
+          <filter name="status" type="dropdown">
+            <!-- {Filter by order status} -->
+            <option value="all" selected="true">All Orders</option>
+            <option value="pending">Pending</option>
+            <option value="processing">Processing</option>
+            <option value="shipped">Shipped</option>
+            <option value="delivered">Delivered</option>
+            <option value="cancelled">Cancelled</option>
+          </filter>
+          
+          <filter name="date-range" type="date-range">
+            <!-- {Filter by date range} -->
+            <option value="all">All Time</option>
+            <option value="last-30">Last 30 Days</option>
+            <option value="last-90">Last 90 Days</option>
+            <option value="last-year">Last Year</option>
+            <option value="custom">Custom Range</option>
+          </filter>
+        </filters>
+      </toolbar>
+
+      <!-- {Orders List} -->
+      <orders-list>
+        
+        <order-item>
+          <!-- {Each order in the list} -->
+          
+          <!-- {Order Header} -->
+          <order-header>
+            <order-info>
+              <order-number>Order #{order.orderNumber}</order-number>
+              <!-- {Order number: ORD-2025-001234} -->
+              <order-date>{order.orderDate}</order-date>
+              <!-- {Order date: November 10, 2025} -->
+            </order-info>
+            
+            <order-status>
+              <badge type="{order.status}" text="{order.statusLabel}"/>
+              <!-- {Status badge: Pending, Processing, Shipped, Delivered, Cancelled} -->
+            </order-status>
+            
+            <order-total>
+              <label>Total</label>
+              <value currency="USD">{order.total}</value>
+            </order-total>
+          </order-header>
+          
+          <!-- {Order Items Preview} -->
+          <order-items-preview>
+            <!-- {Compact preview of items in order} -->
+            <item>
+              <image source="/images/products/{productId}.png" size="thumbnail"/>
+              <name>{Product Name}</name>
+              <quantity>×{quantity}</quantity>
+              <price currency="USD">{price}</price>
+            </item>
+            <!-- {Show first 3 items, "and X more" if more items} -->
+            <more-items condition="itemCount > 3">
+              <text>and {itemCount - 3} more item(s)</text>
+            </more-items>
+          </order-items-preview>
+          
+          <!-- {Order Actions} -->
+          <order-actions>
+            <button type="primary" route="/order/{orderId}" text="View Details"/>
+            <!-- {Link to full order details page} -->
+            
+            <button condition="order.status=shipped" type="secondary" route="/track/{orderId}" text="Track Package"/>
+            <!-- {Track shipment if order is shipped} -->
+            
+            <button condition="order.status=pending" type="secondary" action="cancelOrder" text="Cancel Order"/>
+            <!-- {Cancel order if still pending} -->
+            
+            <button condition="order.status=delivered" type="secondary" action="reorder" text="Reorder"/>
+            <!-- {Quick reorder if order was delivered} -->
+            
+            <button condition="order.status=delivered" type="secondary" route="/order/{orderId}/review" text="Write Review"/>
+            <!-- {Review products if delivered} -->
+          </order-actions>
+          
+          <!-- {Shipping Information} -->
+          <shipping-info condition="order.status=shipped|delivered">
+            <label>Estimated Delivery</label>
+            <value>{estimatedDeliveryDate}</value>
+            <!-- {Estimated delivery date: November 15, 2025} -->
+          </shipping-info>
+          
+        </order-item>
+        
+      </orders-list>
+
+      <!-- {Empty State} -->
+      <empty-state condition="noOrders">
+        <icon>order-icon</icon>
+        <title>No orders yet</title>
+        <message>Start shopping to see your orders here</message>
+        <action>
+          <button type="primary" route="/browse" text="Browse Products"/>
+        </action>
+      </empty-state>
+
+      <!-- {Pagination} -->
+      <pagination>
+        <!-- {Pagination controls if many orders} -->
+        <prev-button enabled="{hasPrevious}"/>
+        <page-numbers current="{currentPage}" total="{totalPages}"/>
+        <next-button enabled="{hasNext}"/>
+      </pagination>
+
+    </section>
+
+    <!-- {Order Detail Modal/Page} -->
+    <order-detail condition="viewingDetails">
+      <!-- {Detailed view of single order - can be modal or separate page} -->
+      
+      <order-detail-header>
+        <order-number>Order #{order.orderNumber}</order-number>
+        <order-date>{order.orderDate} at {order.orderTime}</order-date>
+        <order-status>
+          <badge type="{order.status}" text="{order.statusLabel}"/>
+        </order-status>
+      </order-detail-header>
+      
+      <order-detail-content type="two-column">
+        
+        <!-- {Left Column: Order Items} -->
+        <column name="order-items">
+          <title>Order Items</title>
+          
+          <order-items>
+            <item>
+              <image source="/images/products/{productId}.png"/>
+              <info>
+                <name>{Product Name}</name>
+                <specs>
+                  <!-- {Key product specs} -->
+                </specs>
+                <quantity>Quantity: {quantity}</quantity>
+                <price currency="USD">{unitPrice} each</price>
+              </info>
+              <total currency="USD">{itemTotal}</total>
+              <actions>
+                <button type="link" route="/product/{productId}" text="View Product"/>
+                <button type="link" route="/product/{productId}/review" text="Write Review"/>
+              </actions>
+            </item>
+          </order-items>
+        </column>
+        
+        <!-- {Right Column: Order Summary} -->
+        <column name="order-summary">
+          <summary-card>
+            <title>Order Summary</title>
+            
+            <summary-details>
+              <row name="subtotal">
+                <label>Subtotal</label>
+                <value currency="USD">{subtotal}</value>
+              </row>
+              <row name="shipping">
+                <label>Shipping</label>
+                <value currency="USD">{shippingCost}</value>
+              </row>
+              <row name="tax">
+                <label>Tax</label>
+                <value currency="USD">{tax}</value>
+              </row>
+              <divider/>
+              <row name="total" emphasis="bold">
+                <label>Total</label>
+                <value currency="USD">{total}</value>
+              </row>
+            </summary-details>
+          </summary-card>
+          
+          <!-- {Shipping Address} -->
+          <address-card>
+            <title>Shipping Address</title>
+            <address>
+              <name>{shippingAddress.fullName}</name>
+              <street>{shippingAddress.streetAddress}</street>
+              <city-state-zip>{shippingAddress.city}, {shippingAddress.state} {shippingAddress.zipCode}</city-state-zip>
+              <country>{shippingAddress.country}</country>
+            </address>
+          </address-card>
+          
+          <!-- {Payment Information} -->
+          <payment-card>
+            <title>Payment Method</title>
+            <payment-info>
+              <method>{paymentMethod}</method>
+              <!-- {Credit Card, PayPal, etc.} -->
+              <details>{maskedCardNumber}</details>
+              <!-- {**** **** **** 1234} -->
+            </payment-info>
+          </payment-card>
+          
+          <!-- {Tracking Information} -->
+          <tracking-card condition="order.status=shipped|delivered">
+            <title>Tracking Information</title>
+            <tracking-number>
+              <label>Tracking Number</label>
+              <value copyable="true">{trackingNumber}</value>
+              <!-- {Tracking number with copy button} -->
+            </tracking-number>
+            <tracking-timeline>
+              <!-- {Shipping timeline: ordered, shipped, in transit, delivered} -->
+              <event status="complete" date="{orderDate}">
+                <label>Order Placed</label>
+              </event>
+              <event status="complete" date="{shippedDate}">
+                <label>Shipped</label>
+              </event>
+              <event status="current" date="{inTransitDate}">
+                <label>In Transit</label>
+              </event>
+              <event status="pending" date="{estimatedDeliveryDate}">
+                <label>Estimated Delivery</label>
+              </event>
+            </tracking-timeline>
+          </tracking-card>
+          
+        </column>
+        
+      </order-detail-content>
+      
+    </order-detail>
+
+  </structure>
+
+  <!-- {Refactoring Context} -->
+  <refactoring-context>
+    <current-state>
+      <issues>
+        <issue>Order list could have better filtering options</issue>
+        <issue>No order tracking integration</issue>
+        <issue>Order detail view could be more comprehensive</issue>
+        <issue>No order cancellation flow</issue>
+        <issue>No reorder functionality</issue>
+      </issues>
+    </current-state>
+    <target-state>
+      <improvements>
+        <improvement>Add advanced filtering (date range, product category, price range)</improvement>
+        <improvement>Integrate real-time tracking with carrier APIs</improvement>
+        <improvement>Add order cancellation flow with confirmation</improvement>
+        <improvement>Implement one-click reorder functionality</improvement>
+        <improvement>Add order export (PDF invoice download)</improvement>
+        <improvement>Implement order status notifications (email, SMS)</improvement>
+        <improvement>Add order comparison feature</improvement>
+        <improvement>Mobile: Optimize order card layout for small screens</improvement>
+      </improvements>
+    </target-state>
+  </refactoring-context>
+
+  <dependencies>
+    <component name="header" file="components/header.jsp"/>
+    <component name="footer" file="components/footer.jsp"/>
+    <component name="order-card" file="components/order-card.jsp"/>
+    <component name="tracking-timeline" file="components/tracking-timeline.jsp"/>
+    <layout name="base" file="WEB-INF/tags/base.tag"/>
+  </dependencies>
+
+</page>
+

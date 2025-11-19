@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  {IoTBay Checkout Page Structure}
+  {This XML describes checkout.jsp - the multi-step checkout process}
+  {Purpose: Document checkout flow, form structure, and payment processing}
+-->
+<page name="checkout" type="checkout" jsp-file="checkout.jsp">
+  
+  <metadata>
+    <title>Checkout - IoTBay</title>
+    <description>Complete your order - shipping, payment, and review</description>
+    <route>/checkout</route>
+    <template>t:base</template>
+    <authentication>required</authentication>
+    <!-- {Checkout requires user to be logged in} -->
+  </metadata>
+
+  <structure>
+    
+    <!-- {Checkout Progress Stepper} -->
+    <section name="progress-stepper">
+      <!-- {Visual progress indicator showing current step} -->
+      <steps>
+        <step number="1" name="Cart" status="complete" route="/cart"/>
+        <!-- {Step 1: Cart (already completed)} -->
+        <step number="2" name="Shipping" status="current"/>
+        <!-- {Current step: Shipping information} -->
+        <step number="3" name="Payment" status="pending"/>
+        <!-- {Next step: Payment details} -->
+        <step number="4" name="Review" status="pending"/>
+        <!-- {Final step: Review and confirm} -->
+      </steps>
+    </section>
+
+    <!-- {Main Checkout Content - Two Column Layout} -->
+    <section name="checkout-content" type="two-column">
+      
+      <!-- {Left Column: Checkout Forms} -->
+      <column name="checkout-forms" width="60%">
+        
+        <!-- {Step 1: Shipping Information} -->
+        <form-step name="shipping" active="true">
+          <title>Shipping Information</title>
+          
+          <shipping-address>
+            <!-- {Shipping address form} -->
+            <field-group name="name">
+              <label>Full Name</label>
+              <input type="text" name="fullName" required="true" value="{user.fullName}"/>
+            </field-group>
+            
+            <field-group name="address">
+              <label>Street Address</label>
+              <input type="text" name="streetAddress" required="true" placeholder="123 Main St"/>
+            </field-group>
+            
+            <field-group name="address2">
+              <label>Apartment, suite, etc. (optional)</label>
+              <input type="text" name="address2" placeholder="Apt 4B"/>
+            </field-group>
+            
+            <field-row>
+              <!-- {City, State, ZIP in one row} -->
+              <field-group name="city" width="50%">
+                <label>City</label>
+                <input type="text" name="city" required="true"/>
+              </field-group>
+              
+              <field-group name="state" width="25%">
+                <label>State</label>
+                <select name="state" required="true">
+                  <!-- {State dropdown} -->
+                </select>
+              </field-group>
+              
+              <field-group name="zip" width="25%">
+                <label>ZIP Code</label>
+                <input type="text" name="zipCode" required="true" pattern="[0-9]{5}"/>
+              </field-group>
+            </field-row>
+            
+            <field-group name="country">
+              <label>Country</label>
+              <select name="country" required="true" value="US">
+                <!-- {Country dropdown, default to US} -->
+              </select>
+            </field-group>
+            
+            <field-group name="phone">
+              <label>Phone Number</label>
+              <input type="tel" name="phone" required="true" placeholder="(555) 123-4567"/>
+            </field-group>
+          </shipping-address>
+          
+          <shipping-method>
+            <title>Shipping Method</title>
+            <!-- {Shipping options: Standard, Express, Overnight} -->
+            <option name="standard" value="standard" selected="true">
+              <name>Standard Shipping</name>
+              <description>5-7 business days</description>
+              <cost currency="USD">Free</cost>
+            </option>
+            <option name="express" value="express">
+              <name>Express Shipping</name>
+              <description>2-3 business days</description>
+              <cost currency="USD">15.00</cost>
+            </option>
+            <option name="overnight" value="overnight">
+              <name>Overnight Shipping</name>
+              <description>Next business day</description>
+              <cost currency="USD">35.00</cost>
+            </option>
+          </shipping-method>
+          
+          <save-address>
+            <!-- {Checkbox to save address for future orders} -->
+            <checkbox name="saveAddress" checked="true">
+              <label>Save this address for future orders</label>
+            </checkbox>
+          </save-address>
+        </form-step>
+
+        <!-- {Step 2: Payment Information} -->
+        <form-step name="payment" active="false">
+          <title>Payment Information</title>
+          
+          <payment-method>
+            <!-- {Payment method selection: Credit Card, PayPal, etc.} -->
+            <option name="credit-card" value="card" selected="true">
+              <icon>card-icon</icon>
+              <name>Credit or Debit Card</name>
+            </option>
+            <option name="paypal" value="paypal">
+              <icon>paypal-icon</icon>
+              <name>PayPal</name>
+            </option>
+          </payment-method>
+          
+          <credit-card-form condition="paymentMethod=card">
+            <!-- {Credit card form - shown when card is selected} -->
+            <field-group name="cardNumber">
+              <label>Card Number</label>
+              <input type="text" name="cardNumber" required="true" placeholder="1234 5678 9012 3456" maxlength="19"/>
+              <!-- {Format: XXXX XXXX XXXX XXXX} -->
+            </field-group>
+            
+            <field-row>
+              <field-group name="expiry" width="50%">
+                <label>Expiry Date</label>
+                <input type="text" name="expiry" required="true" placeholder="MM/YY" maxlength="5"/>
+              </field-group>
+              
+              <field-group name="cvv" width="50%">
+                <label>CVV</label>
+                <input type="text" name="cvv" required="true" placeholder="123" maxlength="4"/>
+              </field-group>
+            </field-row>
+            
+            <field-group name="cardholderName">
+              <label>Cardholder Name</label>
+              <input type="text" name="cardholderName" required="true" value="{user.fullName}"/>
+            </field-group>
+            
+            <security-note>
+              <!-- {Security assurance message} -->
+              <icon>lock-icon</icon>
+              <text>Your payment information is encrypted and secure</text>
+            </security-note>
+          </credit-card-form>
+        </form-step>
+
+        <!-- {Step 3: Review and Confirm} -->
+        <form-step name="review" active="false">
+          <title>Review Your Order</title>
+          
+          <order-summary>
+            <!-- {Summary of items, shipping, payment} -->
+            <items-summary>
+              <!-- {List of items being purchased} -->
+            </items-summary>
+            
+            <shipping-summary>
+              <!-- {Shipping address and method summary} -->
+            </shipping-summary>
+            
+            <payment-summary>
+              <!-- {Payment method summary (masked card number)} -->
+            </payment-summary>
+            
+            <total-summary>
+              <!-- {Final total breakdown} -->
+            </total-summary>
+          </order-summary>
+          
+          <terms-acceptance>
+            <!-- {Terms and conditions checkbox} -->
+            <checkbox name="acceptTerms" required="true">
+              <label>I agree to the <a href="/terms">Terms and Conditions</a> and <a href="/privacy">Privacy Policy</a></label>
+            </checkbox>
+          </terms-acceptance>
+          
+          <place-order-button>
+            <button type="primary" size="large" full-width="true" action="placeOrder" text="Place Order"/>
+            <!-- {Final CTA to complete order} -->
+          </place-order-button>
+        </form-step>
+
+        <!-- {Navigation Buttons} -->
+        <form-navigation>
+          <back-button>
+            <button type="secondary" action="previousStep" text="Back"/>
+            <!-- {Go to previous step} -->
+          </back-button>
+          <next-button>
+            <button type="primary" action="nextStep" text="Continue"/>
+            <!-- {Go to next step, validates current step first} -->
+          </next-button>
+        </form-navigation>
+
+      </column>
+
+      <!-- {Right Column: Order Summary Sidebar} -->
+      <column name="order-summary-sidebar" width="40%">
+        
+        <summary-card sticky="true">
+          <!-- {Sticky order summary that stays visible while scrolling} -->
+          <title>Order Summary</title>
+          
+          <items-preview>
+            <!-- {Compact list of items in order} -->
+            <item>
+              <image source="/images/products/{productId}.png" size="thumbnail"/>
+              <name>{Product Name}</name>
+              <quantity>×{quantity}</quantity>
+              <price currency="USD">{price}</price>
+            </item>
+          </items-preview>
+          
+          <summary-breakdown>
+            <!-- {Subtotal, shipping, tax, total} -->
+            <row name="subtotal">
+              <label>Subtotal</label>
+              <value currency="USD">{subtotal}</value>
+            </row>
+            <row name="shipping">
+              <label>Shipping</label>
+              <value currency="USD">{shippingCost}</value>
+            </row>
+            <row name="tax">
+              <label>Tax</label>
+              <value currency="USD">{tax}</value>
+            </row>
+            <divider/>
+            <row name="total" emphasis="bold">
+              <label>Total</label>
+              <value currency="USD">{total}</value>
+            </row>
+          </summary-breakdown>
+        </summary-card>
+
+      </column>
+
+    </section>
+
+  </structure>
+
+  <!-- {Checkout Functionality} -->
+  <functionality>
+    <form-validation>
+      <!-- {Client-side and server-side validation} -->
+      <client-side>true</client-side>
+      <!-- {Validate before submitting to server} -->
+      <server-side>true</server-side>
+      <!-- {Always validate on server for security} -->
+    </form-validation>
+    
+    <step-persistence>
+      <!-- {Save form data as user progresses through steps} -->
+      <method>sessionStorage</method>
+      <!-- {Store in sessionStorage to persist across page refreshes} -->
+      <auto-save>true</auto-save>
+      <!-- {Auto-save on field blur} -->
+    </step-persistence>
+    
+    <payment-processing>
+      <!-- {Payment processing flow} -->
+      <method>server-side</method>
+      <!-- {Never process payment on client side} -->
+      <encryption>SSL/TLS</encryption>
+      <!-- {All payment data encrypted in transit} -->
+    </payment-processing>
+  </functionality>
+
+  <!-- {Refactoring Context} -->
+  <refactoring-context>
+    <current-state>
+      <issues>
+        <issue>Checkout is single page, not multi-step</issue>
+        <issue>No progress indicator</issue>
+        <issue>Form validation could be more user-friendly</issue>
+        <issue>No auto-save of form data</issue>
+        <issue>Payment form security could be improved</issue>
+      </issues>
+    </current-state>
+    <target-state>
+      <improvements>
+        <improvement>Implement multi-step checkout with progress stepper</improvement>
+        <improvement>Add form validation with inline error messages</improvement>
+        <improvement>Auto-save form data to sessionStorage</improvement>
+        <improvement>Add address autocomplete (Google Places API)</improvement>
+        <improvement>Implement payment method tokenization (never store raw card data)</improvement>
+        <improvement>Add order review step before final submission</improvement>
+        <improvement>Mobile: Single column layout, full-width forms</improvement>
+        <improvement>Add loading states during payment processing</improvement>
+      </improvements>
+    </target-state>
+  </refactoring-context>
+
+  <dependencies>
+    <component name="header" file="components/header.jsp"/>
+    <component name="footer" file="components/footer.jsp"/>
+    <component name="progress-stepper" file="components/progress-stepper.jsp"/>
+    <component name="order-summary" file="components/order-summary.jsp"/>
+    <layout name="base" file="WEB-INF/tags/base.tag"/>
+  </dependencies>
+
+</page>
+

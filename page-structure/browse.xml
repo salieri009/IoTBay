@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  {IoTBay Product Browsing Page Structure}
+  {This XML describes the browse.jsp page where users can search and filter products}
+  {Purpose: Document product listing, filtering, and search functionality structure}
+-->
+<page name="browse" type="product-listing" jsp-file="browse.jsp">
+  
+  <metadata>
+    <title>Browse Products - IoTBay</title>
+    <description>Browse and search IoT devices and components</description>
+    <route>/browse</route>
+    <template>t:base</template>
+  </metadata>
+
+  <structure>
+    
+    <!-- {Page Header with Breadcrumb} -->
+    <section name="page-header">
+      <breadcrumb>
+        <!-- {Breadcrumb: Home > Browse Products} -->
+        <item name="Home" route="/"/>
+        <item name="Browse" route="/browse" active="true"/>
+      </breadcrumb>
+      <title>Browse Products</title>
+      <!-- {Page title} -->
+    </section>
+
+    <!-- {Filter Sidebar - Left side on desktop, collapsible on mobile} -->
+    <section name="filters" type="sidebar" position="left">
+      <!-- {Product filters: category, price range, specifications, etc.} -->
+      <filter-group name="category">
+        <title>Category</title>
+        <options>
+          <option value="all" selected="true">All Categories</option>
+          <option value="industrial">Industrial</option>
+          <option value="warehouse">Warehouse</option>
+          <option value="agriculture">Agriculture</option>
+          <option value="smarthome">Smart Home</option>
+        </options>
+      </filter-group>
+      
+      <filter-group name="price">
+        <title>Price Range</title>
+        <!-- {Price range slider or input fields} -->
+        <type>range</type>
+        <min>0</min>
+        <max>10000</max>
+      </filter-group>
+
+      <filter-group name="specifications">
+        <!-- {IoT-specific filters: protocol, voltage, range, etc.} -->
+        <title>Specifications</title>
+        <filters>
+          <filter name="protocol" type="multi-select">
+            <!-- {Communication protocol: LoRaWAN, Zigbee, WiFi, Bluetooth} -->
+            <options>
+              <option value="lorawan">LoRaWAN</option>
+              <option value="zigbee">Zigbee</option>
+              <option value="wifi">WiFi</option>
+              <option value="bluetooth">Bluetooth</option>
+            </options>
+          </filter>
+          <filter name="voltage" type="multi-select">
+            <!-- {Voltage requirements: 5V, 12V, 24V, etc.} -->
+          </filter>
+        </filters>
+      </filter-group>
+
+      <filter-group name="stock">
+        <title>Stock Status</title>
+        <options>
+          <option value="in-stock">In Stock</option>
+          <option value="low-stock">Low Stock</option>
+          <option value="all">All</option>
+        </options>
+      </filter-group>
+    </section>
+
+    <!-- {Main Content Area - Product Grid} -->
+    <section name="product-listing" type="main-content">
+      
+      <!-- {Toolbar: Sort, View Toggle, Results Count} -->
+      <toolbar>
+        <results-count>
+          <!-- {Shows: "Showing 1-24 of 156 products"} -->
+        </results-count>
+        <sort-options>
+          <!-- {Sort by: Price (Low to High), Price (High to Low), Name, Newest} -->
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+          <option value="name-asc">Name: A-Z</option>
+          <option value="newest">Newest First</option>
+        </sort-options>
+        <view-toggle>
+          <!-- {Toggle between grid view and list view} -->
+          <option value="grid" default="true">Grid</option>
+          <option value="list">List</option>
+        </view-toggle>
+      </toolbar>
+
+      <!-- {Product Grid} -->
+      <product-grid columns="4" responsive="true">
+        <!-- {4 columns on desktop, 2 on tablet, 1 on mobile} -->
+        <products>
+          <product-card>
+            <!-- {Same structure as index.xml product-card} -->
+            <image source="/images/products/{productId}.png"/>
+            <name>{productName}</name>
+            <category>{categoryName}</category>
+            <specs>
+              <!-- {Key technical specs displayed on card} -->
+              <spec name="protocol">{protocol}</spec>
+              <spec name="voltage">{voltage}</spec>
+            </specs>
+            <price currency="USD">{price}</price>
+            <stock status="{inStock|lowStock|outOfStock}"/>
+            <actions>
+              <button type="quick-view"/>
+              <button type="add-to-cart"/>
+            </actions>
+          </product-card>
+        </products>
+      </product-grid>
+
+      <!-- {Pagination} -->
+      <pagination>
+        <!-- {Previous, Page Numbers, Next buttons} -->
+        <prev-button enabled="{hasPrevious}"/>
+        <page-numbers current="{currentPage}" total="{totalPages}"/>
+        <next-button enabled="{hasNext}"/>
+      </pagination>
+
+      <!-- {Empty State - When no products match filters} -->
+      <empty-state condition="no-results">
+        <!-- {Shown when filter results in no products} -->
+        <icon>search-icon</icon>
+        <title>No products found</title>
+        <message>Try adjusting your filters or search terms</message>
+        <action>
+          <button type="primary" text="Clear Filters" action="clearFilters"/>
+        </action>
+      </empty-state>
+
+    </section>
+
+  </structure>
+
+  <!-- {Search Functionality} -->
+  <search>
+    <input type="search" placeholder="Search products..."/>
+    <!-- {Search input in header or dedicated search bar} -->
+    <filters>
+      <!-- {Search can be combined with filters} -->
+    </filters>
+    <results>
+      <!-- {Search results displayed in same grid format} -->
+    </results>
+  </search>
+
+  <!-- {Refactoring Context} -->
+  <refactoring-context>
+    <current-state>
+      <issues>
+        <issue>Filters need better mobile UX (collapsible, bottom sheet)</issue>
+        <issue>Product grid should use CSS Grid with auto-fit for responsiveness</issue>
+        <issue>Filter state should be URL-based for shareability</issue>
+        <issue>Loading states needed during filter application</issue>
+      </issues>
+    </current-state>
+    <target-state>
+      <improvements>
+        <improvement>Implement progressive enhancement for filters (work without JS)</improvement>
+        <improvement>Add skeleton loading for product cards</improvement>
+        <improvement>URL-based filter state (?category=industrial&protocol=lorawan)</improvement>
+        <improvement>Optimistic UI updates for filter changes</improvement>
+        <improvement>Accessible filter controls with ARIA labels</improvement>
+      </improvements>
+    </target-state>
+  </refactoring-context>
+
+  <dependencies>
+    <component name="header" file="components/header.jsp"/>
+    <component name="footer" file="components/footer.jsp"/>
+    <component name="product-card" file="components/product-card.jsp"/>
+    <component name="filter-sidebar" file="components/filter-sidebar.jsp"/>
+    <layout name="base" file="WEB-INF/tags/base.tag"/>
+  </dependencies>
+
+</page>
+

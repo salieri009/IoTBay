@@ -578,7 +578,7 @@ function setupKeyboardNavigation() {
         }
         
         // Arrow keys for product grid navigation
-        if (e.key.startsWith('Arrow') && e.target.closest('.product-grid')) {
+        if (e.key && typeof e.key === 'string' && e.key.startsWith('Arrow') && e.target.closest('.product-grid')) {
             navigateProductGrid(e.key);
         }
     });

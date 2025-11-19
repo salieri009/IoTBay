@@ -59,32 +59,77 @@ public class ManageProductController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
 
+        // Authorization check
         if (!isAdmin(request)) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.getWriter().write("{\"error\": \"Access denied\"}");
+            utils.ErrorAction.handleAuthorizationError(request, response, "ManageProductController.doPost");
             return;
         }
+        
+        // CSRF protection
+        if (!utils.SecurityUtil.validateCSRFToken(request)) {
+            utils.ErrorAction.handleValidationError(request, response, "CSRF token validation failed", 
+                    "ManageProductController.doPost");
+            return;
+        }
+        
+        // Rate limiting check
+        if (utils.SecurityUtil.isRateLimited(request, 10, 60000)) { // 10 requests per minute
+            utils.ErrorAction.handleRateLimitError(request, response, "ManageProductController.doPost");
+            return;
+        }
+        
         try {
-            int categoryId = Integer.parseInt(request.getParameter("categoryId"));
-            String name = request.getParameter("name");
-            String description = request.getParameter("description");
-            double price = Double.parseDouble(request.getParameter("price"));
-            int stockQuantity = Integer.parseInt(request.getParameter("stockQuantity"));
-            String imageUrl = request.getParameter("imageUrl");
+            // Secure parameter extraction with validation
+            int categoryId = utils.SecurityUtil.getValidatedIntParameter(request, "categoryId", 1, 100);
+            String name = utils.SecurityUtil.getValidatedStringParameter(request, "name", 200);
+            String description = utils.SecurityUtil.getValidatedStringParameter(request, "description", 2000);
+            double price = utils.SecurityUtil.getValidatedDoubleParameter(request, "price");
+            int stockQuantity = utils.SecurityUtil.getValidatedIntParameter(request, "stockQuantity", 0, 10000);
+            String imageUrl = utils.SecurityUtil.getValidatedStringParameter(request, "imageUrl", 500);
+            
+            // Sanitize inputs
+            name = utils.SecurityUtil.sanitizeInput(name);
+            description = utils.SecurityUtil.sanitizeInput(description);
+            imageUrl = utils.SecurityUtil.sanitizeInput(imageUrl);
+            
+            // Validate price range
+            if (price <= 0 || price > 1000000) {
+                utils.ErrorAction.handleValidationError(request, response, 
+                        "Price must be between 0 and 1,000,000", "ManageProductController.doPost");
+                return;
+            }
 
             String createdAtStr = request.getParameter("created_at");
-            java.time.LocalDate createdAt = java.time.LocalDate.parse(createdAtStr); // expects yyyy-MM-dd
+            java.time.LocalDate createdAt;
+            if (createdAtStr != null && !createdAtStr.trim().isEmpty()) {
+                try {
+                    createdAt = java.time.LocalDate.parse(createdAtStr);
+                } catch (Exception e) {
+                    utils.ErrorAction.handleValidationError(request, response, 
+                            "Invalid date format", "ManageProductController.doPost");
+                    return;
+                }
+            } else {
+                createdAt = java.time.LocalDate.now();
+            }
     
             Product product = new Product(0, categoryId, name, description, price, stockQuantity, imageUrl, createdAt);
 
             productDAO.createProduct(product);
+            
+            // Log security event
+            utils.ErrorAction.logSecurityEvent("PRODUCT_CREATED", request, 
+                    "Product created: " + name);
 
             response.sendRedirect(request.getContextPath() + "/manage/products");
 
-        } catch (SQLException | NumberFormatException e) {
-            System.err.println("Manage product error: " + e.getMessage());
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write("{\"error\":\"Failed to create product: " + e.getMessage() + "\"}");
+        } catch (IllegalArgumentException e) {
+            utils.ErrorAction.handleValidationError(request, response, e.getMessage(), 
+                    "ManageProductController.doPost");
+        } catch (SQLException e) {
+            utils.ErrorAction.handleDatabaseError(request, response, e, "ManageProductController.doPost");
+        } catch (Exception e) {
+            utils.ErrorAction.handleServerError(request, response, e, "ManageProductController.doPost");
         }
 }
 

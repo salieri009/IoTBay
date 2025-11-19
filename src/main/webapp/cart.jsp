@@ -77,8 +77,8 @@
                 </ol>
             </nav>
 
-            <!-- Cart Overview -->
-            <section class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,360px)]">
+            <!-- Cart Overview - Optimized for 1920x1080 -->
+            <section class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,360px)] xl:grid-cols-[minmax(0,1fr)_minmax(0,400px)]">
                 <div class="space-y-4">
                     <h1 class="text-display-l font-bold text-neutral-900 leading-tight">Shopping cart</h1>
                     <p class="text-lg text-neutral-600" id="cart-summary-text">${cartSummary}</p>
@@ -110,7 +110,8 @@
             <!-- Compatibility Warnings -->
             <div id="compatibility-warnings-container" class="rounded-2xl border border-warning-200 bg-warning-50 p-4 hidden" role="region" aria-live="polite" aria-label="Compatibility warnings"></div>
 
-            <div class="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
+            <!-- Main cart layout - Optimized for 1920x1080 -->
+            <div class="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_360px] xl:grid-cols-[minmax(0,1fr)_400px]">
                 <!-- Cart Items Section -->
                 <div>
                     <c:choose>

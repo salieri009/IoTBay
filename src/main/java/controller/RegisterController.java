@@ -36,106 +36,151 @@ public class RegisterController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
-
         
-        String firstName = request.getParameter("firstName");
-        String lastName = request.getParameter("lastName");
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-        String confirmPassword = request.getParameter("confirmPassword");
-        String phone = request.getParameter("phone");
-        String postalCode = request.getParameter("postalCode");
-        String addressLine1 = request.getParameter("addressLine1");
-        String addressLine2 = request.getParameter("addressLine2");
-        String dobString = request.getParameter("dateOfBirth");
-        String paymentMethod = request.getParameter("paymentMethod");
-
-        String tos = request.getParameter("tos");
-        if (tos == null || !tos.equals("on")) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "You must accept the terms of service.");
+        // Rate limiting check
+        if (utils.SecurityUtil.isRateLimited(request, 5, 300000)) { // 5 requests per 5 minutes
+            utils.ErrorAction.handleRateLimitError(request, response, "RegisterController.doPost");
             return;
         }
 
-        String profileError = ValidationUtil.validateRegisterUserProfile(
-                firstName, lastName, phone, postalCode, addressLine1
-        );
-
-        
-        if (profileError != null) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, profileError);
-            return;     
-        }
-
-        // 3. validate email
-        String emailError = ValidationUtil.validateEmail(email);
-        if (emailError != null) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, emailError);
-            return;
-        }
-
-        // 4.confirm the password
-        String passwordError = ValidationUtil.validatePasswordChange(password, confirmPassword);
-        if (passwordError != null) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, passwordError);
-            return;
-        }
-
-        // 5. validate email duplication
         try {
-            if (userDAO.getUserByEmail(email) != null) {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Email already exists.");
+            // Secure parameter extraction with validation
+            String firstName = utils.SecurityUtil.getValidatedStringParameter(request, "firstName", 50);
+            String lastName = utils.SecurityUtil.getValidatedStringParameter(request, "lastName", 50);
+            String email = utils.SecurityUtil.getValidatedStringParameter(request, "email", 100);
+            String password = request.getParameter("password"); // Don't sanitize password
+            String confirmPassword = request.getParameter("confirmPassword");
+            String phone = utils.SecurityUtil.getValidatedStringParameter(request, "phone", 20);
+            String postalCode = utils.SecurityUtil.getValidatedStringParameter(request, "postalCode", 10);
+            String addressLine1 = utils.SecurityUtil.getValidatedStringParameter(request, "addressLine1", 200);
+            String addressLine2 = request.getParameter("addressLine2"); // Optional
+            String dobString = request.getParameter("dateOfBirth"); // Optional
+            String paymentMethod = request.getParameter("paymentMethod"); // Optional
+            
+            // Sanitize inputs (except passwords)
+            firstName = utils.SecurityUtil.sanitizeInput(firstName);
+            lastName = utils.SecurityUtil.sanitizeInput(lastName);
+            email = utils.SecurityUtil.sanitizeInput(email);
+            phone = utils.SecurityUtil.sanitizeInput(phone);
+            postalCode = utils.SecurityUtil.sanitizeInput(postalCode);
+            addressLine1 = utils.SecurityUtil.sanitizeInput(addressLine1);
+            if (addressLine2 != null) {
+                addressLine2 = utils.SecurityUtil.sanitizeInput(addressLine2);
+            }
+            if (paymentMethod != null) {
+                paymentMethod = utils.SecurityUtil.sanitizeInput(paymentMethod);
+            }
+
+            // Validate terms of service acceptance
+            String tos = request.getParameter("tos");
+            if (tos == null || !tos.equals("on")) {
+                utils.ErrorAction.handleValidationError(request, response, 
+                        "Terms of service must be accepted", "RegisterController.doPost");
                 return;
             }
-        } catch (Exception e) {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database error.");
-            return;
-        }
 
-        // 6. date of birth / optional
-        LocalDate dateOfBirth = null;
-        if (dobString != null && !dobString.trim().isEmpty()) {
+            // Validate profile data
+            String profileError = ValidationUtil.validateRegisterUserProfile(
+                    firstName, lastName, phone, postalCode, addressLine1
+            );
+            if (profileError != null) {
+                utils.ErrorAction.handleValidationError(request, response, profileError, 
+                        "RegisterController.doPost");
+                return;
+            }
+
+            // Validate email format
+            String emailError = ValidationUtil.validateEmail(email);
+            if (emailError != null) {
+                utils.ErrorAction.handleValidationError(request, response, emailError, 
+                        "RegisterController.doPost");
+                return;
+            }
+
+            // Validate password strength
+            if (!utils.SecurityUtil.isStrongPassword(password)) {
+                utils.ErrorAction.handleValidationError(request, response, 
+                        "Password does not meet security requirements", "RegisterController.doPost");
+                return;
+            }
+
+            // Confirm password match
+            String passwordError = ValidationUtil.validatePasswordChange(password, confirmPassword);
+            if (passwordError != null) {
+                utils.ErrorAction.handleValidationError(request, response, passwordError, 
+                        "RegisterController.doPost");
+                return;
+            }
+
+            // Check email duplication
             try {
-                dateOfBirth = LocalDate.parse(dobString);
+                if (userDAO.getUserByEmail(email) != null) {
+                    // Generic error to prevent user enumeration
+                    utils.ErrorAction.handleValidationError(request, response, 
+                            "Registration failed", "RegisterController.doPost");
+                    return;
+                }
             } catch (Exception e) {
-                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid date of birth.");
+                utils.ErrorAction.handleDatabaseError(request, response, e, "RegisterController.doPost");
                 return;
             }
-        }
 
-        // parse the password
-        String hashedPassword = PasswordUtil.hashPassword(password);
+            // Parse date of birth (optional)
+            LocalDate dateOfBirth = null;
+            if (dobString != null && !dobString.trim().isEmpty()) {
+                String dobError = ValidationUtil.validateBirthDate(dobString);
+                if (dobError != null) {
+                    utils.ErrorAction.handleValidationError(request, response, dobError, 
+                            "RegisterController.doPost");
+                    return;
+                }
+                try {
+                    dateOfBirth = LocalDate.parse(dobString);
+                } catch (Exception e) {
+                    utils.ErrorAction.handleValidationError(request, response, 
+                            "Invalid date format", "RegisterController.doPost");
+                    return;
+                }
+            }
 
-        LocalDateTime now = LocalDateTime.now();
+            // Hash password securely
+            String hashedPassword = PasswordUtil.hashPassword(password);
 
-        try {
+            LocalDateTime now = LocalDateTime.now();
+
             User newUser = new User(
-                0, // id (auto-increment)
-                email,
-                hashedPassword,  // Use hashed password instead of plain text
-                firstName,
-                lastName,
-                phone,
-                postalCode,
-                addressLine1,
-                addressLine2,
-                dateOfBirth,
-                paymentMethod,
-                now,
-                now,
-                "customer", // default role
-                true    
+                    0, // id (auto-increment)
+                    email,
+                    hashedPassword,  // Use hashed password instead of plain text
+                    firstName,
+                    lastName,
+                    phone,
+                    postalCode,
+                    addressLine1,
+                    addressLine2,
+                    dateOfBirth,
+                    paymentMethod,
+                    now,
+                    now,
+                    "customer", // default role
+                    true    
             );
 
             userDAO.createUser(newUser);
+            
+            // Log security event
+            utils.ErrorAction.logSecurityEvent("USER_REGISTERED", request, 
+                    "New user registered: " + email);
 
-          
             response.sendRedirect(request.getContextPath() + "/welcome.jsp");
 
-
+        } catch (IllegalArgumentException e) {
+            utils.ErrorAction.handleValidationError(request, response, e.getMessage(), 
+                    "RegisterController.doPost");
+        } catch (SQLException e) {
+            utils.ErrorAction.handleDatabaseError(request, response, e, "RegisterController.doPost");
         } catch (Exception e) {
-            System.err.println("Register error: " + e.getMessage());
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write("Registration failed: " + e.getMessage());
+            utils.ErrorAction.handleServerError(request, response, e, "RegisterController.doPost");
         }
     }
 }

@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+  {IoTBay Authentication Pages Structure}
+  {This XML describes login.jsp and register.jsp - authentication pages}
+  {Purpose: Document login and registration page structure and user flows}
+-->
+<pages name="authentication" type="auth-pages">
+  
+  <!-- {Login Page} -->
+  <page name="login" jsp-file="login.jsp">
+    
+    <metadata>
+      <title>Sign In - IoTBay</title>
+      <description>Sign in to your IoTBay account</description>
+      <route>/login</route>
+      <template>standalone</template>
+      <!-- {Login page uses standalone template, not t:base} -->
+      <authentication>guest-only</authentication>
+      <!-- {Redirect to home if already logged in} -->
+    </metadata>
+
+    <structure>
+      
+      <!-- {Centered Auth Card Layout} -->
+      <section name="auth-container" type="centered">
+        
+        <auth-card>
+          <!-- {Card container for login form} -->
+          
+          <!-- {Card Header} -->
+          <card-header>
+            <logo>
+              <image source="/images/logo.png" alt="IoTBay"/>
+            </logo>
+            <title>Welcome back</title>
+            <subtitle>Sign in to your IoT Bay account</subtitle>
+          </card-header>
+          
+          <!-- {Error Message Display} -->
+          <error-message condition="hasError">
+            <!-- {Display error message if login fails} -->
+            <alert type="error" role="alert" aria-live="polite">
+              <icon>error-icon</icon>
+              <message>{errorMessage}</message>
+              <!-- {Error message from server: "Invalid email or password", etc.} -->
+            </alert>
+          </error-message>
+          
+          <!-- {Login Form} -->
+          <form name="login" method="post" action="/api/login">
+            
+            <field-group name="email">
+              <label>Email Address</label>
+              <input type="email" name="email" required="true" autocomplete="email" placeholder="you@example.com"/>
+              <!-- {Email input with validation} -->
+              <validation>
+                <client-side>email format validation</client-side>
+                <server-side>check if user exists</server-side>
+              </validation>
+            </field-group>
+            
+            <field-group name="password">
+              <label>Password</label>
+              <input type="password" name="password" required="true" autocomplete="current-password" placeholder="Enter your password"/>
+              <!-- {Password input, hidden by default} -->
+              <password-toggle>
+                <!-- {Show/hide password toggle button} -->
+                <button type="icon" action="togglePasswordVisibility" aria-label="Show password"/>
+              </password-toggle>
+            </field-group>
+            
+            <form-options>
+              <!-- {Remember me and forgot password} -->
+              <remember-me>
+                <checkbox name="rememberMe">
+                  <label>Remember me</label>
+                  <!-- {Keep user logged in for extended period} -->
+                </checkbox>
+              </remember-me>
+              <forgot-password>
+                <link route="/forgot-password" text="Forgot password?"/>
+                <!-- {Link to password reset page} -->
+              </forgot-password>
+            </form-options>
+            
+            <submit-button>
+              <button type="primary" size="large" full-width="true" text="Sign In"/>
+              <!-- {Primary CTA to submit login form} -->
+            </submit-button>
+            
+            <loading-state>
+              <!-- {Loading spinner shown during form submission} -->
+              <spinner condition="submitting"/>
+            </loading-state>
+          </form>
+          
+          <!-- {Social Login Options (Optional)} -->
+          <social-login condition="enabled">
+            <!-- {Alternative login methods} -->
+            <divider>
+              <text>Or continue with</text>
+            </divider>
+            <social-buttons>
+              <button type="social" provider="google" text="Continue with Google"/>
+              <button type="social" provider="github" text="Continue with GitHub"/>
+            </social-buttons>
+          </social-login>
+          
+          <!-- {Sign Up Link} -->
+          <signup-link>
+            <text>Don't have an account?</text>
+            <link route="/register" text="Sign up"/>
+            <!-- {Link to registration page} -->
+          </signup-link>
+          
+        </auth-card>
+        
+      </section>
+      
+    </structure>
+
+    <!-- {Login Functionality} -->
+    <functionality>
+      <authentication-flow>
+        <!-- {Login process flow} -->
+        <step>1. User submits email and password</step>
+        <step>2. Server validates credentials</step>
+        <step>3. Server creates session</step>
+        <step>4. Redirect to original page or home</step>
+      </authentication-flow>
+      
+      <session-management>
+        <!-- {Session handling} -->
+        <duration default="30 minutes"/>
+        <!-- {Default session timeout} -->
+        <remember-me duration="30 days"/>
+        <!-- {Extended session if remember me checked} -->
+      </session-management>
+    </functionality>
+
+  </page>
+
+  <!-- {Registration Page} -->
+  <page name="register" jsp-file="register.jsp">
+    
+    <metadata>
+      <title>Create Account - IoTBay</title>
+      <description>Sign up for a new IoTBay account</description>
+      <route>/register</route>
+      <template>standalone</template>
+      <authentication>guest-only</authentication>
+    </metadata>
+
+    <structure>
+      
+      <!-- {Centered Auth Card Layout} -->
+      <section name="auth-container" type="centered">
+        
+        <auth-card>
+          
+          <!-- {Card Header} -->
+          <card-header>
+            <logo>
+              <image source="/images/logo.png" alt="IoTBay"/>
+            </logo>
+            <title>Create your account</title>
+            <subtitle>Join IoTBay to start shopping for IoT devices</subtitle>
+          </card-header>
+          
+          <!-- {Error Message Display} -->
+          <error-message condition="hasError">
+            <alert type="error" role="alert" aria-live="polite">
+              <icon>error-icon</icon>
+              <message>{errorMessage}</message>
+              <!-- {Error: "Email already exists", "Password too weak", etc.} -->
+            </alert>
+          </error-message>
+          
+          <!-- {Registration Form} -->
+          <form name="register" method="post" action="/api/register">
+            
+            <!-- {Personal Information Section} -->
+            <form-section name="personal-info">
+              <title>Personal Information</title>
+              
+              <field-row>
+                <field-group name="firstName" width="50%">
+                  <label>First Name</label>
+                  <input type="text" name="firstName" required="true" autocomplete="given-name" placeholder="John"/>
+                </field-group>
+                
+                <field-group name="lastName" width="50%">
+                  <label>Last Name</label>
+                  <input type="text" name="lastName" required="true" autocomplete="family-name" placeholder="Doe"/>
+                </field-group>
+              </field-row>
+              
+              <field-group name="email">
+                <label>Email Address</label>
+                <input type="email" name="email" required="true" autocomplete="email" placeholder="john.doe@example.com"/>
+                <validation>
+                  <client-side>email format</client-side>
+                  <server-side>unique email check</server-side>
+                </validation>
+                <help-text>We'll use this to send order confirmations</help-text>
+              </field-group>
+              
+              <field-group name="phone">
+                <label>Phone Number (Optional)</label>
+                <input type="tel" name="phone" autocomplete="tel" placeholder="(555) 123-4567"/>
+                <help-text>For order updates and delivery notifications</help-text>
+              </field-group>
+            </form-section>
+            
+            <!-- {Account Security Section} -->
+            <form-section name="security">
+              <title>Account Security</title>
+              
+              <field-group name="password">
+                <label>Password</label>
+                <input type="password" name="password" required="true" autocomplete="new-password" placeholder="Create a strong password"/>
+                <password-requirements>
+                  <!-- {Password strength indicator and requirements} -->
+                  <requirement>At least 8 characters</requirement>
+                  <requirement>Contains uppercase and lowercase</requirement>
+                  <requirement>Contains at least one number</requirement>
+                  <requirement>Contains at least one special character</requirement>
+                </password-requirements>
+                <password-strength-meter>
+                  <!-- {Visual password strength indicator} -->
+                </password-strength-meter>
+              </field-group>
+              
+              <field-group name="confirmPassword">
+                <label>Confirm Password</label>
+                <input type="password" name="confirmPassword" required="true" autocomplete="new-password" placeholder="Re-enter your password"/>
+                <validation>
+                  <client-side>match password field</client-side>
+                </validation>
+              </field-group>
+            </form-section>
+            
+            <!-- {Terms and Conditions} -->
+            <form-section name="terms">
+              <terms-acceptance>
+                <checkbox name="acceptTerms" required="true">
+                  <label>I agree to the <a href="/terms" target="_blank">Terms and Conditions</a> and <a href="/privacy" target="_blank">Privacy Policy</a></label>
+                </checkbox>
+              </terms-acceptance>
+              
+              <newsletter-opt-in>
+                <checkbox name="newsletter">
+                  <label>Send me product updates and special offers</label>
+                  <!-- {Optional newsletter subscription} -->
+                </checkbox>
+              </newsletter-opt-in>
+            </form-section>
+            
+            <!-- {Submit Button} -->
+            <submit-button>
+              <button type="primary" size="large" full-width="true" text="Create Account"/>
+            </submit-button>
+            
+            <loading-state>
+              <spinner condition="submitting"/>
+            </loading-state>
+          </form>
+          
+          <!-- {Sign In Link} -->
+          <signin-link>
+            <text>Already have an account?</text>
+            <link route="/login" text="Sign in"/>
+          </signin-link>
+          
+        </auth-card>
+        
+      </section>
+      
+    </structure>
+
+    <!-- {Registration Functionality} -->
+    <functionality>
+      <validation>
+        <!-- {Form validation rules} -->
+        <email>unique, valid format</email>
+        <password>strength requirements, match confirmation</password>
+        <required-fields>firstName, lastName, email, password</required-fields>
+      </validation>
+      
+      <post-registration>
+        <!-- {Actions after successful registration} -->
+        <step>1. Create user account in database</step>
+        <step>2. Hash password with salt</step>
+        <step>3. Send welcome email (optional)</step>
+        <step>4. Auto-login user</step>
+        <step>5. Redirect to welcome page</step>
+      </post-registration>
+    </functionality>
+
+  </page>
+
+  <!-- {Refactoring Context} -->
+  <refactoring-context>
+    <current-state>
+      <issues>
+        <issue>Login form validation could be more user-friendly</issue>
+        <issue>No password strength indicator on registration</issue>
+        <issue>No social login options</issue>
+        <issue>Error messages could be more specific</issue>
+        <issue>No "forgot password" functionality</issue>
+      </issues>
+    </current-state>
+    <target-state>
+      <improvements>
+        <improvement>Add real-time email validation with server check</improvement>
+        <improvement>Implement password strength meter with visual feedback</improvement>
+        <improvement>Add social login options (Google, GitHub OAuth)</improvement>
+        <improvement>Improve error messages with specific guidance</improvement>
+        <improvement>Add "forgot password" flow with email reset</improvement>
+        <improvement>Implement account activation email (optional)</improvement>
+        <improvement>Add CAPTCHA to prevent bot registrations</improvement>
+        <improvement>Mobile: Optimize form layout for small screens</improvement>
+      </improvements>
+    </target-state>
+  </refactoring-context>
+
+  <dependencies>
+    <component name="auth-card" file="components/auth-card.jsp"/>
+    <component name="password-strength" file="components/password-strength.jsp"/>
+    <!-- {No header/footer on auth pages for cleaner experience} -->
+  </dependencies>
+
+</pages>
+

@@ -14,9 +14,14 @@ public class UserDAOStub implements UserDAO {
     private final List<User> users = new ArrayList<>();
 
     public UserDAOStub() {
-        users.add(new User(1, "john.doe@example.com", "password123", "John", "Doe", "+61 400 000 001", "2000", "1 George St", "Sydney NSW", LocalDate.of(1990, 1, 1), "Card", LocalDateTime.now(), LocalDateTime.now(), "staff", true));
-        users.add(new User(2, "jane.smith@example.com", "password456", "Jane", "Smith", "+61 400 000 002", "2001", "2 Pitt St", "Sydney NSW", LocalDate.of(1992, 5, 15), "PayPal", LocalDateTime.now(), LocalDateTime.now(), "customer", true));
-       
+        // Default test accounts as per README
+        users.add(new User(1, "customer@iotbay.com", "password123", "Customer", "User", "+61 400 000 001", "2000", "1 George St", "Sydney NSW", LocalDate.of(1990, 1, 1), "Card", LocalDateTime.now(), LocalDateTime.now(), "customer", true));
+        users.add(new User(2, "staff@iotbay.com", "staff123", "Staff", "User", "+61 400 000 002", "2001", "2 Pitt St", "Sydney NSW", LocalDate.of(1992, 5, 15), "PayPal", LocalDateTime.now(), LocalDateTime.now(), "staff", true));
+        users.add(new User(5, "staff123@iotbay.com", "staff123", "Staff", "User", "+61 400 000 005", "2001", "2 Pitt St", "Sydney NSW", LocalDate.of(1992, 5, 15), "PayPal", LocalDateTime.now(), LocalDateTime.now(), "staff", true));
+        
+        // Additional test accounts
+        users.add(new User(3, "john.doe@example.com", "password123", "John", "Doe", "+61 400 000 003", "2000", "1 George St", "Sydney NSW", LocalDate.of(1990, 1, 1), "Card", LocalDateTime.now(), LocalDateTime.now(), "staff", true));
+        users.add(new User(4, "jane.smith@example.com", "password456", "Jane", "Smith", "+61 400 000 004", "2001", "2 Pitt St", "Sydney NSW", LocalDate.of(1992, 5, 15), "PayPal", LocalDateTime.now(), LocalDateTime.now(), "customer", true));
     }
 
     @Override

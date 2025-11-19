@@ -82,8 +82,8 @@
                 </ol>
             </nav>
 
-            <!-- Page Header -->
-            <section class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,360px)]">
+            <!-- Page Header - Optimized for 1920x1080 -->
+            <section class="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,360px)] xl:grid-cols-[minmax(0,1fr)_minmax(0,400px)]">
                 <div class="space-y-4">
                     <h1 class="text-display-l font-bold text-neutral-900 leading-tight">Secure checkout</h1>
                     <p class="text-lg text-neutral-600">Review your order and complete your purchase</p>
@@ -192,8 +192,8 @@
             </div>
         </c:if>
 
-        <!-- Checkout Form -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Checkout Form - Optimized for 1920x1080 -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] gap-8">
             <!-- Checkout Form -->
             <div class="lg:col-span-2">
                 <form id="checkoutForm" action="${pageContext.request.contextPath}/checkout" method="post" class="space-y-8" onsubmit="return validateCheckoutForm(event)">
