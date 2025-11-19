@@ -46,6 +46,13 @@ public class DeleteProductController extends HttpServlet {
             response.getWriter().write("{\"error\": \"Access denied\"}");
             return;
         }
+        
+        // CSRF protection
+        if (!utils.SecurityUtil.validateCSRFToken(request)) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.getWriter().write("{\"error\": \"CSRF token validation failed\"}");
+            return;
+        }
 
         String idParam = request.getParameter("id");
         if (idParam == null || idParam.isEmpty()) {

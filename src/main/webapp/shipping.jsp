@@ -118,15 +118,15 @@
                         </p>
                         <ul class="space-y-2 text-sm text-neutral-600">
                             <li class="flex items-start gap-2">
-                                <span class="text-brand-primary mt-1">•</span>
+                                <span class="text-brand-primary mt-1">??/span>
                                 <span>In-stock items: 1-2 business days</span>
                             </li>
                             <li class="flex items-start gap-2">
-                                <span class="text-brand-primary mt-1">•</span>
+                                <span class="text-brand-primary mt-1">??/span>
                                 <span>Backordered items: 5-10 business days</span>
                             </li>
                             <li class="flex items-start gap-2">
-                                <span class="text-brand-primary mt-1">•</span>
+                                <span class="text-brand-primary mt-1">??/span>
                                 <span>Custom orders: 2-3 weeks</span>
                             </li>
                         </ul>
@@ -140,15 +140,15 @@
                         </p>
                         <ul class="space-y-2 text-sm text-neutral-600">
                             <li class="flex items-start gap-2">
-                                <span class="text-brand-primary mt-1">•</span>
+                                <span class="text-brand-primary mt-1">??/span>
                                 <span>Real-time tracking updates</span>
                             </li>
                             <li class="flex items-start gap-2">
-                                <span class="text-brand-primary mt-1">•</span>
+                                <span class="text-brand-primary mt-1">??/span>
                                 <span>Full insurance coverage included</span>
                             </li>
                             <li class="flex items-start gap-2">
-                                <span class="text-brand-primary mt-1">•</span>
+                                <span class="text-brand-primary mt-1">??/span>
                                 <span>Email notifications at each stage</span>
                             </li>
                         </ul>
@@ -162,15 +162,15 @@
                         </p>
                         <ul class="space-y-2 text-sm text-neutral-600">
                             <li class="flex items-start gap-2">
-                                <span class="text-brand-primary mt-1">•</span>
+                                <span class="text-brand-primary mt-1">??/span>
                                 <span>International standard: 10-15 business days</span>
                             </li>
                             <li class="flex items-start gap-2">
-                                <span class="text-brand-primary mt-1">•</span>
+                                <span class="text-brand-primary mt-1">??/span>
                                 <span>International express: 5-7 business days</span>
                             </li>
                             <li class="flex items-start gap-2">
-                                <span class="text-brand-primary mt-1">•</span>
+                                <span class="text-brand-primary mt-1">??/span>
                                 <span>Customs fees are the customer's responsibility</span>
                             </li>
                         </ul>
@@ -184,15 +184,15 @@
                         </p>
                         <ul class="space-y-2 text-sm text-neutral-600">
                             <li class="flex items-start gap-2">
-                                <span class="text-brand-primary mt-1">•</span>
+                                <span class="text-brand-primary mt-1">??/span>
                                 <span>Damaged packages: Contact us within 48 hours</span>
                             </li>
                             <li class="flex items-start gap-2">
-                                <span class="text-brand-primary mt-1">•</span>
+                                <span class="text-brand-primary mt-1">??/span>
                                 <span>Lost packages: We'll investigate and reship if needed</span>
                             </li>
                             <li class="flex items-start gap-2">
-                                <span class="text-brand-primary mt-1">•</span>
+                                <span class="text-brand-primary mt-1">??/span>
                                 <span>Wrong address: Update your address before shipping</span>
                             </li>
                         </ul>
@@ -204,9 +204,9 @@
             <section class="rounded-2xl border border-brand-primary bg-brand-primary/5 p-8 text-center">
                 <h2 class="text-display-m font-bold text-neutral-900 mb-4">Free Standard Shipping</h2>
                 <p class="text-lg text-neutral-600 mb-6 max-w-2xl mx-auto">
-                    Orders over $100 qualify for free standard shipping. No code needed—discount applies automatically at checkout.
+                    Orders over $100 qualify for free standard shipping. No code needed?�discount applies automatically at checkout.
                 </p>
-                <a href="${pageContext.request.contextPath}/browse" class="btn btn--primary btn--lg">
+                <a href="/browse.jsp" class="btn btn--primary btn--lg">
                     Shop Now
                 </a>
             </section>

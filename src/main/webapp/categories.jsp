@@ -62,7 +62,7 @@
                                 <span class="feature-tag">Voice Assistants</span>
                             </div>
                             <div class="category-card__actions">
-                                <a href="${pageContext.request.contextPath}/browse?category=smart-home" 
+                                <a href="/browse.jsp?category=smart-home" 
                                    class="btn btn--primary w-full">
                                     Explore Smart Home
                                 </a>
@@ -93,7 +93,7 @@
                                 <span class="feature-tag">Quality Control</span>
                             </div>
                             <div class="category-card__actions">
-                                <a href="${pageContext.request.contextPath}/browse?category=industrial" 
+                                <a href="/browse.jsp?category=industrial" 
                                    class="btn btn--primary w-full">
                                     Explore Industrial
                                 </a>
@@ -124,7 +124,7 @@
                                 <span class="feature-tag">Livestock Tracking</span>
                             </div>
                             <div class="category-card__actions">
-                                <a href="${pageContext.request.contextPath}/browse?category=agriculture" 
+                                <a href="/browse.jsp?category=agriculture" 
                                    class="btn btn--primary w-full">
                                     Explore Agriculture
                                 </a>
@@ -155,7 +155,7 @@
                                 <span class="feature-tag">Environmental Monitoring</span>
                             </div>
                             <div class="category-card__actions">
-                                <a href="${pageContext.request.contextPath}/browse?category=warehouse" 
+                                <a href="/browse.jsp?category=warehouse" 
                                    class="btn btn--primary w-full">
                                     Explore Warehouse
                                 </a>
@@ -186,7 +186,7 @@
                                 <span class="feature-tag">Emergency Response</span>
                             </div>
                             <div class="category-card__actions">
-                                <a href="${pageContext.request.contextPath}/browse?category=healthcare" 
+                                <a href="/browse.jsp?category=healthcare" 
                                    class="btn btn--primary w-full">
                                     Explore Healthcare
                                 </a>
@@ -217,7 +217,7 @@
                                 <span class="feature-tag">Fleet Analytics</span>
                             </div>
                             <div class="category-card__actions">
-                                <a href="${pageContext.request.contextPath}/browse?category=transportation" 
+                                <a href="/browse.jsp?category=transportation" 
                                    class="btn btn--primary w-full">
                                     Explore Transportation
                                 </a>
@@ -251,7 +251,7 @@
                 </div>
                 
                 <div class="text-center mt-8">
-                    <a href="${pageContext.request.contextPath}/browse" class="btn btn--outline btn--lg">
+                    <a href="/browse.jsp" class="btn btn--outline btn--lg">
                         View All Products
                     </a>
                 </div>

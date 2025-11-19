@@ -38,7 +38,7 @@
         } else {
             heading = "Welcome back, " + user.getFirstName() + "!";
             status = "You're signed in";
-            description = "Pick up where you left offâ€”saved carts, recommendations, and order activity are synced to your account.";
+            description = "Pick up where you left off?”saved carts, recommendations, and order activity are synced to your account.";
             primaryCtaHref = contextPath + "/";
             primaryCtaLabel = "Continue to homepage";
             secondaryCtaHref = contextPath + "/orderList.jsp";
@@ -75,7 +75,7 @@
     request.setAttribute("highlightLinkLabel", highlightLinkLabel);
 %>
 
-<t:base title="Welcome" description="Welcome to IoT Bay â€” trusted IoT solutions, expert support, and deployment-ready hardware.">
+<t:base title="Welcome" description="Welcome to IoT Bay ??trusted IoT solutions, expert support, and deployment-ready hardware.">
     <section class="py-16">
         <div class="container space-y-12">
             <!-- Optimized for 1920x1080 -->
@@ -205,7 +205,7 @@
                             </svg>
                         </div>
                         <h3 class="text-base font-semibold text-neutral-900">Get expert help</h3>
-                        <p class="text-sm text-neutral-600">Need tailored procurement or a custom architecture review? Weâ€™ll pair you with a specialist.</p>
+                        <p class="text-sm text-neutral-600">Need tailored procurement or a custom architecture review? We?™ll pair you with a specialist.</p>
                         <a href="${contextPath}/contact.jsp" class="text-sm font-semibold text-brand-primary hover:underline">Contact support</a>
                     </article>
                 </div>

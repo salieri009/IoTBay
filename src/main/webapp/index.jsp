@@ -28,6 +28,7 @@
                 <jsp:param name="secondaryCtaText" value="Watch Demo" />
                 <jsp:param name="secondaryCtaHref" value="${pageContext.request.contextPath}/about.jsp" />
                 <jsp:param name="imageUrl" value="${pageContext.request.contextPath}/images/iot-device-hero-3d.png" />
+                <jsp:param name="imageAlt" value="3D rendering of a connected IoT device ecosystem" />
             </jsp:include>
         </div>
     </section>
@@ -80,24 +81,16 @@
                         <!-- Fallback Featured Products -->
                         <div class="l-grid__col-12 l-grid__col-md-6 l-grid__col-lg-3">
                             <div class="c-product-card">
-                                <img src="${pageContext.request.contextPath}/images/sample1.png" 
-                                     alt="Smart Industrial Sensor" 
-                                     class="c-product-card__image"
-                                     loading="lazy"
-                                     width="300"
-                                     height="300"
-                                     onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/default-product.png';" />
-                                <div class="c-product-card__body">
-                                    <h3 class="c-product-card__title">Smart Industrial Sensor</h3>
-                                    <p class="text-neutral-600 text-sm l-spacing-xs">
-                                        Advanced multi-parameter sensor for real-time monitoring of temperature, humidity, and pressure.
-                                    </p>
-                                    <div class="c-product-card__price">$459.00</div>
-                                    <div class="c-product-card__actions">
-                                        <a href="${pageContext.request.contextPath}/productDetails.jsp?id=1" class="btn btn--outline btn--sm">View Details</a>
-                                        <button type="button" onclick="if(typeof OptimisticUI !== 'undefined' && typeof OptimisticUI.addToCart === 'function') { OptimisticUI.addToCart(1, 1); }" class="btn btn--primary btn--sm">Add to Cart</button>
-                                    </div>
-                                </div>
+                                <jsp:useBean id="fallbackProduct" class="model.Product" />
+                                <jsp:setProperty name="fallbackProduct" property="id" value="1" />
+                                <jsp:setProperty name="fallbackProduct" property="name" value="Smart Industrial Sensor" />
+                                <jsp:setProperty name="fallbackProduct" property="price" value="459.00" />
+                                <jsp:setProperty name="fallbackProduct" property="imageUrl" value="${pageContext.request.contextPath}/images/sample1.png" />
+                                <c:set var="product" value="${fallbackProduct}" scope="request" />
+                                <jsp:include page="/components/molecules/product-card/product-card.jsp">
+                                    <jsp:param name="showQuickView" value="true" />
+                                    <jsp:param name="size" value="medium" />
+                                </jsp:include>
                             </div>
                         </div>
                         
@@ -125,7 +118,7 @@
                                     <div class="product-card__price-info">
                                         <div class="product-card__price">$89.00</div>
                                         <div class="product-card__stock-status">
-                                            <span class="text-success text-sm">✓ In Stock (8 available)</span>
+                                            <span class="text-success text-sm">??In Stock (8 available)</span>
                                         </div>
                                     </div>
                                     <div class="product-card__actions">
@@ -161,7 +154,7 @@
                                     <div class="product-card__price-info">
                                         <div class="product-card__price">$299.00</div>
                                         <div class="product-card__stock-status">
-                                            <span class="text-success text-sm">✓ In Stock (12 available)</span>
+                                            <span class="text-success text-sm">??In Stock (12 available)</span>
                                         </div>
                                     </div>
                                     <div class="product-card__actions">

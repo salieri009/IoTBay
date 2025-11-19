@@ -21,7 +21,7 @@
     <!-- Modern Favicons -->
     <link rel="icon" type="image/svg+xml" href="<c:url value='/images/favicon.svg' />">
     <link rel="icon" type="image/x-icon" href="<c:url value='/favicon.ico' />">
-    <link rel="stylesheet" href="<c:url value='/css/style.css' />">
+    <link rel="stylesheet" href="<c:url value='/css/style.css?v=20251120' />">
 
     <c:if test="${customCSS != null}">
         <link rel="stylesheet" href="<c:url value='/css/${customCSS}' />">
@@ -33,7 +33,7 @@
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
     
     <!-- Preload Critical Resources -->
-    <link rel="preload" href="<c:url value='/css/style.css' />" as="style">
+    <link rel="preload" href="<c:url value='/css/style.css?v=20251120' />" as="style">
     <link rel="preload" href="<c:url value='/js/main.js' />" as="script">
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">

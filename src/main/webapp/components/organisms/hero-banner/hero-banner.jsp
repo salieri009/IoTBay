@@ -35,6 +35,7 @@
     String secondaryCtaText = request.getParameter("secondaryCtaText");
     String secondaryCtaHref = request.getParameter("secondaryCtaHref");
     String imageUrl = request.getParameter("imageUrl");
+    String imageAlt = request.getParameter("imageAlt") != null ? request.getParameter("imageAlt") : "";
 %>
 
 <div class="hero-card relative overflow-hidden rounded-2xl bg-neutral-900 text-white p-8 md:p-12 lg:p-16 min-h-[500px] flex items-center">
@@ -86,7 +87,7 @@
     <!-- Visual Wrapper: 3D Floating Image -->
     <div class="hero-card__visual absolute right-0 bottom-0 w-1/2 h-full hidden lg:block pointer-events-none z-10">
         <img src="${param.imageUrl}"
-             alt="Hero Image"
+             alt="${imageAlt}"
              class="w-full h-full object-contain object-right-bottom transform translate-y-10 translate-x-10"
              onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/hero.png';">
     </div>

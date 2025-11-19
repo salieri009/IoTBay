@@ -1,36 +1,13 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
 
-<%
-    String contextPath = request.getContextPath();
-%>
-
-<!DOCTYPE html>
-<html lang="en" data-theme="light">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Contact IoT Bay for support, sales inquiries, and technical assistance. Get help from our expert team.">
-    <title>Contact Us | IoT Bay - Smart Technology Store</title>
-    
-    <!-- CSS -->
-    <link rel="stylesheet" href="<%= contextPath %>/css/modern-theme.css?v=3">
-    
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-</head>
-<body class="antialiased bg-neutral-50 text-neutral-900 min-h-screen flex flex-col">
-    
-    <!-- Header -->
-    <c:import url="/components/organisms/header/header.jsp" />
-    
-    <main class="flex-1">
-        <!-- Hero Section -->
-        <section class="py-16 md:py-24 bg-neutral-900 text-white">
-            <div class="container">
+<t:base 
+    title="Contact Us" 
+    description="Contact IoT Bay for support, sales inquiries, and technical assistance. Get help from our expert team.">
+    <!-- Hero Section -->
+    <section class="py-16 md:py-24 bg-neutral-900 text-white">
+        <div class="container">
                 <div class="max-w-3xl mx-auto text-center space-y-6">
                     <p class="inline-flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-wide text-white/80">
                         <span class="inline-flex h-2 w-2 rounded-full bg-brand-secondary"></span>
@@ -44,11 +21,12 @@
                     </p>
                 </div>
             </div>
-        </section>
-        
-        <!-- Contact Section -->
-        <section class="py-16">
-            <div class="container">
+        </div>
+    </section>
+    
+    <!-- Contact Section -->
+    <section class="py-16">
+        <div class="container">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
                     
                     <!-- Contact Form -->
@@ -58,7 +36,7 @@
                             <p class="text-neutral-600">Fill out the form below and we'll get back to you within 24 hours.</p>
                         </div>
                         
-                        <form action="<%= contextPath %>/contact" method="post" class="space-y-6">
+                        <form action="${pageContext.request.contextPath}/contact" method="post" class="space-y-6">
                             <fieldset class="space-y-6">
                                 <legend class="sr-only">Contact form</legend>
                                 
@@ -99,7 +77,7 @@
                                            autocomplete="tel"
                                            placeholder="+1 (555) 123-4567"
                                            aria-describedby="phone-help">
-                                    <div id="phone-help" class="form-help text-xs text-neutral-500 mt-1">Optional — helpful for urgent inquiries</div>
+                                    <div id="phone-help" class="form-help text-xs text-neutral-500 mt-1">Optional ??helpful for urgent inquiries</div>
                                 </div>
                                 
                                 <div class="form-group">
@@ -133,8 +111,8 @@
                                         <input type="checkbox" name="privacy" required aria-describedby="privacy-help">
                                         <span class="checkbox__mark"></span>
                                         <span class="checkbox__label">
-                                            I agree to the <a href="<%= contextPath %>/privacy" class="text-brand-primary hover:text-brand-primary-600">Privacy Policy</a> 
-                                            and <a href="<%= contextPath %>/terms" class="text-brand-primary hover:text-brand-primary-600">Terms of Service</a>
+                                            I agree to the <a href="${pageContext.request.contextPath}/privacy.jsp" class="text-brand-primary hover:text-brand-primary-600">Privacy Policy</a> 
+                                            and <a href="${pageContext.request.contextPath}/terms.jsp" class="text-brand-primary hover:text-brand-primary-600">Terms of Service</a>
                                         </span>
                                     </label>
                                     <div id="privacy-help" class="sr-only">Required to submit the contact form</div>
@@ -290,12 +268,12 @@
                         </div>
                     </aside>
                 </div>
-            </div>
-        </section>
-        
-        <!-- FAQ Section -->
-        <section class="py-16 bg-neutral-100">
-            <div class="container">
+        </div>
+    </section>
+    
+    <!-- FAQ Section -->
+    <section class="py-16 bg-neutral-100">
+        <div class="container">
                 <div class="max-w-4xl mx-auto">
                     <div class="text-center mb-12">
                         <h2 class="text-3xl font-bold text-neutral-900 mb-4">Frequently Asked Questions</h2>
@@ -368,14 +346,8 @@
                     </div>
                 </div>
             </div>
-        </section>
-    </main>
-    
-    <!-- Footer -->
-    <c:import url="/components/organisms/footer/footer.jsp" />
-    
-    <!-- JavaScript -->
-    <script src="<%= contextPath %>/js/main.js"></script>
+        </div>
+    </section>
     
     <script>
         // FAQ functionality
@@ -420,5 +392,4 @@
             }
         }
     </script>
-</body>
-</html>
+</t:base>

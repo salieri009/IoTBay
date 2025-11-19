@@ -8,62 +8,35 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<%
-    HttpSession sessionObj = request.getSession(false);
-    User user = (sessionObj != null) ? (User) sessionObj.getAttribute("user") : null;
-    Integer userId;
+<%-- Logic refactored to JSTL/EL --%>
+<c:set var="cartItems" value="${requestScope.cartItems}" />
+<c:if test="${empty cartItems}">
+    <jsp:useBean id="cartItems" class="java.util.ArrayList" scope="request" />
+</c:if>
 
-    if (user != null) {
-        userId = user.getId();
-    } else {
-        userId = (sessionObj != null) ? (Integer) sessionObj.getAttribute("guestId") : null;
-    }
+<%-- Calculate Totals --%>
+<c:set var="subtotal" value="0.0" />
+<c:set var="totalItems" value="0" />
 
-    // cartItems should already be set as a request attribute by a servlet
-    List<CartItem> cartItems = (List<CartItem>) request.getAttribute("cartItems");
-    if (cartItems == null) {
-        cartItems = new java.util.ArrayList<>();
-    }
-    
-    // Calculate totals
-    double subtotal = 0.0;
-    int totalItems = 0;
-    if (cartItems != null && !cartItems.isEmpty()) {
-        for (CartItem item : cartItems) {
-            if (item != null && item.getPrice() != null) {
-                // Use getSubtotal() which uses item's own price, or convert BigDecimal to double
-                subtotal += item.getSubtotal().doubleValue();
-                totalItems += item.getQuantity();
-            }
-        }
-    }
-    double tax = subtotal * 0.1; // 10% tax
-    double shipping = subtotal >= 50.0 ? 0.0 : 15.0; // Free shipping over $50
-    double total = subtotal + tax + shipping;
-    String contextPath = request.getContextPath();
+<c:forEach var="item" items="${cartItems}">
+    <c:set var="subtotal" value="${subtotal + item.subtotal}" />
+    <c:set var="totalItems" value="${totalItems + item.quantity}" />
+</c:forEach>
 
-    double freeShippingDelta = subtotal >= 50.0 ? 0.0 : 50.0 - subtotal;
-    String cartSummary = totalItems == 0 ? "Your cart is currently empty." : totalItems + (totalItems == 1 ? " item" : " items") + " in your cart.";
-    String subtotalFormatted = String.format("%1$,.2f", subtotal);
-    String taxFormatted = String.format("%1$,.2f", tax);
-    String shippingFormatted = shipping == 0.0 ? "Free" : String.format("%1$,.2f", shipping);
-    String totalFormatted = String.format("%1$,.2f", total);
-    String freeShippingDeltaFormatted = String.format("%1$,.2f", freeShippingDelta);
+<c:set var="tax" value="${subtotal * 0.1}" />
+<c:set var="shipping" value="${subtotal >= 50.0 ? 0.0 : 15.0}" />
+<c:set var="total" value="${subtotal + tax + shipping}" />
+<c:set var="freeShippingDelta" value="${subtotal >= 50.0 ? 0.0 : 50.0 - subtotal}" />
 
-    // Expose to EL
-    request.setAttribute("cartItems", cartItems);
-    request.setAttribute("subtotal", subtotal);
-    request.setAttribute("tax", tax);
-    request.setAttribute("shipping", shipping);
-    request.setAttribute("total", total);
-    request.setAttribute("totalItems", totalItems);
-    request.setAttribute("cartSummary", cartSummary);
-    request.setAttribute("subtotalFormatted", subtotalFormatted);
-    request.setAttribute("taxFormatted", taxFormatted);
-    request.setAttribute("shippingFormatted", shippingFormatted);
-    request.setAttribute("totalFormatted", totalFormatted);
-    request.setAttribute("freeShippingDeltaFormatted", freeShippingDeltaFormatted);
-%>
+<%-- Summary Text --%>
+<c:choose>
+    <c:when test="${totalItems == 0}">
+        <c:set var="cartSummary" value="Your cart is currently empty." />
+    </c:when>
+    <c:otherwise>
+        <c:set var="cartSummary" value="${totalItems} ${totalItems == 1 ? 'item' : 'items'} in your cart." />
+    </c:otherwise>
+</c:choose>
 
 <t:base title="Shopping Cart - IoT Bay" description="Review and manage your selected IoT products">
     <main class="py-12 bg-neutral-50">
@@ -144,7 +117,7 @@
                             <div class="space-y-4">
                                 <div class="flex justify-between items-center text-neutral-600">
                                     <span>Subtotal (<span data-cart-summary="items-count"><c:out value="${totalItems}" /></span> items)</span>
-                                    <span class="font-medium text-neutral-900" data-cart-summary="subtotal">&#36;${subtotalFormatted}</span>
+                                    <span class="font-medium text-neutral-900" data-cart-summary="subtotal">&#36;<fmt:formatNumber value="${subtotal}" type="number" minFractionDigits="2" maxFractionDigits="2" /></span>
                                 </div>
                                 <div class="flex justify-between items-center text-neutral-600">
                                     <span>Shipping</span>
@@ -154,25 +127,28 @@
                                                 <span class="text-green-600">Free</span>
                                             </c:when>
                                             <c:otherwise>
-                                                &#36;${shippingFormatted}
+                                            <c:choose>
+                                                <c:when test="${shipping == 0}">Free</c:when>
+                                                <c:otherwise>&#36;<fmt:formatNumber value="${shipping}" type="number" minFractionDigits="2" maxFractionDigits="2" /></c:otherwise>
+                                            </c:choose>
                                             </c:otherwise>
                                         </c:choose>
                                     </span>
                                 </div>
                                 <c:if test="${subtotal < 50}">
                                     <div class="text-sm text-neutral-500 italic bg-neutral-50 p-2 rounded" data-cart-summary="shipping-note">
-                                        Add &#36;${freeShippingDeltaFormatted} more for free shipping
+                                        Add &#36;<fmt:formatNumber value="${freeShippingDelta}" type="number" minFractionDigits="2" maxFractionDigits="2" /> more for free shipping
                                     </div>
                                 </c:if>
                                 <div class="flex justify-between items-center text-neutral-600">
                                     <span>Tax</span>
-                                    <span class="font-medium text-neutral-900" data-cart-summary="tax">&#36;${taxFormatted}</span>
+                                    <span class="font-medium text-neutral-900" data-cart-summary="tax">&#36;<fmt:formatNumber value="${tax}" type="number" minFractionDigits="2" maxFractionDigits="2" /></span>
                                 </div>
                                 
                                 <div class="border-t border-neutral-200 pt-4 mt-4">
                                     <div class="flex justify-between items-center">
                                         <span class="text-lg font-bold text-neutral-900">Total</span>
-                                        <span class="text-xl font-bold text-brand-primary" data-cart-summary="total">&#36;${totalFormatted}</span>
+                                        <span class="text-xl font-bold text-brand-primary" data-cart-summary="total">&#36;<fmt:formatNumber value="${total}" type="number" minFractionDigits="2" maxFractionDigits="2" /></span>
                                     </div>
                                 </div>
                             </div>
@@ -254,7 +230,7 @@
             const productId = cartItem.getAttribute('data-product-id') || itemId;
             
             quantityBtn.disabled = true;
-            quantityInput.value = '…';
+            quantityInput.value = '??;
             if (typeof showLoading === 'function') {
                 showLoading(quantityBtn);
             }

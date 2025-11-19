@@ -2299,27 +2299,27 @@
 
 /* Improved Grid Layout - Responsive */
 /* Skeleton-Refactor: PC 24px gap, Mobile 12px gap */
-.footer__grid {
+/* .footer__grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 12px; /* Mobile: 12px */
-}
+  gap: 12px; 
+} */
 
 /* Tablet: 2 columns */
-@media (min-width: 768px) {
+/* @media (min-width: 768px) {
   .footer__grid {
     grid-template-columns: 2fr 1fr 1fr;
-    gap: 24px; /* PC: 24px */
+    gap: 24px; 
   }
-}
+} */
 
 /* Desktop: Brand column wider, 5 columns (NN/g: Clear hierarchy) */
-@media (min-width: 1024px) {
+/* @media (min-width: 1024px) {
   .footer__grid {
     grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
-    gap: 24px; /* PC: 24px (skeleton-refactor) */
+    gap: 24px; 
   }
-}
+} */
 
 .footer__column {
   display: flex;

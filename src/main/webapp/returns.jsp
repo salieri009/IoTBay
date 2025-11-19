@@ -32,15 +32,15 @@
                         </p>
                         <ul class="space-y-2 text-sm text-neutral-600">
                             <li class="flex items-start gap-2">
-                                <span class="text-brand-primary mt-1">•</span>
+                                <span class="text-brand-primary mt-1">??/span>
                                 <span>Original packaging required</span>
                             </li>
                             <li class="flex items-start gap-2">
-                                <span class="text-brand-primary mt-1">•</span>
+                                <span class="text-brand-primary mt-1">??/span>
                                 <span>All accessories must be included</span>
                             </li>
                             <li class="flex items-start gap-2">
-                                <span class="text-brand-primary mt-1">•</span>
+                                <span class="text-brand-primary mt-1">??/span>
                                 <span>Item must be unused and in original condition</span>
                             </li>
                         </ul>
@@ -89,19 +89,19 @@
                         </p>
                         <ul class="space-y-2 text-sm text-neutral-600">
                             <li class="flex items-start gap-2">
-                                <span class="text-brand-primary mt-1">•</span>
+                                <span class="text-brand-primary mt-1">??/span>
                                 <span>Opened software or digital products</span>
                             </li>
                             <li class="flex items-start gap-2">
-                                <span class="text-brand-primary mt-1">•</span>
+                                <span class="text-brand-primary mt-1">??/span>
                                 <span>Custom or personalized items</span>
                             </li>
                             <li class="flex items-start gap-2">
-                                <span class="text-brand-primary mt-1">•</span>
+                                <span class="text-brand-primary mt-1">??/span>
                                 <span>Items damaged by misuse</span>
                             </li>
                             <li class="flex items-start gap-2">
-                                <span class="text-brand-primary mt-1">•</span>
+                                <span class="text-brand-primary mt-1">??/span>
                                 <span>Items returned after 30 days</span>
                             </li>
                         </ul>

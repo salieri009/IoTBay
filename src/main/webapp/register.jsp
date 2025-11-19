@@ -2,6 +2,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
 
+<%
+    // Generate CSRF token for form submission
+    String csrfToken = utils.SecurityUtil.generateCSRFToken(request);
+    pageContext.setAttribute("csrfToken", csrfToken);
+%>
+
 <t:base title="Create Account - IoT Bay" description="Create your IoT Bay account to access exclusive IoT products and services">
     <main class="min-h-screen flex items-center justify-center bg-neutral-50 py-12 px-4">
         <!-- Auth Card Container -->
@@ -54,8 +60,9 @@
                     </div>
                     
                     <!-- Registration Form -->
-                    <div class="space-y-8">
-                        <form class="space-y-8" id="registerForm" action="<%= contextPath %>/api/auth/register" method="post">
+                    <div class="p-8 lg:p-12 flex flex-col justify-center space-y-8">
+                        <form class="space-y-8" id="registerForm" action="${pageContext.request.contextPath}/api/auth/register" method="post">
+                            <input type="hidden" name="csrfToken" value="${csrfToken}" />
                             <!-- Account Information -->
                             <fieldset class="space-y-4">
                                 <legend class="text-lg font-semibold text-neutral-900 border-b border-neutral-200 pb-2 w-full">Account information</legend>
@@ -90,8 +97,6 @@
                                         <jsp:param name="id" value="confirmPassword" />
                                     </jsp:include>
                                 </div>
-                            </div>
-                            
                             </fieldset>
                             
                             <!-- Personal Information -->
@@ -133,8 +138,6 @@
                                         <jsp:param name="id" value="dateOfBirth" />
                                     </jsp:include>
                                 </div>
-                            </div>
-                            
                             </fieldset>
                             
                             <!-- Address Information -->
@@ -163,8 +166,6 @@
                                     <jsp:param name="required" value="true" />
                                     <jsp:param name="id" value="postalCode" />
                                 </jsp:include>
-                            </div>
-                            
                             </fieldset>
                             
                             <!-- Payment Method -->
@@ -200,7 +201,7 @@
                         </form>
                         
                         <div class="text-center">
-                            <p class="text-neutral-600">Already have an account? <a href="<%= contextPath %>/login.jsp" class="text-primary-600 hover:text-primary-700 font-medium">Sign in</a></p>
+                            <p class="text-neutral-600">Already have an account? <a href="${pageContext.request.contextPath}/login.jsp" class="text-primary-600 hover:text-primary-700 font-medium">Sign in</a></p>
                         </div>
                     </div>
                 </div>
@@ -228,7 +229,7 @@
         </div>
     </div>
 
-    <script src="<%= contextPath %>/js/main.js"></script>
+    <script src="${pageContext.request.contextPath}/js/main.js"></script>
     <script>
         function showModal(message) {
             document.getElementById('modalMessage').textContent = message;
@@ -415,7 +416,7 @@
                 }
                 // Redirect after short delay
                 setTimeout(() => {
-                    window.location.href = '<%= contextPath %>/welcome.jsp';
+                    window.location.href = '${pageContext.request.contextPath}/welcome.jsp';
                 }, 1000);
             })
             .catch(error => {
@@ -424,7 +425,7 @@
                 // Provide specific error messages
                 let errorMessage = 'Registration failed. ';
                 if (error.message.includes('email') || error.message.includes('Email')) {
-                    errorMessage += 'This email is already registered. Would you like to <a href="<%= contextPath %>/login.jsp">log in</a> instead?';
+                    errorMessage += 'This email is already registered. Would you like to <a href="${pageContext.request.contextPath}/login.jsp">log in</a> instead?';
                 } else if (error.message.includes('password')) {
                     errorMessage += 'Please check your password and try again.';
                 } else {

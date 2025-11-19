@@ -92,6 +92,62 @@
     </div>
   </details>
   
+  <%-- Protocol --%>
+  <details class="group py-4 border-b border-neutral-200">
+    <summary class="flex items-center justify-between font-medium text-neutral-900 cursor-pointer list-none select-none">
+      <span>Protocol</span>
+      <span class="transition group-open:rotate-180">
+        <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+      </span>
+    </summary>
+    <div class="text-neutral-600 mt-4 space-y-2 group-open:animate-fadeIn" role="group" aria-label="Communication protocols">
+      <label class="flex items-center gap-3 cursor-pointer hover:text-brand-primary transition-colors">
+        <input type="checkbox" name="protocol" value="wifi" class="w-4 h-4 text-brand-primary border-neutral-300 rounded focus:ring-brand-primary" onchange="<%= onFilterChange %>('protocol')">
+        <span class="text-sm">Wi-Fi</span>
+      </label>
+      <label class="flex items-center gap-3 cursor-pointer hover:text-brand-primary transition-colors">
+        <input type="checkbox" name="protocol" value="bluetooth" class="w-4 h-4 text-brand-primary border-neutral-300 rounded focus:ring-brand-primary" onchange="<%= onFilterChange %>('protocol')">
+        <span class="text-sm">Bluetooth / BLE</span>
+      </label>
+      <label class="flex items-center gap-3 cursor-pointer hover:text-brand-primary transition-colors">
+        <input type="checkbox" name="protocol" value="lorawan" class="w-4 h-4 text-brand-primary border-neutral-300 rounded focus:ring-brand-primary" onchange="<%= onFilterChange %>('protocol')">
+        <span class="text-sm">LoRaWAN</span>
+      </label>
+      <label class="flex items-center gap-3 cursor-pointer hover:text-brand-primary transition-colors">
+        <input type="checkbox" name="protocol" value="zigbee" class="w-4 h-4 text-brand-primary border-neutral-300 rounded focus:ring-brand-primary" onchange="<%= onFilterChange %>('protocol')">
+        <span class="text-sm">Zigbee</span>
+      </label>
+      <label class="flex items-center gap-3 cursor-pointer hover:text-brand-primary transition-colors">
+        <input type="checkbox" name="protocol" value="mqtt" class="w-4 h-4 text-brand-primary border-neutral-300 rounded focus:ring-brand-primary" onchange="<%= onFilterChange %>('protocol')">
+        <span class="text-sm">MQTT</span>
+      </label>
+    </div>
+  </details>
+
+  <%-- Use Case --%>
+  <details class="group py-4 border-b border-neutral-200">
+    <summary class="flex items-center justify-between font-medium text-neutral-900 cursor-pointer list-none select-none">
+      <span>Use Case</span>
+      <span class="transition group-open:rotate-180">
+        <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+      </span>
+    </summary>
+    <div class="text-neutral-600 mt-4 space-y-2 group-open:animate-fadeIn" role="group" aria-label="Use cases">
+      <label class="flex items-center gap-3 cursor-pointer hover:text-brand-primary transition-colors">
+        <input type="checkbox" name="usecase" value="monitoring" class="w-4 h-4 text-brand-primary border-neutral-300 rounded focus:ring-brand-primary" onchange="<%= onFilterChange %>('usecase')">
+        <span class="text-sm">Monitoring</span>
+      </label>
+      <label class="flex items-center gap-3 cursor-pointer hover:text-brand-primary transition-colors">
+        <input type="checkbox" name="usecase" value="automation" class="w-4 h-4 text-brand-primary border-neutral-300 rounded focus:ring-brand-primary" onchange="<%= onFilterChange %>('usecase')">
+        <span class="text-sm">Automation</span>
+      </label>
+      <label class="flex items-center gap-3 cursor-pointer hover:text-brand-primary transition-colors">
+        <input type="checkbox" name="usecase" value="tracking" class="w-4 h-4 text-brand-primary border-neutral-300 rounded focus:ring-brand-primary" onchange="<%= onFilterChange %>('usecase')">
+        <span class="text-sm">Asset Tracking</span>
+      </label>
+    </div>
+  </details>
+
   <%-- Stock Status --%>
   <details class="group py-4 border-b border-neutral-200">
     <summary class="flex items-center justify-between font-medium text-neutral-900 cursor-pointer list-none select-none">

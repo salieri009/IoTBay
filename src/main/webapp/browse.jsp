@@ -113,7 +113,7 @@
                     <ul class="space-y-3 text-sm text-neutral-600">
                         <li>Use filters to focus by category, protocol, voltage, or stock availability.</li>
                         <li>Switch between grid and list views to compare product metadata efficiently.</li>
-                        <li>Sorting updates the catalogue instantly—screen readers announce each change.</li>
+                        <li>Sorting updates the catalogue instantly?�screen readers announce each change.</li>
                     </ul>
                     <p class="text-xs text-neutral-500">Need help selecting hardware? <a href="${pageContext.request.contextPath}/contact.jsp" class="text-brand-primary hover:underline">Contact a specialist</a>.</p>
                 </aside>
@@ -121,7 +121,7 @@
 
             <!-- Search, Sort & View Controls -->
             <div class="flex flex-col gap-4 xl:flex-row xl:items-end">
-                <form action="${pageContext.request.contextPath}/browse" method="get" class="flex w-full flex-col gap-2 sm:flex-row">
+                <form action="${pageContext.request.contextPath}/browse.jsp" method="get" class="flex w-full flex-col gap-2 sm:flex-row">
                     <label for="productSearch" class="sr-only">Search products</label>
                     <input 
                         type="search" 
@@ -386,7 +386,7 @@
             }
             
             // Update URL and reload
-            const url = '${pageContext.request.contextPath}/browse' + (params.toString() ? '?' + params.toString() : '');
+            const url = '${pageContext.request.contextPath}/browse.jsp' + (params.toString() ? '?' + params.toString() : '');
             window.location.href = url;
         }
         
@@ -394,7 +394,7 @@
             const form = document.getElementById('filtersForm');
             form.reset();
             const keyword = '${keyword != null ? keyword : ""}';
-            const url = '${pageContext.request.contextPath}/browse' + (keyword ? '?keyword=' + encodeURIComponent(keyword) : '');
+            const url = '${pageContext.request.contextPath}/browse.jsp' + (keyword ? '?keyword=' + encodeURIComponent(keyword) : '');
             window.location.href = url;
         }
         

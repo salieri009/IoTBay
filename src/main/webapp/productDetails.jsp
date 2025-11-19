@@ -6,7 +6,7 @@
     Product product = (Product) request.getAttribute("product");
     User currentUser = (User) session.getAttribute("user");
     
-    // 기본값 설정
+    // 기본�??�정
     String productName = "Sample IoT Device";
     String productDescription = "A high-quality IoT device for smart automation and monitoring. Features advanced connectivity, robust build quality, and seamless integration with popular IoT platforms.";
     double productPrice = 199.99;
@@ -14,7 +14,7 @@
     int productId = 0;
     String productImage = "images/sample1.png";
     
-    // product 객체가 있으면 실제 값을 사용
+    // product 객체가 ?�으�??�제 값을 ?�용
     if (product != null) {
         try {
             productName = product.getName() != null ? product.getName() : productName;
@@ -24,7 +24,7 @@
             productId = product.getId();
             productImage = product.getImageUrl() != null && !product.getImageUrl().isEmpty() ? product.getImageUrl() : productImage;
         } catch (Exception e) {
-            // 메소드 호출 실패 시 기본값 사용
+            // 메소???�출 ?�패 ??기본�??�용
         }
     }
 
@@ -114,41 +114,127 @@
                         </dl>
                     </section>
 
-                    <!-- Key Features -->
-                    <section class="space-y-6">
-                        <h2 class="text-lg font-semibold text-neutral-900">Key features</h2>
-                        <ul class="space-y-2">
-                            <li class="flex items-center gap-3">
-                                <svg class="w-5 h-5 text-success flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                                </svg>
-                                <span class="text-neutral-700">Wireless connectivity (Wi-Fi & Bluetooth)</span>
-                            </li>
-                            <li class="flex items-center gap-3">
-                                <svg class="w-5 h-5 text-success flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                                </svg>
-                                <span class="text-neutral-700">Real-time monitoring and alerts</span>
-                            </li>
-                            <li class="flex items-center gap-3">
-                                <svg class="w-5 h-5 text-success flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                                </svg>
-                                <span class="text-neutral-700">Easy setup and configuration</span>
-                            </li>
-                            <li class="flex items-center gap-3">
-                                <svg class="w-5 h-5 text-success flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                                </svg>
-                                <span class="text-neutral-700">Energy efficient design</span>
-                            </li>
-                            <li class="flex items-center gap-3">
-                                <svg class="w-5 h-5 text-success flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                                </svg>
-                                <span class="text-neutral-700">Mobile app integration</span>
-                            </li>
-                        </ul>
+                    <!-- Technical Specifications (Collapsible) -->
+                    <section class="border-t border-neutral-200 pt-8">
+                        <h2 class="text-2xl font-bold text-neutral-900 mb-6">Technical Specifications</h2>
+                        <div class="space-y-4">
+                            <!-- Connectivity -->
+                            <details class="group bg-white rounded-lg border border-neutral-200 open:ring-2 open:ring-brand-primary/50 transition-all duration-200">
+                                <summary class="flex items-center justify-between p-4 cursor-pointer list-none">
+                                    <span class="font-semibold text-neutral-900">Connectivity & Protocol</span>
+                                    <span class="transition-transform group-open:rotate-180">
+                                        <svg class="w-5 h-5 text-neutral-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </span>
+                                </summary>
+                                <div class="px-4 pb-4 text-neutral-600 space-y-2">
+                                    <div class="grid grid-cols-2 gap-4 text-sm">
+                                        <div>
+                                            <dt class="font-medium text-neutral-900">Wireless Protocol</dt>
+                                            <dd>Wi-Fi 802.11 b/g/n, Bluetooth 5.0</dd>
+                                        </div>
+                                        <div>
+                                            <dt class="font-medium text-neutral-900">Frequency</dt>
+                                            <dd>2.4 GHz / 5 GHz</dd>
+                                        </div>
+                                        <div>
+                                            <dt class="font-medium text-neutral-900">Range</dt>
+                                            <dd>Up to 100m (outdoor), 30m (indoor)</dd>
+                                        </div>
+                                        <div>
+                                            <dt class="font-medium text-neutral-900">Encryption</dt>
+                                            <dd>WPA2/WPA3 Personal</dd>
+                                        </div>
+                                    </div>
+                                </div>
+                            </details>
+
+                            <!-- Power -->
+                            <details class="group bg-white rounded-lg border border-neutral-200 open:ring-2 open:ring-brand-primary/50 transition-all duration-200">
+                                <summary class="flex items-center justify-between p-4 cursor-pointer list-none">
+                                    <span class="font-semibold text-neutral-900">Power Requirements</span>
+                                    <span class="transition-transform group-open:rotate-180">
+                                        <svg class="w-5 h-5 text-neutral-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </span>
+                                </summary>
+                                <div class="px-4 pb-4 text-neutral-600 space-y-2">
+                                    <div class="grid grid-cols-2 gap-4 text-sm">
+                                        <div>
+                                            <dt class="font-medium text-neutral-900">Input Voltage</dt>
+                                            <dd>5V DC (USB-C) or 12V DC (Terminal)</dd>
+                                        </div>
+                                        <div>
+                                            <dt class="font-medium text-neutral-900">Power Consumption</dt>
+                                            <dd>Max 2.5W (Active), 0.1W (Sleep)</dd>
+                                        </div>
+                                        <div>
+                                            <dt class="font-medium text-neutral-900">Battery Support</dt>
+                                            <dd>Li-Po 3.7V Connector</dd>
+                                        </div>
+                                    </div>
+                                </div>
+                            </details>
+
+                            <!-- Physical -->
+                            <details class="group bg-white rounded-lg border border-neutral-200 open:ring-2 open:ring-brand-primary/50 transition-all duration-200">
+                                <summary class="flex items-center justify-between p-4 cursor-pointer list-none">
+                                    <span class="font-semibold text-neutral-900">Physical Dimensions</span>
+                                    <span class="transition-transform group-open:rotate-180">
+                                        <svg class="w-5 h-5 text-neutral-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                                        </svg>
+                                    </span>
+                                </summary>
+                                <div class="px-4 pb-4 text-neutral-600 space-y-2">
+                                    <div class="grid grid-cols-2 gap-4 text-sm">
+                                        <div>
+                                            <dt class="font-medium text-neutral-900">Dimensions</dt>
+                                            <dd>68mm x 42mm x 15mm</dd>
+                                        </div>
+                                        <div>
+                                            <dt class="font-medium text-neutral-900">Weight</dt>
+                                            <dd>45g</dd>
+                                        </div>
+                                        <div>
+                                            <dt class="font-medium text-neutral-900">Operating Temp</dt>
+                                            <dd>-20°C to +70°C</dd>
+                                        </div>
+                                    </div>
+                                </div>
+                            </details>
+                        </div>
+                    </section>
+
+                    <!-- Use Cases -->
+                    <section class="border-t border-neutral-200 pt-8">
+                        <h2 class="text-2xl font-bold text-neutral-900 mb-6">Common Applications</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="flex gap-4 p-4 rounded-lg bg-white border border-neutral-200">
+                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
+                                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-neutral-900">Smart Home Automation</h3>
+                                    <p class="text-sm text-neutral-600 mt-1">Control lights, temperature, and security systems remotely.</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-4 p-4 rounded-lg bg-white border border-neutral-200">
+                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-green-50 flex items-center justify-center text-green-600">
+                                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-neutral-900">Industrial Monitoring</h3>
+                                    <p class="text-sm text-neutral-600 mt-1">Track equipment health and environmental conditions.</p>
+                                </div>
+                            </div>
+                        </div>
                     </section>
                 </article>
 

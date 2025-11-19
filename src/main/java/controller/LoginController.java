@@ -10,28 +10,51 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import dao.stub.AccessLogDAOStub;
-import dao.stub.UserDAOStub;
 import dao.interfaces.AccessLogDAO;
-import dao.interfaces.UserDAO;
+import config.DIContainer;
+import db.DBConnection;
 import model.AccessLog;
 import model.User;
+import service.UserService;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 // Note: Mapped in web.xml to avoid conflicts
 public class LoginController extends HttpServlet {
     private AccessLogDAO accessLogDAO;
-    private UserDAO userDAO;
+    private UserService userService;
+    private static final Logger logger = Logger.getLogger(LoginController.class.getName());
 
     @Override
     public void init() {
-        accessLogDAO = new AccessLogDAOStub();
-        userDAO = new UserDAOStub();
+        try {
+            // Use DIContainer for dependency injection, fallback to direct instantiation
+            accessLogDAO = DIContainer.get(AccessLogDAO.class);
+            
+            // Fallback if DIContainer not available
+            if (accessLogDAO == null) {
+                java.sql.Connection connection = DBConnection.getConnection();
+                accessLogDAO = new dao.AccessLogDAOImpl(connection);
+            }
+            
+            // Initialize UserService (uses DIContainer internally)
+            userService = new UserService();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to initialize LoginController", e);
+        }
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
+            // CSRF protection
+            if (!utils.SecurityUtil.validateCSRFToken(request)) {
+                request.setAttribute("errorMessage", "Invalid security token. Please try again.");
+                request.getRequestDispatcher("/login.jsp").forward(request, response);
+                return;
+            }
+            
             String email = request.getParameter("email");
             String password = request.getParameter("password");
             
@@ -52,6 +75,9 @@ public class LoginController extends HttpServlet {
                 return;
             }
             
+            // Normalize email casing for comparison
+            email = email.toLowerCase();
+            
             // Validate email format
             if (!utils.SecurityUtil.isValidEmail(email)) {
                 request.setAttribute("errorMessage", "Invalid login credentials");
@@ -59,20 +85,22 @@ public class LoginController extends HttpServlet {
                 return;
             }
             
-            User user = userDAO.getUserByEmail(email);
-
             // Generic error message to prevent user enumeration
             String genericError = "Invalid login credentials";
-
-            if (user == null) {
+            
+            // Use UserService for authentication (handles password verification)
+            User user;
+            try {
+                user = userService.authenticateUser(email, password);
+            } catch (IllegalArgumentException e) {
+                // Authentication failed - use generic error to prevent enumeration
                 request.setAttribute("errorMessage", genericError);
                 request.getRequestDispatcher("/login.jsp").forward(request, response);
                 return;
-            }
-
-            // Use secure password verification (for stub, use plain text comparison)
-            if (!password.equals(user.getPassword())) {
-                request.setAttribute("errorMessage", genericError);
+            } catch (SQLException e) {
+                // Database error
+                System.err.println("Login error: " + e.getMessage());
+                request.setAttribute("errorMessage", "An error occurred. Please try again later.");
                 request.getRequestDispatcher("/login.jsp").forward(request, response);
                 return;
             }
@@ -129,10 +157,20 @@ public class LoginController extends HttpServlet {
 
 
 
-            // Create access log
+            // Create access log with structured logging
             LocalDateTime now = LocalDateTime.now();
-            AccessLog accessLog = new AccessLog(0, user.getId(), "User " + user.getEmail() + " Logged in", now);
-            accessLogDAO.createAccessLog(accessLog);
+            String action = String.format("User %s (ID: %d, Role: %s) logged in successfully", 
+                    user.getEmail(), user.getId(), user.getRole());
+            AccessLog accessLog = new AccessLog(0, user.getId(), action, now);
+            try {
+                accessLogDAO.createAccessLog(accessLog);
+                logger.log(Level.INFO, "Login successful: userId={0}, email={1}, role={2}, ip={3}", 
+                        new Object[]{user.getId(), user.getEmail(), user.getRole(), 
+                        utils.SecurityUtil.getClientIP(request)});
+            } catch (SQLException e) {
+                // Log error but don't fail login
+                logger.log(Level.WARNING, "Failed to create access log for login: " + e.getMessage(), e);
+            }
 
             // Successful login: set session
             HttpSession session = request.getSession();
@@ -141,11 +179,11 @@ public class LoginController extends HttpServlet {
 
             // Redirect to index.jsp (with context path!)
             response.sendRedirect(request.getContextPath() + "/index.jsp");
-        } catch (SQLException e) {
-            // Log error (optional)
-            System.err.println("Login error: " + e.getMessage());
-            // Redirect to index.jsp on error (with context path)
-            response.sendRedirect(request.getContextPath() + "/index.jsp");
+        } catch (Exception e) {
+            // Catch-all for unexpected errors (including SQLException from access log)
+            logger.log(Level.SEVERE, "Error during login: " + e.getMessage(), e);
+            request.setAttribute("errorMessage", "An error occurred. Please try again later.");
+            request.getRequestDispatcher("/login.jsp").forward(request, response);
         }
     }
 }

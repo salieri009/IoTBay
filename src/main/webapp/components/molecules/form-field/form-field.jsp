@@ -34,7 +34,7 @@
   Last Updated: 2025
 --%>
 
-<%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ page contentType="text/html; charset=UTF-8" language="java" isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%
@@ -57,6 +57,21 @@
   String fieldId = id != null ? id : name;
   String errorId = fieldId + "-error";
   String helpId = fieldId + "-help";
+
+  // Expose values for EL access
+  pageContext.setAttribute("label", label);
+  pageContext.setAttribute("name", name);
+  pageContext.setAttribute("type", type);
+  pageContext.setAttribute("value", value);
+  pageContext.setAttribute("placeholder", placeholder);
+  pageContext.setAttribute("required", required);
+  pageContext.setAttribute("error", error);
+  pageContext.setAttribute("errorMessage", errorMessage);
+  pageContext.setAttribute("helpText", helpText);
+  pageContext.setAttribute("fieldId", fieldId);
+  pageContext.setAttribute("errorId", errorId);
+  pageContext.setAttribute("helpId", helpId);
+  pageContext.setAttribute("attributes", attributes);
 %>
 
 <div class="form-field">
@@ -84,7 +99,7 @@
   <%-- Help Text --%>
   <c:if test="${!empty helpText}">
     <div class="form-help" id="${helpId}">
-      ${helpText}
+      <c:out value="${helpText}" />
     </div>
   </c:if>
 </div>

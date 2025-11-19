@@ -57,7 +57,7 @@
             <ol class="flex items-center gap-2 text-sm text-neutral-600">
                 <li><a href="${pageContext.request.contextPath}/index.jsp" class="hover:text-primary">Home</a></li>
                 <li>/</li>
-                <li><a href="${pageContext.request.contextPath}/browse" class="hover:text-primary">Categories</a></li>
+                <li><a href="/browse.jsp" class="hover:text-primary">Categories</a></li>
                 <li>/</li>
                 <li class="text-neutral-900 font-medium">Smart Home</li>
             </ol>
@@ -457,10 +457,10 @@
                                                 <div class="product-card__stock-status">
                                                     <c:choose>
                                                         <c:when test="${p.stockQuantity > 0}">
-                                                            <span class="text-success text-sm">✓ In Stock</span>
+                                                            <span class="text-success text-sm">??In Stock</span>
                                                         </c:when>
                                                         <c:otherwise>
-                                                            <span class="text-error text-sm">✗ Out of Stock</span>
+                                                            <span class="text-error text-sm">??Out of Stock</span>
                                                         </c:otherwise>
                                                     </c:choose>
                                                 </div>
@@ -507,7 +507,7 @@
                                     </c:otherwise>
                                 </c:choose>
                             </p>
-                            <a href="${pageContext.request.contextPath}/browse" class="btn btn--primary">
+                            <a href="/browse.jsp" class="btn btn--primary">
                                 Browse All Products
                             </a>
                         </div>
@@ -661,7 +661,7 @@
                         </svg>
                         Free Smart Home Consultation
                     </a>
-                    <a href="${pageContext.request.contextPath}/browse" class="btn btn--outline btn--lg border-white text-white hover:bg-white hover:text-purple-600">
+                    <a href="/browse.jsp" class="btn btn--outline btn--lg border-white text-white hover:bg-white hover:text-purple-600">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2H3v10z"/>
                         </svg>

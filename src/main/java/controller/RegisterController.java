@@ -37,6 +37,14 @@ public class RegisterController extends HttpServlet {
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         
+        // CSRF protection
+        if (!utils.SecurityUtil.validateCSRFToken(request)) {
+            utils.ErrorAction.handleValidationError(request, response, 
+                    "Invalid security token. Please refresh the page and try again.", 
+                    "RegisterController.doPost");
+            return;
+        }
+        
         // Rate limiting check
         if (utils.SecurityUtil.isRateLimited(request, 5, 300000)) { // 5 requests per 5 minutes
             utils.ErrorAction.handleRateLimitError(request, response, "RegisterController.doPost");

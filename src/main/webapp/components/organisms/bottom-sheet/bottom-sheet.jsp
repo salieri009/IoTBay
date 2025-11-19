@@ -28,28 +28,39 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%
-  String id = request.getParameter("id");
-  String title = request.getParameter("title");
-  String trigger = request.getParameter("trigger");
+  String idParam = request.getParameter("id");
+  String titleParam = request.getParameter("title");
+  String triggerParam = request.getParameter("trigger");
   boolean closeOnBackdrop = !"false".equalsIgnoreCase(request.getParameter("closeOnBackdrop"));
-  
-  if (id == null) {
-    id = "bottom-sheet-" + System.currentTimeMillis();
-  }
-  
-  String sheetId = id;
+
+  String sheetId = (idParam != null && !idParam.trim().isEmpty())
+      ? idParam
+      : "bottom-sheet-" + java.util.UUID.randomUUID();
+
   String backdropId = sheetId + "-backdrop";
   String contentId = sheetId + "-content";
+
+  pageContext.setAttribute("sheetIdAttr", sheetId);
+  pageContext.setAttribute("backdropIdAttr", backdropId);
+  pageContext.setAttribute("contentIdAttr", contentId);
+  pageContext.setAttribute("closeOnBackdropAttr", closeOnBackdrop);
+  pageContext.setAttribute("sheetTitleAttr", titleParam);
+  String triggerSelector = triggerParam != null ? triggerParam : "";
+  String triggerSelectorSafe = triggerSelector
+      .replace("\\", "\\\\")
+      .replace("'", "\\'");
+  pageContext.setAttribute("triggerSelectorAttr", triggerSelector);
+  pageContext.setAttribute("triggerSelectorSafeAttr", triggerSelectorSafe);
 %>
 
-<div id="<%= backdropId %>" 
+<div id="${backdropIdAttr}" 
      class="bottom-sheet-backdrop" 
      role="dialog"
      aria-modal="true"
-     aria-labelledby="<%= sheetId %>-title"
+     aria-labelledby="${sheetIdAttr}-title"
      aria-hidden="true"
-     <c:if test="${closeOnBackdrop}">data-close-on-backdrop="true"</c:if>>
-  <div id="<%= contentId %>" 
+     <c:if test="${closeOnBackdropAttr}">data-close-on-backdrop="true"</c:if>>
+  <div id="${contentIdAttr}" 
        class="bottom-sheet-content" 
        role="document">
     <%-- Handle for drag gesture --%>
@@ -57,13 +68,13 @@
     
     <%-- Header --%>
     <div class="bottom-sheet-header">
-      <c:if test="${!empty title}">
-        <h2 id="<%= sheetId %>-title" class="bottom-sheet-title">${title}</h2>
+      <c:if test="${not empty sheetTitleAttr}">
+        <h2 id="${sheetIdAttr}-title" class="bottom-sheet-title">${sheetTitleAttr}</h2>
       </c:if>
       <button type="button" 
               class="bottom-sheet-close" 
               aria-label="Close"
-              data-sheet-close="<%= sheetId %>">
+              data-sheet-close="${sheetIdAttr}">
         <jsp:include page="/components/atoms/icon/icon.jsp">
           <jsp:param name="name" value="close" />
           <jsp:param name="size" value="medium" />
@@ -72,7 +83,7 @@
     </div>
     
     <%-- Content Area --%>
-    <div class="bottom-sheet-body" id="<%= contentId %>-body">
+    <div class="bottom-sheet-body" id="${contentIdAttr}-body">
       <%-- Content will be injected via JavaScript or included separately --%>
     </div>
   </div>
@@ -80,11 +91,11 @@
 
 <script>
 (function() {
-  const sheetId = '<%= sheetId %>';
-  const backdrop = document.getElementById('<%= backdropId %>');
-  const content = document.getElementById('<%= contentId %>');
+  const sheetId = '${sheetIdAttr}';
+  const backdrop = document.getElementById('${backdropIdAttr}');
+  const content = document.getElementById('${contentIdAttr}');
   const closeButton = content.querySelector('.bottom-sheet-close');
-  const triggerSelector = '<%= trigger != null ? trigger : "" %>';
+  const triggerSelector = '<%= triggerSelectorSafe %>';
   
   if (!backdrop || !content) return;
   
@@ -138,14 +149,20 @@
   });
   
   // Trigger button
-  if (triggerSelector) {
-    const trigger = document.querySelector(triggerSelector);
-    if (trigger) {
-      trigger.addEventListener('click', (e) => {
-        e.preventDefault();
-        window.openBottomSheet(sheetId);
-      });
+  let trigger = null;
+  if (triggerSelector && triggerSelector.trim().length > 0) {
+    try {
+      trigger = document.querySelector(triggerSelector);
+    } catch (error) {
+      console.error(`[BottomSheet:${sheetId}] Invalid trigger selector "${triggerSelector}"`, error);
     }
+  }
+
+  if (trigger) {
+    trigger.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.openBottomSheet(sheetId);
+    });
   }
   
   // Touch gesture support (swipe down to close)

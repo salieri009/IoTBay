@@ -35,6 +35,13 @@ public class DeleteUserController extends HttpServlet {
             response.getWriter().write("Access denied");
             return;
         }
+        
+        // CSRF protection
+        if (!utils.SecurityUtil.validateCSRFToken(request)) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.getWriter().write("CSRF token validation failed");
+            return;
+        }
 
         try {
             int userId = Integer.parseInt(request.getParameter("id"));

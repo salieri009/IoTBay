@@ -24,15 +24,21 @@ public class ProductApiController extends HttpServlet {
     @Override
     public void init() throws ServletException {
         try {
-            // 의존성 주입 패턴 사용
+            // Use DIContainer for dependency injection
             this.productDAO = DIContainer.get(ProductDAO.class);
             if (this.productDAO == null) {
-                // Fallback to stub if DIContainer fails
-                this.productDAO = new dao.stub.ProductDAOStub();
+                // Fallback to real implementation if DIContainer fails
+                java.sql.Connection connection = db.DBConnection.getConnection();
+                this.productDAO = new dao.ProductDAOImpl(connection);
             }
         } catch (Exception e) {
-            // Fallback to stub on any error
-            this.productDAO = new dao.stub.ProductDAOStub();
+            // Fallback to real implementation on any error
+            try {
+                java.sql.Connection connection = db.DBConnection.getConnection();
+                this.productDAO = new dao.ProductDAOImpl(connection);
+            } catch (Exception ex) {
+                throw new ServletException("Failed to initialize ProductApiController", ex);
+            }
         }
     }
     

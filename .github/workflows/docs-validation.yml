@@ -1,0 +1,42 @@
+name: Documentation Validation
+
+on:
+  push:
+    paths:
+      - 'design plan/**'
+      - 'README.md'
+      - '*.md'
+  pull_request:
+    paths:
+      - 'design plan/**'
+      - 'README.md'
+      - '*.md'
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Check for required documentation
+      run: |
+        if [ ! -f "README.md" ]; then
+          echo "ERROR: README.md is missing"
+          exit 1
+        fi
+        if [ ! -d "design plan" ]; then
+          echo "ERROR: design plan directory is missing"
+          exit 1
+        fi
+        echo "Documentation structure validated"
+    
+    - name: Validate markdown syntax
+      run: |
+        # Basic markdown validation (check for common issues)
+        find "design plan" -name "*.md" -type f | while read file; do
+          if ! grep -q "^#" "$file"; then
+            echo "WARNING: $file may be missing headers"
+          fi
+        done
+

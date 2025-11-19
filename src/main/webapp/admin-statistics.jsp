@@ -85,7 +85,7 @@
                         <div class="text-3xl font-bold text-blue-600 mb-2">10,247</div>
                         <div class="text-lg font-semibold text-neutral-900 mb-1">Total Customers</div>
                         <p class="text-sm text-neutral-600">Across 52 countries</p>
-                        <div class="mt-3 text-xs text-green-600 font-medium">↗ +12.5% from last month</div>
+                        <div class="mt-3 text-xs text-green-600 font-medium">??+12.5% from last month</div>
                     </div>
                 </div>
 
@@ -100,7 +100,7 @@
                         <div class="text-3xl font-bold text-green-600 mb-2">547</div>
                         <div class="text-lg font-semibold text-neutral-900 mb-1">IoT Products</div>
                         <p class="text-sm text-neutral-600">Premium quality devices</p>
-                        <div class="mt-3 text-xs text-green-600 font-medium">↗ +8.3% from last month</div>
+                        <div class="mt-3 text-xs text-green-600 font-medium">??+8.3% from last month</div>
                     </div>
                 </div>
 
@@ -115,7 +115,7 @@
                         <div class="text-3xl font-bold text-purple-600 mb-2">99.94%</div>
                         <div class="text-lg font-semibold text-neutral-900 mb-1">System Uptime</div>
                         <p class="text-sm text-neutral-600">Last 30 days</p>
-                        <div class="mt-3 text-xs text-green-600 font-medium">↗ +0.1% from last month</div>
+                        <div class="mt-3 text-xs text-green-600 font-medium">??+0.1% from last month</div>
                     </div>
                 </div>
 
@@ -130,7 +130,7 @@
                         <div class="text-3xl font-bold text-orange-600 mb-2">24/7</div>
                         <div class="text-lg font-semibold text-neutral-900 mb-1">Support Available</div>
                         <p class="text-sm text-neutral-600">Average response: 2.3hrs</p>
-                        <div class="mt-3 text-xs text-green-600 font-medium">↗ Response time improved</div>
+                        <div class="mt-3 text-xs text-green-600 font-medium">??Response time improved</div>
                     </div>
                 </div>
             </div>

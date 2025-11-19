@@ -57,7 +57,7 @@
             <ol class="flex items-center gap-2 text-sm text-neutral-600">
                 <li><a href="${pageContext.request.contextPath}/index.jsp" class="hover:text-primary">Home</a></li>
                 <li>/</li>
-                <li><a href="${pageContext.request.contextPath}/browse" class="hover:text-primary">Categories</a></li>
+                <li><a href="/browse.jsp" class="hover:text-primary">Categories</a></li>
                 <li>/</li>
                 <li class="text-neutral-900 font-medium">Smart Agriculture</li>
             </ol>
@@ -453,10 +453,10 @@
                                                 <div class="product-card__stock-status">
                                                     <c:choose>
                                                         <c:when test="${p.stockQuantity > 0}">
-                                                            <span class="text-success text-sm">✓ In Stock</span>
+                                                            <span class="text-success text-sm">??In Stock</span>
                                                         </c:when>
                                                         <c:otherwise>
-                                                            <span class="text-error text-sm">✗ Out of Stock</span>
+                                                            <span class="text-error text-sm">??Out of Stock</span>
                                                         </c:otherwise>
                                                     </c:choose>
                                                 </div>
@@ -503,7 +503,7 @@
                                     </c:otherwise>
                                 </c:choose>
                             </p>
-                            <a href="${pageContext.request.contextPath}/browse" class="btn btn--primary">
+                            <a href="/browse.jsp" class="btn btn--primary">
                                 Browse All Products
                             </a>
                         </div>
@@ -563,7 +563,7 @@
                         </svg>
                         Get Free Consultation
                     </a>
-                    <a href="${pageContext.request.contextPath}/browse" class="btn btn--outline btn--lg border-white text-white hover:bg-white hover:text-green-600">
+                    <a href="/browse.jsp" class="btn btn--outline btn--lg border-white text-white hover:bg-white hover:text-green-600">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
                         </svg>

@@ -4,6 +4,12 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
 
+<%
+    // Generate CSRF token for form submission
+    String csrfToken = utils.SecurityUtil.generateCSRFToken(request);
+    pageContext.setAttribute("csrfToken", csrfToken);
+%>
+
 <c:if test="${empty sessionScope.user}">
     <c:redirect url="login.jsp" />
 </c:if>
@@ -185,7 +191,8 @@
             <!-- Checkout Form -->
             <div class="lg:col-span-2">
                 <form id="checkoutForm" action="${pageContext.request.contextPath}/checkout" method="post" class="space-y-8" onsubmit="return validateCheckoutForm(event)">
-                    <!-- STEP 2: Shipping Information -->
+                    <input type="hidden" name="csrfToken" value="${csrfToken}" />
+                     <!-- STEP 2: Shipping Information -->
                     <section class="rounded-2xl border border-neutral-200 bg-white shadow-sm">
                         <div class="p-6 border-b border-neutral-200">
                             <h2 class="text-xl font-semibold text-neutral-900 flex items-center gap-3">
@@ -588,7 +595,7 @@
                                     </button>
                                 </div>
                                 <div id="paymentMethodReview" class="text-sm text-neutral-600">
-                                    <p>Credit/Debit Card ending in •••• <span id="reviewCardLast4">4242</span></p>
+                                    <p>Credit/Debit Card ending in ?�••�?<span id="reviewCardLast4">4242</span></p>
                                 </div>
                             </div>
                             
@@ -623,7 +630,7 @@
                             <!-- Back to Cart Link -->
                             <div class="mt-4 text-center">
                                 <a href="${pageContext.request.contextPath}/cart.jsp" class="text-sm text-brand-primary hover:underline">
-                                    ← Back to Cart
+                                    ??Back to Cart
                                 </a>
                             </div>
                         </div>
@@ -740,7 +747,7 @@
                                             </svg>
                                         </div>
                                         <p class="text-neutral-600">Your cart is empty</p>
-                                        <a href="${pageContext.request.contextPath}/browse" class="btn btn--primary btn--sm mt-4">
+                                        <a href="${pageContext.request.contextPath}/browse.jsp" class="btn btn--primary btn--sm mt-4">
                                             Continue Shopping
                                         </a>
                                     </div>

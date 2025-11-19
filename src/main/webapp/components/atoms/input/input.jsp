@@ -71,31 +71,52 @@
   if (id == null && name != null) {
     id = name;
   }
+  
+  // Expose variables to EL for safe usage
+  pageContext.setAttribute("inputType", type != null ? type : "text");
+  pageContext.setAttribute("inputName", name);
+  pageContext.setAttribute("inputId", id);
+  pageContext.setAttribute("inputValue", value);
+  pageContext.setAttribute("inputPlaceholder", placeholder);
+  pageContext.setAttribute("inputRequired", required);
+  pageContext.setAttribute("inputDisabled", disabled);
+  pageContext.setAttribute("inputReadonly", readonly);
+  pageContext.setAttribute("inputError", error);
+  pageContext.setAttribute("inputErrorMessage", errorMessage);
+  pageContext.setAttribute("inputAriaLabel", ariaLabel);
+  pageContext.setAttribute("inputAriaDescribedBy", ariaDescribedBy);
+  pageContext.setAttribute("inputAutocomplete", autocomplete);
+  pageContext.setAttribute("inputPattern", pattern);
+  pageContext.setAttribute("inputMin", min);
+  pageContext.setAttribute("inputMax", max);
+  pageContext.setAttribute("inputStep", step);
+  pageContext.setAttribute("inputAttributes", attributes);
+  pageContext.setAttribute("inputClass", inputClass);
 %>
 
 <div class="input-wrapper">
-  <input type="${type}"
-         <c:if test="${!empty name}">name="${name}"</c:if>
-         <c:if test="${!empty id}">id="${id}"</c:if>
-         <c:if test="${!empty value}">value="${value}"</c:if>
-         <c:if test="${!empty placeholder}">placeholder="${placeholder}"</c:if>
-         <c:if test="${required}">required</c:if>
-         <c:if test="${disabled}">disabled</c:if>
-         <c:if test="${readonly}">readonly</c:if>
-         <c:if test="${!empty autocomplete}">autocomplete="${autocomplete}"</c:if>
-         <c:if test="${!empty pattern}">pattern="${pattern}"</c:if>
-         <c:if test="${!empty min}">min="${min}"</c:if>
-         <c:if test="${!empty max}">max="${max}"</c:if>
-         <c:if test="${!empty step}">step="${step}"</c:if>
-         <c:if test="${!empty attributes}">${attributes}</c:if>
+  <input type="${inputType}"
+         <c:if test="${!empty inputName}">name="${inputName}"</c:if>
+         <c:if test="${!empty inputId}">id="${inputId}"</c:if>
+         <c:if test="${!empty inputValue}">value="${inputValue}"</c:if>
+         <c:if test="${!empty inputPlaceholder}">placeholder="${inputPlaceholder}"</c:if>
+         <c:if test="${inputRequired}">required</c:if>
+         <c:if test="${inputDisabled}">disabled</c:if>
+         <c:if test="${inputReadonly}">readonly</c:if>
+         <c:if test="${!empty inputAutocomplete}">autocomplete="${inputAutocomplete}"</c:if>
+         <c:if test="${!empty inputPattern}">pattern="${inputPattern}"</c:if>
+         <c:if test="${!empty inputMin}">min="${inputMin}"</c:if>
+         <c:if test="${!empty inputMax}">max="${inputMax}"</c:if>
+         <c:if test="${!empty inputStep}">step="${inputStep}"</c:if>
+         <c:if test="${!empty inputAttributes}">${inputAttributes}</c:if>
          class="${inputClass}"
-         <c:if test="${!empty ariaLabel}">aria-label="${ariaLabel}"</c:if>
-         <c:if test="${!empty ariaDescribedBy}">aria-describedby="${ariaDescribedBy}"</c:if>
-         <c:if test="${error && !empty errorMessage}">aria-invalid="true"</c:if> />
+         <c:if test="${!empty inputAriaLabel}">aria-label="${inputAriaLabel}"</c:if>
+         <c:if test="${!empty inputAriaDescribedBy}">aria-describedby="${inputAriaDescribedBy}"</c:if>
+         <c:if test="${inputError && !empty inputErrorMessage}">aria-invalid="true"</c:if> />
   
-  <c:if test="${error && !empty errorMessage}">
-    <div class="input-error" id="${id}-error" role="alert">
-      ${errorMessage}
+  <c:if test="${inputError && !empty inputErrorMessage}">
+    <div class="input-error" id="${inputId}-error" role="alert">
+      <c:out value="${inputErrorMessage}" />
     </div>
   </c:if>
 </div>

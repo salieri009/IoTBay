@@ -37,7 +37,7 @@
   Last Updated: 2025
 --%>
 
-<%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ page contentType="text/html; charset=UTF-8" language="java" isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%
@@ -91,6 +91,22 @@
   }
   
   String buttonClass = sb.toString();
+
+  // Expose values for EL access
+  pageContext.setAttribute("text", text);
+  pageContext.setAttribute("type", type);
+  pageContext.setAttribute("size", size);
+  pageContext.setAttribute("href", href);
+  pageContext.setAttribute("onclick", onclick);
+  pageContext.setAttribute("disabled", disabled);
+  pageContext.setAttribute("ariaLabel", ariaLabel);
+  pageContext.setAttribute("icon", icon);
+  pageContext.setAttribute("iconPosition", iconPosition);
+  pageContext.setAttribute("fullWidth", fullWidth);
+  pageContext.setAttribute("extraClass", extraClass);
+  pageContext.setAttribute("attributes", attributes);
+  pageContext.setAttribute("htmlType", htmlType);
+  pageContext.setAttribute("buttonClass", buttonClass);
 %>
 
 <c:choose>
@@ -107,7 +123,7 @@
           <jsp:param name="name" value="${icon}" />
         </jsp:include>
       </c:if>
-      <span>${text}</span>
+      <span><c:out value="${text}" /></span>
       <c:if test="${!empty icon && iconPosition == 'right'}">
         <jsp:include page="/components/atoms/icon/icon.jsp">
           <jsp:param name="name" value="${icon}" />
@@ -123,14 +139,14 @@
             <c:if test="${disabled}">disabled</c:if>
             <c:if test="${!empty onclick}">onclick="${onclick}"</c:if>
             <c:if test="${!empty ariaLabel}">aria-label="${ariaLabel}"</c:if>
-            <c:if test="${empty ariaLabel && !empty text}">aria-label="${text}"</c:if>
+            <c:if test="${empty ariaLabel && !empty text}">aria-label="<c:out value='${text}' />"</c:if>
             <c:if test="${!empty attributes}">${attributes}</c:if>>
       <c:if test="${!empty icon && iconPosition == 'left'}">
         <jsp:include page="/components/atoms/icon/icon.jsp">
           <jsp:param name="name" value="${icon}" />
         </jsp:include>
       </c:if>
-      <span>${text}</span>
+      <span><c:out value="${text}" /></span>
       <c:if test="${!empty icon && iconPosition == 'right'}">
         <jsp:include page="/components/atoms/icon/icon.jsp">
           <jsp:param name="name" value="${icon}" />

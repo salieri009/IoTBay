@@ -394,7 +394,7 @@
                     </div>
                     <div class="stat-number" id="totalUsers">1,234</div>
                     <div class="stat-label">Total Users</div>
-                    <div class="stat-change positive">â†— +12% this month</div>
+                    <div class="stat-change positive">??+12% this month</div>
                 </div>
                 
                 <div class="stat-card">
@@ -405,7 +405,7 @@
                     </div>
                     <div class="stat-number" id="totalProducts">856</div>
                     <div class="stat-label">IoT Products</div>
-                    <div class="stat-change positive">â†— +8% this week</div>
+                    <div class="stat-change positive">??+8% this week</div>
                 </div>
                 
                 <div class="stat-card">
@@ -416,7 +416,7 @@
                     </div>
                     <div class="stat-number" id="totalOrders">2,468</div>
                     <div class="stat-label">Total Orders</div>
-                    <div class="stat-change positive">â†— +15% this month</div>
+                    <div class="stat-change positive">??+15% this month</div>
                 </div>
                 
                 <div class="stat-card">
@@ -427,7 +427,7 @@
                     </div>
                     <div class="stat-number" id="totalSuppliers">95</div>
                     <div class="stat-label">Active Suppliers</div>
-                    <div class="stat-change positive">â†— +3% this month</div>
+                    <div class="stat-change positive">??+3% this month</div>
                 </div>
             </section>
             
@@ -436,7 +436,7 @@
                 <!-- Supplier Information Management -->
                 <div class="management-card">
                     <div class="card-header">
-                        <h3 class="card-title">ğŸ¢ Supplier Management</h3>
+                        <h3 class="card-title">?¢ Supplier Management</h3>
                         <p class="card-description">Manage supplier information, contracts, and relationships</p>
                     </div>
                     <div class="card-body">
@@ -474,7 +474,7 @@
                 <!-- Data Management -->
                 <div class="management-card">
                     <div class="card-header">
-                        <h3 class="card-title">ğŸ’¾ Data Management</h3>
+                        <h3 class="card-title">?’¾ Data Management</h3>
                         <p class="card-description">Bulk import/export operations and data analytics</p>
                     </div>
                     <div class="card-body">
@@ -512,7 +512,7 @@
                 <!-- BI & Reporting -->
                 <div class="management-card">
                     <div class="card-header">
-                        <h3 class="card-title">ğŸ“Š BI & Reporting</h3>
+                        <h3 class="card-title">?“Š BI & Reporting</h3>
                         <p class="card-description">Business intelligence and advanced analytics</p>
                     </div>
                     <div class="card-body">
@@ -553,7 +553,7 @@
                 <!-- Inventory Management -->
                 <div class="management-card">
                     <div class="card-header">
-                        <h3 class="card-title">ğŸ“¦ Inventory Control</h3>
+                        <h3 class="card-title">?“¦ Inventory Control</h3>
                         <p class="card-description">Real-time inventory tracking and management</p>
                     </div>
                     <div class="card-body">
@@ -591,7 +591,7 @@
                 <!-- Order Management -->
                 <div class="management-card">
                     <div class="card-header">
-                        <h3 class="card-title">ğŸ›ï¸ Order Management</h3>
+                        <h3 class="card-title">?›ï¸?Order Management</h3>
                         <p class="card-description">Comprehensive order processing and fulfillment</p>
                     </div>
                     <div class="card-body">
@@ -629,7 +629,7 @@
                 <!-- User Management -->
                 <div class="management-card">
                     <div class="card-header">
-                        <h3 class="card-title">ğŸ‘¥ User Administration</h3>
+                        <h3 class="card-title">?‘¥ User Administration</h3>
                         <p class="card-description">User accounts, roles, and access control</p>
                     </div>
                     <div class="card-body">

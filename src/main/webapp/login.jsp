@@ -2,6 +2,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
 
+<%
+    // Generate CSRF token for form submission
+    String csrfToken = utils.SecurityUtil.generateCSRFToken(request);
+    pageContext.setAttribute("csrfToken", csrfToken);
+%>
+
 <t:base title="Sign In - IoT Bay" description="Sign in to your IoT Bay account">
     <main class="min-h-screen flex items-center justify-center bg-neutral-50 py-12 px-4">
         <!-- Auth Card -->
@@ -17,11 +23,12 @@
                         <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
                         </svg>
-                        <span>${errorMessage}</span>
+                        <span><c:out value="${errorMessage}" /></span>
                     </div>
                 </c:if>
                 
                 <form class="space-y-6" method="post" action="${pageContext.request.contextPath}/api/login" id="loginForm">
+                    <input type="hidden" name="csrfToken" value="${csrfToken}" />
                     <fieldset class="space-y-6">
                         <legend class="sr-only">Sign in to your account</legend>
                         
@@ -40,7 +47,7 @@
                                 <jsp:param name="label" value="Password" />
                                 <jsp:param name="name" value="password" />
                                 <jsp:param name="type" value="password" />
-                                <jsp:param name="placeholder" value="••••••••" />
+                                <jsp:param name="placeholder" value="********" />
                                 <jsp:param name="required" value="true" />
                                 <jsp:param name="id" value="password" />
                             </jsp:include>

@@ -15,7 +15,7 @@
   Last Updated: 2025
 --%>
 
-<%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ page contentType="text/html; charset=UTF-8" language="java" isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%
@@ -23,12 +23,18 @@
   String forAttr = request.getParameter("for");
   boolean required = "true".equalsIgnoreCase(request.getParameter("required"));
   String id = request.getParameter("id");
+
+  // Expose for EL usage
+  pageContext.setAttribute("text", text);
+  pageContext.setAttribute("forAttr", forAttr);
+  pageContext.setAttribute("required", required);
+  pageContext.setAttribute("id", id);
 %>
 
 <label <c:if test="${!empty forAttr}">for="${forAttr}"</c:if>
        <c:if test="${!empty id}">id="${id}"</c:if>
        class="label <c:if test="${required}">label--required</c:if>">
-  ${text}
+  <c:out value="${text}" />
   <c:if test="${required}">
     <span class="label__required" aria-label="required">*</span>
   </c:if>

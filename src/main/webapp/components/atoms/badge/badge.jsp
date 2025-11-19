@@ -15,7 +15,7 @@
   Last Updated: 2025
 --%>
 
-<%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<%@ page contentType="text/html; charset=UTF-8" language="java" isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%
@@ -25,6 +25,13 @@
   String icon = request.getParameter("icon");
   
   String badgeClass = "badge badge--" + type + " badge--" + size;
+
+  // Expose for EL usage
+  pageContext.setAttribute("text", text);
+  pageContext.setAttribute("type", type);
+  pageContext.setAttribute("size", size);
+  pageContext.setAttribute("icon", icon);
+  pageContext.setAttribute("badgeClass", badgeClass);
 %>
 
 <span class="${badgeClass}" role="status">
@@ -33,6 +40,6 @@
       <jsp:param name="name" value="${icon}" />
     </jsp:include>
   </c:if>
-  <span>${text}</span>
+  <span><c:out value="${text}" /></span>
 </span>
 

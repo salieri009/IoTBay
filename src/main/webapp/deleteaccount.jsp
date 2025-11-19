@@ -47,7 +47,7 @@
 </head>
 <body>
 <div class="container">
-    <h2 style="color:#c9302c; margin-bottom: 10px;">⚠️ Delete Account</h2>
+    <h2 style="color:#c9302c; margin-bottom: 10px;">?�️ Delete Account</h2>
     <div class="warning">
         <span style="font-size:1.4em;">This action <u>cannot be undone!</u></span><br>
         <span>Your account will be <b>permanently deleted</b> and all information will be lost.</span>
@@ -56,23 +56,23 @@
         Are you absolutely sure you want to <b style="color:#b71c1c;">delete</b> your account?<br>
         <span style="color:#b71c1c; font-weight:bold;">Please think carefully before proceeding.</span>
     </p>
-    <button class="delete-btn" onclick="deleteAccount()">🚨 Permanently Delete Account</button>
+    <button class="delete-btn" onclick="deleteAccount()">?�� Permanently Delete Account</button>
 </div>
 
 <script>
 function deleteAccount() {
     // First confirmation
-    if (!confirm('⚠️ WARNING: This will permanently delete your account.\n\nAll your data, orders, and information will be lost forever.\n\nAre you absolutely sure you want to continue?')) {
+    if (!confirm('?�️ WARNING: This will permanently delete your account.\n\nAll your data, orders, and information will be lost forever.\n\nAre you absolutely sure you want to continue?')) {
         return;
     }
     
     // Second confirmation with more details
     const confirmMessage = 'This is your final warning!\n\n' +
                           'Deleting your account will:\n' +
-                          '• Permanently remove all your personal information\n' +
-                          '• Delete your order history\n' +
-                          '• Remove all saved preferences\n' +
-                          '• This action CANNOT be undone\n\n' +
+                          '??Permanently remove all your personal information\n' +
+                          '??Delete your order history\n' +
+                          '??Remove all saved preferences\n' +
+                          '??This action CANNOT be undone\n\n' +
                           'Type "DELETE" to confirm:';
     
     const userInput = prompt(confirmMessage);
