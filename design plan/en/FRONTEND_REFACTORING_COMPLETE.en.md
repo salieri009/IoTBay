@@ -97,7 +97,30 @@
 16. `components/organisms/bottom-sheet/bottom-sheet.css`
 
 ### JSP Components (7 files)
-17. `components/atoms/skeleton/skeleton.jsp`
+
+## 🛠️ Session Refactoring Log (Current)
+
+### Refactored Pages
+1.  **`cart.jsp`**
+    *   Replaced Quantity buttons with `button` atom (ghost variant).
+    *   Replaced "Browse Products" button with `button` atom (primary variant).
+    *   Replaced "Proceed to Checkout" button with `button` atom (primary, full-width).
+2.  **`checkout.jsp`**
+    *   Replaced all form fields (Name, Email, Phone, Address, City, State, Zip) with `form-field` molecule.
+    *   Updated `input` atom to support `attributes` parameter for custom attributes (pattern, oninput, etc.).
+    *   Updated `form-field` molecule to pass `attributes` to `input` atom.
+    *   Updated `button` atom to support `htmlType` parameter (e.g., `submit`).
+    *   Replaced "Place Order" button with `button` atom (submit type, complex content).
+3.  **`orderList.jsp`**
+    *   Replaced "Start Shopping" button with `button` atom.
+    *   Replaced Status Badges with `badge` atom.
+    *   Replaced Action Buttons (View, Track, Reorder) with `button` atom.
+
+### Component Updates
+*   **`components/atoms/button/button.jsp`**: Added `htmlType` parameter.
+*   **`components/atoms/input/input.jsp`**: Added `attributes` parameter.
+*   **`components/molecules/form-field/form-field.jsp`**: Added `attributes` parameter support.
+
 18. `components/molecules/accordion/accordion.jsp`
 19. `components/molecules/bento-grid/bento-grid.jsp`
 20. `components/molecules/facet-search/facet-search.jsp`

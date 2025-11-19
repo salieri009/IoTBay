@@ -18,8 +18,9 @@
 </head>
 <body>
     <main class="min-h-screen flex items-center justify-center bg-neutral-50 py-12 px-4">
-        <div class="max-w-md w-full">
-            <div class="rounded-2xl border border-neutral-200 bg-white shadow-sm p-8">
+        <!-- Auth Card: PC max-width 440px/padding 40px, Mobile 100%/padding 20px -->
+        <div class="auth-card-container">
+            <div class="auth-card">
                 <div class="text-center mb-8">
                     <h1 class="text-display-m font-bold text-neutral-900 mb-2">Welcome back</h1>
                     <p class="text-lg text-neutral-600">Sign in to your IoT Bay account</p>
@@ -38,23 +39,25 @@
                     <fieldset class="space-y-6">
                         <legend class="sr-only">Sign in to your account</legend>
                         
-                        <div class="form-group">
-                            <label for="email" class="form-label form-label--required">Email address</label>
-                            <input type="email" id="email" name="email" class="form-input" 
-                                   placeholder="your.email@example.com" required autocomplete="email" 
-                                   aria-describedby="email-help emailError" />
-                            <div id="email-help" class="form-help text-xs text-neutral-500 mt-1">Enter the email address associated with your account</div>
-                            <div class="form-error" id="emailError" style="display: none;" role="alert" aria-live="polite"></div>
-                        </div>
+                        <jsp:include page="/components/molecules/form-field/form-field.jsp">
+                            <jsp:param name="label" value="Email address" />
+                            <jsp:param name="name" value="email" />
+                            <jsp:param name="type" value="email" />
+                            <jsp:param name="placeholder" value="your.email@example.com" />
+                            <jsp:param name="required" value="true" />
+                            <jsp:param name="helpText" value="Enter the email address associated with your account" />
+                            <jsp:param name="id" value="email" />
+                        </jsp:include>
                         
-                        <div class="form-group">
-                            <label for="password" class="form-label form-label--required">Password</label>
-                            <input type="password" id="password" name="password" class="form-input" 
-                                   placeholder="Enter your password" required autocomplete="current-password" 
-                                   aria-describedby="password-help passwordError" />
-                            <div id="password-help" class="form-help text-xs text-neutral-500 mt-1">Case-sensitive password</div>
-                            <div class="form-error" id="passwordError" style="display: none;" role="alert" aria-live="polite"></div>
-                        </div>
+                        <jsp:include page="/components/molecules/form-field/form-field.jsp">
+                            <jsp:param name="label" value="Password" />
+                            <jsp:param name="name" value="password" />
+                            <jsp:param name="type" value="password" />
+                            <jsp:param name="placeholder" value="Enter your password" />
+                            <jsp:param name="required" value="true" />
+                            <jsp:param name="helpText" value="Case-sensitive password" />
+                            <jsp:param name="id" value="password" />
+                        </jsp:include>
                         
                         <div class="flex items-center justify-between">
                             <label class="checkbox">

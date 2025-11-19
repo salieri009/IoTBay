@@ -29,23 +29,58 @@
       </section>
 
       <!-- {Category Grid} -->
-      <section name="category-grid">
-        
-        <categories-grid columns="2" responsive="true">
-          <!-- {2 columns on desktop, 1 on mobile} -->
+      <section name="category-grid" class="section-container">
+        <container class="l-container">
+          <component-size>
+            <container-width>max-width: 1400px</container-width>
+            <padding:>32px responsive</padding:>
+          </component-size>
           
-          <category-card name="industrial" route="/category-industrial">
-            <image source="/images/categories/industrial.jpg" alt="Industrial IoT"/>
-            <title>Industrial</title>
-            <description>Industrial automation and monitoring solutions for manufacturing and production</description>
-            <product-count>{productCount} products</product-count>
-            <!-- {Number of products in this category} -->
-            <features>
-              <feature>Automation Systems</feature>
-              <feature>Monitoring Sensors</feature>
-              <feature>Control Systems</feature>
-            </features>
-          </category-card>
+          <categories-grid class="l-grid l-grid--gap-large" columns="2" responsive="true">
+            <grid-structure>
+              <design>2-column grid for category cards</design>
+              <mobile>1 column (l-grid__col-12), card width: 100%</mobile>
+              <desktop>2 columns (l-grid__col-md-6), card width: calc(50% - 16px)</desktop>
+              <gap>32px (8px × 4) between cards</gap>
+            </grid-structure>
+            <!-- {2 columns on desktop, 1 on mobile} -->
+            
+            <category-card name="industrial" route="/category-industrial" class="c-card c-card--elevated l-grid__col-12 l-grid__col-md-6">
+              <component-size>
+                <width>Mobile: 100%, Desktop: calc(50% - 16px)</width>
+                <min-height>400px</min-height>
+                <padding:>0</padding:>
+                <border-radius:>12px</border-radius:>
+                <box-shadow:>0 4px 16px rgba(0,0,0,0.1)</box-shadow:>
+                <overflow:>hidden</overflow:>
+              </component-size>
+              <image source="/images/categories/industrial.jpg" alt="Industrial IoT">
+                <component-size>
+                  <width>100%</width>
+                  <height>240px</height>
+                  <object-fit:>cover</object-fit:>
+                </component-size>
+              </image>
+              <body class="c-card__body" style="padding: 32px">
+                <component-size>
+                  <padding:>32px (8px × 4)</padding:>
+                  <gap:>16px between elements</gap:>
+                </component-size>
+                <title class="c-card__title text-display-m">Industrial</title>
+                <description class="text-body-m">{Industrial automation and monitoring solutions for manufacturing and production}</description>
+                <product-count class="text-body-s">{productCount} products</product-count>
+                <!-- {Number of products in this category} -->
+                <features class="flex flex-wrap gap-2 l-spacing-sm">
+                  <component-size>
+                    <badge-size:>Auto width, height: 28px</badge-size:>
+                    <gap:>8px between badges</gap:>
+                  </component-size>
+                  <feature component="atoms/badge">Automation Systems</feature>
+                  <feature component="atoms/badge">Monitoring Sensors</feature>
+                  <feature component="atoms/badge">Control Systems</feature>
+                </features>
+              </body>
+            </category-card>
           
           <category-card name="warehouse" route="/category-warehouse">
             <image source="/images/categories/warehouse.jpg" alt="Warehouse IoT"/>

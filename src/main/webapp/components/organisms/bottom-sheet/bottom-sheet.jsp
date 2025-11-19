@@ -72,8 +72,8 @@
     </div>
     
     <%-- Content Area --%>
-    <div class="bottom-sheet-body">
-      <jsp:doBody/>
+    <div class="bottom-sheet-body" id="<%= contentId %>-body">
+      <%-- Content will be injected via JavaScript or included separately --%>
     </div>
   </div>
 </div>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
   {IoTBay Product Browsing Page Structure}
-  {This XML describes the browse.jsp page where users can search and filter products}
-  {Purpose: Document product listing, filtering, and search functionality structure}
+  {Container-Centric Design with Facet Search}
+  {Purpose: Document browse page layout, filter sidebar, and product grid structure}
 -->
 <page name="browse" type="product-listing" jsp-file="browse.jsp">
   
@@ -13,179 +13,330 @@
     <template>t:base</template>
   </metadata>
 
+  <layout-system>
+    <container>l-container</container>
+    <background>#FFFFFF</background>
+    <spacing-base>8px</spacing-base>
+    <grid-system>12-column</grid-system>
+  </layout-system>
+
   <structure>
     
-    <!-- {Page Header with Breadcrumb} -->
-    <section name="page-header">
-      <breadcrumb>
-        <!-- {Breadcrumb: Home > Browse Products} -->
+    <!-- {Page Header} -->
+    <section name="page-header" class="l-spacing-md">
+      <component-size>
+        <padding>24px 0</padding>
+        <margin-bottom>32px</margin-bottom>
+      </component-size>
+      <breadcrumb component="atoms/breadcrumb">
         <item name="Home" route="/"/>
         <item name="Browse" route="/browse" active="true"/>
       </breadcrumb>
-      <title>Browse Products</title>
-      <!-- {Page title} -->
+      <title class="text-display-l">Browse Products</title>
     </section>
 
-    <!-- {Filter Sidebar - Left side on desktop, collapsible on mobile} -->
-    <section name="filters" type="sidebar" position="left">
-      <!-- {Product filters: category, price range, specifications, etc.} -->
-      <filter-group name="category">
-        <title>Category</title>
-        <options>
-          <option value="all" selected="true">All Categories</option>
-          <option value="industrial">Industrial</option>
-          <option value="warehouse">Warehouse</option>
-          <option value="agriculture">Agriculture</option>
-          <option value="smarthome">Smart Home</option>
-        </options>
-      </filter-group>
-      
-      <filter-group name="price">
-        <title>Price Range</title>
-        <!-- {Price range slider or input fields} -->
-        <type>range</type>
-        <min>0</min>
-        <max>10000</max>
-      </filter-group>
+    <!-- {Main Layout: Filter Sidebar + Product Grid} -->
+    <section name="browse-content" class="l-two-column">
+      <layout-structure>
+        <design>Two-column layout: Filter sidebar (left) + Product grid (right)</design>
+        <desktop>
+          <left-column width="280px" min-width="240px" max-width="320px" position="sticky" top="24px"/>
+          <right-column width="calc(100% - 280px - 32px)" padding="0 0 0 32px"/>
+        </desktop>
+        <tablet>
+          <layout>Stacked: Filter as bottom sheet overlay</layout>
+          <right-column width="100%"/>
+        </tablet>
+        <mobile>
+          <layout>Single column, filter hidden in bottom sheet</layout>
+          <right-column width="100%"/>
+        </mobile>
+      </layout-structure>
 
-      <filter-group name="specifications">
-        <!-- {IoT-specific filters: protocol, voltage, range, etc.} -->
-        <title>Specifications</title>
-        <filters>
-          <filter name="protocol" type="multi-select">
-            <!-- {Communication protocol: LoRaWAN, Zigbee, WiFi, Bluetooth} -->
+      <!-- {Filter Sidebar - Desktop Only} -->
+      <column name="filters" class="filter-sidebar" component="organisms/bottom-sheet/bottom-sheet.jsp">
+        <component-size>
+          <width>Desktop: 280px (fixed), Mobile: 100% (bottom sheet)</width>
+          <padding>24px (8px × 3)</padding>
+          <background>#F5F7FA</background>
+          <border-radius>8px</border-radius>
+          <min-height>400px</min-height>
+          <position>Desktop: sticky, Mobile: fixed bottom sheet</position>
+          <z-index>Mobile: var(--z-modal-backdrop)</z-index>
+        </component-size>
+        
+        <!-- {Facet Search Component} -->
+        <facet-search component="molecules/facet-search/facet-search.jsp">
+          <component-size>
+            <width>100%</width>
+            <padding>0</padding>
+            <gap>24px between filter groups</gap>
+          </component-size>
+          
+          <filter-group name="category">
+            <component-size>
+              <padding>16px 0</padding>
+              <border-bottom>1px solid var(--neutral-200)</border-bottom>
+            </component-size>
+            <title>Category</title>
             <options>
-              <option value="lorawan">LoRaWAN</option>
-              <option value="zigbee">Zigbee</option>
-              <option value="wifi">WiFi</option>
-              <option value="bluetooth">Bluetooth</option>
+              <option value="all" selected="true">All Categories</option>
+              <option value="industrial">Industrial</option>
+              <option value="warehouse">Warehouse</option>
+              <option value="agriculture">Agriculture</option>
+              <option value="smarthome">Smart Home</option>
             </options>
-          </filter>
-          <filter name="voltage" type="multi-select">
-            <!-- {Voltage requirements: 5V, 12V, 24V, etc.} -->
-          </filter>
-        </filters>
-      </filter-group>
+          </filter-group>
+          
+          <filter-group name="price">
+            <component-size>
+              <padding>16px 0</padding>
+              <height>Auto</height>
+            </component-size>
+            <title>Price Range</title>
+            <type>range</type>
+            <min>0</min>
+            <max>10000</max>
+            <input-size>
+              <width>80px per input</width>
+              <height>36px</height>
+              <gap>8px between min/max</gap>
+            </input-size>
+          </filter-group>
 
-      <filter-group name="stock">
-        <title>Stock Status</title>
-        <options>
-          <option value="in-stock">In Stock</option>
-          <option value="low-stock">Low Stock</option>
-          <option value="all">All</option>
-        </options>
-      </filter-group>
-    </section>
+          <filter-group name="specifications">
+            <component-size>
+              <padding>16px 0</padding>
+            </component-size>
+            <title>Specifications</title>
+            <filters>
+              <filter name="protocol" type="multi-select">
+                <component-size>
+                  <checkbox-size>20px × 20px</checkbox-size>
+                  <gap>8px between options</gap>
+                </component-size>
+                <options>
+                  <option value="lorawan">LoRaWAN</option>
+                  <option value="zigbee">Zigbee</option>
+                  <option value="wifi">WiFi</option>
+                  <option value="bluetooth">Bluetooth</option>
+                </options>
+              </filter>
+              <filter name="voltage" type="multi-select">
+                <component-size>
+                  <checkbox-size>20px × 20px</checkbox-size>
+                  <gap>8px between options</gap>
+                </component-size>
+              </filter>
+            </filters>
+          </filter-group>
 
-    <!-- {Main Content Area - Product Grid} -->
-    <section name="product-listing" type="main-content">
-      
-      <!-- {Toolbar: Sort, View Toggle, Results Count} -->
-      <toolbar>
-        <results-count>
-          <!-- {Shows: "Showing 1-24 of 156 products"} -->
-        </results-count>
-        <sort-options>
-          <!-- {Sort by: Price (Low to High), Price (High to Low), Name, Newest} -->
-          <option value="price-asc">Price: Low to High</option>
-          <option value="price-desc">Price: High to Low</option>
-          <option value="name-asc">Name: A-Z</option>
-          <option value="newest">Newest First</option>
-        </sort-options>
-        <view-toggle>
-          <!-- {Toggle between grid view and list view} -->
-          <option value="grid" default="true">Grid</option>
-          <option value="list">List</option>
-        </view-toggle>
-      </toolbar>
+          <filter-group name="stock">
+            <component-size>
+              <padding>16px 0</padding>
+            </component-size>
+            <title>Stock Status</title>
+            <options>
+              <option value="in-stock">In Stock</option>
+              <option value="low-stock">Low Stock</option>
+              <option value="all">All</option>
+            </options>
+          </filter-group>
+        </facet-search>
+      </column>
 
-      <!-- {Product Grid} -->
-      <product-grid columns="4" responsive="true">
-        <!-- {4 columns on desktop, 2 on tablet, 1 on mobile} -->
-        <products>
-          <product-card>
-            <!-- {Same structure as index.xml product-card} -->
-            <image source="/images/products/{productId}.png"/>
-            <name>{productName}</name>
-            <category>{categoryName}</category>
-            <specs>
-              <!-- {Key technical specs displayed on card} -->
-              <spec name="protocol">{protocol}</spec>
-              <spec name="voltage">{voltage}</spec>
-            </specs>
-            <price currency="USD">{price}</price>
-            <stock status="{inStock|lowStock|outOfStock}"/>
-            <actions>
-              <button type="quick-view"/>
-              <button type="add-to-cart"/>
-            </actions>
+      <!-- {Product Listing Area} -->
+      <column name="product-listing" class="content-zone">
+        <component-size>
+          <width>Desktop: calc(100% - 280px - 32px), Mobile: 100%</width>
+          <padding>0</padding>
+        </component-size>
+        
+        <!-- {Toolbar: Sort, View Toggle, Results Count} -->
+        <toolbar class="l-spacing-md">
+          <component-size>
+            <height>48px</height>
+            <padding>0 0 16px 0</padding>
+            <border-bottom>1px solid var(--neutral-200)</border-bottom>
+          </component-size>
+          <layout-structure>
+            <design>Flex row layout for toolbar controls</design>
+            <mobile>Stacked vertically</mobile>
+            <desktop>Horizontal row with space-between</desktop>
+          </layout-structure>
+          <results-count>
+            <component-size>
+              <font-size>14px</font-size>
+              <color>var(--neutral-600)</color>
+            </component-size>
+            <text>Showing 1-24 of 156 products</text>
+          </results-count>
+          <sort-options>
+            <component-size>
+              <select-width>180px</select-width>
+              <select-height>36px</select-height>
+            </component-size>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+            <option value="name-asc">Name: A-Z</option>
+            <option value="newest">Newest First</option>
+          </sort-options>
+          <view-toggle>
+            <component-size>
+              <button-size>36px × 36px</button-size>
+              <gap>8px between toggle buttons</gap>
+            </component-size>
+            <option value="grid" default="true">Grid</option>
+            <option value="list">List</option>
+          </view-toggle>
+        </toolbar>
+
+        <!-- {Product Grid} -->
+        <product-grid class="l-grid l-grid--gap-medium l-spacing-lg">
+          <grid-structure>
+            <design>4-column responsive grid for product cards</design>
+            <mobile>1 column (l-grid__col-12), card width: 100%</mobile>
+            <tablet>2 columns (l-grid__col-md-6), card width: calc(50% - 12px)</tablet>
+            <desktop>4 columns (l-grid__col-lg-3), card width: calc(25% - 18px)</desktop>
+            <gap>24px (8px × 3) between cards</gap>
+          </grid-structure>
+          
+          <!-- {Skeleton Loading State} -->
+          <skeleton-loading id="product-grid-skeleton" class="hidden">
+            <skeleton component="atoms/skeleton" type="card" class="l-grid__col-12 l-grid__col-md-6 l-grid__col-lg-3">
+              <component-size>
+                <width>Mobile: 100%, Tablet: calc(50% - 12px), Desktop: calc(25% - 18px)</width>
+                <height>320px</height>
+              </component-size>
+            </skeleton>
+          </skeleton-loading>
+          
+          <product-card class="l-grid__col-12 l-grid__col-md-6 l-grid__col-lg-3" component="molecules/product-card/product-card.jsp">
+            <component-size>
+              <width>Mobile: 100%, Tablet: calc(50% - 12px), Desktop: calc(25% - 18px)</width>
+              <min-height>320px</min-height>
+              <padding>16px</padding>
+              <border-radius>8px</border-radius>
+              <box-shadow>0 2px 8px rgba(0,0,0,0.08)</box-shadow>
+            </component-size>
+            <card class="c-product-card">
+              <image class="c-product-card__image">
+                <component-size>
+                  <width>100%</width>
+                  <height>180px</height>
+                  <aspect-ratio>16:9</aspect-ratio>
+                  <object-fit>cover</object-fit>
+                </component-size>
+              </image>
+              <body class="c-product-card__body">
+                <component-size>
+                  <padding>16px</padding>
+                  <gap>8px between elements</gap>
+                </component-size>
+                <name>{productName}</name>
+                <category>{categoryName}</category>
+                <specs>
+                  <component-size>
+                    <badge-size>Auto width, height: 24px</badge-size>
+                    <gap>4px between badges</gap>
+                  </component-size>
+                  <spec name="protocol">{protocol}</spec>
+                  <spec name="voltage">{voltage}</spec>
+                </specs>
+                <price currency="USD">{price}</price>
+                <stock status="{inStock|lowStock|outOfStock}"/>
+                <actions>
+                  <component-size>
+                    <button-height>36px</button-height>
+                    <gap>8px between buttons</gap>
+                  </component-size>
+                  <button type="quick-view"/>
+                  <button type="add-to-cart"/>
+                </actions>
+              </body>
+            </card>
           </product-card>
-        </products>
-      </product-grid>
+        </product-grid>
 
-      <!-- {Pagination} -->
-      <pagination>
-        <!-- {Previous, Page Numbers, Next buttons} -->
-        <prev-button enabled="{hasPrevious}"/>
-        <page-numbers current="{currentPage}" total="{totalPages}"/>
-        <next-button enabled="{hasNext}"/>
-      </pagination>
+        <!-- {Pagination} -->
+        <pagination class="l-spacing-lg">
+          <component-size>
+            <height>48px</height>
+            <padding>24px 0</padding>
+            <justify-content>center</justify-content>
+          </component-size>
+          <prev-button enabled="{hasPrevious}">
+            <component-size>
+              <button-size>36px × 36px</button-size>
+            </component-size>
+          </prev-button>
+          <page-numbers current="{currentPage}" total="{totalPages}">
+            <component-size>
+              <button-size>36px × 36px</button-size>
+              <gap>4px between page numbers</gap>
+            </component-size>
+          </page-numbers>
+          <next-button enabled="{hasNext}">
+            <component-size>
+              <button-size>36px × 36px</button-size>
+            </component-size>
+          </next-button>
+        </pagination>
 
-      <!-- {Empty State - When no products match filters} -->
-      <empty-state condition="no-results">
-        <!-- {Shown when filter results in no products} -->
-        <icon>search-icon</icon>
-        <title>No products found</title>
-        <message>Try adjusting your filters or search terms</message>
-        <action>
-          <button type="primary" text="Clear Filters" action="clearFilters"/>
-        </action>
-      </empty-state>
+        <!-- {Empty State} -->
+        <empty-state condition="no-results" class="c-card c-card--padded-large text-center">
+          <component-size>
+            <width>100%</width>
+            <padding>64px 32px</padding>
+            <min-height>300px</min-height>
+          </component-size>
+          <icon component="atoms/icon" name="search" size="large">
+            <component-size>
+              <icon-size>64px × 64px</icon-size>
+            </component-size>
+          </icon>
+          <title>No products found</title>
+          <message>Try adjusting your filters or search terms</message>
+          <action>
+            <button component="atoms/button" type="primary" text="Clear Filters" action="clearFilters">
+              <component-size>
+                <button-height>40px</button-height>
+                <padding>0 24px</padding>
+              </component-size>
+            </button>
+          </action>
+        </empty-state>
+
+      </column>
 
     </section>
 
   </structure>
 
-  <!-- {Search Functionality} -->
-  <search>
-    <input type="search" placeholder="Search products..."/>
-    <!-- {Search input in header or dedicated search bar} -->
-    <filters>
-      <!-- {Search can be combined with filters} -->
-    </filters>
-    <results>
-      <!-- {Search results displayed in same grid format} -->
-    </results>
-  </search>
+  <components>
+    <atomic>
+      <atom name="badge" path="components/atoms/badge/badge.jsp"/>
+      <atom name="button" path="components/atoms/button/button.jsp"/>
+      <atom name="skeleton" path="components/atoms/skeleton/skeleton.jsp"/>
+      <atom name="icon" path="components/atoms/icon/icon.jsp"/>
+    </atomic>
+    <molecular>
+      <molecule name="product-card" path="components/molecules/product-card/product-card.jsp"/>
+      <molecule name="facet-search" path="components/molecules/facet-search/facet-search.jsp"/>
+    </molecular>
+    <organism>
+      <organism name="header" path="components/organisms/header/header.jsp"/>
+      <organism name="footer" path="components/organisms/footer/footer.jsp"/>
+      <organism name="bottom-sheet" path="components/organisms/bottom-sheet/bottom-sheet.jsp"/>
+    </organism>
+  </components>
 
-  <!-- {Refactoring Context} -->
-  <refactoring-context>
-    <current-state>
-      <issues>
-        <issue>Filters need better mobile UX (collapsible, bottom sheet)</issue>
-        <issue>Product grid should use CSS Grid with auto-fit for responsiveness</issue>
-        <issue>Filter state should be URL-based for shareability</issue>
-        <issue>Loading states needed during filter application</issue>
-      </issues>
-    </current-state>
-    <target-state>
-      <improvements>
-        <improvement>Implement progressive enhancement for filters (work without JS)</improvement>
-        <improvement>Add skeleton loading for product cards</improvement>
-        <improvement>URL-based filter state (?category=industrial&protocol=lorawan)</improvement>
-        <improvement>Optimistic UI updates for filter changes</improvement>
-        <improvement>Accessible filter controls with ARIA labels</improvement>
-      </improvements>
-    </target-state>
-  </refactoring-context>
-
-  <dependencies>
-    <component name="header" file="components/header.jsp"/>
-    <component name="footer" file="components/footer.jsp"/>
-    <component name="product-card" file="components/product-card.jsp"/>
-    <component name="filter-sidebar" file="components/filter-sidebar.jsp"/>
-    <layout name="base" file="WEB-INF/tags/base.tag"/>
-  </dependencies>
+  <design-tokens>
+    <spacing>8px multiples (l-spacing-xs: 8px, l-spacing-sm: 16px, l-spacing-md: 24px, l-spacing-lg: 32px)</spacing>
+    <container>l-container (max-width: 1400px, padding: 16-32px responsive)</container>
+    <grid>l-grid (12-column), 4-column product grid (l-grid__col-lg-3)</grid>
+    <cards>c-product-card (elevated with shadow)</cards>
+    <z-index>z-modal-backdrop: 400, z-modal: 500</z-index>
+  </design-tokens>
 
 </page>
-

@@ -21,7 +21,7 @@
     <!-- Modern Favicons -->
     <link rel="icon" type="image/svg+xml" href="<c:url value='/images/favicon.svg' />">
     <link rel="icon" type="image/x-icon" href="<c:url value='/favicon.ico' />">
-    <link rel="stylesheet" href="<c:url value='/css/modern-theme.css' />">
+    <link rel="stylesheet" href="<c:url value='/css/style.css' />">
 
     <c:if test="${customCSS != null}">
         <link rel="stylesheet" href="<c:url value='/css/${customCSS}' />">
@@ -33,7 +33,7 @@
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
     
     <!-- Preload Critical Resources -->
-    <link rel="preload" href="<c:url value='/css/modern-theme.css' />" as="style">
+    <link rel="preload" href="<c:url value='/css/style.css' />" as="style">
     <link rel="preload" href="<c:url value='/js/main.js' />" as="script">
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -96,7 +96,7 @@
     <!-- Toast Notifications Container (Enhanced ARIA) -->
     <div 
         id="toast-container" 
-        class="fixed top-4 right-4 z-50 space-y-2" 
+        class="fixed top-4 right-4 z-toast space-y-2" 
         role="region" 
         aria-label="Notifications"
         aria-live="polite"
@@ -106,7 +106,7 @@
     <!-- Loading Overlay (Enhanced ARIA) -->
     <div 
         id="loading-overlay" 
-        class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center"
+        class="fixed inset-0 bg-black bg-opacity-50 hidden z-modal-backdrop flex items-center justify-center"
         role="status"
         aria-live="polite"
         aria-busy="true"

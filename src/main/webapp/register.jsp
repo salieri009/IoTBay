@@ -18,15 +18,22 @@
 </head>
 <body class="min-h-screen bg-neutral-50">
     <main class="min-h-screen flex items-center justify-center py-12 px-4">
-        <div class="max-w-5xl w-full">
-            <div class="rounded-2xl border border-neutral-200 bg-white shadow-sm p-8">
+        <!-- Auth Card Container: PC max-width 440px/padding 40px, Mobile 100%/padding 20px -->
+        <div class="auth-card-container" style="max-width: 100%;">
+            <div class="auth-card" style="max-width: 100%;">
                 <div class="text-center mb-8">
                     <h1 class="text-display-l font-bold text-neutral-900 mb-2">Join IoT Bay</h1>
                     <p class="text-lg text-neutral-600">Create your account to start shopping for IoT solutions</p>
                 </div>
                 
-                <!-- Optimized for 1920x1080 -->
-                <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-[minmax(0,1fr)_minmax(0,500px)] gap-12">
+                <!-- Register Form Layout: 2-column on desktop -->
+                <div class="grid grid-cols-1 lg:grid-cols-2" style="gap: 12px;">
+                    <!-- Responsive gap: Mobile 12px, PC 24px -->
+                    <style>
+                        @media (min-width: 768px) {
+                            .grid { gap: 24px !important; }
+                        }
+                    </style>
                     <!-- Benefits Section -->
                     <aside class="space-y-6">
                         <figure class="text-center">
@@ -84,34 +91,35 @@
                             <fieldset class="space-y-4">
                                 <legend class="text-lg font-semibold text-neutral-900 border-b border-neutral-200 pb-2 w-full">Account information</legend>
                                 
-                                <div class="form-group">
-                                    <label for="email" class="form-label">Email Address *</label>
-                                    <input type="email" id="email" name="email" class="form-input" 
-                                           placeholder="Enter your email" required />
-                                    <div class="form-error" id="emailError" style="display: none;"></div>
-                                    <div class="form-help" id="emailHelp">We'll use this to send order confirmations</div>
-                                </div>
+                                <jsp:include page="/components/molecules/form-field/form-field.jsp">
+                                    <jsp:param name="label" value="Email Address *" />
+                                    <jsp:param name="name" value="email" />
+                                    <jsp:param name="type" value="email" />
+                                    <jsp:param name="placeholder" value="Enter your email" />
+                                    <jsp:param name="required" value="true" />
+                                    <jsp:param name="helpText" value="We'll use this to send order confirmations" />
+                                    <jsp:param name="id" value="email" />
+                                </jsp:include>
                                 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div class="form-group">
-                                        <label for="password" class="form-label">Password *</label>
-                                        <input type="password" id="password" name="password" class="form-input" 
-                                               placeholder="Create a password" required minlength="8" />
-                                        <div class="form-error" id="passwordError" style="display: none;"></div>
-                                        <div class="form-help" id="passwordHelp">Must be at least 8 characters</div>
-                                        <div class="password-strength" id="passwordStrength" style="display: none;">
-                                            <div class="password-strength-bar">
-                                                <div class="password-strength-fill" id="passwordStrengthFill"></div>
-                                            </div>
-                                            <span class="password-strength-text" id="passwordStrengthText"></span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="confirmPassword" class="form-label">Confirm Password *</label>
-                                        <input type="password" id="confirmPassword" name="confirmPassword" 
-                                               class="form-input" placeholder="Confirm your password" required />
-                                        <div class="form-error" id="confirmPasswordError" style="display: none;"></div>
-                                    </div>
+                                    <jsp:include page="/components/molecules/form-field/form-field.jsp">
+                                        <jsp:param name="label" value="Password *" />
+                                        <jsp:param name="name" value="password" />
+                                        <jsp:param name="type" value="password" />
+                                        <jsp:param name="placeholder" value="Create a password" />
+                                        <jsp:param name="required" value="true" />
+                                        <jsp:param name="helpText" value="Must be at least 8 characters" />
+                                        <jsp:param name="id" value="password" />
+                                    </jsp:include>
+                                    
+                                    <jsp:include page="/components/molecules/form-field/form-field.jsp">
+                                        <jsp:param name="label" value="Confirm Password *" />
+                                        <jsp:param name="name" value="confirmPassword" />
+                                        <jsp:param name="type" value="password" />
+                                        <jsp:param name="placeholder" value="Confirm your password" />
+                                        <jsp:param name="required" value="true" />
+                                        <jsp:param name="id" value="confirmPassword" />
+                                    </jsp:include>
                                 </div>
                             </div>
                             
@@ -122,28 +130,39 @@
                                 <legend class="text-lg font-semibold text-neutral-900 border-b border-neutral-200 pb-2 w-full">Personal information</legend>
                                 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div class="form-group">
-                                        <label for="firstName" class="form-label">First Name *</label>
-                                        <input type="text" id="firstName" name="firstName" class="form-input" 
-                                               placeholder="Your first name" required />
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="lastName" class="form-label">Last Name *</label>
-                                        <input type="text" id="lastName" name="lastName" class="form-input" 
-                                               placeholder="Your last name" required />
-                                    </div>
+                                    <jsp:include page="/components/molecules/form-field/form-field.jsp">
+                                        <jsp:param name="label" value="First Name *" />
+                                        <jsp:param name="name" value="firstName" />
+                                        <jsp:param name="placeholder" value="Your first name" />
+                                        <jsp:param name="required" value="true" />
+                                        <jsp:param name="id" value="firstName" />
+                                    </jsp:include>
+                                    
+                                    <jsp:include page="/components/molecules/form-field/form-field.jsp">
+                                        <jsp:param name="label" value="Last Name *" />
+                                        <jsp:param name="name" value="lastName" />
+                                        <jsp:param name="placeholder" value="Your last name" />
+                                        <jsp:param name="required" value="true" />
+                                        <jsp:param name="id" value="lastName" />
+                                    </jsp:include>
                                 </div>
                                 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div class="form-group">
-                                        <label for="phone" class="form-label">Phone Number *</label>
-                                        <input type="tel" id="phone" name="phone" class="form-input" 
-                                               placeholder="Your phone number" required />
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="dateOfBirth" class="form-label">Date of Birth</label>
-                                        <input type="date" id="dateOfBirth" name="dateOfBirth" class="form-input" />
-                                    </div>
+                                    <jsp:include page="/components/molecules/form-field/form-field.jsp">
+                                        <jsp:param name="label" value="Phone Number *" />
+                                        <jsp:param name="name" value="phone" />
+                                        <jsp:param name="type" value="tel" />
+                                        <jsp:param name="placeholder" value="Your phone number" />
+                                        <jsp:param name="required" value="true" />
+                                        <jsp:param name="id" value="phone" />
+                                    </jsp:include>
+                                    
+                                    <jsp:include page="/components/molecules/form-field/form-field.jsp">
+                                        <jsp:param name="label" value="Date of Birth" />
+                                        <jsp:param name="name" value="dateOfBirth" />
+                                        <jsp:param name="type" value="date" />
+                                        <jsp:param name="id" value="dateOfBirth" />
+                                    </jsp:include>
                                 </div>
                             </div>
                             
@@ -153,23 +172,28 @@
                             <fieldset class="space-y-4">
                                 <legend class="text-lg font-semibold text-neutral-900 border-b border-neutral-200 pb-2 w-full">Address information</legend>
                                 
-                                <div class="form-group">
-                                    <label for="addressLine1" class="form-label">Address Line 1 *</label>
-                                    <input type="text" id="addressLine1" name="addressLine1" class="form-input" 
-                                           placeholder="Street address" required />
-                                </div>
+                                <jsp:include page="/components/molecules/form-field/form-field.jsp">
+                                    <jsp:param name="label" value="Address Line 1 *" />
+                                    <jsp:param name="name" value="addressLine1" />
+                                    <jsp:param name="placeholder" value="Street address" />
+                                    <jsp:param name="required" value="true" />
+                                    <jsp:param name="id" value="addressLine1" />
+                                </jsp:include>
                                 
-                                <div class="form-group">
-                                    <label for="addressLine2" class="form-label">Address Line 2</label>
-                                    <input type="text" id="addressLine2" name="addressLine2" class="form-input" 
-                                           placeholder="Apartment, suite, etc. (optional)" />
-                                </div>
+                                <jsp:include page="/components/molecules/form-field/form-field.jsp">
+                                    <jsp:param name="label" value="Address Line 2" />
+                                    <jsp:param name="name" value="addressLine2" />
+                                    <jsp:param name="placeholder" value="Apartment, suite, etc. (optional)" />
+                                    <jsp:param name="id" value="addressLine2" />
+                                </jsp:include>
                                 
-                                <div class="form-group">
-                                    <label for="postalCode" class="form-label">Postal Code *</label>
-                                    <input type="text" id="postalCode" name="postalCode" class="form-input" 
-                                           placeholder="Postal code" required />
-                                </div>
+                                <jsp:include page="/components/molecules/form-field/form-field.jsp">
+                                    <jsp:param name="label" value="Postal Code *" />
+                                    <jsp:param name="name" value="postalCode" />
+                                    <jsp:param name="placeholder" value="Postal code" />
+                                    <jsp:param name="required" value="true" />
+                                    <jsp:param name="id" value="postalCode" />
+                                </jsp:include>
                             </div>
                             
                             </fieldset>

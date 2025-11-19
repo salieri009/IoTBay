@@ -52,11 +52,17 @@
   String icon = request.getParameter("icon");
   String iconPosition = request.getParameter("iconPosition") != null ? request.getParameter("iconPosition") : "left";
   boolean fullWidth = "true".equalsIgnoreCase(request.getParameter("fullWidth"));
+  String extraClass = request.getParameter("extraClass");
+  String attributes = request.getParameter("attributes");
+  String htmlType = request.getParameter("htmlType") != null ? request.getParameter("htmlType") : "button";
   
   // Build CSS classes
   String buttonClass = "btn btn--" + type + " btn--" + size;
   if (fullWidth) {
     buttonClass += " btn--full";
+  }
+  if (extraClass != null) {
+    buttonClass += " " + extraClass;
   }
 %>
 
@@ -67,7 +73,8 @@
        class="${buttonClass}"
        <c:if test="${!empty onclick}">onclick="${onclick}"</c:if>
        <c:if test="${!empty ariaLabel}">aria-label="${ariaLabel}"</c:if>
-       <c:if test="${disabled}">aria-disabled="true" tabindex="-1"</c:if>>
+       <c:if test="${disabled}">aria-disabled="true" tabindex="-1"</c:if>
+       <c:if test="${!empty attributes}">${attributes}</c:if>>
       <c:if test="${!empty icon && iconPosition == 'left'}">
         <jsp:include page="/components/atoms/icon/icon.jsp">
           <jsp:param name="name" value="${icon}" />
@@ -84,12 +91,13 @@
   
   <%-- Render as button --%>
   <c:otherwise>
-    <button type="button"
+    <button type="${htmlType}"
             class="${buttonClass}"
             <c:if test="${disabled}">disabled</c:if>
             <c:if test="${!empty onclick}">onclick="${onclick}"</c:if>
             <c:if test="${!empty ariaLabel}">aria-label="${ariaLabel}"</c:if>
-            <c:if test="${empty ariaLabel && !empty text}">aria-label="${text}"</c:if>>
+            <c:if test="${empty ariaLabel && !empty text}">aria-label="${text}"</c:if>
+            <c:if test="${!empty attributes}">${attributes}</c:if>>
       <c:if test="${!empty icon && iconPosition == 'left'}">
         <jsp:include page="/components/atoms/icon/icon.jsp">
           <jsp:param name="name" value="${icon}" />

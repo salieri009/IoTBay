@@ -1,0 +1,264 @@
+/* =====================================
+   Component: Hero Card (Bento Grid First Cell)
+   =====================================
+   
+   Immersive Hero Section with Tech-Noir & Deep Engineering Theme
+   - Deep Blue background with Circuit Pattern overlay
+   - 3D Floating image effect
+   - Entry animations (fade-in-left, float-up)
+   - Hover effects (background scale, CTA glow)
+*/
+
+:root {
+  /* Hero Card Design Tokens */
+  --hero-bg-color: #051b3b; /* Deep Blue */
+  --hero-content-z: 2;
+}
+
+.hero-card {
+  position: relative;
+  min-height: 500px;
+  border-radius: 16px; /* 2 * 8px */
+  overflow: hidden;
+  background: var(--hero-bg-color);
+  color: var(--neutral-white);
+  padding: 48px; /* 6 * 8px */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hero-card:hover {
+  transform: scale(1.01);
+  box-shadow: 0 20px 60px rgba(0, 82, 204, 0.3);
+}
+
+/* Background: Deep Blue + Circuit Pattern */
+.hero-card__background {
+  position: absolute;
+  inset: 0;
+  background: var(--hero-bg-color);
+  z-index: 0;
+}
+
+.hero-card__background::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: 
+    url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%230a95ff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E"),
+    linear-gradient(135deg, rgba(5, 27, 59, 0.9) 0%, rgba(10, 149, 255, 0.1) 100%);
+  background-size: 200px 200px, cover;
+  background-position: 0 0, center;
+  opacity: 0.6;
+  z-index: 0;
+}
+
+/* Overlay: Gradient for text readability */
+.hero-card__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.3));
+  z-index: 1;
+}
+
+/* Content Wrapper */
+.hero-card__content {
+  position: relative;
+  z-index: var(--hero-content-z);
+  max-width: 600px;
+}
+
+/* Badge */
+.hero-card__badge {
+  display: inline-block;
+  margin-bottom: 16px; /* 2 * 8px */
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Headline */
+.hero-card__headline {
+  font-size: var(--text-4xl);
+  font-weight: var(--weight-black);
+  line-height: var(--leading-tight);
+  margin-bottom: 16px; /* 2 * 8px */
+  color: var(--neutral-white);
+}
+
+@media (min-width: 768px) {
+  .hero-card__headline {
+    font-size: var(--text-5xl);
+  }
+}
+
+@media (min-width: 1024px) {
+  .hero-card__headline {
+    font-size: var(--text-6xl);
+  }
+}
+
+/* Sub-headline */
+.hero-card__subheadline {
+  font-size: var(--text-lg);
+  line-height: var(--leading-relaxed);
+  margin-bottom: 32px; /* 4 * 8px */
+  color: rgba(255, 255, 255, 0.9);
+}
+
+@media (min-width: 768px) {
+  .hero-card__subheadline {
+    font-size: var(--text-xl);
+  }
+}
+
+/* CTA Group */
+.hero-card__cta-group {
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* 2 * 8px */
+}
+
+@media (min-width: 640px) {
+  .hero-card__cta-group {
+    flex-direction: row;
+    gap: 16px; /* 2 * 8px */
+  }
+}
+
+.hero-card__cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.hero-card__cta--primary:hover {
+  box-shadow: 0 0 20px rgba(10, 149, 255, 0.6);
+  transform: translateY(-2px);
+}
+
+.hero-card__cta--secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Visual: 3D Floating Image */
+.hero-card__visual {
+  position: absolute;
+  right: -5%;
+  bottom: -10%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.hero-card__image {
+  width: auto;
+  height: 400px;
+  max-width: 500px;
+  filter: drop-shadow(0 20px 40px rgba(0, 82, 204, 0.4));
+  object-fit: contain;
+  animation: float 3s ease-in-out infinite;
+}
+
+@media (max-width: 1023px) {
+  .hero-card__visual {
+    display: none; /* Hide on mobile/tablet */
+  }
+}
+
+/* Entry Animations */
+@keyframes fade-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes float-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.fade-in-left {
+  animation: fade-in-left 0.8s ease-out forwards;
+  opacity: 0;
+}
+
+.float-up {
+  animation: float-up 1s ease-out forwards;
+  opacity: 0;
+}
+
+/* Mobile: Darker background, text-focused layout */
+@media (max-width: 767px) {
+  .hero-card {
+    min-height: 400px;
+    padding: 32px 24px; /* 4 * 8px, 3 * 8px */
+  }
+  
+  .hero-card__overlay {
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.7));
+  }
+  
+  .hero-card__headline {
+    font-size: var(--text-3xl);
+  }
+  
+  .hero-card__subheadline {
+    font-size: var(--text-base);
+  }
+  
+  .hero-card__cta-group {
+    flex-direction: column;
+  }
+  
+  .hero-card__cta {
+    width: 100%;
+  }
+}
+
+/* Hover Effect: Background Scale */
+.hero-card:hover .hero-card__background::before {
+  transform: scale(1.05);
+  transition: transform 0.5s ease;
+}
+
+/* Accessibility: Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  .hero-card,
+  .hero-card *,
+  .fade-in-left,
+  .float-up,
+  .hero-card__image {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  .hero-card:hover .hero-card__background::before {
+    transform: none;
+  }
+}
+

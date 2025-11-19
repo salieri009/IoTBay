@@ -1,0 +1,74 @@
+/* =====================================
+   Layout: Z-Index System
+   =====================================
+   
+   Consistent layering system for all components
+   - Base: 0-99
+   - Dropdowns: 100-199
+   - Sticky: 200-299
+   - Fixed: 300-399
+   - Modal Backdrop: 400-499
+   - Modal: 500-599
+   - Popover: 600-699
+   - Tooltip: 700-799
+   - Notification: 800-899
+*/
+
+:root {
+  /* Base Layer */
+  --z-base: 0;
+  --z-below: -1;
+  
+  /* Dropdowns & Selects */
+  --z-dropdown: 100;
+  
+  /* Sticky Elements */
+  --z-sticky: 200;
+  
+  /* Sidebar (Fixed Navigation) */
+  --z-sidebar: 250;
+  
+  /* Fixed Elements */
+  --z-fixed: 300;
+  --z-header: 310;
+  --z-footer: 320;
+  
+  /* Overlays & Backdrops */
+  --z-overlay: 400;
+  --z-modal-backdrop: 400;
+  
+  /* Modals & Dialogs */
+  --z-modal: 500;
+  --z-dialog: 510;
+  --z-bottom-sheet: 520;
+  
+  /* Popovers */
+  --z-popover: 600;
+  
+  /* Tooltips */
+  --z-tooltip: 700;
+  
+  /* Notifications & Toasts */
+  --z-notification: 800;
+  --z-toast: 810;
+}
+
+/* Z-Index Utility Classes */
+.z-base { z-index: var(--z-base); }
+.z-below { z-index: var(--z-below); }
+.z-dropdown { z-index: var(--z-dropdown); }
+.z-sticky { z-index: var(--z-sticky); }
+.z-sidebar { z-index: var(--z-sidebar); }
+.z-fixed { z-index: var(--z-fixed); }
+.z-header { z-index: var(--z-header); }
+.z-footer { z-index: var(--z-footer); }
+.z-overlay { z-index: var(--z-overlay); }
+.z-modal-backdrop { z-index: var(--z-modal-backdrop); }
+.z-modal { z-index: var(--z-modal); }
+.z-dialog { z-index: var(--z-dialog); }
+.z-bottom-sheet { z-index: var(--z-bottom-sheet); }
+.z-popover { z-index: var(--z-popover); }
+.z-tooltip { z-index: var(--z-tooltip); }
+.z-notification { z-index: var(--z-notification); }
+.z-toast { z-index: var(--z-toast); }
+

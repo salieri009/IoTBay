@@ -5,11 +5,10 @@
   
   Description:
     Site footer composed of multiple sections.
-    Refactored to use Atomic Design components.
+    Refactored to use Atomic Design components and Tailwind CSS.
   
   Dependencies:
-    - atoms/icon/icon.jsp
-    - atoms/button/button.jsp
+    - atoms/icon/icon.jsp (optional, using inline SVGs for performance)
   
   Last Updated: 2025
 --%>
@@ -17,195 +16,99 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<footer class="footer" role="contentinfo">
-  <div class="container">
+<footer class="bg-neutral-900 text-white pt-16 pb-8 border-t border-neutral-800" role="contentinfo">
+  <div class="container mx-auto px-4">
     <%-- Main Footer Content --%>
-    <div class="footer__content">
-      <div class="footer__grid">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
         <%-- Brand Column (First, wider on desktop) --%>
-        <div class="footer__column footer__column--brand">
-          <div class="footer__brand">
-            <a href="${pageContext.request.contextPath}/" class="footer__brand-link" aria-label="IoT Bay - Home">
-              <img src="${pageContext.request.contextPath}/images/logo.png" alt="IoT Bay Logo" class="footer__brand-logo" />
-              <span class="footer__brand-text">IoT Bay</span>
+        <div class="space-y-6">
+          <div class="flex items-center gap-3">
+            <a href="${pageContext.request.contextPath}/" class="flex items-center gap-2 group" aria-label="IoT Bay - Home">
+              <div class="w-10 h-10 bg-brand-primary rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-brand-primary/20">
+                IoT
+              </div>
+              <span class="text-xl font-bold tracking-tight group-hover:text-brand-primary transition-colors">IoT Bay</span>
             </a>
-            <p class="footer__brand-description">
-              Your premier destination for innovative IoT devices and smart technology solutions.
-            </p>
           </div>
-          
-          <%-- Contact Information --%>
-          <div class="footer__contact">
-            <address class="footer__address">
-              <div class="footer__contact-item">
-                <jsp:include page="/components/atoms/icon/icon.jsp">
-                  <jsp:param name="name" value="email" />
-                  <jsp:param name="size" value="small" />
-                </jsp:include>
-                <a href="mailto:support@iotbay.com" class="footer__link">support@iotbay.com</a>
-              </div>
-              <div class="footer__contact-item">
-                <jsp:include page="/components/atoms/icon/icon.jsp">
-                  <jsp:param name="name" value="phone" />
-                  <jsp:param name="size" value="small" />
-                </jsp:include>
-                <a href="tel:18004688324" class="footer__link">1-800-IOT-TECH</a>
-              </div>
-            </address>
-          </div>
+          <p class="text-neutral-400 text-sm leading-relaxed">
+            Your premier destination for innovative IoT devices and smart technology solutions. Empowering developers and businesses since 2025.
+          </p>
           
           <%-- Social Media Links --%>
-          <div class="footer__social">
-            <span class="footer__social-label">Follow Us</span>
-            <div class="footer__social-links">
-              <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="GitHub">
-                <jsp:include page="/components/atoms/icon/icon.jsp">
-                  <jsp:param name="name" value="github" />
-                  <jsp:param name="size" value="medium" />
-                </jsp:include>
+          <div class="flex gap-4">
+              <a href="#" class="w-10 h-10 rounded-full bg-neutral-800 flex items-center justify-center text-neutral-400 hover:bg-brand-primary hover:text-white transition-all duration-300 hover:scale-110" aria-label="GitHub">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path></svg>
               </a>
-              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="LinkedIn">
-                <jsp:include page="/components/atoms/icon/icon.jsp">
-                  <jsp:param name="name" value="linkedin" />
-                  <jsp:param name="size" value="medium" />
-                </jsp:include>
+              <a href="#" class="w-10 h-10 rounded-full bg-neutral-800 flex items-center justify-center text-neutral-400 hover:bg-brand-primary hover:text-white transition-all duration-300 hover:scale-110" aria-label="Twitter">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path></svg>
               </a>
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" class="footer__social-link" aria-label="Twitter">
-                <jsp:include page="/components/atoms/icon/icon.jsp">
-                  <jsp:param name="name" value="twitter" />
-                  <jsp:param name="size" value="medium" />
-                </jsp:include>
+              <a href="#" class="w-10 h-10 rounded-full bg-neutral-800 flex items-center justify-center text-neutral-400 hover:bg-brand-primary hover:text-white transition-all duration-300 hover:scale-110" aria-label="LinkedIn">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" clip-rule="evenodd"></path></svg>
               </a>
-            </div>
           </div>
         </div>
         
-        <%-- Company Column --%>
-        <div class="footer__column">
-          <h3 class="footer__title">Company</h3>
-          <nav aria-label="Company links">
-            <ul class="footer__links">
-              <li><a href="${pageContext.request.contextPath}/about.jsp" class="footer__link">About Us</a></li>
-              <li><a href="${pageContext.request.contextPath}/contact.jsp" class="footer__link">Contact</a></li>
-              <li><a href="${pageContext.request.contextPath}/careers.jsp" class="footer__link">Careers</a></li>
-              <li><a href="${pageContext.request.contextPath}/blog.jsp" class="footer__link">Blog</a></li>
-            </ul>
-          </nav>
+        <%-- Shop Navigation --%>
+        <div>
+          <h3 class="text-white font-semibold text-lg mb-4">Shop</h3>
+          <ul class="space-y-3">
+            <li><a href="${pageContext.request.contextPath}/browse.jsp" class="text-neutral-400 hover:text-brand-primary transition-colors">All Products</a></li>
+            <li><a href="${pageContext.request.contextPath}/category-industrial.jsp" class="text-neutral-400 hover:text-brand-primary transition-colors">Industrial</a></li>
+            <li><a href="${pageContext.request.contextPath}/category-smarthome.jsp" class="text-neutral-400 hover:text-brand-primary transition-colors">Smart Home</a></li>
+            <li><a href="${pageContext.request.contextPath}/browse.jsp?featured=true" class="text-neutral-400 hover:text-brand-primary transition-colors">Featured</a></li>
+            <li><a href="${pageContext.request.contextPath}/browse.jsp?new=true" class="text-neutral-400 hover:text-brand-primary transition-colors">New Arrivals</a></li>
+          </ul>
         </div>
         
-        <%-- Products Column --%>
-        <div class="footer__column">
-          <h3 class="footer__title">Products</h3>
-          <nav aria-label="Product links">
-            <ul class="footer__links">
-              <li><a href="${pageContext.request.contextPath}/browse.jsp" class="footer__link">Browse All</a></li>
-              <li><a href="${pageContext.request.contextPath}/browse.jsp?featured=true" class="footer__link">Featured Products</a></li>
-              <li><a href="${pageContext.request.contextPath}/categories.jsp" class="footer__link">Categories</a></li>
-              <li><a href="${pageContext.request.contextPath}/browse.jsp?new=true" class="footer__link">New Arrivals</a></li>
+        <%-- Support Navigation --%>
+        <div>
+          <h3 class="text-white font-semibold text-lg mb-4">Support</h3>
+          <ul class="space-y-3">
+            <li><a href="${pageContext.request.contextPath}/help.jsp" class="text-neutral-400 hover:text-brand-primary transition-colors">Help Center</a></li>
+            <li><a href="${pageContext.request.contextPath}/shipping.jsp" class="text-neutral-400 hover:text-brand-primary transition-colors">Shipping & Returns</a></li>
+            <li><a href="${pageContext.request.contextPath}/warranty.jsp" class="text-neutral-400 hover:text-brand-primary transition-colors">Warranty Info</a></li>
+            <li><a href="${pageContext.request.contextPath}/contact.jsp" class="text-neutral-400 hover:text-brand-primary transition-colors">Contact Us</a></li>
+            <li><a href="${pageContext.request.contextPath}/faq.jsp" class="text-neutral-400 hover:text-brand-primary transition-colors">FAQ</a></li>
+          </ul>
+        </div>
+
+        <%-- Contact Info --%>
+        <div>
+            <h3 class="text-white font-semibold text-lg mb-4">Contact</h3>
+            <ul class="space-y-4">
+                <li class="flex items-start gap-3">
+                    <svg class="w-5 h-5 text-brand-primary mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    <span class="text-neutral-400 text-sm">123 IoT Street, Tech District<br>Sydney, NSW 2000, Australia</span>
+                </li>
+                <li class="flex items-center gap-3">
+                    <svg class="w-5 h-5 text-brand-primary shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                    <a href="mailto:support@iotbay.com" class="text-neutral-400 hover:text-white transition-colors text-sm">support@iotbay.com</a>
+                </li>
+                <li class="flex items-center gap-3">
+                    <svg class="w-5 h-5 text-brand-primary shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
+                    <a href="tel:+61212345678" class="text-neutral-400 hover:text-white transition-colors text-sm">+61 2 1234 5678</a>
+                </li>
             </ul>
-          </nav>
         </div>
-        
-        <%-- Support Column --%>
-        <div class="footer__column">
-          <h3 class="footer__title">Support</h3>
-          <nav aria-label="Support links">
-            <ul class="footer__links">
-              <li><a href="${pageContext.request.contextPath}/support.jsp" class="footer__link">Help Center</a></li>
-              <li><a href="${pageContext.request.contextPath}/shipping.jsp" class="footer__link">Shipping Info</a></li>
-              <li><a href="${pageContext.request.contextPath}/returns.jsp" class="footer__link">Returns & Refunds</a></li>
-              <li><a href="${pageContext.request.contextPath}/faq.jsp" class="footer__link">FAQ</a></li>
-            </ul>
-          </nav>
-        </div>
-        
-        <%-- Legal Column --%>
-        <div class="footer__column">
-          <h3 class="footer__title">Legal</h3>
-          <nav aria-label="Legal links">
-            <ul class="footer__links">
-              <li><a href="${pageContext.request.contextPath}/privacy.jsp" class="footer__link">Privacy Policy</a></li>
-              <li><a href="${pageContext.request.contextPath}/terms.jsp" class="footer__link">Terms of Service</a></li>
-              <li><a href="${pageContext.request.contextPath}/cookies.jsp" class="footer__link">Cookie Policy</a></li>
-            </ul>
-          </nav>
-        </div>
-      </div>
-      
-      <%-- Newsletter Signup Section --%>
-      <div class="footer__newsletter">
-        <div class="footer__newsletter-content">
-          <div class="footer__newsletter-text">
-            <h3 class="footer__newsletter-title">Stay Updated</h3>
-            <p class="footer__newsletter-description">Get the latest IoT solutions and exclusive offers delivered to your inbox.</p>
-          </div>
-          <form class="footer__newsletter-form" action="${pageContext.request.contextPath}/newsletter/subscribe" method="post">
-            <div class="footer__newsletter-input-wrapper">
-              <jsp:include page="/components/atoms/input/input.jsp">
-                <jsp:param name="type" value="email" />
-                <jsp:param name="name" value="email" />
-                <jsp:param name="id" value="newsletter-email" />
-                <jsp:param name="placeholder" value="Enter your email" />
-                <jsp:param name="required" value="true" />
-                <jsp:param name="ariaLabel" value="Email address for newsletter" />
-              </jsp:include>
-              <jsp:include page="/components/atoms/button/button.jsp">
-                <jsp:param name="text" value="Subscribe" />
-                <jsp:param name="type" value="primary" />
-                <jsp:param name="size" value="medium" />
-              </jsp:include>
-            </div>
-          </form>
-        </div>
-      </div>
     </div>
     
-    <%-- Footer Bottom --%>
-    <div class="footer__bottom">
-      <div class="footer__bottom-content">
-        <div class="footer__copyright">
-          <p class="footer__copyright-text">© 2025 IoT Bay. All rights reserved.</p>
-          <p class="footer__copyright-sub">University of Technology Sydney (UTS) - 41025 ISD Assignment 2</p>
+    <%-- Bottom Bar --%>
+    <div class="border-t border-neutral-800 pt-8 mt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div class="flex flex-col md:flex-row items-center gap-2 md:gap-6">
+            <p class="text-neutral-500 text-sm">
+                &copy; 2025 IoT Bay. All rights reserved.
+            </p>
+            <span class="hidden md:inline text-neutral-700">|</span>
+            <p class="text-neutral-600 text-xs">
+                University of Technology Sydney (UTS) - 41025 ISD Assignment 2
+            </p>
         </div>
-        <div class="footer__legal-links">
-          <a href="${pageContext.request.contextPath}/privacy.jsp" class="footer__legal-link">Privacy</a>
-          <span class="footer__legal-separator">•</span>
-          <a href="${pageContext.request.contextPath}/terms.jsp" class="footer__legal-link">Terms</a>
-          <span class="footer__legal-separator">•</span>
-          <a href="${pageContext.request.contextPath}/cookies.jsp" class="footer__legal-link">Cookies</a>
+        <div class="flex gap-6">
+            <a href="${pageContext.request.contextPath}/privacy.jsp" class="text-neutral-500 hover:text-white text-sm transition-colors">Privacy Policy</a>
+            <a href="${pageContext.request.contextPath}/terms.jsp" class="text-neutral-500 hover:text-white text-sm transition-colors">Terms of Service</a>
+            <a href="${pageContext.request.contextPath}/sitemap.jsp" class="text-neutral-500 hover:text-white text-sm transition-colors">Sitemap</a>
         </div>
-      </div>
     </div>
   </div>
-  
-  <%-- Back to Top Button --%>
-  <button id="backToTop" 
-          class="footer__back-to-top"
-          aria-label="Back to top">
-    <jsp:include page="/components/atoms/icon/icon.jsp">
-      <jsp:param name="name" value="arrow-up" />
-      <jsp:param name="size" value="medium" />
-    </jsp:include>
-  </button>
 </footer>
-
-<script>
-// Back to top functionality
-document.addEventListener('DOMContentLoaded', function() {
-  const backToTopButton = document.getElementById('backToTop');
-  if (!backToTopButton) return;
-  
-  window.addEventListener('scroll', function() {
-    if (window.pageYOffset > 300) {
-      backToTopButton.classList.add('footer__back-to-top--visible');
-    } else {
-      backToTopButton.classList.remove('footer__back-to-top--visible');
-    }
-  });
-  
-  backToTopButton.addEventListener('click', function() {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
-});
-</script>
 

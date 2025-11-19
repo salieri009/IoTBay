@@ -119,3 +119,12 @@
   flex-shrink: 0;
 }
 
+/* Accessibility: Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  .btn:hover:not(:disabled),
+  .btn:active:not(:disabled) {
+    transform: none;
+    transition: none;
+  }
+}
+

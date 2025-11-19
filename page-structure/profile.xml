@@ -30,25 +30,66 @@
       </section>
 
       <!-- {Profile Content - Two Column Layout} -->
-      <section name="profile-content" type="two-column">
+      <section name="profile-content" type="two-column" class="l-two-column l-spacing-lg">
+        <layout-structure>
+          <design>Two-column layout: Profile info (left) + Account settings sidebar (right)</design>
+          <desktop>
+            <left-column width="calc(100% - 320px)" min-width="600px" padding="0 24px 0 0"/>
+            <right-column width="320px" padding="0 0 0 24px" position="sticky" top="24px"/>
+          </desktop>
+          <tablet>
+            <layout>Stacked columns (1 column)</layout>
+            <spacing>24px gap between sections</spacing>
+          </tablet>
+          <mobile>
+            <layout>Single column, full width</layout>
+            <spacing>16px gap</spacing>
+          </mobile>
+        </layout-structure>
         
         <!-- {Left Column: Profile Information} -->
-        <column name="profile-info" width="65%">
+        <column name="profile-info" class="content-zone">
+          <component-size>
+            <width>Desktop: calc(100% - 320px), Mobile: 100%</width>
+            <padding>0</padding>
+          </component-size>
           
           <!-- {Personal Information Card} -->
-          <card name="personal-info">
-            <card-header>
-              <title>Personal Information</title>
+          <card name="personal-info" class="c-card c-card--bordered l-spacing-md">
+            <component-size>
+              <width>100%</width>
+              <padding>24px</padding>
+              <background>#FFFFFF</background>
+              <border-radius>8px</border-radius>
+              <box-shadow>0 1px 3px rgba(0,0,0,0.1)</box-shadow>
+              <margin-bottom:>24px</margin-bottom:>
+            </component-size>
+            <card-header class="flex justify-between items-center l-spacing-sm">
+              <component-size>
+                <padding-bottom:>16px</padding-bottom:>
+                <border-bottom:>1px solid var(--neutral-200)</border-bottom:>
+                <margin-bottom:>16px</margin-bottom:>
+              </component-size>
+              <title class="text-display-s">Personal Information</title>
               <action>
-                <button type="secondary" route="/updateProfile" text="Edit"/>
+                <button component="atoms/button" type="secondary" route="/updateProfile" text="Edit">
+                  <component-size>
+                    <button-height>36px</button-height>
+                    <padding:>0 16px</padding:>
+                  </component-size>
+                </button>
                 <!-- {Link to profile edit page} -->
               </action>
             </card-header>
             
             <card-content>
-              <info-row>
-                <label>Name</label>
-                <value>{user.firstName} {user.lastName}</value>
+              <info-row class="flex justify-between l-spacing-xs">
+                <component-size>
+                  <padding:>12px 0</padding:>
+                  <border-bottom:>1px solid var(--neutral-100)</border-bottom:>
+                </component-size>
+                <label class="text-body-m font-medium">Name</label>
+                <value class="text-body-m">{user.firstName} {user.lastName}</value>
               </info-row>
               
               <info-row>
@@ -72,30 +113,69 @@
           </card>
 
           <!-- {Shipping Addresses Card} -->
-          <card name="shipping-addresses">
-            <card-header>
-              <title>Shipping Addresses</title>
+          <card name="shipping-addresses" class="c-card c-card--bordered l-spacing-md">
+            <component-size>
+              <width>100%</width>
+              <padding>24px</padding>
+              <background>#FFFFFF</background>
+              <border-radius>8px</border-radius>
+              <margin-bottom:>24px</margin-bottom:>
+            </component-size>
+            <card-header class="flex justify-between items-center l-spacing-sm">
+              <component-size>
+                <padding-bottom:>16px</padding-bottom:>
+                <border-bottom:>1px solid var(--neutral-200)</border-bottom:>
+                <margin-bottom:>16px</margin-bottom:>
+              </component-size>
+              <title class="text-display-s">Shipping Addresses</title>
               <action>
-                <button type="primary" action="addAddress" text="Add Address"/>
+                <button component="atoms/button" type="primary" action="addAddress" text="Add Address">
+                  <component-size>
+                    <button-height>36px</button-height>
+                    <padding:>0 16px</padding:>
+                  </component-size>
+                </button>
               </action>
             </card-header>
             
             <card-content>
-              <addresses>
-                <address-item>
+              <addresses class="space-y-4">
+                <component-size>
+                  <gap:>16px between address items</gap:>
+                </component-size>
+                <address-item class="c-card c-card--bordered">
+                  <component-size>
+                    <width>100%</width>
+                    <padding:>20px</padding:>
+                    <background:>#F9FAFB</background:>
+                    <border-radius:>8px</border-radius:>
+                  </component-size>
                   <!-- {List of saved shipping addresses} -->
                   <address>
-                    <name>{address.fullName}</name>
-                    <street>{address.streetAddress}</street>
-                    <city-state-zip>{address.city}, {address.state} {address.zipCode}</city-state-zip>
-                    <country>{address.country}</country>
+                    <component-size>
+                      <gap:>8px between address lines</gap:>
+                      <margin-bottom:>12px</margin-bottom:>
+                    </component-size>
+                    <name class="text-body-m font-semibold">{address.fullName}</name>
+                    <street class="text-body-s">{address.streetAddress}</street>
+                    <city-state-zip class="text-body-s">{address.city}, {address.state} {address.zipCode}</city-state-zip>
+                    <country class="text-body-s">{address.country}</country>
                   </address>
-                  <actions>
-                    <button type="secondary" action="editAddress" text="Edit"/>
-                    <button type="secondary" action="deleteAddress" text="Delete"/>
-                    <button type="primary" condition="!isDefault" action="setDefault" text="Set as Default"/>
+                  <actions class="flex gap-2">
+                    <component-size>
+                      <button-height:>32px</button-height:>
+                      <gap:>8px between buttons</gap:>
+                    </component-size>
+                    <button component="atoms/button" type="secondary" size="sm" action="editAddress" text="Edit"/>
+                    <button component="atoms/button" type="secondary" size="sm" action="deleteAddress" text="Delete"/>
+                    <button component="atoms/button" type="primary" size="sm" condition="!isDefault" action="setDefault" text="Set as Default"/>
                   </actions>
-                  <badge condition="isDefault" type="default" text="Default"/>
+                  <badge component="atoms/badge" condition="isDefault" type="default" text="Default">
+                    <component-size>
+                      <badge-size:>Auto width, height: 24px</badge-size:>
+                      <position:>absolute top-4 right-4</position:>
+                    </component-size>
+                  </badge>
                 </address-item>
               </addresses>
               
@@ -141,31 +221,60 @@
         </column>
 
         <!-- {Right Column: Quick Actions & Stats} -->
-        <column name="sidebar" width="35%">
+        <column name="sidebar" class="summary-section l-sticky">
+          <component-size>
+            <width>Desktop: 320px (fixed), Mobile: 100%</width>
+            <padding>0</padding>
+            <position>sticky</position>
+            <top-offset>24px</top-offset>
+          </component-size>
           
           <!-- {Account Summary Card} -->
-          <card name="account-summary">
-            <card-header>
-              <title>Account Summary</title>
+          <card name="account-summary" class="c-card c-card--bordered l-spacing-md">
+            <component-size>
+              <width>100%</width>
+              <padding>24px</padding>
+              <background>#FFFFFF</background>
+              <border-radius>8px</border-radius>
+              <box-shadow>0 1px 3px rgba(0,0,0,0.1)</box-shadow>
+              <margin-bottom:>24px</margin-bottom:>
+            </component-size>
+            <card-header class="l-spacing-sm">
+              <component-size>
+                <padding-bottom:>16px</padding-bottom:>
+                <border-bottom:>1px solid var(--neutral-200)</border-bottom:>
+                <margin-bottom:>16px</margin-bottom:>
+              </component-size>
+              <title class="text-display-s">Account Summary</title>
             </card-header>
             
             <card-content>
-              <stats>
-                <stat>
-                  <label>Total Orders</label>
-                  <value>{orderCount}</value>
-                  <link route="/orders" text="View Orders"/>
+              <stats class="space-y-4">
+                <component-size>
+                  <gap:>16px between stat items</gap:>
+                </component-size>
+                <stat class="flex justify-between items-center">
+                  <component-size>
+                    <padding:>12px 0</padding:>
+                  </component-size>
+                  <label class="text-body-m">Total Orders</label>
+                  <div class="text-right">
+                    <value class="text-display-s">{orderCount}</value>
+                    <link component="atoms/button" type="link" route="/orders" text="View Orders" size="sm"/>
+                  </div>
                 </stat>
                 
-                <stat>
-                  <label>Wishlist Items</label>
-                  <value>{wishlistCount}</value>
-                  <link route="/wishlist" text="View Wishlist"/>
+                <stat class="flex justify-between items-center">
+                  <label class="text-body-m">Wishlist Items</label>
+                  <div class="text-right">
+                    <value class="text-display-s">{wishlistCount}</value>
+                    <link component="atoms/button" type="link" route="/wishlist" text="View Wishlist" size="sm"/>
+                  </div>
                 </stat>
                 
-                <stat>
-                  <label>Account Status</label>
-                  <value badge="active">{user.status}</value>
+                <stat class="flex justify-between items-center">
+                  <label class="text-body-m">Account Status</label>
+                  <value badge="active" component="atoms/badge">{user.status}</value>
                   <!-- {Active, Suspended, etc.} -->
                 </stat>
               </stats>
@@ -236,24 +345,60 @@
       </section>
 
       <!-- {Edit Form} -->
-      <section name="edit-form" type="centered" max-width="800px">
+      <section name="edit-form" type="centered" class="l-container">
+        <layout-structure>
+          <design>Centered single-column layout for profile edit form</design>
+          <container-width>max-width: 800px</container-width>
+          <padding>32px responsive</padding>
+        </layout-structure>
         
-        <form-card>
+        <form-card class="c-card c-card--elevated">
+          <component-size>
+            <width>100%</width>
+            <padding>40px</padding>
+            <background>#FFFFFF</background>
+            <border-radius>12px</border-radius>
+            <box-shadow>0 4px 16px rgba(0,0,0,0.1)</box-shadow>
+          </component-size>
           <!-- {Form card container} -->
           
           <!-- {Personal Information Section} -->
-          <form-section name="personal-info">
-            <title>Personal Information</title>
+          <form-section name="personal-info" class="l-spacing-lg">
+            <component-size>
+              <padding-bottom:>32px</padding-bottom:>
+              <border-bottom:>1px solid var(--neutral-200)</border-bottom:>
+              <margin-bottom:>32px</margin-bottom:>
+            </component-size>
+            <title class="text-display-s l-spacing-md">Personal Information</title>
             
-            <field-row>
-              <field-group name="firstName" width="50%">
+            <field-row class="flex gap-4">
+              <component-size>
+                <gap:>16px between fields</gap:>
+              </component-size>
+              <field-group name="firstName" component="molecules/form-field/form-field.jsp" class="flex-1">
+                <component-size>
+                  <width>50%</width>
+                </component-size>
                 <label>First Name</label>
-                <input type="text" name="firstName" value="{user.firstName}" required="true"/>
+                <input type="text" name="firstName" value="{user.firstName}" required="true">
+                  <component-size>
+                    <height>44px</height>
+                    <padding:>12px 16px</padding:>
+                  </component-size>
+                </input>
               </field-group>
               
-              <field-group name="lastName" width="50%">
+              <field-group name="lastName" component="molecules/form-field/form-field.jsp" class="flex-1">
+                <component-size>
+                  <width>50%</width>
+                </component-size>
                 <label>Last Name</label>
-                <input type="text" name="lastName" value="{user.lastName}" required="true"/>
+                <input type="text" name="lastName" value="{user.lastName}" required="true">
+                  <component-size>
+                    <height>44px</height>
+                    <padding:>12px 16px</padding:>
+                  </component-size>
+                </input>
               </field-group>
             </field-row>
             
@@ -312,10 +457,26 @@
           </form-section>
 
           <!-- {Form Actions} -->
-          <form-actions>
-            <button type="secondary" route="/profile" text="Cancel"/>
+          <form-actions class="flex justify-end gap-3 l-spacing-lg">
+            <component-size>
+              <gap:>12px between buttons</gap:>
+              <margin-top:>32px</margin-top:>
+              <padding-top:>32px</padding-top:>
+              <border-top:>1px solid var(--neutral-200)</border-top:>
+            </component-size>
+            <button component="atoms/button" type="secondary" route="/profile" text="Cancel">
+              <component-size>
+                <button-height:>44px</button-height:>
+                <padding:>0 24px</padding:>
+              </component-size>
+            </button>
             <!-- {Cancel and return to profile view} -->
-            <button type="primary" action="saveProfile" text="Save Changes"/>
+            <button component="atoms/button" type="primary" action="saveProfile" text="Save Changes">
+              <component-size>
+                <button-height:>44px</button-height:>
+                <padding:>0 24px</padding:>
+              </component-size>
+            </button>
             <!-- {Save profile changes} -->
           </form-actions>
           

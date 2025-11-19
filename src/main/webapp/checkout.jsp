@@ -225,103 +225,94 @@
                                 
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div class="form-group md:col-span-2">
-                                    <label for="fullName" class="form-label form-label--required">Full Name</label>
-                                    <input type="text" id="fullName" name="fullName" 
-                                           value="${user.firstName} ${user.lastName}" 
-                                           class="form-input" 
-                                           placeholder="John Doe"
-                                           required
-                                           aria-describedby="fullName-help">
-                                    <div id="fullName-help" class="form-help text-xs text-neutral-500 mt-1">
-                                        Enter the recipient's full name
-                                    </div>
+                                    <jsp:include page="/components/molecules/form-field/form-field.jsp">
+                                        <jsp:param name="label" value="Full Name" />
+                                        <jsp:param name="name" value="fullName" />
+                                        <jsp:param name="value" value="${user.firstName} ${user.lastName}" />
+                                        <jsp:param name="placeholder" value="John Doe" />
+                                        <jsp:param name="required" value="true" />
+                                        <jsp:param name="helpText" value="Enter the recipient's full name" />
+                                    </jsp:include>
                                 </div>
                                 
                                 <div class="form-group md:col-span-2">
-                                    <label for="email" class="form-label form-label--required">Email Address</label>
-                                    <input type="email" id="email" name="email" 
-                                           value="${user.email}" 
-                                           class="form-input" 
-                                           placeholder="your.email@example.com"
-                                           required
-                                           aria-describedby="email-help"
-                                           onblur="validateBusinessEmail(this)">
-                                    <div id="email-help" class="form-help text-xs text-neutral-500 mt-1">
-                                        For order confirmation and tracking
-                                    </div>
+                                    <jsp:include page="/components/molecules/form-field/form-field.jsp">
+                                        <jsp:param name="label" value="Email Address" />
+                                        <jsp:param name="type" value="email" />
+                                        <jsp:param name="name" value="email" />
+                                        <jsp:param name="value" value="${user.email}" />
+                                        <jsp:param name="placeholder" value="your.email@example.com" />
+                                        <jsp:param name="required" value="true" />
+                                        <jsp:param name="helpText" value="For order confirmation and tracking" />
+                                        <jsp:param name="attributes" value="onblur='validateBusinessEmail(this)'" />
+                                    </jsp:include>
                                     <div id="email-error" class="form-error text-xs text-error mt-1 hidden"></div>
                                 </div>
                                 
                                 <div class="form-group md:col-span-2">
-                                    <label for="phone" class="form-label form-label--required">Phone Number</label>
-                                    <input type="tel" id="phone" name="phone" 
-                                           value="${empty user.phone ? '' : user.phone}" 
-                                           class="form-input" 
-                                           placeholder="+1 (555) 123-4567"
-                                           pattern="[+]?[0-9\s\-\(\)]+"
-                                           required
-                                           aria-describedby="phone-help"
-                                           oninput="formatPhoneNumber(this)">
-                                    <div id="phone-help" class="form-help text-xs text-neutral-500 mt-1">
-                                        Format: +1 (555) 123-4567
-                                    </div>
+                                    <jsp:include page="/components/molecules/form-field/form-field.jsp">
+                                        <jsp:param name="label" value="Phone Number" />
+                                        <jsp:param name="type" value="tel" />
+                                        <jsp:param name="name" value="phone" />
+                                        <jsp:param name="value" value="${empty user.phone ? '' : user.phone}" />
+                                        <jsp:param name="placeholder" value="+1 (555) 123-4567" />
+                                        <jsp:param name="required" value="true" />
+                                        <jsp:param name="helpText" value="Format: +1 (555) 123-4567" />
+                                        <jsp:param name="attributes" value="pattern='[+]?[0-9\\s\\-\\(\\\\)]+' oninput='formatPhoneNumber(this)'" />
+                                    </jsp:include>
                                 </div>
                                 
                                 <div class="form-group md:col-span-2">
-                                    <label for="address1" class="form-label form-label--required">Address Line 1</label>
-                                    <input type="text" id="address1" name="address1" 
-                                           value="${empty user.addressLine1 ? '' : user.addressLine1}" 
-                                           class="form-input" 
-                                           placeholder="Street address, P.O. box, company name" 
-                                           required
-                                           aria-describedby="address1-help">
-                                    <div id="address1-help" class="form-help text-xs text-neutral-500 mt-1">
-                                        Street address or P.O. box
-                                    </div>
+                                    <jsp:include page="/components/molecules/form-field/form-field.jsp">
+                                        <jsp:param name="label" value="Address Line 1" />
+                                        <jsp:param name="name" value="address1" />
+                                        <jsp:param name="value" value="${empty user.addressLine1 ? '' : user.addressLine1}" />
+                                        <jsp:param name="placeholder" value="Street address, P.O. box, company name" />
+                                        <jsp:param name="required" value="true" />
+                                        <jsp:param name="helpText" value="Street address or P.O. box" />
+                                    </jsp:include>
                                 </div>
                                 
                                 <div class="form-group md:col-span-2">
-                                    <label for="address2" class="form-label">Address Line 2 <span class="text-neutral-500 text-sm">(Optional)</span></label>
-                                    <input type="text" id="address2" name="address2" 
-                                           value="${empty user.addressLine2 ? '' : user.addressLine2}" 
-                                           class="form-input" 
-                                           placeholder="Apartment, suite, unit, building, floor, etc."
-                                           aria-describedby="address2-help">
-                                    <div id="address2-help" class="form-help text-xs text-neutral-500 mt-1">
-                                        Additional address information
-                                    </div>
+                                    <jsp:include page="/components/molecules/form-field/form-field.jsp">
+                                        <jsp:param name="label" value="Address Line 2 (Optional)" />
+                                        <jsp:param name="name" value="address2" />
+                                        <jsp:param name="value" value="${empty user.addressLine2 ? '' : user.addressLine2}" />
+                                        <jsp:param name="placeholder" value="Apartment, suite, unit, building, floor, etc." />
+                                        <jsp:param name="helpText" value="Additional address information" />
+                                    </jsp:include>
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="city" class="form-label form-label--required">City</label>
-                                    <input type="text" id="city" name="city" 
-                                           value="${empty user.city ? '' : user.city}"
-                                           class="form-input" 
-                                           placeholder="New York"
-                                           required>
+                                    <jsp:include page="/components/molecules/form-field/form-field.jsp">
+                                        <jsp:param name="label" value="City" />
+                                        <jsp:param name="name" value="city" />
+                                        <jsp:param name="value" value="${empty user.city ? '' : user.city}" />
+                                        <jsp:param name="placeholder" value="New York" />
+                                        <jsp:param name="required" value="true" />
+                                    </jsp:include>
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="state" class="form-label form-label--required">State/Province</label>
-                                    <input type="text" id="state" name="state" 
-                                           value="${empty user.state ? '' : user.state}"
-                                           class="form-input" 
-                                           placeholder="NY"
-                                           required>
+                                    <jsp:include page="/components/molecules/form-field/form-field.jsp">
+                                        <jsp:param name="label" value="State/Province" />
+                                        <jsp:param name="name" value="state" />
+                                        <jsp:param name="value" value="${empty user.state ? '' : user.state}" />
+                                        <jsp:param name="placeholder" value="NY" />
+                                        <jsp:param name="required" value="true" />
+                                    </jsp:include>
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="postalCode" class="form-label form-label--required">Postal/ZIP Code</label>
-                                    <input type="text" id="postalCode" name="postalCode" 
-                                           value="${empty user.postalCode ? '' : user.postalCode}" 
-                                           class="form-input" 
-                                           placeholder="10001"
-                                           pattern="[0-9]{5}(-[0-9]{4})?"
-                                           required
-                                           aria-describedby="postalCode-help">
-                                    <div id="postalCode-help" class="form-help text-xs text-neutral-500 mt-1">
-                                        5-digit ZIP code or ZIP+4
-                                    </div>
+                                    <jsp:include page="/components/molecules/form-field/form-field.jsp">
+                                        <jsp:param name="label" value="Postal/ZIP Code" />
+                                        <jsp:param name="name" value="postalCode" />
+                                        <jsp:param name="value" value="${empty user.postalCode ? '' : user.postalCode}" />
+                                        <jsp:param name="placeholder" value="10001" />
+                                        <jsp:param name="required" value="true" />
+                                        <jsp:param name="helpText" value="5-digit ZIP code or ZIP+4" />
+                                        <jsp:param name="attributes" value="pattern='[0-9]{5}(-[0-9]{4})?'" />
+                                    </jsp:include>
                                 </div>
                                 
                                 <div class="form-group">
@@ -630,21 +621,16 @@
                             </div>
                             
                             <!-- Place Order Button -->
-                            <button type="submit" 
-                                    id="placeOrderBtn"
-                                    form="checkoutForm"
-                                    class="btn btn--primary btn--lg w-full"
-                                    onclick="confirmPlaceOrder(event)"
-                                    aria-label="Place order">
-                                <span id="placeOrderText">Place Order</span>
-                                <span id="placeOrderLoading" class="hidden">
-                                    <svg class="animate-spin h-5 w-5 inline ml-2" fill="none" viewBox="0 0 24 24" aria-hidden="true">
-                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                    </svg>
-                                    Processing...
-                                </span>
-                            </button>
+                            <jsp:include page="/components/atoms/button/button.jsp">
+                                <jsp:param name="type" value="primary" />
+                                <jsp:param name="size" value="large" />
+                                <jsp:param name="fullWidth" value="true" />
+                                <jsp:param name="htmlType" value="submit" />
+                                <jsp:param name="text" value="<span id='placeOrderText'>Place Order</span><span id='placeOrderLoading' class='hidden'><svg class='animate-spin h-5 w-5 inline ml-2' fill='none' viewBox='0 0 24 24' aria-hidden='true'><circle class='opacity-25' cx='12' cy='12' r='10' stroke='currentColor' stroke-width='4'></circle><path class='opacity-75' fill='currentColor' d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'></path></svg> Processing...</span>" />
+                                <jsp:param name="attributes" value="id='placeOrderBtn' form='checkoutForm'" />
+                                <jsp:param name="onclick" value="confirmPlaceOrder(event)" />
+                                <jsp:param name="ariaLabel" value="Place order" />
+                            </jsp:include>
                             
                             <!-- Back to Cart Link -->
                             <div class="mt-4 text-center">

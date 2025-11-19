@@ -33,10 +33,29 @@
     </section>
 
     <!-- {Main Checkout Content - Two Column Layout} -->
-    <section name="checkout-content" type="two-column">
+    <section name="checkout-content" type="two-column" class="l-two-column">
+      <layout-structure>
+        <design>Two-column layout: Checkout forms (left) + Order summary sidebar (right)</design>
+        <desktop>
+          <left-column width="calc(100% - 420px)" min-width="600px" padding="0 32px 0 0"/>
+          <right-column width="420px" padding="0 0 0 32px" position="sticky" top="24px"/>
+        </desktop>
+        <tablet>
+          <layout>Stacked columns (1 column)</layout>
+          <spacing>32px gap between sections</spacing>
+        </tablet>
+        <mobile>
+          <layout>Single column, full width</layout>
+          <spacing>24px gap</spacing>
+        </mobile>
+      </layout-structure>
       
       <!-- {Left Column: Checkout Forms} -->
-      <column name="checkout-forms" width="60%">
+      <column name="checkout-forms" class="content-zone">
+        <component-size>
+          <width>Desktop: calc(100% - 420px), Mobile: 100%</width>
+          <padding>0</padding>
+        </component-size>
         
         <!-- {Step 1: Shipping Information} -->
         <form-step name="shipping" active="true">
@@ -220,11 +239,21 @@
       </column>
 
       <!-- {Right Column: Order Summary Sidebar} -->
-      <column name="order-summary-sidebar" width="40%">
+      <column name="order-summary-sidebar" class="summary-section l-sticky">
+        <component-size>
+          <width>Desktop: 420px (fixed), Mobile: 100%</width>
+          <padding>24px (8px × 3)</padding>
+          <background>#FFFFFF</background>
+          <border-radius>8px</border-radius>
+          <box-shadow>0 2px 8px rgba(0,0,0,0.1)</box-shadow>
+          <position>sticky</position>
+          <top-offset>24px</top-offset>
+          <max-height>calc(100vh - 48px)</max-height>
+        </component-size>
         
-        <summary-card sticky="true">
+        <summary-card class="summary-section">
           <!-- {Sticky order summary that stays visible while scrolling} -->
-          <title>Order Summary</title>
+          <title class="summary-section__title">Order Summary</title>
           
           <items-preview>
             <!-- {Compact list of items in order} -->

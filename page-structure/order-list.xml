@@ -59,28 +59,55 @@
       </toolbar>
 
       <!-- {Orders List} -->
-      <orders-list>
+      <orders-list class="l-spacing-md">
+        <component-size>
+          <gap>16px between order items</gap>
+        </component-size>
         
-        <order-item>
+        <order-item class="c-card c-card--bordered">
+          <component-size>
+            <width>100%</width>
+            <padding>24px</padding>
+            <margin-bottom:>16px</margin-bottom:>
+            <background>#FFFFFF</background>
+            <border-radius>8px</border-radius>
+            <box-shadow>0 1px 3px rgba(0,0,0,0.1)</box-shadow>
+          </component-size>
           <!-- {Each order in the list} -->
           
           <!-- {Order Header} -->
-          <order-header>
+          <order-header class="flex justify-between items-start l-spacing-sm">
+            <component-size>
+              <padding-bottom:>16px</padding-bottom:>
+              <border-bottom:>1px solid var(--neutral-200)</border-bottom:>
+            </component-size>
             <order-info>
-              <order-number>Order #{order.orderNumber}</order-number>
+              <component-size>
+                <gap:>8px between elements</gap:>
+              </component-size>
+              <order-number class="text-display-s">Order #{order.orderNumber}</order-number>
               <!-- {Order number: ORD-2025-001234} -->
-              <order-date>{order.orderDate}</order-date>
+              <order-date class="text-body-s">{order.orderDate}</order-date>
               <!-- {Order date: November 10, 2025} -->
             </order-info>
             
             <order-status>
-              <badge type="{order.status}" text="{order.statusLabel}"/>
+              <badge component="atoms/badge" type="{order.status}" text="{order.statusLabel}">
+                <component-size>
+                  <badge-size>Auto width, height: 28px</badge-size>
+                  <padding:>6px 12px</padding:>
+                </component-size>
+              </badge>
               <!-- {Status badge: Pending, Processing, Shipped, Delivered, Cancelled} -->
             </order-status>
             
-            <order-total>
-              <label>Total</label>
-              <value currency="USD">{order.total}</value>
+            <order-total class="text-right">
+              <component-size>
+                <font-size:>18px</font-size:>
+                <font-weight:>600</font-weight:>
+              </component-size>
+              <label class="text-body-s">Total</label>
+              <value currency="USD" class="text-display-m">{order.total}</value>
             </order-total>
           </order-header>
           

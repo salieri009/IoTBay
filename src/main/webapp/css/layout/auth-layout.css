@@ -1,0 +1,39 @@
+/* =====================================
+   Layout: Authentication Pages Layout
+   =====================================
+   
+   Skeleton-Refactor Rules:
+   - PC: max-width 440px, padding 40px
+   - Mobile: max-width 100%, padding 20px
+*/
+
+/* Auth Card Container */
+.auth-card-container {
+  width: 100%;
+  max-width: 100%; /* Mobile: 100% */
+  padding: 20px; /* Mobile: 20px (half of PC padding) */
+}
+
+@media (min-width: 768px) {
+  .auth-card-container {
+    max-width: 440px; /* PC: 440px */
+    padding: 40px; /* PC: 40px */
+  }
+}
+
+/* Auth Card */
+.auth-card {
+  width: 100%;
+  background: #FFFFFF;
+  border-radius: 12px;
+  border: 1px solid var(--neutral-200);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  padding: 20px; /* Mobile: 20px */
+}
+
+@media (min-width: 768px) {
+  .auth-card {
+    padding: 40px; /* PC: 40px */
+  }
+}
+

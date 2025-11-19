@@ -22,7 +22,7 @@
   <link rel="icon" type="image/x-icon" href="<c:url value='/favicon.ico' />">
   
   <!-- Stylesheets -->
-  <link rel="stylesheet" href="<c:url value='/css/modern-theme.css' />">
+  <link rel="stylesheet" href="<c:url value='/css/style.css' />">
   
   <c:if test="${customCSS != null}">
     <link rel="stylesheet" href="<c:url value='/css/${customCSS}' />">

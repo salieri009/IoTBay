@@ -1,0 +1,87 @@
+/* =====================================
+   Layout: Admin Dashboard Layout
+   =====================================
+   
+   Skeleton-Refactor Rules:
+   - Sidebar Width: 256px (Fixed)
+   - Main Content: calc(100vw - 256px)
+   - Mobile: Sidebar overlay (width: 0 -> 100%)
+*/
+
+/* Admin Layout Container */
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--neutral-50) 0%, var(--neutral-100) 100%);
+}
+
+/* Admin Sidebar */
+.admin-sidebar {
+  width: 256px; /* Fixed width (skeleton-refactor) */
+  min-height: 100vh;
+  background: #1F2937;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: var(--z-sidebar);
+  padding: 24px;
+  overflow-y: auto;
+  transition: transform 0.3s ease;
+}
+
+/* Admin Main Content */
+.admin-main {
+  width: calc(100vw - 256px); /* Variable width (skeleton-refactor) */
+  margin-left: 256px; /* Sidebar width */
+  padding: 32px;
+  transition: margin-left 0.3s ease;
+}
+
+/* Mobile: Sidebar Overlay */
+@media (max-width: 768px) {
+  .admin-sidebar {
+    width: 0;
+    transform: translateX(-100%);
+  }
+  
+  .admin-sidebar--open {
+    width: 100%;
+    transform: translateX(0);
+  }
+  
+  .admin-main {
+    width: 100vw;
+    margin-left: 0;
+  }
+  
+  /* Overlay backdrop when sidebar is open */
+  .admin-sidebar--open::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: calc(var(--z-sidebar) - 1);
+  }
+}
+
+/* Sidebar Toggle Button (Mobile) */
+.admin-sidebar-toggle {
+  display: none;
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: calc(var(--z-sidebar) + 1);
+  background: #1F2937;
+  color: #FFFFFF;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .admin-sidebar-toggle {
+    display: block;
+  }
+}
+

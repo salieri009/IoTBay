@@ -1,192 +1,205 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
-  {IoTBay Homepage Structure Documentation}
-  {This XML file describes the structure and context of the index.jsp homepage}
-  {Purpose: Provide AI systems with clear understanding of page layout, components, and refactoring context}
+  {IoTBay Homepage Structure}
+  {Container-Centric Design with Bento Grid System}
+  {Purpose: Document homepage layout, component hierarchy, and visual grouping}
 -->
 <page name="index" type="homepage" jsp-file="index.jsp">
   
-  <!-- {Page Metadata} -->
   <metadata>
     <title>IoTBay - IoT Device Marketplace</title>
     <description>Homepage for IoTBay e-commerce platform</description>
     <route>/</route>
     <template>t:base</template>
-    <!-- {t:base is the base layout tag that provides header, footer, and main content wrapper} -->
   </metadata>
 
-  <!-- {Page Structure - Top to Bottom} -->
+  <layout-system>
+    <container>l-container</container>
+    <spacing-base>8px</spacing-base>
+    <grid-system>12-column (l-grid)</grid-system>
+  </layout-system>
+
   <structure>
     
-    <!-- {Header Section - Reusable component included via JSP include} -->
-    <section name="header" type="component" source="components/header.jsp">
-      <!-- {Header contains: logo, navigation menu, search, user menu, cart icon} -->
+    <!-- {Header Organism} -->
+    <section name="header" component="organisms/header/header.jsp" class="header" z-index="var(--z-header)">
       <components>
-        <component name="logo" type="branding">
-          <!-- {Logo links to homepage, contains IoTBay branding} -->
-        </component>
-        <component name="navigation" type="menu">
-          <!-- {Main navigation: Home, Browse, Categories, About, Contact} -->
-          <items>
-            <item name="home" route="/" active="true"/>
-            <item name="browse" route="/browse"/>
-            <item name="categories" route="/categories"/>
-            <item name="about" route="/about"/>
-            <item name="contact" route="/contact"/>
-          </items>
-        </component>
-        <component name="search" type="search-overlay">
-          <!-- {Full-screen search overlay triggered by search icon} -->
-        </component>
-        <component name="user-menu" type="dropdown">
-          <!-- {User menu: Profile, Orders, Logout (if logged in) or Login/Register (if not)} -->
-        </component>
-        <component name="cart" type="cart-icon">
-          <!-- {Cart icon with item count badge, links to cart page} -->
-        </component>
+        <logo component="atoms/icon" class="header__brand"/>
+        <navigation component="molecules/navigation-item" class="header__nav"/>
+        <search component="molecules/search-form" class="header__search" z-index="var(--z-dropdown)"/>
+        <cart-icon component="atoms/icon" class="header__cart-link"/>
+        <user-menu component="molecules/dropdown" class="header__user-menu" z-index="var(--z-dropdown)"/>
       </components>
     </section>
 
-    <!-- {Hero Section - Main banner/CTA area} -->
-    <section name="hero" type="masthead">
-      <!-- {Hero section uses components/masthead.jsp with title, subtitle, and CTA buttons} -->
-      <content>
-        <title>Welcome to IoTBay</title>
-        <!-- {Main headline introducing the platform} -->
-        <subtitle>Your trusted marketplace for IoT devices and components</subtitle>
-        <!-- {Supporting text explaining value proposition} -->
-        <actions>
-          <button type="primary" route="/browse" text="Browse Products"/>
-          <!-- {Primary CTA: Browse products} -->
-          <button type="secondary" route="/about" text="Learn More"/>
-          <!-- {Secondary CTA: Learn about platform} -->
-        </actions>
-      </content>
-    </section>
-
-    <!-- {Category Navigation - Quick access to product categories} -->
-    <section name="categories" type="category-grid">
-      <!-- {Grid of category cards: Industrial, Warehouse, Agriculture, Smart Home} -->
-      <categories>
-        <category name="industrial" route="/category-industrial">
-          <!-- {Industrial IoT devices category} -->
-          <icon>industrial-icon</icon>
-          <title>Industrial</title>
-          <description>Industrial automation and monitoring solutions</description>
-        </category>
-        <category name="warehouse" route="/category-warehouse">
-          <!-- {Warehouse management IoT devices} -->
-          <icon>warehouse-icon</icon>
-          <title>Warehouse</title>
-          <description>Warehouse management and logistics IoT</description>
-        </category>
-        <category name="agriculture" route="/category-agriculture">
-          <!-- {Agricultural IoT solutions} -->
-          <icon>agriculture-icon</icon>
-          <title>Agriculture</title>
-          <description>Smart farming and agricultural monitoring</description>
-        </category>
-        <category name="smarthome" route="/category-smarthome">
-          <!-- {Smart home IoT devices} -->
-          <icon>smarthome-icon</icon>
-          <title>Smart Home</title>
-          <description>Home automation and smart living solutions</description>
-        </category>
-      </categories>
-    </section>
-
-    <!-- {Featured Products - Highlighted product showcase} -->
-    <section name="featured-products" type="product-grid">
-      <!-- {Grid of product cards showing featured/popular items} -->
-      <layout>
-        <grid columns="4" responsive="true">
-          <!-- {4 columns on desktop, responsive on mobile/tablet} -->
-        </grid>
-      </layout>
-      <products>
-        <product-card>
-          <!-- {Product card component: image, name, price, quick view, add to cart} -->
-          <image source="/images/products/{productId}.png" alt="{productName}"/>
-          <name>{productName}</name>
-          <category>{categoryName}</category>
-          <price currency="USD">{price}</price>
-          <stock status="{inStock|lowStock|outOfStock}"/>
+    <!-- {Hero Section} -->
+    <section name="hero" class="section-container section-container--white">
+      <container class="l-container">
+        <content class="section-container__header">
+          <title class="section-container__title">{Welcome to IoTBay}</title>
+          <description class="section-container__description">{Value proposition}</description>
           <actions>
-            <button type="quick-view" action="showProductModal"/>
-            <button type="add-to-cart" action="addToCart"/>
+            <button component="atoms/button" type="primary" route="/browse" text="Browse Products"/>
+            <button component="atoms/button" type="outline" route="/about" text="Learn More"/>
           </actions>
-        </product-card>
-      </products>
+        </content>
+      </container>
     </section>
 
-    <!-- {Footer Section - Reusable component} -->
-    <section name="footer" type="component" source="components/footer.jsp">
-      <!-- {Footer contains: links, contact info, newsletter, social media} -->
-      <components>
-        <component name="links" type="footer-nav">
-          <!-- {Footer navigation: About, Contact, Privacy, Terms, Support} -->
-        </component>
-        <component name="contact" type="contact-info">
-          <!-- {Contact information: email, phone, address} -->
-        </component>
-        <component name="newsletter" type="newsletter-form">
-          <!-- {Newsletter subscription form} -->
-        </component>
-        <component name="social" type="social-links">
-          <!-- {Social media links: Facebook, Twitter, LinkedIn} -->
-        </component>
-      </components>
+    <!-- {Category Grid} -->
+    <section name="categories" class="section-container">
+      <container class="l-container">
+        <component-size>
+          <container-width>max-width: 1400px</container-width>
+          <padding>32px (8px × 4) responsive</padding>
+        </component-size>
+        <grid class="l-grid l-grid--gap-medium">
+          <grid-structure>
+            <design>4-column grid for category cards</design>
+            <mobile>1 column (l-grid__col-12)</mobile>
+            <tablet>2 columns (l-grid__col-md-6)</tablet>
+            <desktop>4 columns (l-grid__col-lg-3)</desktop>
+            <gap>24px (8px × 3) between cards</gap>
+          </grid-structure>
+          <category-card class="l-grid__col-12 l-grid__col-md-6 l-grid__col-lg-3">
+            <component-size>
+              <width>Mobile: 100%, Tablet: 50%, Desktop: 25% (3 columns)</width>
+              <height>200px (fixed height for consistency)</height>
+              <padding>24px</padding>
+              <border-radius>8px</border-radius>
+            </component-size>
+            <card class="c-product-card">
+              <image class="c-product-card__image"/>
+              <body class="c-product-card__body">
+                <title class="c-product-card__title">{Category Name}</title>
+                <link route="/category-{name}"/>
+              </body>
+            </card>
+          </category-card>
+        </grid>
+      </container>
+    </section>
+
+    <!-- {Featured Products: Bento Grid} -->
+    <section name="featured-products" class="section-container section-container--white">
+      <container class="l-container">
+        <header class="section-container__header">
+          <title class="section-container__title">Featured IoT Products</title>
+          <description class="section-container__description">Handpicked devices for professionals</description>
+        </header>
+        
+        <!-- {Skeleton Loading State} -->
+        <skeleton-loading id="featured-products-skeleton" class="l-grid l-grid--gap-medium hidden">
+          <skeleton component="atoms/skeleton" type="card" class="l-grid__col-12 l-grid__col-md-6 l-grid__col-lg-3"/>
+        </skeleton-loading>
+        
+        <!-- {Product Grid} -->
+        <product-grid id="featured-products-grid" class="l-grid l-grid--gap-medium">
+          <grid-structure>
+            <design>4-column Bento Grid for featured products</design>
+            <mobile>1 column (l-grid__col-12), card width: 100%</mobile>
+            <tablet>2 columns (l-grid__col-md-6), card width: calc(50% - 12px)</tablet>
+            <desktop>4 columns (l-grid__col-lg-3), card width: calc(25% - 18px)</desktop>
+            <gap>24px (8px × 3) between cards</gap>
+          </grid-structure>
+          <product-card class="l-grid__col-12 l-grid__col-md-6 l-grid__col-lg-3">
+            <component-size>
+              <width>Mobile: 100%, Tablet: calc(50% - 12px), Desktop: calc(25% - 18px)</width>
+              <min-height>320px</min-height>
+              <padding>16px</padding>
+              <border-radius>8px</border-radius>
+              <box-shadow>0 2px 8px rgba(0,0,0,0.08)</box-shadow>
+            </component-size>
+            <card class="c-product-card">
+              <image class="c-product-card__image">
+                <component-size>
+                  <width>100%</width>
+                  <height>180px (aspect ratio: 16:9)</height>
+                  <object-fit>cover</object-fit>
+                </component-size>
+              </image>
+              <body class="c-product-card__body">
+                <component-size>
+                  <padding>16px</padding>
+                  <gap>8px between elements</gap>
+                </component-size>
+                <title class="c-product-card__title">{product.name}</title>
+                <price class="c-product-card__price">${price}</price>
+                <actions class="c-product-card__actions">
+                  <component-size>
+                    <button-height>36px</button-height>
+                    <gap>8px between buttons</gap>
+                  </component-size>
+                  <button component="atoms/button" type="outline" text="View Details"/>
+                  <button component="atoms/button" type="primary" action="addToCart" optimistic-ui="true"/>
+                </actions>
+              </body>
+            </card>
+          </product-card>
+        </product-grid>
+      </container>
+    </section>
+
+    <!-- {Footer Organism} -->
+    <section name="footer" component="organisms/footer/footer.jsp" class="footer" z-index="var(--z-footer)">
+      <structure>
+        <brand-column class="footer__column--brand">
+          <logo class="footer__brand"/>
+          <description class="footer__brand-description"/>
+          <contact class="footer__contact"/>
+          <social class="footer__social"/>
+        </brand-column>
+        <doormat-nav class="footer__column">
+          <title>Shop</title>
+          <links>Home, Browse Products, Categories, Featured, New Arrivals</links>
+        </doormat-nav>
+        <utility-links class="footer__column">
+          <title>Customer Service</title>
+          <links>Contact Us, Help Center, Shipping Info, Returns, FAQ</links>
+        </utility-links>
+        <secondary-tasks class="footer__column">
+          <title>About</title>
+          <links>About Us, Careers, Blog, Partners, Developer Resources</links>
+        </secondary-tasks>
+        <legal class="footer__column">
+          <title>Legal</title>
+          <links>Privacy Policy, Terms of Service, Cookie Policy, Accessibility</links>
+        </legal>
+        <newsletter class="footer__newsletter">
+          <form component="molecules/search-form"/>
+        </newsletter>
+        <bottom class="footer__bottom">
+          <copyright class="footer__copyright"/>
+          <legal-links class="footer__legal-links"/>
+        </bottom>
+      </structure>
     </section>
 
   </structure>
 
-  <!-- {Design System Tokens Used} -->
+  <components>
+    <atomic>
+      <atom name="button" path="components/atoms/button/button.jsp"/>
+      <atom name="icon" path="components/atoms/icon/icon.jsp"/>
+      <atom name="skeleton" path="components/atoms/skeleton/skeleton.jsp"/>
+    </atomic>
+    <molecular>
+      <molecule name="navigation-item" path="components/molecules/navigation-item/navigation-item.jsp"/>
+      <molecule name="search-form" path="components/molecules/search-form/search-form.jsp"/>
+      <molecule name="product-card" path="components/molecules/product-card/product-card.jsp"/>
+    </molecular>
+    <organism>
+      <organism name="header" path="components/organisms/header/header.jsp"/>
+      <organism name="footer" path="components/organisms/footer/footer.jsp"/>
+    </organism>
+  </components>
+
   <design-tokens>
-    <color primary="#0a95ff" secondary="#22c55e"/>
-    <!-- {Primary: Blue for trust, Secondary: Green for success} -->
-    <typography heading="Inter" body="Inter"/>
-    <!-- {Typography: Inter font family for modern, clean look} -->
-    <spacing container="max-width: 1280px" section="padding: 4rem 0"/>
-    <!-- {Container max-width and section padding for consistent layout} -->
+    <spacing>8px grid (l-spacing-*: 8, 16, 24, 32, 48, 64px)</spacing>
+    <grid>l-grid (12-column), l-grid__col-* (responsive: md, lg)</grid>
+    <cards>c-card, c-product-card (elevated, bordered variants)</cards>
+    <sections>section-container (white, bordered variants)</sections>
+    <z-index>z-header: 310, z-footer: 320, z-dropdown: 100</z-index>
   </design-tokens>
 
-  <!-- {Refactoring Context} -->
-  <refactoring-context>
-    <current-state>
-      <!-- {Current implementation uses JSP with inline styles and mixed concerns} -->
-      <issues>
-        <issue>Inline styles should be replaced with design system classes</issue>
-        <issue>Component structure could be more modular</issue>
-        <issue>Accessibility improvements needed (ARIA labels, keyboard navigation)</issue>
-      </issues>
-    </current-state>
-    <target-state>
-      <!-- {Target: Clean component-based structure using design system tokens} -->
-      <improvements>
-        <improvement>Use t:base layout tag consistently</improvement>
-        <improvement>Replace inline styles with utility classes</improvement>
-        <improvement>Implement proper ARIA labels and roles</improvement>
-        <improvement>Use design system components (btn, card, etc.)</improvement>
-        <improvement>Optimize images with lazy loading</improvement>
-      </improvements>
-    </target-state>
-    <related-pages>
-      <!-- {Pages that share similar structure or components} -->
-      <page name="browse" route="/browse"/>
-      <page name="categories" route="/categories"/>
-      <page name="about" route="/about"/>
-    </related-pages>
-  </refactoring-context>
-
-  <!-- {Component Dependencies} -->
-  <dependencies>
-    <component name="header" file="components/header.jsp"/>
-    <component name="footer" file="components/footer.jsp"/>
-    <component name="masthead" file="components/masthead.jsp"/>
-    <component name="product-card" file="components/product-card.jsp"/>
-    <layout name="base" file="WEB-INF/tags/base.tag"/>
-    <!-- {Base layout tag provides page structure wrapper} -->
-  </dependencies>
-
 </page>
-

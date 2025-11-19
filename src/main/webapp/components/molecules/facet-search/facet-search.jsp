@@ -5,18 +5,13 @@
   
   Description:
     Faceted search component with immediate feedback.
-    Used in browse page for filtering products.
+    Refactored to use Tailwind CSS and native details/summary.
   
   Parameters:
     - id (string): Unique ID
     - categories (List): Available categories
     - priceRange (object): Price range filter
     - onFilterChange (string): JavaScript callback function name
-  
-  Dependencies:
-    - atoms/input/input.jsp
-    - atoms/button/button.jsp
-    - molecules/accordion/accordion.jsp
   
   Last Updated: 2025
 --%>
@@ -29,75 +24,98 @@
   String onFilterChange = request.getParameter("onFilterChange") != null ? request.getParameter("onFilterChange") : "handleFilterChange";
 %>
 
-<div class="facet-search" id="<%= id %>" role="search" aria-label="Product filters">
+<div class="space-y-1" id="<%= id %>" role="search" aria-label="Product filters">
+  
   <%-- Price Range --%>
-  <jsp:include page="/components/molecules/accordion/accordion.jsp">
-    <jsp:param name="id" value="<%= id %>-price" />
-    <jsp:param name="title" value="Price Range" />
-    <jsp:param name="open" value="false" />
-  </jsp:include>
-    <div class="facet-search__price-range">
-      <div class="facet-search__price-inputs">
-        <jsp:include page="/components/atoms/input/input.jsp">
-          <jsp:param name="type" value="number" />
-          <jsp:param name="name" value="priceMin" />
-          <jsp:param name="id" value="<%= id %>-price-min" />
-          <jsp:param name="placeholder" value="Min" />
-          <jsp:param name="ariaLabel" value="Minimum price" />
-        </jsp:include>
-        <span class="facet-search__price-separator">to</span>
-        <jsp:include page="/components/atoms/input/input.jsp">
-          <jsp:param name="type" value="number" />
-          <jsp:param name="name" value="priceMax" />
-          <jsp:param name="id" value="<%= id %>-price-max" />
-          <jsp:param name="placeholder" value="Max" />
-          <jsp:param name="ariaLabel" value="Maximum price" />
-        </jsp:include>
+  <details class="group py-4 border-b border-neutral-200" open>
+    <summary class="flex items-center justify-between font-medium text-neutral-900 cursor-pointer list-none select-none">
+      <span>Price Range</span>
+      <span class="transition group-open:rotate-180">
+        <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+      </span>
+    </summary>
+    <div class="text-neutral-600 mt-4 group-open:animate-fadeIn">
+      <div class="flex items-center gap-2 mb-3">
+        <div class="relative flex-1">
+          <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-neutral-500">$</span>
+          <input type="number" name="priceMin" id="<%= id %>-price-min" placeholder="Min" 
+                 class="w-full pl-7 pr-3 py-2 border border-neutral-300 rounded-lg text-sm focus:ring-brand-primary focus:border-brand-primary"
+                 aria-label="Minimum price">
+        </div>
+        <span class="text-neutral-400">-</span>
+        <div class="relative flex-1">
+          <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-neutral-500">$</span>
+          <input type="number" name="priceMax" id="<%= id %>-price-max" placeholder="Max" 
+                 class="w-full pl-7 pr-3 py-2 border border-neutral-300 rounded-lg text-sm focus:ring-brand-primary focus:border-brand-primary"
+                 aria-label="Maximum price">
+        </div>
       </div>
-      <jsp:include page="/components/atoms/button/button.jsp">
-        <jsp:param name="text" value="Apply" />
-        <jsp:param name="type" value="primary" />
-        <jsp:param name="size" value="small" />
-        <jsp:param name="onclick" value="<%= onFilterChange %>('price')" />
-      </jsp:include>
+      <button type="button" onclick="<%= onFilterChange %>('price')" 
+              class="w-full py-2 px-4 bg-neutral-100 hover:bg-neutral-200 text-neutral-900 text-sm font-medium rounded-lg transition-colors">
+        Apply Price
+      </button>
     </div>
-  </jsp:include>
+  </details>
   
   <%-- Categories --%>
-  <jsp:include page="/components/molecules/accordion/accordion.jsp">
-    <jsp:param name="id" value="<%= id %>-category" />
-    <jsp:param name="title" value="Category" />
-    <jsp:param name="open" value="false" />
-  </jsp:include>
-    <div class="facet-search__categories" role="group" aria-label="Product categories">
+  <details class="group py-4 border-b border-neutral-200" open>
+    <summary class="flex items-center justify-between font-medium text-neutral-900 cursor-pointer list-none select-none">
+      <span>Category</span>
+      <span class="transition group-open:rotate-180">
+        <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+      </span>
+    </summary>
+    <div class="text-neutral-600 mt-4 space-y-2 group-open:animate-fadeIn" role="group" aria-label="Product categories">
       <c:forEach var="category" items="${categories}">
-        <label class="facet-search__checkbox-label">
+        <label class="flex items-center gap-3 cursor-pointer hover:text-brand-primary transition-colors">
           <input type="checkbox" 
                  name="category" 
                  value="${category.id}"
-                 class="facet-search__checkbox"
+                 class="w-4 h-4 text-brand-primary border-neutral-300 rounded focus:ring-brand-primary"
                  onchange="<%= onFilterChange %>('category')"
                  aria-label="Filter by ${category.name}">
-          <span class="facet-search__checkbox-text">${category.name}</span>
-          <span class="facet-search__checkbox-count" aria-label="${category.count} products">(${category.count})</span>
+          <span class="flex-1 text-sm">${category.name}</span>
+          <span class="text-xs text-neutral-400 bg-neutral-100 px-2 py-0.5 rounded-full">(${category.count})</span>
         </label>
       </c:forEach>
+      <%-- Fallback if no categories --%>
+      <c:if test="${empty categories}">
+        <label class="flex items-center gap-3 cursor-pointer hover:text-brand-primary transition-colors">
+          <input type="checkbox" name="category" value="industrial" class="w-4 h-4 text-brand-primary border-neutral-300 rounded focus:ring-brand-primary" onchange="<%= onFilterChange %>('category')">
+          <span class="flex-1 text-sm">Industrial</span>
+        </label>
+        <label class="flex items-center gap-3 cursor-pointer hover:text-brand-primary transition-colors">
+          <input type="checkbox" name="category" value="smarthome" class="w-4 h-4 text-brand-primary border-neutral-300 rounded focus:ring-brand-primary" onchange="<%= onFilterChange %>('category')">
+          <span class="flex-1 text-sm">Smart Home</span>
+        </label>
+      </c:if>
     </div>
-  </jsp:include>
+  </details>
   
   <%-- Stock Status --%>
-  <jsp:include page="/components/molecules/accordion/accordion.jsp">
-    <jsp:param name="id" value="<%= id %>-stock" />
-    <jsp:param name="title" value="Stock Status" />
-    <jsp:param name="open" value="false" />
-  </jsp:include>
-    <div class="facet-search__stock" role="group" aria-label="Stock status">
-      <label class="facet-search__radio-label">
-        <input type="radio" 
-               name="stock" 
-               value="all"
-               class="facet-search__radio"
-               checked
+  <details class="group py-4 border-b border-neutral-200">
+    <summary class="flex items-center justify-between font-medium text-neutral-900 cursor-pointer list-none select-none">
+      <span>Stock Status</span>
+      <span class="transition group-open:rotate-180">
+        <svg fill="none" height="24" shape-rendering="geometricPrecision" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
+      </span>
+    </summary>
+    <div class="text-neutral-600 mt-4 space-y-2 group-open:animate-fadeIn" role="group" aria-label="Stock status">
+      <label class="flex items-center gap-3 cursor-pointer hover:text-brand-primary transition-colors">
+        <input type="radio" name="stock" value="all" class="w-4 h-4 text-brand-primary border-neutral-300 focus:ring-brand-primary" checked onchange="<%= onFilterChange %>('stock')">
+        <span class="text-sm">All Items</span>
+      </label>
+      <label class="flex items-center gap-3 cursor-pointer hover:text-brand-primary transition-colors">
+        <input type="radio" name="stock" value="in-stock" class="w-4 h-4 text-brand-primary border-neutral-300 focus:ring-brand-primary" onchange="<%= onFilterChange %>('stock')">
+        <span class="text-sm">In Stock Only</span>
+      </label>
+      <label class="flex items-center gap-3 cursor-pointer hover:text-brand-primary transition-colors">
+        <input type="radio" name="stock" value="on-sale" class="w-4 h-4 text-brand-primary border-neutral-300 focus:ring-brand-primary" onchange="<%= onFilterChange %>('stock')">
+        <span class="text-sm">On Sale</span>
+      </label>
+    </div>
+  </details>
+</div>
                onchange="<%= onFilterChange %>('stock')"
                aria-label="Show all products">
         <span class="facet-search__radio-text">All Products</span>

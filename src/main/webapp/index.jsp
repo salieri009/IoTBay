@@ -16,218 +16,84 @@
 
 <t:base title="Home" description="Your Premier IoT Device Store - Technical sophistication meets user-friendly design">
     
-    <!-- Hero Section - Full Width (Section 4.1) - Optimized for 1920x1080 -->
-    <section class="py-16 md:py-24 bg-neutral-900 text-white" style="min-height: 600px;">
-        <!-- Optimized for 1920x1080: Better text/image balance -->
-        <div class="container grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,480px)] xl:grid-cols-[minmax(0,1fr)_minmax(0,560px)] items-center">
-            <div class="space-y-6 text-center lg:text-left">
-                <p class="inline-flex items-center justify-center lg:justify-start gap-2 text-xs font-semibold uppercase tracking-wide text-white/80">
-                    <span class="inline-flex h-2 w-2 rounded-full bg-brand-secondary"></span>
-                    Built for engineers, trusted by teams worldwide
-                </p>
-                <h1 class="text-display-xl font-extrabold leading-tight">
-                    Your Premier IoT Device Store
-                </h1>
-                <p class="text-lg md:text-xl text-neutral-200 max-w-2xl mx-auto lg:mx-0">
-                    Technical sophistication meets human-centred design so you can specify, compare, and deploy the right IoT hardware with confidence.
-                </p>
-                <div class="flex flex-col sm:flex-row sm:justify-start gap-3 sm:gap-4 max-w-xl mx-auto lg:mx-0">
-                    <a href="${pageContext.request.contextPath}/browse.jsp" class="btn btn--primary btn--lg sm:flex-1" aria-label="Browse IoTBay products">
-                        Browse Products
-                    </a>
-                    <a href="${pageContext.request.contextPath}/about.jsp" class="btn btn--secondary btn--lg sm:flex-1" aria-label="Learn more about IoTBay">
-                        Learn More
-                    </a>
-                </div>
-                <dl class="grid gap-4 sm:grid-cols-2 text-left max-w-2xl mx-auto lg:mx-0">
-                    <div class="rounded-lg bg-white/10 p-4" role="group" aria-label="Certified hardware">
-                        <dt class="text-sm font-semibold text-white">Certified hardware</dt>
-                        <dd class="mt-1 text-sm text-neutral-200">All devices verified for industrial and enterprise deployments.</dd>
-                    </div>
-                    <div class="rounded-lg bg-white/10 p-4" role="group" aria-label="Expert support">
-                        <dt class="text-sm font-semibold text-white">Expert support</dt>
-                        <dd class="mt-1 text-sm text-neutral-200">Access implementation guides and 24/7 specialist assistance.</dd>
-                    </div>
-                </dl>
-            </div>
-            <figure class="relative">
-                <img src="${pageContext.request.contextPath}/images/hero.png"
-                     alt="IoT gateways, sensors, and modules arranged on a workbench"
-                     class="w-full h-auto rounded-2xl shadow-xl object-cover">
-                <figcaption class="sr-only">Photo illustrating the range of IoT hardware available at IoTBay.</figcaption>
-            </figure>
+    <!-- 1. Hero Section (Standalone) -->
+    <section class="py-8 bg-white">
+        <div class="l-container">
+            <jsp:include page="/components/organisms/hero-banner/hero-banner.jsp">
+                <jsp:param name="badgeText" value="New Arrivals" />
+                <jsp:param name="title" value="Build Your <br/> Connected World" />
+                <jsp:param name="description" value="From Arduino and Raspberry Pi to industrial sensors.<br/> Everything you need to turn your projects into reality is here." />
+                <jsp:param name="primaryCtaText" value="Start Building" />
+                <jsp:param name="primaryCtaHref" value="${pageContext.request.contextPath}/browse.jsp" />
+                <jsp:param name="secondaryCtaText" value="Watch Demo" />
+                <jsp:param name="secondaryCtaHref" value="${pageContext.request.contextPath}/about.jsp" />
+                <jsp:param name="imageUrl" value="${pageContext.request.contextPath}/images/iot-device-hero-3d.png" />
+            </jsp:include>
         </div>
     </section>
 
-    <!-- Category Quick Links - Grid Layout (Section 4.1) -->
-    <section class="py-12 bg-white">
-        <div class="container">
-            <div class="text-center mb-12">
-                <h2 class="text-display-m font-bold text-neutral-900 mb-4">Shop by Category</h2>
-                <p class="text-lg text-neutral-600 max-w-2xl mx-auto">
-                    Explore our comprehensive range of IoT solutions across industries
-                </p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Industrial Category Card -->
-                <a href="${pageContext.request.contextPath}/category-industrial.jsp" 
-                   class="category-card group bg-white rounded-lg shadow-sm hover:shadow-lg transition-all duration-300 p-6 border border-neutral-200 hover:border-brand-primary">
-                    <div class="category-card__icon mb-4">
-                        <div class="w-16 h-16 bg-brand-primary-100 rounded-lg flex items-center justify-center group-hover:bg-brand-primary group-hover:scale-110 transition-all duration-300">
-                            <svg class="w-8 h-8 text-brand-primary group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 8.172V5L8 4z"/>
-                            </svg>
-                        </div>
-                    </div>
-                    <h3 class="text-xl font-semibold text-neutral-900 mb-2">Industrial</h3>
-                    <ul class="text-sm text-neutral-600 space-y-1 mb-4">
-                        <li>Sensors</li>
-                        <li>Controllers</li>
-                        <li>Connectivity</li>
-                    </ul>
-                    <span class="text-brand-primary font-medium group-hover:underline inline-flex items-center">
-                        Explore →
-                    </span>
-                </a>
+    <!-- 2. Shop by Category -->
+    <jsp:include page="/components/organisms/category-grid/category-grid.jsp" />
 
-                <!-- Warehouse Category Card -->
-                <a href="${pageContext.request.contextPath}/category-warehouse.jsp" 
-                   class="category-card group bg-white rounded-lg shadow-sm hover:shadow-lg transition-all duration-300 p-6 border border-neutral-200 hover:border-brand-primary">
-                    <div class="category-card__icon mb-4">
-                        <div class="w-16 h-16 bg-brand-secondary-100 rounded-lg flex items-center justify-center group-hover:bg-brand-secondary group-hover:scale-110 transition-all duration-300">
-                            <svg class="w-8 h-8 text-brand-secondary group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h1.586a1 1 0 01.707.293l1.414 1.414a1 1 0 00.707.293H15a2 2 0 012 2v0M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/>
-                            </svg>
-                        </div>
-                    </div>
-                    <h3 class="text-xl font-semibold text-neutral-900 mb-2">Warehouse</h3>
-                    <ul class="text-sm text-neutral-600 space-y-1 mb-4">
-                        <li>RFID Systems</li>
-                        <li>Automation</li>
-                        <li>Monitoring</li>
-                    </ul>
-                    <span class="text-brand-primary font-medium group-hover:underline inline-flex items-center">
-                        Explore →
-                    </span>
-                </a>
-
-                <!-- Agriculture Category Card -->
-                <a href="${pageContext.request.contextPath}/category-agriculture.jsp" 
-                   class="category-card group bg-white rounded-lg shadow-sm hover:shadow-lg transition-all duration-300 p-6 border border-neutral-200 hover:border-brand-primary">
-                    <div class="category-card__icon mb-4">
-                        <div class="w-16 h-16 bg-success-100 rounded-lg flex items-center justify-center group-hover:bg-success group-hover:scale-110 transition-all duration-300">
-                            <svg class="w-8 h-8 text-success group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
-                            </svg>
-                        </div>
-                    </div>
-                    <h3 class="text-xl font-semibold text-neutral-900 mb-2">Agriculture</h3>
-                    <ul class="text-sm text-neutral-600 space-y-1 mb-4">
-                        <li>Environmental Sensors</li>
-                        <li>Irrigation</li>
-                        <li>Livestock Monitoring</li>
-                    </ul>
-                    <span class="text-brand-primary font-medium group-hover:underline inline-flex items-center">
-                        Explore →
-                    </span>
-                </a>
-
-                <!-- Smart Home Category Card -->
-                <a href="${pageContext.request.contextPath}/category-smarthome.jsp" 
-                   class="category-card group bg-white rounded-lg shadow-sm hover:shadow-lg transition-all duration-300 p-6 border border-neutral-200 hover:border-brand-primary">
-                    <div class="category-card__icon mb-4">
-                        <div class="w-16 h-16 bg-accent-100 rounded-lg flex items-center justify-center group-hover:bg-accent group-hover:scale-110 transition-all duration-300">
-                            <svg class="w-8 h-8 text-accent group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2H3v10z"/>
-                            </svg>
-                        </div>
-                    </div>
-                    <h3 class="text-xl font-semibold text-neutral-900 mb-2">Smart Home</h3>
-                    <ul class="text-sm text-neutral-600 space-y-1 mb-4">
-                        <li>Security Systems</li>
-                        <li>Energy Management</li>
-                        <li>Home Automation</li>
-                    </ul>
-                    <span class="text-brand-primary font-medium group-hover:underline inline-flex items-center">
-                        Explore →
-                    </span>
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Featured Products - Bento Grid Layout (Section 4.1) -->
-    <section class="py-12 bg-neutral-50">
-        <div class="container">
-            <div class="text-center mb-12">
-                <h2 class="text-display-m font-bold text-neutral-900 mb-4">Featured IoT Products</h2>
-                <p class="text-lg text-neutral-600 max-w-3xl mx-auto">
+    <!-- 3. Featured Products -->
+    <section class="section-container section-container--white">
+        <div class="l-container">
+            <div class="section-container__header">
+                <h2 class="section-container__title">Featured IoT Products</h2>
+                <p class="section-container__description">
                     Handpicked devices for professionals
                 </p>
             </div>
             
-            <!-- Skeleton Loading State (Section 3.2) - Using Atomic Design Skeleton -->
-            <div id="featured-products-skeleton" class="product-grid hidden" data-product-grid>
+            <!-- Skeleton Loading State -->
+            <div id="featured-products-skeleton" class="l-grid l-grid--gap-medium hidden" data-product-grid>
                 <c:forEach begin="1" end="4" varStatus="loop">
-                    <jsp:include page="/components/atoms/skeleton/skeleton.jsp">
-                        <jsp:param name="type" value="card" />
-                    </jsp:include>
+                    <div class="l-grid__col-12 l-grid__col-md-6 l-grid__col-lg-3">
+                        <jsp:include page="/components/atoms/skeleton/skeleton.jsp">
+                            <jsp:param name="type" value="card" />
+                        </jsp:include>
+                    </div>
                 </c:forEach>
             </div>
             
-            <%-- Bento Grid for Featured Products --%>
-            <%
-              int columns = 4;
-              String gap = "medium";
-              String gridClass = "bento-grid bento-grid--cols-" + columns + " bento-grid--gap-" + gap;
-            %>
-            <div class="<%= gridClass %>" id="featured-products-grid" data-product-grid>
+            <!-- Product Grid -->
+            <div class="l-grid l-grid--gap-medium" id="featured-products-grid" data-product-grid>
                 <c:choose>
                     <c:when test="${featuredProducts != null && !empty featuredProducts}">
                         <c:forEach var="p" items="${featuredProducts}" end="3">
-                            <div class="bento-grid-item" 
+                            <div class="l-grid__col-12 l-grid__col-md-6 l-grid__col-lg-3" 
                                  data-product-id="${p.id}" 
                                  data-product-name="${p.name}"
                                  data-product-price="${p.price}"
                                  data-product-image="${p.imageUrl}">
                                 <c:set var="product" value="${p}" scope="request" />
-                                <jsp:include page="/components/molecules/product-card/product-card.jsp">
-                                    <jsp:param name="showQuickView" value="true" />
-                                    <jsp:param name="size" value="medium" />
-                                </jsp:include>
+                                <div class="c-product-card">
+                                    <jsp:include page="/components/molecules/product-card/product-card.jsp">
+                                        <jsp:param name="showQuickView" value="true" />
+                                        <jsp:param name="size" value="medium" />
+                                    </jsp:include>
+                                </div>
                             </div>
                         </c:forEach>
                     </c:when>
                     <c:otherwise>
-                        <!-- Fallback Featured Products (if no data from controller) -->
-                        <div class="bento-grid-item">
-                            <div class="product-card__image-container">
+                        <!-- Fallback Featured Products -->
+                        <div class="l-grid__col-12 l-grid__col-md-6 l-grid__col-lg-3">
+                            <div class="c-product-card">
                                 <img src="${pageContext.request.contextPath}/images/sample1.png" 
                                      alt="Smart Industrial Sensor" 
-                                     class="product-card__image"
+                                     class="c-product-card__image"
                                      loading="lazy"
                                      width="300"
                                      height="300"
                                      onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/default-product.png';" />
-                                <span class="product-card__badge product-card__badge--success" aria-label="In stock">In Stock</span>
-                            </div>
-                            <div class="product-card__body">
-                                <div class="product-card__header">
-                                    <h3 class="product-card__title">Smart Industrial Sensor</h3>
-                                    <span class="product-card__spec-badge">LoRaWAN</span>
-                                </div>
-                                <p class="product-card__description">
-                                    Advanced multi-parameter sensor for real-time monitoring of temperature, humidity, and pressure.
-                                </p>
-                                <div class="product-card__footer">
-                                    <div class="product-card__price-info">
-                                        <div class="product-card__price">$459.00</div>
-                                        <div class="product-card__stock-status">
-                                            <span class="text-success text-sm">✓ In Stock (15 available)</span>
-                                        </div>
-                                    </div>
-                                    <div class="product-card__actions">
+                                <div class="c-product-card__body">
+                                    <h3 class="c-product-card__title">Smart Industrial Sensor</h3>
+                                    <p class="text-neutral-600 text-sm l-spacing-xs">
+                                        Advanced multi-parameter sensor for real-time monitoring of temperature, humidity, and pressure.
+                                    </p>
+                                    <div class="c-product-card__price">$459.00</div>
+                                    <div class="c-product-card__actions">
                                         <a href="${pageContext.request.contextPath}/productDetails.jsp?id=1" class="btn btn--outline btn--sm">View Details</a>
                                         <button type="button" onclick="if(typeof OptimisticUI !== 'undefined' && typeof OptimisticUI.addToCart === 'function') { OptimisticUI.addToCart(1, 1); }" class="btn btn--primary btn--sm">Add to Cart</button>
                                     </div>
@@ -235,7 +101,8 @@
                             </div>
                         </div>
                         
-                        <div class="product-card">
+                        <div class="l-grid__col-12 l-grid__col-md-6 l-grid__col-lg-3">
+                            <div class="c-product-card">
                             <div class="product-card__image-container">
                                 <img src="${pageContext.request.contextPath}/images/sample2.png" 
                                      alt="IoT Connectivity Kit" 
@@ -268,8 +135,10 @@
                                 </div>
                             </div>
                         </div>
+                        </div>
                         
-                        <div class="product-card">
+                        <div class="l-grid__col-12 l-grid__col-md-6 l-grid__col-lg-3">
+                            <div class="c-product-card">
                             <div class="product-card__image-container">
                                 <img src="${pageContext.request.contextPath}/images/sample3.png" 
                                      alt="Smart Power Management" 
@@ -302,6 +171,39 @@
                                 </div>
                             </div>
                         </div>
+                        </div>
+                        
+                        <div class="l-grid__col-12 l-grid__col-md-6 l-grid__col-lg-3">
+                            <div class="c-product-card">
+                                <div class="product-card__image-container">
+                                    <img src="${pageContext.request.contextPath}/images/sample1.png" 
+                                         alt="Industrial Gateway" 
+                                         class="product-card__image"
+                                         loading="lazy"
+                                         width="300"
+                                         height="300"
+                                         onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/default-product.png';" />
+                                </div>
+                                <div class="product-card__body">
+                                    <div class="product-card__header">
+                                        <h3 class="product-card__title">Industrial Gateway</h3>
+                                        <span class="product-card__spec-badge">LoRaWAN</span>
+                                    </div>
+                                    <p class="product-card__description">
+                                        Robust gateway for connecting thousands of sensors over long distances.
+                                    </p>
+                                    <div class="product-card__footer">
+                                        <div class="product-card__price-info">
+                                            <div class="product-card__price">$599.00</div>
+                                        </div>
+                                        <div class="product-card__actions">
+                                            <a href="${pageContext.request.contextPath}/productDetails.jsp?id=4" class="btn btn--outline btn--sm">View Details</a>
+                                            <button type="button" onclick="if(typeof OptimisticUI !== 'undefined' && typeof OptimisticUI.addToCart === 'function') { OptimisticUI.addToCart(4, 1); }" class="btn btn--primary btn--sm">Add to Cart</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </c:otherwise>
                 </c:choose>
             </div>
@@ -318,101 +220,14 @@
         </div>
     </section>
 
-    <!-- Trust Indicators - Horizontal Strip (Section 4.1) -->
-    <section class="py-12 bg-white border-t border-neutral-200">
-        <div class="container">
-            <div class="text-center mb-8">
-                <h2 class="text-display-sm font-bold text-neutral-900 mb-2">Why Choose IoTBay?</h2>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="trust-indicator text-center p-6 bg-neutral-50 rounded-lg">
-                    <div class="w-16 h-16 bg-brand-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg class="w-8 h-8 text-brand-primary" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                            <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                        </svg>
-                    </div>
-                    <h3 class="text-lg font-semibold text-neutral-900 mb-2">Certified Products</h3>
-                    <p class="text-sm text-neutral-600">CE/FCC Approved</p>
-                </div>
-                
-                <div class="trust-indicator text-center p-6 bg-neutral-50 rounded-lg">
-                    <div class="w-16 h-16 bg-brand-secondary-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg class="w-8 h-8 text-brand-secondary" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                            <path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z"></path>
-                            <path d="M15 7v2a4 4 0 01-4 4H9.828l-1.766 1.767c.28.149.599.233.938.233h2l3 3v-3h2a2 2 0 002-2V9a2 2 0 00-2-2h-1z"></path>
-                        </svg>
-                    </div>
-                    <h3 class="text-lg font-semibold text-neutral-900 mb-2">24/7 Support</h3>
-                    <p class="text-sm text-neutral-600">Live Chat Available</p>
-                </div>
-                
-                <div class="trust-indicator text-center p-6 bg-neutral-50 rounded-lg">
-                    <div class="w-16 h-16 bg-success-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg class="w-8 h-8 text-success" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                            <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                        </svg>
-                    </div>
-                    <h3 class="text-lg font-semibold text-neutral-900 mb-2">2-Year Warranty</h3>
-                    <p class="text-sm text-neutral-600">All Items Covered</p>
-                </div>
-                
-                <div class="trust-indicator text-center p-6 bg-neutral-50 rounded-lg">
-                    <div class="w-16 h-16 bg-accent-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <svg class="w-8 h-8 text-accent" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                            <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"></path>
-                            <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v6.05A2.5 2.5 0 0115.95 16H17a1 1 0 001-1v-5a1 1 0 00-.293-.707l-2-2A1 1 0 0015 7h-1z"></path>
-                        </svg>
-                    </div>
-                    <h3 class="text-lg font-semibold text-neutral-900 mb-2">Free Shipping</h3>
-                    <p class="text-sm text-neutral-600">On Orders $50+</p>
-                </div>
-            </div>
-        </div>
-    </section>
+    <!-- 4. Trust Indicators -->
+    <jsp:include page="/components/organisms/trust-indicators/trust-indicators.jsp" />
 
-    <!-- Newsletter Signup - Optional (Section 4.1) -->
-    <section class="py-12 bg-gradient-to-r from-brand-primary-50 to-brand-secondary-50">
-        <div class="container">
-            <div class="max-w-2xl mx-auto text-center">
-                <h2 class="text-display-sm font-bold text-neutral-900 mb-4">Stay Updated with Latest IoT Solutions</h2>
-                <p class="text-lg text-neutral-600 mb-6">
-                    Get the latest product updates, technical guides, and exclusive offers delivered to your inbox.
-                </p>
-                <form class="newsletter-form flex flex-col sm:flex-row gap-3 max-w-md mx-auto" 
-                      id="newsletterForm"
-                      onsubmit="handleNewsletterSubmit(event)">
-                    <input 
-                        type="email" 
-                        id="newsletterEmail"
-                        name="email"
-                        placeholder="Enter your email address"
-                        class="form-input flex-1"
-                        required
-                        aria-label="Email address for newsletter"
-                        aria-describedby="newsletter-help">
-                    <button type="submit" class="btn btn--primary">
-                        Subscribe
-                    </button>
-                </form>
-                <p id="newsletter-help" class="text-sm text-neutral-500 mt-3">
-                    We respect your privacy. Unsubscribe at any time.
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <script>
-        // Newsletter form handler
-        function handleNewsletterSubmit(event) {
-            event.preventDefault();
-            const email = document.getElementById('newsletterEmail').value;
-            
-            if (typeof showToast === 'function') {
-                showToast('Thank you for subscribing!', 'success');
-            }
-            
-            // Reset form
-            event.target.reset();
-        }
-    </script>
+    <!-- 5. Newsletter Signup -->
+    <jsp:include page="/components/organisms/newsletter-section/newsletter-section.jsp">
+        <jsp:param name="title" value="Stay Updated with Latest IoT Solutions" />
+        <jsp:param name="description" value="Get the latest product updates, technical guides, and exclusive offers delivered to your inbox." />
+        <jsp:param name="placeholder" value="Enter your email address" />
+        <jsp:param name="buttonText" value="Subscribe" />
+    </jsp:include>
 </t:base>

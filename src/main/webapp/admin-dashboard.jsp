@@ -17,14 +17,56 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - IoT Bay Management</title>
-    <link rel="stylesheet" href="<%=request.getContextPath()%>/css/modern-theme.css">
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/css/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
     <style>
+        /* Admin Layout: Sidebar 256px + Main calc(100vw - 256px) */
         .admin-layout {
+            display: flex;
             min-height: 100vh;
             background: linear-gradient(135deg, var(--neutral-50) 0%, var(--neutral-100) 100%);
+        }
+        
+        /* Admin Sidebar: 256px fixed (skeleton-refactor) */
+        .admin-sidebar {
+            width: 256px;
+            min-height: 100vh;
+            background: #1F2937;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 300;
+            padding: 24px;
+            overflow-y: auto;
+            transition: transform 0.3s ease;
+        }
+        
+        /* Admin Main Content: calc(100vw - 256px) */
+        .admin-main {
+            width: calc(100vw - 256px);
+            margin-left: 256px;
+            padding: 32px;
+            transition: margin-left 0.3s ease;
+        }
+        
+        /* Mobile: Sidebar Overlay */
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                width: 0;
+                transform: translateX(-100%);
+            }
+            
+            .admin-sidebar--open {
+                width: 100%;
+                transform: translateX(0);
+            }
+            
+            .admin-main {
+                width: 100vw;
+                margin-left: 0;
+            }
         }
         
         .admin-container {
@@ -312,7 +354,24 @@
     <c:import url="/components/organisms/header/header.jsp" />
     
     <main class="admin-layout">
-        <div class="admin-container">
+        <!-- Admin Sidebar: 256px fixed -->
+        <aside class="admin-sidebar" id="adminSidebar">
+            <div style="color: #FFFFFF; margin-bottom: 24px;">
+                <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 8px;">Admin Panel</h2>
+                <p style="font-size: 0.875rem; color: rgba(255,255,255,0.7);">IoT Bay Management</p>
+            </div>
+            <nav style="display: flex; flex-direction: column; gap: 8px;">
+                <a href="admin-dashboard.jsp" style="color: #FFFFFF; padding: 12px; border-radius: 8px; text-decoration: none; background: rgba(255,255,255,0.1);">Dashboard</a>
+                <a href="/WEB-INF/views/manage-users.jsp" style="color: rgba(255,255,255,0.8); padding: 12px; border-radius: 8px; text-decoration: none;">User Management</a>
+                <a href="/WEB-INF/views/manage-products.jsp" style="color: rgba(255,255,255,0.8); padding: 12px; border-radius: 8px; text-decoration: none;">Product Management</a>
+                <a href="/WEB-INF/views/manage-suppliers.jsp" style="color: rgba(255,255,255,0.8); padding: 12px; border-radius: 8px; text-decoration: none;">Supplier Management</a>
+                <a href="/api/manage/access-logs" style="color: rgba(255,255,255,0.8); padding: 12px; border-radius: 8px; text-decoration: none;">Access Logs</a>
+            </nav>
+        </aside>
+        
+        <!-- Admin Main Content: calc(100vw - 256px) -->
+        <div class="admin-main">
+            <div class="admin-container">
             <!-- Admin Header -->
             <header class="admin-header">
                 <div>
@@ -598,7 +657,7 @@
                             <a href="<%=request.getContextPath()%>/api/manage/users" class="btn btn--primary action-btn">
                                 Manage Users
                             </a>
-                            <a href="<%=request.getContextPath()%>/accessLog.jsp" class="btn btn--outline action-btn">
+                            <a href="<%=request.getContextPath()%>/api/manage/access-logs" class="btn btn--outline action-btn">
                                 Access Logs
                             </a>
                         </div>
@@ -648,8 +707,26 @@
                     </a>
                 </div>
             </section>
+            </div>
         </div>
     </main>
+    
+    <!-- Mobile Sidebar Toggle -->
+    <button class="admin-sidebar-toggle" id="sidebarToggle" style="display: none; position: fixed; top: 16px; left: 16px; z-index: 301; background: #1F2937; color: #FFFFFF; border: none; padding: 12px; border-radius: 8px; cursor: pointer;">
+        <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        </svg>
+    </button>
+    
+    <script>
+        // Mobile sidebar toggle
+        if (window.innerWidth <= 768) {
+            document.getElementById('sidebarToggle').style.display = 'block';
+            document.getElementById('sidebarToggle').addEventListener('click', function() {
+                document.getElementById('adminSidebar').classList.toggle('admin-sidebar--open');
+            });
+        }
+    </script>
     
     <c:import url="/components/organisms/footer/footer.jsp" />
     

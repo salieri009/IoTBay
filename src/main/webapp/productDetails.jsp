@@ -46,54 +46,116 @@
     pageContext.setAttribute("pd_image", productImage);
 %>
 <t:base title="${pd_name} - IoT Bay" description="Product details">
-    <main class="py-12">
-        <div class="container space-y-12">
+    <main class="py-12 bg-neutral-50">
+        <div class="container mx-auto px-4">
             <!-- Breadcrumb Navigation -->
-            <nav aria-label="Breadcrumb">
+            <nav aria-label="Breadcrumb" class="mb-8">
                 <ol class="flex flex-wrap items-center gap-2 text-sm text-neutral-600">
-                    <li><a href="${pageContext.request.contextPath}/" class="hover:text-brand-primary">Home</a></li>
-                    <li aria-hidden="true">/</li>
-                    <li><a href="${pageContext.request.contextPath}/browse" class="hover:text-brand-primary">Products</a></li>
-                    <li aria-hidden="true">/</li>
+                    <li><a href="${pageContext.request.contextPath}/" class="hover:text-brand-primary transition-colors">Home</a></li>
+                    <li aria-hidden="true" class="text-neutral-400">/</li>
+                    <li><a href="${pageContext.request.contextPath}/browse.jsp" class="hover:text-brand-primary transition-colors">Products</a></li>
+                    <li aria-hidden="true" class="text-neutral-400">/</li>
                     <li class="text-neutral-900 font-medium" aria-current="page">${pd_name}</li>
                 </ol>
             </nav>
 
-            <!-- Optimized for 1920x1080: Better image/info ratio -->
-            <section class="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)] xl:grid-cols-[minmax(0,1fr)_minmax(0,480px)]">
-                <!-- Product Imagery -->
-                <div class="space-y-4">
-                    <figure class="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm">
-                        <img src="${pageContext.request.contextPath}/${pd_image}" 
-                             alt="${pd_name}" 
-                             class="w-full h-full object-cover"
-                             id="mainProductImage"
-                             onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/sample1.png';" />
-                    </figure>
-                    <div class="grid grid-cols-4 gap-2">
-                        <div class="overflow-hidden rounded-xl border-2 border-brand-primary bg-white">
-                            <img src="${pageContext.request.contextPath}/${pd_image}" 
-                                 alt="${pd_name} gallery image" 
-                                 class="w-full h-full object-cover">
-                        </div>
-                        <div class="overflow-hidden rounded-xl border bg-neutral-100">
-                            <img src="${pageContext.request.contextPath}/images/sample2.png" 
-                                 alt="${pd_name} alternate view" 
-                                 class="w-full h-full object-cover">
-                        </div>
-                        <div class="overflow-hidden rounded-xl border bg-neutral-100">
-                            <img src="${pageContext.request.contextPath}/images/sample3.png" 
-                                 alt="${pd_name} component detail" 
-                                 class="w-full h-full object-cover">
-                        </div>
-                        <div class="rounded-xl border bg-neutral-50 flex items-center justify-center text-xs text-neutral-500">
-                            +2 more
-                        </div>
-                    </div>
-                </div>
+            <!-- Product Details: 12-column Grid 7:5 Ratio (Image:Info) -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                <!-- Left Panel: Product Images (7 columns, sticky) -->
+                <article class="lg:col-span-7 space-y-12">
+                    <!-- Product Imagery -->
+                    <jsp:include page="/components/organisms/product-gallery/product-gallery.jsp">
+                        <jsp:param name="mainImageUrl" value="${pageContext.request.contextPath}/${pd_image}" />
+                        <jsp:param name="productName" value="${pd_name}" />
+                    </jsp:include>
 
-                <!-- Product Information -->
-                <div class="space-y-6" id="product-overview">
+                    <!-- Product Overview -->
+                    <section class="space-y-6">
+                        <div class="flex items-center gap-3">
+                            <span class="inline-flex items-center gap-2 rounded-full bg-brand-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-brand-primary">
+                                <span class="inline-flex h-2 w-2 rounded-full bg-brand-primary"></span>
+                                Product overview
+                            </span>
+                        </div>
+                        <h1 class="text-4xl font-bold text-neutral-900 tracking-tight">
+                            ${pd_name}
+                        </h1>
+                        <p class="text-lg text-neutral-600 leading-relaxed max-w-3xl">
+                            ${pd_desc}
+                        </p>
+                    </section>
+
+                    <!-- Product Highlights -->
+                    <section>
+                        <dl class="grid grid-cols-1 md:grid-cols-3 gap-6" aria-label="Product highlights">
+                            <div class="bg-white rounded-xl border border-neutral-200 p-6 shadow-sm">
+                                <dt class="text-xs font-semibold uppercase tracking-wide text-neutral-500 mb-2">Price</dt>
+                                <dd class="text-3xl font-bold text-neutral-900">&#36;${pd_priceFormatted}</dd>
+                                <dd class="mt-1 text-xs text-neutral-500">All prices include GST.</dd>
+                            </div>
+                            <div class="bg-white rounded-xl border border-neutral-200 p-6 shadow-sm">
+                                <dt class="text-xs font-semibold uppercase tracking-wide text-neutral-500 mb-2">Availability</dt>
+                                <c:choose>
+                                    <c:when test="${pd_inStock}">
+                                            <dd class="mt-2 text-sm font-semibold text-success" aria-live="polite">${pd_stockLabel}</dd>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <dd class="mt-2 text-sm font-semibold text-error" aria-live="polite">${pd_stockLabel}</dd>
+                                        </c:otherwise>
+                                    </c:choose>
+                                    <dd class="mt-1 text-xs text-neutral-500">Ships within 2-3 business days.</dd>
+                                </div>
+                            </div>
+                            <div class="l-grid__col-12 l-grid__col-md-4">
+                                <div class="c-card c-card--padded-small" role="group" aria-label="Support">
+                                    <dt class="text-xs font-semibold uppercase tracking-wide text-neutral-500">Support</dt>
+                                    <dd class="mt-2 text-sm font-semibold text-neutral-900">24/7 specialist assistance</dd>
+                                    <dd class="mt-1 text-xs text-neutral-500">Includes onboarding & integration guidance.</dd>
+                                </div>
+                            </div>
+                        </dl>
+                    </section>
+
+                    <!-- Key Features -->
+                    <section class="l-spacing-md">
+                        <h2 class="text-lg font-semibold text-neutral-900 l-spacing-sm">Key features</h2>
+                        <ul class="space-y-2">
+                            <li class="flex items-center gap-3">
+                                <svg class="w-5 h-5 text-success flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                </svg>
+                                <span class="text-neutral-700">Wireless connectivity (Wi-Fi & Bluetooth)</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <svg class="w-5 h-5 text-success flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                </svg>
+                                <span class="text-neutral-700">Real-time monitoring and alerts</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <svg class="w-5 h-5 text-success flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                </svg>
+                                <span class="text-neutral-700">Easy setup and configuration</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <svg class="w-5 h-5 text-success flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                </svg>
+                                <span class="text-neutral-700">Energy efficient design</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <svg class="w-5 h-5 text-success flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                                </svg>
+                                <span class="text-neutral-700">Mobile app integration</span>
+                            </li>
+                        </ul>
+                    </section>
+                </article>
+
+                <!-- Right Panel: Product Info & Buy Box (5 columns, sticky) -->
+                <aside class="l-product-details__info c-buy-box l-sticky">
                     <div class="space-y-4">
                         <span class="inline-flex items-center gap-2 rounded-full bg-neutral-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-neutral-700">
                             <span class="inline-flex h-2 w-2 rounded-full bg-brand-primary"></span>
@@ -132,114 +194,98 @@
                         </div>
                     </dl>
 
-                    <!-- Purchase Section -->
-                    <div class="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm" id="purchase-options">
-                        <div class="flex flex-col gap-6">
-                            <div>
-                                <label for="quantity" class="block text-sm font-medium text-neutral-700 mb-2">Quantity</label>
-                                <div class="flex items-center gap-2">
-                                    <button type="button" onclick="decreaseQuantity()" class="btn btn--ghost btn--sm" aria-label="Decrease quantity">
-                                        <span aria-hidden="true">&minus;</span>
-                                    </button>
-                                    <input type="number" id="quantity" value="1" min="1" max="${pd_stock}" 
-                                           class="form-input w-24 text-center" aria-live="polite">
-                                    <button type="button" onclick="increaseQuantity()" class="btn btn--ghost btn--sm" aria-label="Increase quantity">
-                                        <span aria-hidden="true">+</span>
-                                    </button>
-                                </div>
-                            </div>
+                    <!-- Price -->
+                    <div class="c-buy-box__price">
+                        &#36;${pd_priceFormatted}
+                    </div>
+                    <p class="text-sm text-neutral-500 l-spacing-sm">All prices include GST.</p>
 
-                            <div class="space-y-3">
-                                <c:choose>
-                                    <c:when test="${pd_inStock}">
-                                        <button data-product-id="${pd_id}" 
-                                                data-action="add-to-cart"
-                                                class="add-to-cart-button w-full btn btn--primary btn--lg"
-                                                aria-label="Add ${pd_name} to cart">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m0 0H17"></path>
-                                            </svg>
-                                            Add to Cart
-                                        </button>
-                                        <button class="w-full btn btn--outline btn--lg" type="button">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                                            </svg>
-                                            Add to Wishlist
-                                        </button>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <button disabled class="w-full btn btn--outline btn--lg" aria-disabled="true">
-                                            Currently unavailable
-                                        </button>
-                                    </c:otherwise>
-                                </c:choose>
-                            </div>
+                    <!-- Stock Status -->
+                    <div class="l-spacing-md">
+                        <jsp:include page="/components/atoms/badge/badge.jsp">
+                            <jsp:param name="text" value="${pd_stockLabel}" />
+                            <jsp:param name="type" value="${pd_inStock ? 'success' : 'error'}" />
+                            <jsp:param name="size" value="medium" />
+                        </jsp:include>
+                        <p class="text-xs text-neutral-500 mt-1">Ships within 2-3 business days.</p>
+                    </div>
 
-                            <div class="pt-6 border-t border-neutral-200 space-y-3 text-sm text-neutral-600">
-                                <div class="flex items-center gap-3">
-                                    <svg class="w-5 h-5 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h1.586a1 1 0 01.707.293l1.414 1.414a1 1 0 00.707.293H15a2 2 0 012 2v0M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
-                                    </svg>
-                                    <span>Free shipping on orders over &#36;100.</span>
-                                </div>
-                                <div class="flex items-center gap-3">
-                                    <svg class="w-5 h-5 text-brand-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
-                                    <span>2-year warranty included.</span>
-                                </div>
-                                <div class="flex items-center gap-3">
-                                    <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                                    </svg>
-                                    <span>30-day return policy.</span>
-                                </div>
-                            </div>
+                    <!-- Quantity Selector -->
+                    <div class="l-spacing-md">
+                        <label for="quantity" class="block text-sm font-medium text-neutral-700 l-spacing-xs">Quantity</label>
+                        <div class="flex items-center gap-2">
+                            <button type="button" onclick="decreaseQuantity()" class="btn btn--ghost btn--sm" aria-label="Decrease quantity">
+                                <span aria-hidden="true">&minus;</span>
+                            </button>
+                            <input type="number" id="quantity" value="1" min="1" max="${pd_stock}" 
+                                   class="form-input w-24 text-center" aria-live="polite">
+                            <button type="button" onclick="increaseQuantity()" class="btn btn--ghost btn--sm" aria-label="Increase quantity">
+                                <span aria-hidden="true">+</span>
+                            </button>
                         </div>
                     </div>
 
-                    <!-- Key Features -->
-                    <div class="space-y-4">
-                        <h2 class="text-lg font-semibold text-neutral-900">Key features</h2>
-                        <ul class="space-y-2">
-                            <li class="flex items-center gap-3">
-                                <svg class="w-5 h-5 text-success flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                                </svg>
-                                <span class="text-neutral-700">Wireless connectivity (Wi-Fi & Bluetooth)</span>
-                            </li>
-                            <li class="flex items-center gap-3">
-                                <svg class="w-5 h-5 text-success flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                                </svg>
-                                <span class="text-neutral-700">Real-time monitoring and alerts</span>
-                            </li>
-                            <li class="flex items-center gap-3">
-                                <svg class="w-5 h-5 text-success flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                                </svg>
-                                <span class="text-neutral-700">Easy setup and configuration</span>
-                            </li>
-                            <li class="flex items-center gap-3">
-                                <svg class="w-5 h-5 text-success flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                                </svg>
-                                <span class="text-neutral-700">Energy efficient design</span>
-                            </li>
-                            <li class="flex items-center gap-3">
-                                <svg class="w-5 h-5 text-success flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                                </svg>
-                                <span class="text-neutral-700">Mobile app integration</span>
-                            </li>
-                        </ul>
+                    <!-- Actions -->
+                    <div class="c-buy-box__actions">
+                        <c:choose>
+                            <c:when test="${pd_inStock}">
+                                <jsp:include page="/components/atoms/button/button.jsp">
+                                    <jsp:param name="text" value="Add to Cart" />
+                                    <jsp:param name="type" value="primary" />
+                                    <jsp:param name="size" value="large" />
+                                    <jsp:param name="fullWidth" value="true" />
+                                    <jsp:param name="icon" value="cart" />
+                                    <jsp:param name="ariaLabel" value="Add ${pd_name} to cart" />
+                                    <jsp:param name="extraClass" value="add-to-cart-button" />
+                                    <jsp:param name="attributes" value="data-product-id='${pd_id}' data-action='add-to-cart'" />
+                                </jsp:include>
+                                
+                                <jsp:include page="/components/atoms/button/button.jsp">
+                                    <jsp:param name="text" value="Add to Wishlist" />
+                                    <jsp:param name="type" value="outline" />
+                                    <jsp:param name="size" value="large" />
+                                    <jsp:param name="fullWidth" value="true" />
+                                    <jsp:param name="icon" value="heart" />
+                                </jsp:include>
+                            </c:when>
+                            <c:otherwise>
+                                <jsp:include page="/components/atoms/button/button.jsp">
+                                    <jsp:param name="text" value="Currently unavailable" />
+                                    <jsp:param name="type" value="outline" />
+                                    <jsp:param name="size" value="large" />
+                                    <jsp:param name="fullWidth" value="true" />
+                                    <jsp:param name="disabled" value="true" />
+                                </jsp:include>
+                            </c:otherwise>
+                        </c:choose>
                     </div>
-                </div>
-            </section>
 
-            <!-- Trust Badges Section (Section 2.1) -->
-            <div class="mt-8 mb-8">
+                    <!-- Trust Info -->
+                    <div class="c-buy-box__info">
+                        <div class="c-buy-box__info-item">
+                            <svg class="w-5 h-5 text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h1.586a1 1 0 01.707.293l1.414 1.414a1 1 0 00.707.293H15a2 2 0 012 2v0M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
+                            </svg>
+                            <span>Free shipping on orders over &#36;100.</span>
+                        </div>
+                        <div class="c-buy-box__info-item">
+                            <svg class="w-5 h-5 text-brand-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            <span>2-year warranty included.</span>
+                        </div>
+                        <div class="c-buy-box__info-item">
+                            <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                            </svg>
+                            <span>30-day return policy.</span>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+
+            <!-- Trust Badges Section -->
+            <section class="l-spacing-md">
                 <div class="flex flex-wrap gap-3">
                     <div class="trust-badge" title="CE Certified - European Conformity">
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -311,11 +357,14 @@
                     </nav>
                 </div>
 
-                <div class="tab-content mt-8">
+                <div class="tab-content l-spacing-md">
                     <!-- Specifications Tab with Progressive Disclosure (Section 5.1) -->
                     <div id="specifications" class="tab-panel active" role="tabpanel" aria-labelledby="specifications-tab">
-                        <div class="bg-white rounded-lg shadow p-6">
-                            <h3 class="text-xl font-semibold text-neutral-900 mb-6">Technical Specifications</h3>
+                        <div class="c-card">
+                            <div class="c-card__header">
+                                <h3 class="c-card__title">Technical Specifications</h3>
+                            </div>
+                            <div class="c-card__body">
                             
                             <%-- Essential Specs Accordion --%>
                             <jsp:include page="/components/molecules/accordion/accordion.jsp">
@@ -645,8 +694,11 @@
 
                     <!-- Documentation Tab (Section 4.3) -->
                     <div id="documentation" class="tab-panel hidden" role="tabpanel" aria-labelledby="documentation-tab">
-                        <div class="bg-white rounded-lg shadow p-6">
-                            <h3 class="text-xl font-semibold text-neutral-900 mb-6">Product Documentation</h3>
+                        <div class="c-card">
+                            <div class="c-card__header">
+                                <h3 class="c-card__title">Product Documentation</h3>
+                            </div>
+                            <div class="c-card__body">
                             
                             <div class="space-y-6">
                                 <!-- Quick Start Guide -->
@@ -771,7 +823,11 @@
 
                     <!-- Reviews Tab - Enhanced (Section 4.3) -->
                     <div id="reviews" class="tab-panel hidden" role="tabpanel" aria-labelledby="reviews-tab">
-                        <div class="bg-white rounded-lg shadow p-6">
+                        <div class="c-card">
+                            <div class="c-card__header">
+                                <h3 class="c-card__title">Customer Reviews</h3>
+                            </div>
+                            <div class="c-card__body">
                             <div class="mb-6">
                                 <div class="flex items-center gap-4 mb-4">
                                     <div>
@@ -883,35 +939,38 @@
                                     </button>
                                 </div>
                             </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
 
             <!-- Related Products -->
-            <section class="mt-16">
-                <h2 class="text-2xl font-bold text-neutral-900 mb-8">You Might Also Like</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <section class="section-container l-spacing-lg">
+                <div class="section-container__header">
+                    <h2 class="section-container__title">You Might Also Like</h2>
+                </div>
+                <div class="l-grid l-grid--gap-medium">
                     <!-- Related product cards would go here -->
-                    <div class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow">
-                        <div class="aspect-square bg-neutral-100 rounded-t-lg overflow-hidden">
-                            <img src="${pageContext.request.contextPath}/images/sample2.png" alt="Related Product" class="w-full h-full object-cover">
-                        </div>
-                        <div class="p-4">
-                            <h3 class="font-medium text-neutral-900 mb-2">Smart Sensor Pro</h3>
-                            <p class="text-neutral-600 text-sm mb-2">Advanced environmental monitoring</p>
-                            <div class="text-brand-primary font-bold">$149.99</div>
+                    <div class="l-grid__col-12 l-grid__col-md-6 l-grid__col-lg-3">
+                        <div class="c-product-card">
+                            <img src="${pageContext.request.contextPath}/images/sample2.png" alt="Smart Sensor Pro" class="c-product-card__image">
+                            <div class="c-product-card__body">
+                                <h3 class="c-product-card__title">Smart Sensor Pro</h3>
+                                <p class="text-neutral-600 text-sm mb-2">Advanced environmental monitoring</p>
+                                <div class="c-product-card__price">$149.99</div>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow">
-                        <div class="aspect-square bg-neutral-100 rounded-t-lg overflow-hidden">
-                            <img src="${pageContext.request.contextPath}/images/sample3.png" alt="Related Product" class="w-full h-full object-cover">
-                        </div>
-                        <div class="p-4">
-                            <h3 class="font-medium text-neutral-900 mb-2">IoT Hub Gateway</h3>
-                            <p class="text-neutral-600 text-sm mb-2">Central control for all devices</p>
-                            <div class="text-brand-primary font-bold">$299.99</div>
+                    <div class="l-grid__col-12 l-grid__col-md-6 l-grid__col-lg-3">
+                        <div class="c-product-card">
+                            <img src="${pageContext.request.contextPath}/images/sample3.png" alt="IoT Hub Gateway" class="c-product-card__image">
+                            <div class="c-product-card__body">
+                                <h3 class="c-product-card__title">IoT Hub Gateway</h3>
+                                <p class="text-neutral-600 text-sm mb-2">Central control for all devices</p>
+                                <div class="c-product-card__price">$299.99</div>
+                            </div>
                         </div>
                     </div>
                 </div>

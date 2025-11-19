@@ -19,14 +19,31 @@
   <structure>
     
     <!-- {Admin Navigation Sidebar} -->
-    <section name="admin-sidebar" type="sidebar" position="left">
+    <section name="admin-sidebar" type="sidebar" position="left" class="admin-sidebar">
+      <component-size>
+        <width>280px (fixed)</width>
+        <min-height>100vh</min-height>
+        <background>#1F2937</background>
+        <padding>24px</padding>
+        <position>fixed left-0 top-0</position>
+        <z-index>var(--z-sidebar)</z-index>
+      </component-size>
       <!-- {Left sidebar navigation for admin sections} -->
       
-      <sidebar-header>
+      <sidebar-header class="admin-sidebar__header">
+        <component-size>
+          <padding-bottom:>24px</padding-bottom:>
+          <border-bottom>1px solid rgba(255,255,255,0.1)</border-bottom>
+          <margin-bottom>24px</margin-bottom>
+        </component-size>
         <logo>
+          <component-size>
+            <logo-size>40px × 40px</logo-size>
+            <margin-bottom:>12px</margin-bottom:>
+          </component-size>
           <image source="/images/logo.png" alt="IoTBay Admin"/>
         </logo>
-        <title>Admin Panel</title>
+        <title class="text-display-s" style="color: #FFFFFF">Admin Panel</title>
       </sidebar-header>
       
       <sidebar-menu>
@@ -93,14 +110,39 @@
       </dashboard-header>
 
       <!-- {Statistics Cards Grid} -->
-      <statistics-grid columns="4">
+      <statistics-grid class="l-grid l-grid--gap-medium" columns="4">
+        <grid-structure>
+          <design>4-column grid for statistics cards</design>
+          <mobile>1 column (l-grid__col-12)</mobile>
+          <tablet>2 columns (l-grid__col-md-6)</tablet>
+          <desktop>4 columns (l-grid__col-lg-3)</desktop>
+          <gap>24px (8px × 3) between cards</gap>
+        </grid-structure>
         <!-- {Key metrics displayed as cards} -->
         
-        <stat-card name="total-revenue">
-          <icon>revenue-icon</icon>
-          <label>Total Revenue</label>
-          <value currency="USD">{totalRevenue}</value>
-          <change period="month" value="{revenueChange}" trend="{up|down|neutral}"/>
+        <stat-card name="total-revenue" class="c-card c-card--elevated l-grid__col-12 l-grid__col-md-6 l-grid__col-lg-3">
+          <component-size>
+            <width>Mobile: 100%, Tablet: calc(50% - 12px), Desktop: calc(25% - 18px)</width>
+            <padding>24px</padding>
+            <min-height>140px</min-height>
+            <background>#FFFFFF</background>
+            <border-radius>8px</border-radius>
+            <box-shadow>0 2px 8px rgba(0,0,0,0.08)</box-shadow>
+          </component-size>
+          <icon component="atoms/icon" name="revenue" size="large">
+            <component-size>
+              <icon-size>32px × 32px</icon-size>
+              <margin-bottom:>12px</margin-bottom:>
+            </component-size>
+          </icon>
+          <label class="text-body-s">Total Revenue</label>
+          <value currency="USD" class="text-display-l">{totalRevenue}</value>
+          <change period="month" value="{revenueChange}" trend="{up|down|neutral}">
+            <component-size>
+              <font-size>14px</font-size>
+              <margin-top:>8px</margin-top:>
+            </component-size>
+          </change>
           <!-- {Percentage change from previous period} -->
         </stat-card>
         
@@ -128,12 +170,34 @@
       </statistics-grid>
 
       <!-- {Charts Section} -->
-      <charts-section type="two-column">
+      <charts-section class="l-two-column l-spacing-lg">
+        <layout-structure>
+          <design>Two-column layout: Revenue chart (66%) + Order status chart (34%)</design>
+          <desktop>
+            <left-column width="calc(66.666% - 12px)" padding="0 12px 0 0"/>
+            <right-column width="calc(33.333% - 12px)" padding="0 0 0 12px"/>
+          </desktop>
+          <tablet>
+            <layout>Stacked columns (1 column)</layout>
+            <spacing>24px gap between charts</spacing>
+          </tablet>
+        </layout-structure>
         
         <!-- {Revenue Chart} -->
-        <chart-card name="revenue-chart" width="66%">
-          <title>Revenue Trend</title>
-          <chart type="line">
+        <chart-card name="revenue-chart" class="c-card c-card--elevated">
+          <component-size>
+            <width>Desktop: calc(66.666% - 12px), Mobile: 100%</width>
+            <padding>24px</padding>
+            <min-height>400px</min-height>
+            <background>#FFFFFF</background>
+            <border-radius>8px</border-radius>
+          </component-size>
+          <title class="text-display-s">Revenue Trend</title>
+          <chart type="line" component="organisms/chart/chart.jsp">
+            <component-size>
+              <chart-height>320px</chart-height>
+              <margin-top:>16px</margin-top:>
+            </component-size>
             <!-- {Line chart showing revenue over time} -->
             <data>
               <!-- {Revenue data points for selected time range} -->
@@ -142,9 +206,20 @@
         </chart-card>
         
         <!-- {Order Status Chart} -->
-        <chart-card name="order-status" width="34%">
-          <title>Orders by Status</title>
-          <chart type="pie">
+        <chart-card name="order-status" class="c-card c-card--elevated">
+          <component-size>
+            <width>Desktop: calc(33.333% - 12px), Mobile: 100%</width>
+            <padding>24px</padding>
+            <min-height>400px</min-height>
+            <background>#FFFFFF</background>
+            <border-radius>8px</border-radius>
+          </component-size>
+          <title class="text-display-s">Orders by Status</title>
+          <chart type="pie" component="organisms/chart/chart.jsp">
+            <component-size>
+              <chart-height:>320px</chart-height:>
+              <margin-top:>16px</margin-top:>
+            </component-size>
             <!-- {Pie chart showing order status distribution} -->
             <data>
               <!-- {Pending, Processing, Shipped, Delivered, Cancelled} -->

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
   {IoTBay Shopping Cart Page Structure}
-  {This XML describes cart.jsp - the shopping cart page where users manage items before checkout}
-  {Purpose: Document cart structure, item management, and checkout preparation}
+  {Container-Centric Design with Atomic Components}
+  {Purpose: Document cart structure, component hierarchy, and layout system}
 -->
 <page name="cart" type="shopping-cart" jsp-file="cart.jsp">
   
@@ -12,238 +12,249 @@
     <route>/cart</route>
     <template>t:base</template>
     <authentication>optional</authentication>
-    <!-- {Cart can be accessed by guests, but checkout requires login} -->
   </metadata>
+
+  <layout-system>
+    <container>l-container</container>
+    <background>#F5F7FA</background>
+    <spacing-base>8px</spacing-base>
+    <grid-system>12-column</grid-system>
+  </layout-system>
 
   <structure>
     
     <!-- {Page Header} -->
-    <section name="page-header">
-      <breadcrumb>
+    <section name="page-header" class="l-spacing-md">
+      <breadcrumb component="atoms/breadcrumb">
         <item name="Home" route="/"/>
         <item name="Cart" active="true"/>
       </breadcrumb>
-      <title>Shopping Cart</title>
-      <item-count>
-        <!-- {Shows: "X items in your cart"} -->
-      </item-count>
+      <title class="text-display-l">Shopping cart</title>
+      <item-count id="cart-summary-text">{X items in your cart}</item-count>
     </section>
 
-    <!-- {Main Cart Content} -->
-    <section name="cart-content" type="two-column">
+    <!-- {Compatibility Warnings} -->
+    <component name="compatibility-warnings" type="organism" class="c-card c-card--bordered bg-warning-50" condition="hasWarnings">
+      <!-- {Shows compatibility issues between cart items} -->
+    </component>
+
+    <!-- {Main Cart Layout: Two-Column (Order Items / Summary)} -->
+    <section name="cart-content" class="l-two-column l-spacing-lg">
+      <layout-structure>
+        <design>Two-column layout for order items and summary</design>
+        <desktop>
+          <left-column width="calc(100% - 420px)" min-width="600px" padding="24px"/>
+          <right-column width="420px" padding="24px" position="sticky" top="24px"/>
+        </desktop>
+        <tablet>
+          <layout>Stacked columns (1 column)</layout>
+          <spacing>16px gap between sections</spacing>
+        </tablet>
+        <mobile>
+          <layout>Single column, full width</layout>
+          <spacing>16px gap</spacing>
+        </mobile>
+      </layout-structure>
       
-      <!-- {Left Column: Cart Items} -->
-      <column name="cart-items" width="65%">
-        
-        <!-- {Cart Items List} -->
-        <cart-items>
-          <cart-item>
-            <!-- {Each cart item row} -->
-            <product-image>
-              <image source="/images/products/{productId}.png" alt="{productName}"/>
-              <!-- {Product thumbnail image} -->
-            </product-image>
-            
-            <product-info>
-              <name>{Product Name}</name>
-              <!-- {Product name, links to product details} -->
-              <category>{Category Name}</category>
-              <!-- {Category badge/tag} -->
-              <specs>
-                <!-- {Key technical specs: protocol, voltage, etc.} -->
-                <spec name="protocol">{LoRaWAN|Zigbee|etc}</spec>
-                <spec name="voltage">{12V|24V|etc}</spec>
-              </specs>
-            </product-info>
-            
-            <quantity-controls>
-              <!-- {Quantity selector: decrease, input, increase buttons} -->
-              <button type="decrease" action="decreaseQuantity"/>
-              <input type="number" value="{quantity}" min="1" max="{stockQuantity}"/>
-              <button type="increase" action="increaseQuantity"/>
-            </quantity-controls>
-            
-            <price>
-              <unit-price currency="USD">{unitPrice}</unit-price>
-              <!-- {Price per unit} -->
-              <total-price currency="USD">{totalPrice}</total-price>
-              <!-- {Price × quantity} -->
-            </price>
-            
-            <actions>
-              <button type="remove" action="removeFromCart" text="Remove"/>
-              <!-- {Remove item from cart} -->
-              <button type="save-for-later" action="saveForLater" text="Save for Later"/>
-              <!-- {Move to wishlist/saved items} -->
-            </actions>
-          </cart-item>
-        </cart-items>
+      <!-- {Left Column: Order Items Container} -->
+      <column name="cart-items" class="content-zone">
+        <component-size>
+          <width>Desktop: calc(100% - 420px), Mobile: 100%</width>
+          <padding>24px (8px × 3)</padding>
+          <background>#FFFFFF</background>
+          <border-radius>8px</border-radius>
+          <box-shadow>0 1px 3px rgba(0,0,0,0.1)</box-shadow>
+        </component-size>
+        <header class="content-zone__header">
+          <title class="content-zone__title">Order Items</title>
+        </header>
+        <body class="content-zone__body">
+          
+          <!-- {Cart Items List} -->
+          <cart-items class="space-y-4">
+            <cart-item class="c-card c-card--bordered" data-item-id="{id}">
+              <component-size>
+                <width>100%</width>
+                <padding>16px (8px × 2)</padding>
+                <gap>16px between elements</gap>
+                <min-height>120px</min-height>
+              </component-size>
+              <!-- {Each item in a card container} -->
+              <layout class="flex flex-col sm:flex-row gap-4">
+                <layout-structure>
+                  <design>Flex row layout for cart item</design>
+                  <mobile>Stacked vertically (flex-col)</mobile>
+                  <desktop>Horizontal row (flex-row)</desktop>
+                </layout-structure>
+                
+                <!-- {Product Image} -->
+                <image-container class="cart-item-image">
+                  <component-size>
+                    <width>Mobile: 96px (24 × 4px), Desktop: 128px (32 × 4px)</width>
+                    <height>96px / 128px (square aspect ratio)</height>
+                    <border-radius>8px</border-radius>
+                  </component-size>
+                  <image source="/images/{product.imageUrl}" alt="{product.name}" class="aspect-square w-24 sm:w-32"/>
+                </image-container>
+                
+                <!-- {Product Info} -->
+                <product-info class="flex-1">
+                  <component-size>
+                    <width>flex-1 (takes remaining space)</width>
+                    <padding>0 16px</padding>
+                    <gap>8px between text elements</gap>
+                  </component-size>
+                  <name class="cart-item-name">
+                    <link href="/product?productId={id}">{product.name}</link>
+                  </name>
+                  <description class="cart-item-description">{product.description}</description>
+                  <specs class="flex flex-wrap gap-2">
+                    <badge component="atoms/badge" type="protocol">{LoRaWAN}</badge>
+                    <badge component="atoms/badge" type="voltage">{12V DC}</badge>
+                  </specs>
+                  <price class="cart-item-price">${unitPrice}</price>
+                </product-info>
+                
+                <!-- {Quantity Controls} -->
+                <quantity-controls class="flex items-center gap-2">
+                  <component-size>
+                    <width>Auto (fits content)</width>
+                    <button-size>32px × 32px (8px × 4)</button-size>
+                    <input-width>48px</input-width>
+                    <gap>8px between controls</gap>
+                  </component-size>
+                  <button component="atoms/button" type="ghost" size="sm" action="decreaseQuantity">−</button>
+                  <input component="atoms/input" type="number" value="{quantity}" min="1" max="{stock}" readonly/>
+                  <button component="atoms/button" type="ghost" size="sm" action="increaseQuantity">+</button>
+                </quantity-controls>
+                
+                <!-- {Subtotal} -->
+                <subtotal class="cart-item-subtotal text-right">
+                  <component-size>
+                    <width>120px (fixed width for alignment)</width>
+                    <text-align>right</text-align>
+                  </component-size>
+                  <label>Subtotal</label>
+                  <value>${totalPrice}</value>
+                </subtotal>
+                
+                <!-- {Remove Button} -->
+                <actions>
+                  <component-size>
+                    <button-size>32px × 32px</button-size>
+                  </component-size>
+                  <button component="atoms/button" type="icon" action="removeItem" aria-label="Remove"/>
+                </actions>
+              </layout>
+            </cart-item>
+          </cart-items>
 
-        <!-- {Empty Cart State} -->
-        <empty-state condition="cart-empty">
-          <!-- {Shown when cart has no items} -->
-          <icon>cart-icon</icon>
-          <title>Your cart is empty</title>
-          <message>Add some products to get started</message>
-          <action>
-            <button type="primary" route="/browse" text="Browse Products"/>
-          </action>
-        </empty-state>
-
-        <!-- {Cart Actions - Bottom of items list} -->
-        <cart-actions>
-          <button type="secondary" route="/browse" text="Continue Shopping"/>
-          <!-- {Return to product browsing} -->
-          <button type="secondary" action="clearCart" text="Clear Cart"/>
-          <!-- {Remove all items from cart} -->
-        </cart-actions>
-
+          <!-- {Empty Cart State} -->
+          <empty-state condition="cart-empty" class="c-card c-card--padded-large text-center">
+            <icon component="atoms/icon" name="cart" size="large"/>
+            <title>Your cart is empty</title>
+            <message>Add some products to get started!</message>
+            <action>
+              <button component="atoms/button" type="primary" route="/browse" text="Browse Products"/>
+            </action>
+          </empty-state>
+        </body>
       </column>
 
-      <!-- {Right Column: Order Summary} -->
-      <column name="order-summary" width="35%">
+      <!-- {Right Column: Order Summary (Sticky)} -->
+      <column name="order-summary" class="summary-section l-sticky" condition="hasItems">
+        <component-size>
+          <width>Desktop: 420px (fixed), Mobile: 100%</width>
+          <padding>24px (8px × 3)</padding>
+          <background>#FFFFFF</background>
+          <border-radius>8px</border-radius>
+          <box-shadow>0 2px 8px rgba(0,0,0,0.1)</box-shadow>
+          <position>sticky</position>
+          <top-offset>24px</top-offset>
+          <max-height>calc(100vh - 48px)</max-height>
+        </component-size>
+        <title class="summary-section__title">Order Summary</title>
         
-        <summary-card>
-          <!-- {Sticky order summary card} -->
-          <title>Order Summary</title>
-          
-          <summary-details>
-            <row name="subtotal">
-              <label>Subtotal</label>
-              <value currency="USD">{subtotal}</value>
-              <!-- {Sum of all item prices} -->
-            </row>
-            
-            <row name="shipping">
-              <label>Shipping</label>
-              <value>
-                <!-- {Shipping cost or "Free shipping" message} -->
-                <free-shipping condition="subtotal >= 50">Free shipping on orders over $50</free-shipping>
-                <shipping-cost condition="subtotal < 50" currency="USD">{shippingCost}</shipping-cost>
-              </value>
-            </row>
-            
-            <row name="tax">
-              <label>Tax</label>
-              <value currency="USD">{tax}</value>
-              <!-- {Calculated tax based on location} -->
-            </row>
-            
-            <row name="discount" condition="hasDiscount">
-              <!-- {Optional discount row} -->
-              <label>Discount</label>
-              <value currency="USD" type="negative">-{discountAmount}</value>
-            </row>
-          </summary-details>
-          
-          <divider/>
-          <!-- {Visual separator} -->
-          
-          <total>
+        <summary-rows>
+          <component-size>
+            <row-height>40px per row</row-height>
+            <gap>8px between rows</gap>
+            <padding>16px 0</padding>
+          </component-size>
+          <row class="summary-section__row">
+            <label>Subtotal ({itemCount} items)</label>
+            <value data-cart-summary="subtotal">${subtotal}</value>
+          </row>
+          <row class="summary-section__row">
+            <label>Shipping</label>
+            <value data-cart-summary="shipping">{Free|$X.XX}</value>
+          </row>
+          <row class="summary-section__row">
+            <label>Tax</label>
+            <value data-cart-summary="tax">${tax}</value>
+          </row>
+          <row class="summary-section__row summary-section__row--total">
+            <component-size>
+              <font-size>18px (larger for emphasis)</font-size>
+              <font-weight>600</font-weight>
+              <padding-top>16px</padding-top>
+              <border-top>1px solid var(--neutral-200)</border-top>
+            </component-size>
             <label>Total</label>
-            <value currency="USD" emphasis="bold">{total}</value>
-            <!-- {Final total including all fees} -->
-          </total>
-          
-          <checkout-button>
-            <button type="primary" route="/checkout" text="Proceed to Checkout" size="large" full-width="true"/>
-            <!-- {Primary CTA to proceed to checkout} -->
-          </checkout-button>
-          
-          <security-badges>
-            <!-- {Trust indicators: secure payment, SSL, etc.} -->
-            <badge icon="lock" text="Secure Checkout"/>
-            <badge icon="shield" text="SSL Encrypted"/>
-          </security-badges>
-        </summary-card>
-
-        <!-- {Compatibility Warnings} -->
-        <compatibility-warnings condition="hasWarnings">
-          <!-- {Shown if cart items have compatibility issues} -->
-          <warning type="voltage-mismatch">
-            <icon>warning-icon</icon>
-            <message>Voltage mismatch detected. Some items may not be compatible.</message>
-            <action>
-              <button type="link" text="View Details" action="showCompatibilityDetails"/>
-            </action>
-          </warning>
-        </compatibility-warnings>
-
-        <!-- {Recommended Products} -->
-        <recommended-products>
-          <title>You May Also Like</title>
-          <product-grid columns="1">
-            <!-- {Vertical list of recommended products} -->
-            <product-card compact="true">
-              <!-- {Compact product card for sidebar} -->
-            </product-card>
-          </product-grid>
-        </recommended-products>
-
+            <value data-cart-summary="total">${total}</value>
+          </row>
+        </summary-rows>
+        
+        <action class="summary-section__action">
+          <component-size>
+            <button-height>48px (8px × 6)</button-height>
+            <width>100%</width>
+            <margin-top>24px</margin-top>
+          </component-size>
+          <button component="atoms/button" type="primary" size="lg" route="/checkout" text="Proceed to Checkout" full-width="true"/>
+        </action>
+        
+        <!-- {Trust Indicators} -->
+        <trust-badges class="l-spacing-md" style="border-top: 1px solid var(--neutral-200);">
+          <badge component="atoms/icon" name="lock" text="Secure checkout"/>
+          <badge component="atoms/icon" name="truck" text="Free shipping on orders $50+"/>
+          <badge component="atoms/icon" name="shield" text="30-day return policy"/>
+        </trust-badges>
       </column>
 
     </section>
 
   </structure>
 
-  <!-- {Cart Functionality} -->
+  <components>
+    <atomic>
+      <atom name="badge" path="components/atoms/badge/badge.jsp"/>
+      <atom name="button" path="components/atoms/button/button.jsp"/>
+      <atom name="input" path="components/atoms/input/input.jsp"/>
+      <atom name="icon" path="components/atoms/icon/icon.jsp"/>
+    </atomic>
+    <molecular>
+      <molecule name="form-field" path="components/molecules/form-field/form-field.jsp"/>
+    </molecular>
+    <organism>
+      <organism name="header" path="components/organisms/header/header.jsp"/>
+      <organism name="footer" path="components/organisms/footer/footer.jsp"/>
+    </organism>
+  </components>
+
   <functionality>
-    <update-quantity>
-      <!-- {Update item quantity without page reload} -->
-      <method>AJAX</method>
-      <endpoint>/api/cart/update</endpoint>
-      <optimistic-update>true</optimistic-update>
-      <!-- {Update UI immediately, rollback on error} -->
-    </update-quantity>
-    
-    <remove-item>
-      <!-- {Remove item from cart} -->
-      <method>AJAX</method>
-      <endpoint>/api/cart/remove</endpoint>
-      <confirmation>false</confirmation>
-      <!-- {No confirmation needed for remove} -->
-    </remove-item>
-    
-    <persist-cart>
-      <!-- {Cart persistence strategy} -->
-      <guest>sessionStorage</guest>
-      <!-- {Guest users: store in sessionStorage} -->
-      <authenticated>server-side</authenticated>
-      <!-- {Logged-in users: store in database} -->
-    </persist-cart>
+    <update-quantity method="AJAX" endpoint="/api/cart/update" optimistic-ui="true"/>
+    <remove-item method="AJAX" endpoint="/api/cart/remove" confirmation="true"/>
+    <persist-cart guest="localStorage" authenticated="server-side"/>
+    <compatibility-check component="molecules/compatibility-checker"/>
   </functionality>
 
-  <!-- {Refactoring Context} -->
-  <refactoring-context>
-    <current-state>
-      <issues>
-        <issue>Cart updates require full page reload</issue>
-        <issue>No optimistic UI updates for better perceived performance</issue>
-        <issue>Compatibility checking not implemented</issue>
-        <issue>Cart persistence for guests could be improved</issue>
-        <issue>Mobile layout needs optimization (stack columns vertically)</issue>
-      </issues>
-    </current-state>
-    <target-state>
-      <improvements>
-        <improvement>Implement AJAX cart updates with optimistic UI</improvement>
-        <improvement>Add real-time compatibility checking</improvement>
-        <improvement>Persist guest cart in localStorage with expiration</improvement>
-        <improvement>Add cart item animations (add/remove feedback)</improvement>
-        <improvement>Implement save for later functionality</improvement>
-        <improvement>Add cart item notes/instructions field</improvement>
-        <improvement>Mobile: Stack columns, sticky summary at bottom</improvement>
-      </improvements>
-    </target-state>
-  </refactoring-context>
-
-  <dependencies>
-    <component name="header" file="components/header.jsp"/>
-    <component name="footer" file="components/footer.jsp"/>
-    <component name="cart-item" file="components/cart-item.jsp"/>
-    <component name="order-summary" file="components/order-summary.jsp"/>
-    <layout name="base" file="WEB-INF/tags/base.tag"/>
-  </dependencies>
+  <design-tokens>
+    <spacing>8px multiples (l-spacing-xs: 8px, l-spacing-sm: 16px, l-spacing-md: 24px, l-spacing-lg: 32px)</spacing>
+    <container>l-container (max-width: 1400px, padding: 16-32px responsive)</container>
+    <grid>l-grid (12-column), l-two-column (1fr / 420px desktop)</grid>
+    <cards>c-card (bordered, elevated, padded variants)</cards>
+    <z-index>z-base: 0, z-sticky: 200, z-fixed: 300</z-index>
+  </design-tokens>
 
 </page>
-

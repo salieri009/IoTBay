@@ -15,8 +15,8 @@
 }
 
 .badge--small {
-  padding: 2px var(--space-1);  /* 2px 4px */
-  font-size: 10px;
+  padding: var(--space-1) var(--space-1);  /* 4px 4px - 4px multiples */
+  font-size: var(--text-xs);  /* 12px - 4px multiple */
 }
 
 .badge--medium {

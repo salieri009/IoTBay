@@ -1,0 +1,173 @@
+/* =====================================
+   Component: Card (BEM)
+   =====================================
+   
+   Container for grouped information
+   - Visual grouping
+   - Clear boundaries
+   - Elevated surface
+*/
+
+.c-card {
+  background: var(--neutral-white);
+  border-radius: 8px; /* 1 * 8px */
+  padding: 24px; /* 3 * 8px */
+  border: 1px solid var(--neutral-200);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.c-card:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Card Modifiers */
+.c-card--elevated {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.c-card--flat {
+  box-shadow: none;
+  border: none;
+}
+
+.c-card--bordered {
+  border: 1px solid var(--neutral-200);
+  box-shadow: none;
+}
+
+.c-card--padded-small {
+  padding: 16px; /* 2 * 8px */
+}
+
+.c-card--padded-large {
+  padding: 32px; /* 4 * 8px */
+}
+
+/* Card Elements */
+.c-card__header {
+  margin-bottom: 16px; /* 2 * 8px */
+  padding-bottom: 16px; /* 2 * 8px */
+  border-bottom: 1px solid var(--neutral-200);
+}
+
+.c-card__title {
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--neutral-900);
+  margin: 0;
+}
+
+.c-card__body {
+  margin-bottom: 16px; /* 2 * 8px */
+}
+
+.c-card__body:last-child {
+  margin-bottom: 0;
+}
+
+.c-card__footer {
+  margin-top: 16px; /* 2 * 8px */
+  padding-top: 16px; /* 2 * 8px */
+  border-top: 1px solid var(--neutral-200);
+}
+
+/* Buy Box (Sticky Purchase Container) */
+.c-buy-box {
+  background: var(--neutral-white);
+  border-radius: 8px; /* 1 * 8px */
+  padding: 24px; /* 3 * 8px */
+  border: 1px solid var(--neutral-200);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 24px; /* 3 * 8px */
+}
+
+.c-buy-box__price {
+  font-size: 32px; /* 4 * 8px */
+  font-weight: var(--font-weight-bold);
+  color: var(--color-cta);
+  margin-bottom: 8px; /* 1 * 8px */
+}
+
+.c-buy-box__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* 1.5 * 8px */
+  margin-top: 24px; /* 3 * 8px */
+}
+
+.c-buy-box__info {
+  margin-top: 24px; /* 3 * 8px */
+  padding-top: 24px; /* 3 * 8px */
+  border-top: 1px solid var(--neutral-200);
+}
+
+.c-buy-box__info-item {
+  display: flex;
+  align-items: center;
+  gap: 12px; /* 1.5 * 8px */
+  margin-bottom: 12px; /* 1.5 * 8px */
+  font-size: var(--text-sm);
+  color: var(--neutral-600);
+}
+
+.c-buy-box__info-item:last-child {
+  margin-bottom: 0;
+}
+
+/* Product Card (Enhanced) */
+.c-product-card {
+  background: var(--neutral-white);
+  border-radius: 8px; /* 1 * 8px */
+  overflow: hidden;
+  border: 1px solid var(--neutral-200);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.c-product-card:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.c-product-card__image {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  background: var(--neutral-100);
+}
+
+.c-product-card__body {
+  padding: 16px; /* 2 * 8px */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.c-product-card__title {
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--neutral-900);
+  margin: 0 0 8px 0; /* 1 * 8px */
+  line-height: 1.4;
+}
+
+.c-product-card__price {
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-cta);
+  margin-top: auto;
+  padding-top: 16px; /* 2 * 8px */
+}
+
+.c-product-card__actions {
+  margin-top: 16px; /* 2 * 8px */
+  display: flex;
+  gap: 8px; /* 1 * 8px */
+}
+

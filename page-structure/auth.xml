@@ -22,18 +22,39 @@
     <structure>
       
       <!-- {Centered Auth Card Layout} -->
-      <section name="auth-container" type="centered">
+      <section name="auth-container" type="centered" class="l-container">
+        <layout-structure>
+          <design>Centered single-column layout for authentication</design>
+          <container-width>max-width: 440px</container-width>
+          <padding>32px (8px × 4)</padding>
+          <alignment>center</alignment>
+        </layout-structure>
         
-        <auth-card>
+        <auth-card class="c-card c-card--elevated">
+          <component-size>
+            <width>100%, max-width: 440px</width>
+            <padding>40px (8px × 5)</padding>
+            <background>#FFFFFF</background>
+            <border-radius>12px</border-radius>
+            <box-shadow>0 4px 16px rgba(0,0,0,0.1)</box-shadow>
+          </component-size>
           <!-- {Card container for login form} -->
           
           <!-- {Card Header} -->
-          <card-header>
+          <card-header class="text-center l-spacing-md">
+            <component-size>
+              <padding-bottom>24px</padding-bottom>
+              <border-bottom>1px solid var(--neutral-200)</border-bottom>
+            </component-size>
             <logo>
+              <component-size>
+                <logo-size>48px × 48px</logo-size>
+                <margin-bottom>16px</margin-bottom>
+              </component-size>
               <image source="/images/logo.png" alt="IoTBay"/>
             </logo>
-            <title>Welcome back</title>
-            <subtitle>Sign in to your IoT Bay account</subtitle>
+            <title class="text-display-m">Welcome back</title>
+            <subtitle class="text-body-m">{Sign in to your IoT Bay account}</subtitle>
           </card-header>
           
           <!-- {Error Message Display} -->
@@ -49,9 +70,19 @@
           <!-- {Login Form} -->
           <form name="login" method="post" action="/api/login">
             
-            <field-group name="email">
+            <field-group name="email" component="molecules/form-field/form-field.jsp">
+              <component-size>
+                <width>100%</width>
+                <margin-bottom>20px</margin-bottom>
+              </component-size>
               <label>Email Address</label>
-              <input type="email" name="email" required="true" autocomplete="email" placeholder="you@example.com"/>
+              <input type="email" name="email" required="true" autocomplete="email" placeholder="you@example.com">
+                <component-size>
+                  <height>44px (touch target)</height>
+                  <padding>12px 16px</padding>
+                  <border-radius>8px</border-radius>
+                </component-size>
+              </input>
               <!-- {Email input with validation} -->
               <validation>
                 <client-side>email format validation</client-side>
@@ -59,11 +90,25 @@
               </validation>
             </field-group>
             
-            <field-group name="password">
+            <field-group name="password" component="molecules/form-field/form-field.jsp">
+              <component-size>
+                <width>100%</width>
+                <margin-bottom>20px</margin-bottom>
+              </component-size>
               <label>Password</label>
-              <input type="password" name="password" required="true" autocomplete="current-password" placeholder="Enter your password"/>
+              <input type="password" name="password" required="true" autocomplete="current-password" placeholder="Enter your password">
+                <component-size>
+                  <height>44px</height>
+                  <padding>12px 16px 12px 16px</padding>
+                  <padding-right>48px (space for toggle button)</padding-right>
+                </component-size>
+              </input>
               <!-- {Password input, hidden by default} -->
               <password-toggle>
+                <component-size>
+                  <button-size>44px × 44px</button-size>
+                  <position>absolute right-0</position>
+                </component-size>
                 <!-- {Show/hide password toggle button} -->
                 <button type="icon" action="togglePasswordVisibility" aria-label="Show password"/>
               </password-toggle>
@@ -83,7 +128,12 @@
               </forgot-password>
             </form-options>
             
-            <submit-button>
+            <submit-button class="l-spacing-md">
+              <component-size>
+                <button-height>48px (8px × 6)</button-height>
+                <width>100%</width>
+                <margin-top>24px</margin-top>
+              </component-size>
               <button type="primary" size="large" full-width="true" text="Sign In"/>
               <!-- {Primary CTA to submit login form} -->
             </submit-button>

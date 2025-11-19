@@ -61,6 +61,7 @@
   String min = request.getParameter("min");
   String max = request.getParameter("max");
   String step = request.getParameter("step");
+  String attributes = request.getParameter("attributes");
   
   String inputClass = "input";
   if (error) {
@@ -86,6 +87,7 @@
          <c:if test="${!empty min}">min="${min}"</c:if>
          <c:if test="${!empty max}">max="${max}"</c:if>
          <c:if test="${!empty step}">step="${step}"</c:if>
+         <c:if test="${!empty attributes}">${attributes}</c:if>
          class="${inputClass}"
          <c:if test="${!empty ariaLabel}">aria-label="${ariaLabel}"</c:if>
          <c:if test="${!empty ariaDescribedBy}">aria-describedby="${ariaDescribedBy}"</c:if>

@@ -114,7 +114,11 @@
                                     <p class="text-neutral-600 mb-6">
                                         You haven't placed any orders yet. Start shopping to see your orders here.
                                     </p>
-                                    <a href="${pageContext.request.contextPath}/browse.jsp" class="btn btn--primary">Start Shopping</a>
+                                    <jsp:include page="/components/atoms/button/button.jsp">
+                                        <jsp:param name="type" value="primary" />
+                                        <jsp:param name="text" value="Start Shopping" />
+                                        <jsp:param name="href" value="${pageContext.request.contextPath}/browse.jsp" />
+                                    </jsp:include>
                                 </div>
                             </c:when>
                             <c:otherwise>
@@ -138,19 +142,34 @@
                                             <div class="flex items-center gap-4 mt-2 md:mt-0">
                                                 <c:choose>
                                                     <c:when test="${order.status == 'SHIPPED'}">
-                                                        <span class="badge badge--success">Shipped</span>
+                                                        <jsp:include page="/components/atoms/badge/badge.jsp">
+                                                            <jsp:param name="type" value="success" />
+                                                            <jsp:param name="text" value="Shipped" />
+                                                        </jsp:include>
                                                     </c:when>
                                                     <c:when test="${order.status == 'PENDING'}">
-                                                        <span class="badge badge--warning">Pending</span>
+                                                        <jsp:include page="/components/atoms/badge/badge.jsp">
+                                                            <jsp:param name="type" value="warning" />
+                                                            <jsp:param name="text" value="Pending" />
+                                                        </jsp:include>
                                                     </c:when>
                                                     <c:when test="${order.status == 'DELIVERED'}">
-                                                        <span class="badge badge--success">Delivered</span>
+                                                        <jsp:include page="/components/atoms/badge/badge.jsp">
+                                                            <jsp:param name="type" value="success" />
+                                                            <jsp:param name="text" value="Delivered" />
+                                                        </jsp:include>
                                                     </c:when>
                                                     <c:when test="${order.status == 'CANCELLED'}">
-                                                        <span class="badge badge--error">Cancelled</span>
+                                                        <jsp:include page="/components/atoms/badge/badge.jsp">
+                                                            <jsp:param name="type" value="error" />
+                                                            <jsp:param name="text" value="Cancelled" />
+                                                        </jsp:include>
                                                     </c:when>
                                                     <c:otherwise>
-                                                        <span class="badge badge--info">${order.status}</span>
+                                                        <jsp:include page="/components/atoms/badge/badge.jsp">
+                                                            <jsp:param name="type" value="info" />
+                                                            <jsp:param name="text" value="${order.status}" />
+                                                        </jsp:include>
                                                     </c:otherwise>
                                                 </c:choose>
                                                 <span class="text-lg font-semibold text-neutral-900">
@@ -176,18 +195,34 @@
                                         
                                         <!-- Order Actions -->
                                         <div class="flex flex-col sm:flex-row gap-3">
-                                            <a href="${pageContext.request.contextPath}/orderhistory?orderId=${order.id}" 
-                                               class="btn btn--outline btn--sm" 
-                                               aria-label="View order details">View Details</a>
-                                            <a href="${pageContext.request.contextPath}/shipment?orderId=${order.id}" 
-                                               class="btn btn--secondary btn--sm" 
-                                               aria-label="Track this order">Track Order</a>
-                                            <a href="#" 
-                                               class="btn btn--ghost btn--sm" 
-                                               aria-label="Reorder these items">Reorder</a>
-                                            <a href="#" 
-                                               class="btn btn--ghost btn--sm" 
-                                               aria-label="Download invoice">Download Invoice</a>
+                                            <jsp:include page="/components/atoms/button/button.jsp">
+                                                <jsp:param name="type" value="outline" />
+                                                <jsp:param name="size" value="small" />
+                                                <jsp:param name="text" value="View Details" />
+                                                <jsp:param name="href" value="${pageContext.request.contextPath}/orderhistory?orderId=${order.id}" />
+                                                <jsp:param name="ariaLabel" value="View order details" />
+                                            </jsp:include>
+                                            <jsp:include page="/components/atoms/button/button.jsp">
+                                                <jsp:param name="type" value="secondary" />
+                                                <jsp:param name="size" value="small" />
+                                                <jsp:param name="text" value="Track Order" />
+                                                <jsp:param name="href" value="${pageContext.request.contextPath}/shipment?orderId=${order.id}" />
+                                                <jsp:param name="ariaLabel" value="Track this order" />
+                                            </jsp:include>
+                                            <jsp:include page="/components/atoms/button/button.jsp">
+                                                <jsp:param name="type" value="ghost" />
+                                                <jsp:param name="size" value="small" />
+                                                <jsp:param name="text" value="Reorder" />
+                                                <jsp:param name="href" value="#" />
+                                                <jsp:param name="ariaLabel" value="Reorder these items" />
+                                            </jsp:include>
+                                            <jsp:include page="/components/atoms/button/button.jsp">
+                                                <jsp:param name="type" value="ghost" />
+                                                <jsp:param name="size" value="small" />
+                                                <jsp:param name="text" value="Download Invoice" />
+                                                <jsp:param name="href" value="#" />
+                                                <jsp:param name="ariaLabel" value="Download invoice" />
+                                            </jsp:include>
                                         </div>
                                     </div>
                                 </c:forEach>

@@ -48,6 +48,7 @@
   String errorMessage = request.getParameter("errorMessage");
   String helpText = request.getParameter("helpText");
   String id = request.getParameter("id");
+  String attributes = request.getParameter("attributes");
   
   if (id == null && name != null) {
     id = name;
@@ -77,6 +78,7 @@
     <jsp:param name="error" value="${error ? 'true' : 'false'}" />
     <jsp:param name="errorMessage" value="${errorMessage}" />
     <jsp:param name="ariaDescribedBy" value="${error ? errorId : (helpText != null ? helpId : '')}" />
+    <jsp:param name="attributes" value="${attributes}" />
   </jsp:include>
   
   <%-- Help Text --%>
