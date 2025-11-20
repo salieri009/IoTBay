@@ -2,7 +2,7 @@
 
 <div align="center">
 
-[한국어](README.ko.md) | English | [日本語](README.ja.md)
+[한국어](README.ko_docs.md) | English | [日本語](README.ja_docs.md)
 
 </div>
 
@@ -165,10 +165,14 @@ IoTBay/
 │   │   ├── web.xml          # Deployment descriptor
 │   │   └── views/           # Protected JSP pages
 │   └── *.jsp                # JSP pages
-├── design plan/             # Design system documentation
-│   ├── FEATURES.md         # Feature requirements
-│   ├── DESIGN_SYSTEM.md
-│   └── *.md
+├── docs/                    # Project Documentation
+│   ├── architecture/        # System design & decisions
+│   ├── requirements/        # Features & specifications
+│   ├── testing/             # Test strategies & audits
+│   ├── development/         # Developer guides
+│   ├── plans/               # Implementation plans
+│   ├── reports/             # Status reports
+│   └── archive/             # Historical data
 └── pom.xml                  # Maven configuration
 ```
 

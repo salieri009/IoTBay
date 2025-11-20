@@ -2,7 +2,7 @@
 
 <div align="center">
 
-日本語 | [English](README.en.md) | [한국어](README.ko.md)
+日本語 | [English](README.en_docs.md) | [한국어](README.ko_docs.md)
 
 </div>
 
@@ -165,9 +165,14 @@ IoTBay/
 │   │   ├── web.xml          # デプロイ記述子
 │   │   └── views/           # 保護されたJSPページ
 │   └── *.jsp                # JSPページ
-├── design plan/             # デザインシステムドキュメント
-│   ├── FEATURES.md         # 機能要件
-│   └── *.md
+├── docs/                    # プロジェクトドキュメント
+│   ├── architecture/        # システム設計と決定
+│   ├── requirements/        # 機能と仕様
+│   ├── testing/             # テスト戦略と監査
+│   ├── development/         # 開発者ガイド
+│   ├── plans/               # 実装計画
+│   ├── reports/             # ステータスレポート
+│   └── archive/             # 履歴データ
 └── pom.xml                  # Maven設定
 ```
 
@@ -304,7 +309,7 @@ IoTBay/
    - ユーザー登録と認証
    - プロフィール管理
    - ロールベースアクセス制御 (顧客、スタッフ、管理者)
-   - セッション管理
+   - セッション 관리
 
 2. **製品管理**
    - カテゴリ付き製品カタログ

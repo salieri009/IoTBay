@@ -6,13 +6,24 @@
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
 
 <%
+    // If products are not set, redirect to CategoryPageController
     List<Product> products = (List<Product>) request.getAttribute("products");
+    model.Category category = (model.Category) request.getAttribute("category");
+    
+    if (products == null || category == null) {
+        // Redirect to CategoryPageController to fetch data
+        String contextPath = request.getContextPath();
+        response.sendRedirect(contextPath + "/category/smarthome");
+        return;
+    }
+    
     String searchKeyword = (String) request.getParameter("search");
     if (products == null) {
         products = new ArrayList<>();
     }
     // Expose to EL
     request.setAttribute("products", products);
+    request.setAttribute("category", category);
 %>
 
 <t:base title="Smart Home Solutions - IoT Bay" description="Smart home automation, security, and energy management.">

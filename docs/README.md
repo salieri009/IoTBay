@@ -1,69 +1,47 @@
-# Page Structure Documentation
+# IoT Bay Documentation
 
-This directory contains XML-based documentation that describes the structure and context of UI/UX refactoring for the IoTBay platform. These XML files are designed to help AI systems understand how pages work and how they should be structured.
+Welcome to the IoT Bay engineering documentation. This directory is organized to support a Test-Driven Development (TDD) workflow and modern engineering best practices.
 
----
+## Directory Structure
 
-## Purpose
+### 🏗️ [architecture/](./architecture/)
+**System Design & Decisions**
+High-level design documents, component architecture, database schema, and design system specifications.
+*Start here to understand the "Big Picture".*
 
-The XML files in this directory provide:
-- **Page Structure**: Hierarchical representation of page components
-- **Component Relationships**: How components relate to each other
-- **Refactoring Context**: Information needed for UI/UX improvements
-- **AI-Friendly Format**: Structured data that AI systems can easily parse and understand
+### 📋 [requirements/](./requirements/)
+**Features & Specifications**
+Detailed feature descriptions, user stories, and requirements.
+*What are we building?*
 
----
+### 🧪 [testing/](./testing/)
+**Quality Assurance**
+Test strategies, audit reports (Accessibility, Heuristics), and improvement plans.
+*How do we ensure quality?*
 
-## File Format
+### 💻 [development/](./development/)
+**Developer Guides**
+API documentation, setup guides, contribution guidelines, and workflow standards.
+*How do I contribute?*
 
-All files use XML format with descriptive comments in `{}` braces. The `{}` notation provides human-readable context and explanations that help AI systems understand the XML structure.
+### 📅 [plans/](./plans/)
+**Roadmaps & Execution**
+Active implementation plans, migration guides, and future improvement strategies.
+*What is being worked on now?*
 
-### Example Structure
+### 📊 [reports/](./reports/)
+**Status & Reviews**
+Periodic reviews, expert analyses, and progress reports.
+*What is the current state?*
 
-```xml
-<page name="example">
-  <!-- {This is a comment explaining what this element does} -->
-  <component type="header">
-    <!-- {Header component contains navigation and user menu} -->
-  </component>
-</page>
-```
-
----
-
-## File Organization
-
-### Core Pages
-- `index.xml` - Homepage structure
-- `browse.xml` - Product browsing page
-- `product-details.xml` - Product detail page
-
-### E-commerce Flow
-- `cart.xml` - Shopping cart page
-- `checkout.xml` - Multi-step checkout process
-- `order-list.xml` - Order history and tracking
-
-### User Management
-- `auth.xml` - Authentication pages (login/register)
-- `profile.xml` - User profile viewing and editing
-
-### Administrative
-- `admin-dashboard.xml` - Admin dashboard and management interface
-
-### Category Pages
-- `category.xml` - Category browsing and category-specific product listings
+### 📦 [archive/](./archive/)
+**Historical Data**
+Deprecated documents, past sprint summaries, and old logs.
+*History of the project.*
 
 ---
 
-## Usage
-
-These XML files serve as:
-1. **Documentation** for developers understanding page structure
-2. **Reference** for AI systems performing refactoring
-3. **Blueprint** for maintaining consistency across pages
-4. **Context** for understanding component relationships
-
----
-
-**Last Updated**: 2025
-
+## Quick Links
+- [Contributing Guidelines](./development/CONTRIBUTING.md)
+- [Git Workflow](./development/GIT_WORKFLOW.md)
+- [API Documentation](./development/API_DOCUMENTATION.en_docs.md)

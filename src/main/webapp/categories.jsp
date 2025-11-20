@@ -1,7 +1,9 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
+<%@ page import="java.util.Map" %>
 
 <t:base title="Categories | IoT Bay" description="Browse IoT device categories - Smart Home, Industrial, Agricultural, and Warehouse">
     <main>
@@ -38,193 +40,60 @@
                 
                 <!-- Categories Grid -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <c:forEach var="category" items="${categories}">
+                        <c:set var="categorySlug" value="${fn:toLowerCase(fn:replace(category.name, ' ', '-'))}" />
+                        <c:set var="productCount" value="${categoryProductCounts[category.id] != null ? categoryProductCounts[category.id] : 0}" />
+                        <article id="${categorySlug}" class="category-card group">
+                            <div class="category-card__image">
+                                <img src="${pageContext.request.contextPath}/images/categories/${categorySlug}.jpg" 
+                                     alt="${category.name} Devices" 
+                                     class="w-full h-48 object-cover rounded-t-lg"
+                                     onerror="this.src='${pageContext.request.contextPath}/images/categories/default.jpg'">
+                                <div class="category-card__overlay">
+                                    <span class="category-card__count">${productCount}+ Products</span>
+                                </div>
+                            </div>
+                            <div class="category-card__content">
+                                <h3 class="category-card__title">${category.name}</h3>
+                                <p class="category-card__description">
+                                    ${category.description != null && !empty category.description ? category.description : 'Explore our collection of ' += category.name += ' IoT solutions and devices.'}
+                                </p>
+                                <div class="category-card__actions">
+                                    <a href="${pageContext.request.contextPath}/browse.jsp?category=${categorySlug}&categoryId=${category.id}" 
+                                       class="btn btn--primary w-full">
+                                        Explore ${category.name}
+                                    </a>
+                                </div>
+                            </div>
+                        </article>
+                    </c:forEach>
                     
-                    <!-- Smart Home Category -->
-                    <article id="smart-home" class="category-card group">
-                        <div class="category-card__image">
-                            <img src="${pageContext.request.contextPath}/images/categories/smart-home.jpg" 
-                                 alt="Smart Home Devices" 
-                                 class="w-full h-48 object-cover rounded-t-lg">
-                            <div class="category-card__overlay">
-                                <span class="category-card__count">120+ Products</span>
+                    <c:if test="${empty categories}">
+                        <!-- Fallback: Show default categories if database is empty -->
+                        <article id="smart-home" class="category-card group">
+                            <div class="category-card__image">
+                                <img src="${pageContext.request.contextPath}/images/categories/smart-home.jpg" 
+                                     alt="Smart Home Devices" 
+                                     class="w-full h-48 object-cover rounded-t-lg">
+                                <div class="category-card__overlay">
+                                    <span class="category-card__count">0+ Products</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="category-card__content">
-                            <h3 class="category-card__title">Smart Home</h3>
-                            <p class="category-card__description">
-                                Transform your living space with intelligent automation, security systems, 
-                                and energy management solutions.
-                            </p>
-                            <div class="category-card__features">
-                                <span class="feature-tag">Smart Lighting</span>
-                                <span class="feature-tag">Security Systems</span>
-                                <span class="feature-tag">Climate Control</span>
-                                <span class="feature-tag">Voice Assistants</span>
+                            <div class="category-card__content">
+                                <h3 class="category-card__title">Smart Home</h3>
+                                <p class="category-card__description">
+                                    Transform your living space with intelligent automation, security systems, 
+                                    and energy management solutions.
+                                </p>
+                                <div class="category-card__actions">
+                                    <a href="${pageContext.request.contextPath}/browse.jsp?category=smart-home" 
+                                       class="btn btn--primary w-full">
+                                        Explore Smart Home
+                                    </a>
+                                </div>
                             </div>
-                            <div class="category-card__actions">
-                                <a href="/browse.jsp?category=smart-home" 
-                                   class="btn btn--primary w-full">
-                                    Explore Smart Home
-                                </a>
-                            </div>
-                        </div>
-                    </article>
-                    
-                    <!-- Industrial IoT Category -->
-                    <article id="industrial" class="category-card group">
-                        <div class="category-card__image">
-                            <img src="${pageContext.request.contextPath}/images/categories/industrial.jpg" 
-                                 alt="Industrial IoT Solutions" 
-                                 class="w-full h-48 object-cover rounded-t-lg">
-                            <div class="category-card__overlay">
-                                <span class="category-card__count">85+ Products</span>
-                            </div>
-                        </div>
-                        <div class="category-card__content">
-                            <h3 class="category-card__title">Industrial IoT</h3>
-                            <p class="category-card__description">
-                                Enhance operational efficiency with sensors, monitoring systems, 
-                                and predictive maintenance solutions.
-                            </p>
-                            <div class="category-card__features">
-                                <span class="feature-tag">Process Monitoring</span>
-                                <span class="feature-tag">Asset Tracking</span>
-                                <span class="feature-tag">Predictive Maintenance</span>
-                                <span class="feature-tag">Quality Control</span>
-                            </div>
-                            <div class="category-card__actions">
-                                <a href="/browse.jsp?category=industrial" 
-                                   class="btn btn--primary w-full">
-                                    Explore Industrial
-                                </a>
-                            </div>
-                        </div>
-                    </article>
-                    
-                    <!-- Agriculture Category -->
-                    <article id="agriculture" class="category-card group">
-                        <div class="category-card__image">
-                            <img src="${pageContext.request.contextPath}/images/categories/agriculture.jpg" 
-                                 alt="Agricultural IoT Solutions" 
-                                 class="w-full h-48 object-cover rounded-t-lg">
-                            <div class="category-card__overlay">
-                                <span class="category-card__count">65+ Products</span>
-                            </div>
-                        </div>
-                        <div class="category-card__content">
-                            <h3 class="category-card__title">Agriculture</h3>
-                            <p class="category-card__description">
-                                Revolutionize farming with precision agriculture, smart irrigation, 
-                                and crop monitoring technologies.
-                            </p>
-                            <div class="category-card__features">
-                                <span class="feature-tag">Soil Monitoring</span>
-                                <span class="feature-tag">Smart Irrigation</span>
-                                <span class="feature-tag">Weather Stations</span>
-                                <span class="feature-tag">Livestock Tracking</span>
-                            </div>
-                            <div class="category-card__actions">
-                                <a href="/browse.jsp?category=agriculture" 
-                                   class="btn btn--primary w-full">
-                                    Explore Agriculture
-                                </a>
-                            </div>
-                        </div>
-                    </article>
-                    
-                    <!-- Warehouse Category -->
-                    <article class="category-card group">
-                        <div class="category-card__image">
-                            <img src="${pageContext.request.contextPath}/images/categories/warehouse.jpg" 
-                                 alt="Warehouse IoT Solutions" 
-                                 class="w-full h-64 object-cover rounded-t-lg">
-                            <div class="category-card__overlay">
-                                <span class="category-card__count">45+ Products</span>
-                            </div>
-                        </div>
-                        <div class="category-card__content">
-                            <h3 class="category-card__title">Warehouse & Logistics</h3>
-                            <p class="category-card__description">
-                                Optimize supply chain operations with inventory tracking, 
-                                automated sorting, and fleet management systems.
-                            </p>
-                            <div class="category-card__features">
-                                <span class="feature-tag">Inventory Tracking</span>
-                                <span class="feature-tag">Fleet Management</span>
-                                <span class="feature-tag">Automated Sorting</span>
-                                <span class="feature-tag">Environmental Monitoring</span>
-                            </div>
-                            <div class="category-card__actions">
-                                <a href="/browse.jsp?category=warehouse" 
-                                   class="btn btn--primary w-full">
-                                    Explore Warehouse
-                                </a>
-                            </div>
-                        </div>
-                    </article>
-                    
-                    <!-- Healthcare Category -->
-                    <article class="category-card group">
-                        <div class="category-card__image">
-                            <img src="${pageContext.request.contextPath}/images/categories/healthcare.jpg" 
-                                 alt="Healthcare IoT Solutions" 
-                                 class="w-full h-48 object-cover rounded-t-lg">
-                            <div class="category-card__overlay">
-                                <span class="category-card__count">35+ Products</span>
-                            </div>
-                        </div>
-                        <div class="category-card__content">
-                            <h3 class="category-card__title">Healthcare IoT</h3>
-                            <p class="category-card__description">
-                                Advance patient care with wearable devices, remote monitoring, 
-                                and smart medical equipment.
-                            </p>
-                            <div class="category-card__features">
-                                <span class="feature-tag">Patient Monitoring</span>
-                                <span class="feature-tag">Wearable Devices</span>
-                                <span class="feature-tag">Medication Tracking</span>
-                                <span class="feature-tag">Emergency Response</span>
-                            </div>
-                            <div class="category-card__actions">
-                                <a href="/browse.jsp?category=healthcare" 
-                                   class="btn btn--primary w-full">
-                                    Explore Healthcare
-                                </a>
-                            </div>
-                        </div>
-                    </article>
-                    
-                    <!-- Transportation Category -->
-                    <article class="category-card group">
-                        <div class="category-card__image">
-                            <img src="${pageContext.request.contextPath}/images/categories/transportation.jpg" 
-                                 alt="Transportation IoT Solutions" 
-                                 class="w-full h-48 object-cover rounded-t-lg">
-                            <div class="category-card__overlay">
-                                <span class="category-card__count">28+ Products</span>
-                            </div>
-                        </div>
-                        <div class="category-card__content">
-                            <h3 class="category-card__title">Transportation</h3>
-                            <p class="category-card__description">
-                                Modernize transportation with connected vehicles, traffic management, 
-                                and smart infrastructure solutions.
-                            </p>
-                            <div class="category-card__features">
-                                <span class="feature-tag">Vehicle Tracking</span>
-                                <span class="feature-tag">Traffic Management</span>
-                                <span class="feature-tag">Route Optimization</span>
-                                <span class="feature-tag">Fleet Analytics</span>
-                            </div>
-                            <div class="category-card__actions">
-                                <a href="/browse.jsp?category=transportation" 
-                                   class="btn btn--primary w-full">
-                                    Explore Transportation
-                                </a>
-                            </div>
-                        </div>
-                    </article>
-                    
+                        </article>
+                    </c:if>
                 </div>
             </div>
         </section>

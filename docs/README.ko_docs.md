@@ -2,7 +2,7 @@
 
 <div align="center">
 
-한국어 | [English](README.en.md) | [日本語](README.ja.md)
+한국어 | [English](README.en_docs.md) | [日本語](README.ja_docs.md)
 
 </div>
 
@@ -165,9 +165,14 @@ IoTBay/
 │   │   ├── web.xml          # 배포 설명자
 │   │   └── views/           # 보호된 JSP 페이지
 │   └── *.jsp                # JSP 페이지
-├── design plan/             # 디자인 시스템 문서
-│   ├── FEATURES.md         # 기능 요구사항
-│   └── *.md
+├── docs/                    # 프로젝트 문서
+│   ├── architecture/        # 시스템 설계 및 결정
+│   ├── requirements/        # 기능 및 사양
+│   ├── testing/             # 테스트 전략 및 감사
+│   ├── development/         # 개발자 가이드
+│   ├── plans/               # 구현 계획
+│   ├── reports/             # 상태 보고서
+│   └── archive/             # 기록 데이터
 └── pom.xml                  # Maven 설정
 ```
 

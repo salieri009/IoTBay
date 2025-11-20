@@ -143,7 +143,35 @@
         <url-pattern>/api/v1/products/*</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>SupplierController</servlet-name>
+        <servlet-class>controller.SupplierController</servlet-class>
+    </servlet>
 
+    <servlet-mapping>
+        <servlet-name>SupplierController</servlet-name>
+        <url-pattern>/admin/supplier/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ManageOrderController</servlet-name>
+        <servlet-class>controller.ManageOrderController</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ManageOrderController</servlet-name>
+        <url-pattern>/manage/orders</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>DataManagementController</servlet-name>
+        <servlet-class>controller.DataManagementController</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>DataManagementController</servlet-name>
+        <url-pattern>/api/dataManagement/*</url-pattern>
+    </servlet-mapping>
 
     <error-page>
     <error-code>400</error-code>

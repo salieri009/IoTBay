@@ -90,12 +90,25 @@
                     aria-expanded="false"
                     aria-haspopup="true"
                     aria-controls="userMenuDropdown"
-                    aria-label="User menu for ${user.firstName} ${user.lastName}"
+                    aria-label="User menu for ${user.firstName != null ? user.firstName : ''} ${user.lastName != null ? user.lastName : ''}"
                     id="userMenuButton">
-              <div class="h-8 w-8 rounded-full bg-brand-primary text-white flex items-center justify-center text-xs font-bold" aria-hidden="true">
-                ${fn:toUpperCase(user.firstName.substring(0,1))}${fn:toUpperCase(user.lastName.substring(0,1))}
+              <div class="h-8 w-8 rounded-full bg-brand-primary text-white flex items-center justify-center text-xs font-bold overflow-hidden" aria-hidden="true">
+                <c:choose>
+                  <c:when test="${user.firstName != null && !empty user.firstName && user.lastName != null && !empty user.lastName}">
+                    ${fn:toUpperCase(fn:substring(user.firstName, 0, 1))}${fn:toUpperCase(fn:substring(user.lastName, 0, 1))}
+                  </c:when>
+                  <c:when test="${user.firstName != null && !empty user.firstName}">
+                    ${fn:toUpperCase(fn:substring(user.firstName, 0, 1))}
+                  </c:when>
+                  <c:when test="${user.email != null && !empty user.email}">
+                    ${fn:toUpperCase(fn:substring(user.email, 0, 1))}
+                  </c:when>
+                  <c:otherwise>
+                    U
+                  </c:otherwise>
+                </c:choose>
               </div>
-              <span class="hidden lg:block">${user.firstName}</span>
+              <span class="hidden lg:block">${user.firstName != null ? user.firstName : 'User'}</span>
               <jsp:include page="/components/atoms/icon/icon.jsp">
                 <jsp:param name="name" value="chevron-down" />
                 <jsp:param name="size" value="small" />

@@ -47,9 +47,9 @@
                     <ul class="space-y-2">
                         <li><a href="${pageContext.request.contextPath}/login.jsp" class="text-neutral-600 hover:text-brand-primary transition-colors">Login</a></li>
                         <li><a href="${pageContext.request.contextPath}/register.jsp" class="text-neutral-600 hover:text-brand-primary transition-colors">Register</a></li>
-                        <li><a href="${pageContext.request.contextPath}/Profiles.jsp" class="text-neutral-600 hover:text-brand-primary transition-colors">Profile</a></li>
-                        <li><a href="${pageContext.request.contextPath}/orderList.jsp" class="text-neutral-600 hover:text-brand-primary transition-colors">Order History</a></li>
-                        <li><a href="${pageContext.request.contextPath}/cart.jsp" class="text-neutral-600 hover:text-brand-primary transition-colors">Shopping Cart</a></li>
+                        <li><a href="${pageContext.request.contextPath}/api/Profiles" class="text-neutral-600 hover:text-brand-primary transition-colors">Profile</a></li>
+                        <li><a href="${pageContext.request.contextPath}/orderhistory" class="text-neutral-600 hover:text-brand-primary transition-colors">Order History</a></li>
+                        <li><a href="${pageContext.request.contextPath}/cart" class="text-neutral-600 hover:text-brand-primary transition-colors">Shopping Cart</a></li>
                     </ul>
                 </div>
 
@@ -59,7 +59,8 @@
                     <ul class="space-y-2">
                         <li><a href="${pageContext.request.contextPath}/help.jsp" class="text-neutral-600 hover:text-brand-primary transition-colors">Help Center</a></li>
                         <li><a href="${pageContext.request.contextPath}/faq.jsp" class="text-neutral-600 hover:text-brand-primary transition-colors">FAQ</a></li>
-                        <li><a href="${pageContext.request.contextPath}/shipping.jsp" class="text-neutral-600 hover:text-brand-primary transition-colors">Shipping & Returns</a></li>
+                        <li><a href="${pageContext.request.contextPath}/shipping.jsp" class="text-neutral-600 hover:text-brand-primary transition-colors">Shipping Info</a></li>
+                        <li><a href="${pageContext.request.contextPath}/returns.jsp" class="text-neutral-600 hover:text-brand-primary transition-colors">Returns & Refunds</a></li>
                         <li><a href="${pageContext.request.contextPath}/warranty.jsp" class="text-neutral-600 hover:text-brand-primary transition-colors">Warranty Info</a></li>
                         <li><a href="${pageContext.request.contextPath}/contact.jsp" class="text-neutral-600 hover:text-brand-primary transition-colors">Contact Us</a></li>
                     </ul>
@@ -81,9 +82,9 @@
                         <h2 class="text-xl font-bold text-neutral-900 mb-4">Admin</h2>
                         <ul class="space-y-2">
                             <li><a href="${pageContext.request.contextPath}/admin-dashboard.jsp" class="text-neutral-600 hover:text-brand-primary transition-colors">Dashboard</a></li>
-                            <li><a href="${pageContext.request.contextPath}/manage-products.jsp" class="text-neutral-600 hover:text-brand-primary transition-colors">Manage Products</a></li>
-                            <li><a href="${pageContext.request.contextPath}/manage-users.jsp" class="text-neutral-600 hover:text-brand-primary transition-colors">Manage Users</a></li>
-                            <li><a href="${pageContext.request.contextPath}/manage-access-logs.jsp" class="text-neutral-600 hover:text-brand-primary transition-colors">Access Logs</a></li>
+                            <li><a href="${pageContext.request.contextPath}/api/manage/products" class="text-neutral-600 hover:text-brand-primary transition-colors">Manage Products</a></li>
+                            <li><a href="${pageContext.request.contextPath}/api/manage/users" class="text-neutral-600 hover:text-brand-primary transition-colors">Manage Users</a></li>
+                            <li><a href="${pageContext.request.contextPath}/api/manage/access-logs" class="text-neutral-600 hover:text-brand-primary transition-colors">Access Logs</a></li>
                         </ul>
                     </div>
                 </c:if>

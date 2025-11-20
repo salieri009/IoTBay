@@ -8,17 +8,17 @@
 
 <%
     User user = (User) session.getAttribute("user");
-    if (user == null || !"staff".equalsIgnoreCase(user.getRole())) {
+    if (user == null || (!"staff".equalsIgnoreCase(user.getRole()) && !"admin".equalsIgnoreCase(user.getRole()))) {
         response.sendRedirect("../../login.jsp");
         return;
     }
     String contextPath = request.getContextPath();
     
-    // Mock product data
-    List<Product> products = new ArrayList<>();
-    products.add(new Product(1, "Smart Home Hub Pro", "Advanced home automation hub", 299.99, 50, "Smart Home", "IoT Solutions Inc.", true));
-    products.add(new Product(2, "IoT Sensor Pack", "Complete sensor kit", 149.99, 25, "Industrial IoT", "SmartTech Co.", true));
-    products.add(new Product(3, "Smart Thermostat", "WiFi-enabled thermostat", 199.99, 30, "Smart Home", "Global Connect", true));
+    @SuppressWarnings("unchecked")
+    List<Product> products = (List<Product>) request.getAttribute("products");
+    if (products == null) {
+        products = new ArrayList<>();
+    }
 %>
 
 <!DOCTYPE html>
