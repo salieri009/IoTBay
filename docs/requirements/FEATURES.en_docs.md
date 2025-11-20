@@ -5,8 +5,8 @@
 **Assignment**: Assignment 2 - Autumn 2025  
 **Institution**: University of Technology Sydney (UTS)  
 **Project Type**: E-commerce Web Application for IoT Devices  
-**Document Version**: 2.0  
-**Last Updated**: 2025
+**Document Version**: 2.1  
+**Last Updated**: 2025-01-20
 
 ---
 
@@ -322,7 +322,7 @@
 ### 2.4 Product Management (Admin/Staff)
 
 #### Product CRUD Operations
-- **Create Product** (`WEB-INF/views/manage-products.jsp`, `ManageProductController`)
+- **Create Product** (`manage-product-form.jsp`, `manage-products.jsp`, `ManageProductController`)
   - Product name, description
   - Category assignment
   - Price and stock quantity
@@ -640,7 +640,7 @@
 
 ### 5.2 User Management
 
-#### User Management Interface (`WEB-INF/views/manage-users.jsp`, `ManageUserController`)
+#### User Management Interface (`manage-users.jsp`, `manage-user-form.jsp`, `ManageUserController`)
 - **User Listing**
   - List all users
   - User search and filtering
@@ -660,7 +660,7 @@
 
 ### 5.3 Product Management
 
-#### Product Management Interface (`WEB-INF/views/manage-products.jsp`, `ManageProductController`)
+#### Product Management Interface (`manage-products.jsp`, `ManageProductController`)
 - **Product Listing**
   - List all products
   - Product search and filtering
@@ -700,7 +700,7 @@
 
 ### 5.5 Access Logging
 
-#### Access Log Management (`accessLog.jsp`, `WEB-INF/views/manage-access-logs.jsp`, `AccesslogController`, `ManageAccessLogController`)
+#### Access Log Management (`accessLog.jsp`, `manage-access-logs.jsp`, `AccesslogController`, `ManageAccessLogController`)
 - **Log Viewing**
   - View all access logs
   - Filter by user
@@ -749,7 +749,7 @@
 
 ### 5.7 Supplier Management
 
-#### Supplier Management (`supplier-management.jsp`, `WEB-INF/views/manage-suppliers.jsp`, `SupplierController`)
+#### Supplier Management (`admin/supplier-list.jsp`, `admin/supplier-view.jsp`, `admin/supplier-form.jsp`, `SupplierController`)
 - **Supplier Listing**
   - List all suppliers
   - Supplier information
@@ -767,7 +767,7 @@
 
 ## 6. Data Management & Export
 
-### 6.1 Data Export (`data-management.jsp`, `WEB-INF/views/manage-data.jsp`, `DataManagementController`)
+### 6.1 Data Export (`data-management.jsp`, `DataManagementController`)
 
 #### CSV Export Functionality
 - **Export Users** (`/api/dataManagement/exportUsers`)
@@ -1306,21 +1306,21 @@
   - Index optimization
 
 #### Database Tables
-- **Users** - User accounts and profiles
-- **Products** - Product catalog
-- **Categories** - Product categories
-- **Orders** - Customer orders
-- **OrderItems** - Order line items
-- **CartItems** - Shopping cart items
-- **Payments** - Payment transactions
-- **PaymentDetails** - Payment method details
-- **Shipments** - Shipping information
-- **AccessLogs** - System access logs
-- **AddressDetails** - User addresses
-- **Reviews** - Product reviews and ratings
-- **Wishlist** - User wishlists (if implemented)
-- **WishlistProducts** - Wishlist items (if implemented)
-- **ResetQuestions** - Password recovery questions
+- **User** - User accounts and profiles (with password_hash, salt, role, isActive)
+- **Products** - Product catalog (with sku, short_description, cost_price, low_stock_threshold, weight, dimensions, gallery_images, specifications, is_active, is_featured, meta_title, meta_description)
+- **Categories** - Product categories (hierarchical with parent_category_id, slug, image_url, sort_order, is_active)
+- **Orders** - Customer orders (with order_number, status, subtotal, tax_amount, shipping_cost, discount_amount, total_amount, currency, shipping/billing addresses, order_date, confirmed_at, shipped_at, delivered_at)
+- **Order_Products** - Order line items (with product_name, product_sku, quantity, unit_price, total_price, product_snapshot)
+- **Cart_Items** - Shopping cart items (with user_id, product_id, quantity, added_at, updated_at)
+- **Payments** - Payment transactions (with order_id, payment_method, payment_status, amount, currency, transaction_id, gateway_response, paid_at)
+- **Shipments** - Shipping information (with order_id, tracking_number, carrier, shipping_date, delivery_date, status)
+- **Access_Logs** - System access logs (with user_id, action, resource, method, ip_address, user_agent, request_data, response_status, created_at)
+- **Address_Details** - User addresses (with user_id, recipient_name, street_address, city, state, postal_code, country, phone_number, is_default)
+- **Reviews** - Product reviews and ratings (with product_id, user_id, order_id, rating, title, comment, images, is_verified, is_approved, helpful_count)
+- **Wishlists** - User wishlists (with user_id, name, is_default)
+- **Wishlist_Products** - Wishlist items (with wishlist_id, product_id, added_at)
+- **Reset_Questions** - Password recovery questions (with user_id, question, answer_hash, salt)
+- **Suppliers** - Supplier information (if implemented, with company_name, contact_name, email, phone, address, city, state, postal_code, country, is_active)
 
 ### 13.3 Utilities
 
@@ -1356,6 +1356,151 @@
   - Port configuration
   - Context path
   - Hot reload support
+
+---
+
+## Feature Summary Tables
+
+### Table 1: Core User Management Features
+
+| Feature | Status | Priority | Assignment Requirement | Implementation Details |
+|---------|--------|----------|----------------------|----------------------|
+| User Registration | ✅ Implemented | High | ✅ Required | `register.jsp`, `RegisterController`, password strength indicator, validation |
+| User Login | ✅ Implemented | High | ✅ Required | `login.jsp`, `LoginController`, session management, CSRF protection |
+| User Logout | ✅ Implemented | High | ✅ Required | `logout.jsp`, `LogoutController`, session invalidation |
+| Profile Management | ✅ Implemented | High | ✅ Required | `profile.jsp`, `UserProfileController`, edit profile, address management |
+| Password Reset | 🚧 Partially | Medium | ✅ Required | Reset questions table exists, UI may need enhancement |
+| Role-Based Access Control | ✅ Implemented | High | ✅ Required | Customer, Staff, Admin roles with different permissions |
+| Account Deletion | ✅ Implemented | Medium | ✅ Required | `deleteaccount.jsp`, soft delete functionality |
+
+### Table 2: Product Catalog Features
+
+| Feature | Status | Priority | Assignment Requirement | Implementation Details |
+|---------|--------|----------|----------------------|----------------------|
+| Product Browsing | ✅ Implemented | High | ✅ Required | `browse.jsp`, `BrowseProductController`, category pages |
+| Product Search | ✅ Implemented | High | ✅ Required | Keyword search, autocomplete, search results page |
+| Product Filtering | ✅ Implemented | High | ✅ Required | Multi-dimensional filtering (category, protocol, voltage, price, stock) |
+| Product Details | ✅ Implemented | High | ✅ Required | `productDetails.jsp`, technical specifications, images, reviews |
+| Category Management | ✅ Implemented | High | ✅ Required | Hierarchical categories, `categories.jsp`, `CategoryController` |
+| Product Management (Admin) | ✅ Implemented | High | ✅ Required | `manage-products.jsp`, `manage-product-form.jsp`, CRUD operations |
+| Inventory Management | ✅ Implemented | High | ✅ Required | Stock tracking, low stock alerts, stock status indicators |
+
+### Table 3: E-commerce Features
+
+| Feature | Status | Priority | Assignment Requirement | Implementation Details |
+|---------|--------|----------|----------------------|----------------------|
+| Shopping Cart | ✅ Implemented | High | ✅ Required | `cart.jsp`, `CartController`, add/update/remove items, persistence |
+| Checkout Process | ✅ Implemented | High | ✅ Required | `checkout.jsp`, multi-step process, shipping, payment, review |
+| Order Management | ✅ Implemented | High | ✅ Required | `orderList.jsp`, order history, order details, status tracking |
+| Order Tracking | ✅ Implemented | Medium | ✅ Required | Shipment tracking, tracking numbers, delivery status |
+| Payment Processing | 🚧 Partially | High | ✅ Required | Payment methods (Card, PayPal, Bank Transfer), gateway integration needed |
+| Compatibility Checking | ✅ Implemented | Medium | ✅ Required | `CompatibilityEngine`, cart compatibility warnings |
+| Wishlist | 🚧 Partially | Low | Optional | Database structure exists, UI may need enhancement |
+
+### Table 4: Reviews & Ratings Features
+
+| Feature | Status | Priority | Assignment Requirement | Implementation Details |
+|---------|--------|----------|----------------------|----------------------|
+| Review Submission | ✅ Implemented | High | ✅ Required | `ReviewController`, rating (1-5 stars), title, comment |
+| Review Display | ✅ Implemented | High | ✅ Required | Product reviews, average rating, rating distribution |
+| Review Moderation | ✅ Implemented | Medium | ✅ Required | Staff approval, verification, moderation queue |
+| Review Management | ✅ Implemented | Medium | ✅ Required | Edit/delete reviews, user review history |
+
+### Table 5: Administrative Features
+
+| Feature | Status | Priority | Assignment Requirement | Implementation Details |
+|---------|--------|----------|----------------------|----------------------|
+| Admin Dashboard | ✅ Implemented | High | ✅ Required | `admin-dashboard.jsp`, statistics, quick access links |
+| User Management | ✅ Implemented | High | ✅ Required | `manage-users.jsp`, `manage-user-form.jsp`, CRUD operations |
+| Product Management | ✅ Implemented | High | ✅ Required | `manage-products.jsp`, `manage-product-form.jsp`, CRUD operations |
+| Order Management | ✅ Implemented | High | ✅ Required | Order processing, status updates, order search/filter |
+| Access Logging | ✅ Implemented | High | ✅ Required | `manage-access-logs.jsp`, log viewing, filtering, export |
+| Supplier Management | ✅ Implemented | Medium | ✅ Required | `admin/supplier-list.jsp`, `SupplierController`, CRUD operations |
+| Reports & Analytics | ✅ Implemented | Medium | ✅ Required | `reports-dashboard.jsp`, sales reports, user reports, inventory reports |
+| Data Export | ✅ Implemented | High | ✅ Required | CSV export for users, products, orders, access logs |
+
+### Table 6: Security Features
+
+| Feature | Status | Priority | Assignment Requirement | Implementation Details |
+|---------|--------|----------|----------------------|----------------------|
+| Password Hashing | ✅ Implemented | High | ✅ Required | SHA-256 with salt, `PasswordUtil` |
+| CSRF Protection | ✅ Implemented | High | ✅ Required | Token-based CSRF protection, `SecurityUtil` |
+| Input Validation | ✅ Implemented | High | ✅ Required | Client-side and server-side validation, `InputValidator`, `ValidationUtil` |
+| SQL Injection Prevention | ✅ Implemented | High | ✅ Required | Prepared statements, parameterized queries |
+| XSS Prevention | ✅ Implemented | High | ✅ Required | Input sanitization, output encoding |
+| Session Security | ✅ Implemented | High | ✅ Required | Secure session management, timeout, invalidation |
+| Rate Limiting | ✅ Implemented | Medium | ✅ Required | Request throttling for security |
+| Access Control | ✅ Implemented | High | ✅ Required | Role-based access control, route protection |
+
+### Table 7: UI/UX Features
+
+| Feature | Status | Priority | Assignment Requirement | Implementation Details |
+|---------|--------|----------|----------------------|----------------------|
+| Responsive Design | ✅ Implemented | High | ✅ Required | Mobile-first approach, breakpoints, responsive components |
+| Dark Mode | ✅ Implemented | Medium | Optional | Theme toggle, system preference detection, persistence |
+| Design System | ✅ Implemented | High | ✅ Required | CSS custom properties, component-based architecture |
+| Loading States | ✅ Implemented | Medium | ✅ Required | Skeleton loading, loading indicators, progress bars |
+| Toast Notifications | ✅ Implemented | Medium | ✅ Required | Success/error/warning/info messages, auto-dismiss |
+| Optimistic UI | ✅ Implemented | Medium | Optional | Immediate feedback, error rollback |
+| Accessibility (WCAG 2.1 AA) | ✅ Implemented | High | ✅ Required | ARIA attributes, keyboard navigation, screen reader support |
+
+### Table 8: Static Pages & Navigation
+
+| Feature | Status | Priority | Assignment Requirement | Implementation Details |
+|---------|--------|----------|----------------------|----------------------|
+| Homepage | ✅ Implemented | High | ✅ Required | `index.jsp`, hero section, featured products, categories |
+| About Page | ✅ Implemented | Medium | ✅ Required | `about.jsp`, company information, team |
+| Contact Page | ✅ Implemented | Medium | ✅ Required | `contact.jsp`, contact form, business hours |
+| Welcome Page | ✅ Implemented | Medium | ✅ Required | `welcome.jsp`, personalized greeting after login/registration |
+| Goodbye Page | ✅ Implemented | Medium | ✅ Required | `goodbye.jsp`, logout confirmation |
+| Error Page | ✅ Implemented | High | ✅ Required | `error.jsp`, error handling, user-friendly messages |
+| Help Page | ✅ Implemented | Low | Optional | `help.jsp`, help center |
+| Header Navigation | ✅ Implemented | High | ✅ Required | `components/organisms/header/header.jsp`, search, user menu, cart |
+| Footer Navigation | ✅ Implemented | Medium | ✅ Required | `components/organisms/footer/footer.jsp`, links, company info |
+
+### Table 9: API Endpoints
+
+| Feature | Status | Priority | Assignment Requirement | Implementation Details |
+|---------|--------|----------|----------------------|----------------------|
+| Authentication API | ✅ Implemented | High | ✅ Required | `/api/auth/register`, `/api/login`, `/api/me` |
+| Product API | ✅ Implemented | High | ✅ Required | `/api/v1/products`, CRUD operations, pagination |
+| Cart API | ✅ Implemented | High | ✅ Required | `/api/cart`, add/update/remove/clear operations |
+| Payment API | 🚧 Partially | High | ✅ Required | `/api/payment`, basic structure exists |
+| Shipment API | ✅ Implemented | Medium | ✅ Required | `/shipment`, tracking, search |
+| Review API | ✅ Implemented | Medium | ✅ Required | `/review`, CRUD operations |
+| Access Log API | ✅ Implemented | Medium | ✅ Required | `/api/accessLog`, viewing, filtering |
+| Data Management API | ✅ Implemented | High | ✅ Required | `/api/dataManagement`, CSV export endpoints |
+
+### Table 10: Database Schema
+
+| Table | Status | Priority | Assignment Requirement | Key Fields |
+|-------|--------|----------|----------------------|------------|
+| User | ✅ Implemented | High | ✅ Required | id, email, password_hash, salt, firstName, lastName, role, isActive |
+| Products | ✅ Implemented | High | ✅ Required | id, category_id, sku, name, price, stock_quantity, is_active, is_featured |
+| Categories | ✅ Implemented | High | ✅ Required | id, name, slug, parent_category_id, is_active |
+| Orders | ✅ Implemented | High | ✅ Required | id, order_number, user_id, status, total_amount, order_date |
+| Order_Products | ✅ Implemented | High | ✅ Required | id, order_id, product_id, quantity, unit_price, total_price |
+| Cart_Items | ✅ Implemented | High | ✅ Required | id, user_id, product_id, quantity, added_at |
+| Payments | ✅ Implemented | High | ✅ Required | id, order_id, payment_method, payment_status, amount |
+| Shipments | ✅ Implemented | Medium | ✅ Required | id, order_id, tracking_number, status, delivery_date |
+| Reviews | ✅ Implemented | High | ✅ Required | id, product_id, user_id, rating, title, comment, is_approved |
+| Access_Logs | ✅ Implemented | High | ✅ Required | id, user_id, action, resource, method, ip_address, response_status |
+| Address_Details | ✅ Implemented | Medium | ✅ Required | id, user_id, recipient_name, street_address, city, postal_code |
+| Wishlists | ✅ Implemented | Low | Optional | id, user_id, name, is_default |
+| Wishlist_Products | ✅ Implemented | Low | Optional | id, wishlist_id, product_id, added_at |
+| Reset_Questions | ✅ Implemented | Medium | ✅ Required | id, user_id, question, answer_hash, salt |
+
+### Table 11: Technical Architecture
+
+| Component | Status | Priority | Assignment Requirement | Implementation Details |
+|-----------|--------|----------|----------------------|----------------------|
+| MVC Architecture | ✅ Implemented | High | ✅ Required | Clean separation: Controllers, Models, Views (JSP) |
+| DAO Pattern | ✅ Implemented | High | ✅ Required | Interface-based DAOs, database abstraction |
+| Service Layer | ✅ Implemented | High | ✅ Required | Business logic: `UserService`, `CartService`, `CompatibilityEngine` |
+| Dependency Injection | ✅ Implemented | Medium | Optional | `DIContainer` for dependency management |
+| Error Handling | ✅ Implemented | High | ✅ Required | Comprehensive validation, error recovery, user feedback |
+| Logging | ✅ Implemented | Medium | ✅ Required | Structured logging, access logging |
+| TypeScript Migration | ✅ Implemented | Medium | Optional | Frontend JS converted to TypeScript for stability |
 
 ---
 
