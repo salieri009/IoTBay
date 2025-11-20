@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" isELIgnored="false" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ page import="model.User" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
@@ -13,11 +14,11 @@
     }
     String contextPath = request.getContextPath();
     
-    // Mock user data
-    List<User> users = new ArrayList<>();
-    users.add(new User(1, "john.doe@example.com", "password123", "John", "Doe", "+61 400 000 001", "2000", "1 George St", "Sydney NSW", null, "Card", null, null, "customer", true));
-    users.add(new User(2, "jane.smith@example.com", "password456", "Jane", "Smith", "+61 400 000 002", "2001", "2 Pitt St", "Sydney NSW", null, "PayPal", null, null, "customer", true));
-    users.add(new User(3, "admin@iotbay.com", "admin123", "Admin", "User", "+61 400 000 003", "2002", "3 Admin St", "Sydney NSW", null, "Card", null, null, "staff", true));
+    // Get users from request attribute (set by ManageUserController)
+    List<User> users = (List<User>) request.getAttribute("users");
+    if (users == null) {
+        users = new ArrayList<>();
+    }
 %>
 
 <!DOCTYPE html>
@@ -29,7 +30,7 @@
     <title>Manage Users | IoT Bay - Staff Portal</title>
     
     <!-- CSS -->
-    <link rel="stylesheet" href="<%= contextPath %>/css/modern-theme.css">
+    <link rel="stylesheet" href="<%= contextPath %>/css/style.css">
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -62,12 +63,12 @@
                                 </svg>
                                 Export Users
                             </button>
-                            <button class="btn btn--primary">
+                            <a href="${pageContext.request.contextPath}/manage/users/form" class="btn btn--primary">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                                 </svg>
                                 Add User
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -123,59 +124,92 @@
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-neutral-200">
-                                    <c:forEach var="userItem" items="<%= users %>">
-                                        <tr class="hover:bg-neutral-50">
-                                            <td class="py-4 px-6">
-                                                <input type="checkbox" class="rounded border-neutral-300">
+                                    <c:choose>
+                                        <c:when test="${not empty users}">
+                                            <c:forEach var="userItem" items="${users}">
+                                                <tr class="hover:bg-neutral-50">
+                                                    <td class="py-4 px-6">
+                                                        <input type="checkbox" class="rounded border-neutral-300">
+                                                    </td>
+                                                    <td class="py-4 px-6">
+                                                        <div class="flex items-center gap-3">
+                                                            <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                                                                <c:choose>
+                                                                    <c:when test="${not empty userItem.firstName && not empty userItem.lastName}">
+                                                                        ${fn:toUpperCase(fn:substring(userItem.firstName, 0, 1))}${fn:toUpperCase(fn:substring(userItem.lastName, 0, 1))}
+                                                                    </c:when>
+                                                                    <c:when test="${not empty userItem.firstName}">
+                                                                        ${fn:toUpperCase(fn:substring(userItem.firstName, 0, 1))}
+                                                                    </c:when>
+                                                                    <c:otherwise>U</c:otherwise>
+                                                                </c:choose>
+                                                            </div>
+                                                            <div>
+                                                                <p class="font-medium text-neutral-900">${userItem.firstName != null ? userItem.firstName : ''} ${userItem.lastName != null ? userItem.lastName : ''}</p>
+                                                                <p class="text-sm text-neutral-600">ID: ${userItem.id}</p>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="py-4 px-6">
+                                                        <p class="text-neutral-900">${userItem.email}</p>
+                                                        <p class="text-sm text-neutral-600">${userItem.phoneNumber != null ? userItem.phoneNumber : 'N/A'}</p>
+                                                    </td>
+                                                    <td class="py-4 px-6">
+                                                        <span class="badge ${userItem.role eq 'staff' || userItem.role eq 'admin' ? 'badge--info' : 'badge--secondary'}">
+                                                            ${userItem.role}
+                                                        </span>
                                             </td>
                                             <td class="py-4 px-6">
-                                                <div class="flex items-center gap-3">
-                                                    <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-                                                        ${fn:toUpperCase(userItem.firstName.substring(0,1))}${fn:toUpperCase(userItem.lastName.substring(0,1))}
-                                                    </div>
-                                                    <div>
-                                                        <p class="font-medium text-neutral-900">${userItem.firstName} ${userItem.lastName}</p>
-                                                        <p class="text-sm text-neutral-600">ID: ${userItem.id}</p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td class="py-4 px-6">
-                                                <p class="text-neutral-900">${userItem.email}</p>
-                                                <p class="text-sm text-neutral-600">${userItem.phone}</p>
-                                            </td>
-                                            <td class="py-4 px-6">
-                                                <span class="badge ${userItem.role == 'staff' ? 'badge--info' : 'badge--secondary'}">
-                                                    ${userItem.role}
+                                                <span class="badge ${userItem.isActive ? 'badge--success' : 'badge--warning'}">
+                                                    ${userItem.isActive ? 'Active' : 'Inactive'}
                                                 </span>
                                             </td>
                                             <td class="py-4 px-6">
-                                                <span class="badge badge--success">Active</span>
-                                            </td>
-                                            <td class="py-4 px-6">
-                                                <p class="text-neutral-900">Mar 15, 2024</p>
+                                                <p class="text-neutral-900">
+                                                    <c:if test="${userItem.createdAt != null}">
+                                                        <fmt:formatDate value="${userItem.createdAt}" pattern="MMM dd, yyyy" />
+                                                    </c:if>
+                                                    <c:if test="${userItem.createdAt == null}">
+                                                        N/A
+                                                    </c:if>
+                                                </p>
                                             </td>
                                             <td class="py-4 px-6">
                                                 <div class="flex items-center gap-2">
-                                                    <button class="btn btn--ghost btn--sm" onclick="editUser(${userItem.id})">
+                                                    <a href="${pageContext.request.contextPath}/manage/users/update?id=${userItem.id}" 
+                                                       class="btn btn--ghost btn--sm" title="Edit User">
                                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                                         </svg>
-                                                    </button>
-                                                    <button class="btn btn--ghost btn--sm" onclick="viewUser(${userItem.id})">
+                                                    </a>
+                                                    <a href="${pageContext.request.contextPath}/Profiles.jsp?id=${userItem.id}" 
+                                                       class="btn btn--ghost btn--sm" title="View User">
                                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
                                                         </svg>
-                                                    </button>
-                                                    <button class="btn btn--ghost btn--sm text-red-600" onclick="deleteUser(${userItem.id})">
+                                                    </a>
+                                                    <a href="${pageContext.request.contextPath}/manage/users/delete?id=${userItem.id}" 
+                                                       class="btn btn--ghost btn--sm text-red-600" 
+                                                       title="Delete User"
+                                                       onclick="return confirm('Are you sure you want to delete this user?');">
                                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                                                         </svg>
-                                                    </button>
+                                                    </a>
                                                 </div>
                                             </td>
                                         </tr>
                                     </c:forEach>
+                                </c:when>
+                                <c:otherwise>
+                                    <tr>
+                                        <td colspan="7" class="py-8 px-6 text-center text-neutral-600">
+                                            No users found.
+                                        </td>
+                                    </tr>
+                                </c:otherwise>
+                            </c:choose>
                                 </tbody>
                             </table>
                         </div>

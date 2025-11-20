@@ -98,10 +98,17 @@
             <httpConnector>
                 <port>8080</port>
             </httpConnector>
-      <webApp>
-        <contextPath>/</contextPath>
-      </webApp>
+            <webApp>
+                <contextPath>/</contextPath>
+            </webApp>
         </configuration>
+        <dependencies>
+            <dependency>
+                <groupId>org.xerial</groupId>
+                <artifactId>sqlite-jdbc</artifactId>
+                <version>3.49.1.0</version>
+            </dependency>
+        </dependencies>
       </plugin>
     </plugins>
     <finalName>iot-bay</finalName>

@@ -18,7 +18,7 @@ import db.DBConnection;
 import model.Product;
 import model.User;
 
-@WebServlet("/manage/products")
+@WebServlet("/manage/products/*")
 public class ManageProductController extends HttpServlet {
     private ProductDAO productDAO;
 
@@ -35,49 +35,66 @@ public class ManageProductController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-    
+
         if (!isAdmin(request)) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             response.getWriter().write("{\"error\": \"Access denied\"}");
             return;
         }
-    
+
         try {
+            String pathInfo = request.getPathInfo();
+
+            // Check if requesting form page
+            if (pathInfo != null && pathInfo.equals("/form")) {
+                // Get categories for dropdown
+                try {
+                    dao.CategoryDAO categoryDAO = new dao.CategoryDAO(DBConnection.getConnection());
+                    List<model.Category> categories = categoryDAO.getAllCategories();
+                    request.setAttribute("categories", categories);
+                } catch (Exception e) {
+                    // If category fetch fails, continue without categories
+                }
+                request.getRequestDispatcher("/manage-product-form.jsp").forward(request, response);
+                return;
+            }
+
+            // Default: show product list
             List<Product> products = productDAO.getAllProducts(); // Get all products
             request.setAttribute("products", products); // Add products to request attribute
-    
+
             // Forward to JSP page to display products
             request.getRequestDispatcher("/WEB-INF/views/manage-products.jsp").forward(request, response);
-    
+
         } catch (SQLException e) {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             response.getWriter().write("{\"error\":\"Database error: " + e.getMessage() + "\"}");
         }
     }
-    
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
+            throws ServletException, IOException {
 
         // Authorization check
         if (!isAdmin(request)) {
             utils.ErrorAction.handleAuthorizationError(request, response, "ManageProductController.doPost");
             return;
         }
-        
+
         // CSRF protection
         if (!utils.SecurityUtil.validateCSRFToken(request)) {
-            utils.ErrorAction.handleValidationError(request, response, "CSRF token validation failed", 
+            utils.ErrorAction.handleValidationError(request, response, "CSRF token validation failed",
                     "ManageProductController.doPost");
             return;
         }
-        
+
         // Rate limiting check
         if (utils.SecurityUtil.isRateLimited(request, 10, 60000)) { // 10 requests per minute
             utils.ErrorAction.handleRateLimitError(request, response, "ManageProductController.doPost");
             return;
         }
-        
+
         try {
             // Secure parameter extraction with validation
             int categoryId = utils.SecurityUtil.getValidatedIntParameter(request, "categoryId", 1, 100);
@@ -86,15 +103,15 @@ public class ManageProductController extends HttpServlet {
             double price = utils.SecurityUtil.getValidatedDoubleParameter(request, "price");
             int stockQuantity = utils.SecurityUtil.getValidatedIntParameter(request, "stockQuantity", 0, 10000);
             String imageUrl = utils.SecurityUtil.getValidatedStringParameter(request, "imageUrl", 500);
-            
+
             // Sanitize inputs
             name = utils.SecurityUtil.sanitizeInput(name);
             description = utils.SecurityUtil.sanitizeInput(description);
             imageUrl = utils.SecurityUtil.sanitizeInput(imageUrl);
-            
+
             // Validate price range
             if (price <= 0 || price > 1000000) {
-                utils.ErrorAction.handleValidationError(request, response, 
+                utils.ErrorAction.handleValidationError(request, response,
                         "Price must be between 0 and 1,000,000", "ManageProductController.doPost");
                 return;
             }
@@ -105,41 +122,42 @@ public class ManageProductController extends HttpServlet {
                 try {
                     createdAt = java.time.LocalDate.parse(createdAtStr);
                 } catch (Exception e) {
-                    utils.ErrorAction.handleValidationError(request, response, 
+                    utils.ErrorAction.handleValidationError(request, response,
                             "Invalid date format", "ManageProductController.doPost");
                     return;
                 }
             } else {
                 createdAt = java.time.LocalDate.now();
             }
-    
+
             Product product = new Product(0, categoryId, name, description, price, stockQuantity, imageUrl, createdAt);
 
             productDAO.createProduct(product);
-            
+
             // Log security event
-            utils.ErrorAction.logSecurityEvent("PRODUCT_CREATED", request, 
+            utils.ErrorAction.logSecurityEvent("PRODUCT_CREATED", request,
                     "Product created: " + name);
 
             response.sendRedirect(request.getContextPath() + "/manage/products");
 
         } catch (IllegalArgumentException e) {
-            utils.ErrorAction.handleValidationError(request, response, e.getMessage(), 
+            utils.ErrorAction.handleValidationError(request, response, e.getMessage(),
                     "ManageProductController.doPost");
         } catch (SQLException e) {
             utils.ErrorAction.handleDatabaseError(request, response, e, "ManageProductController.doPost");
         } catch (Exception e) {
             utils.ErrorAction.handleServerError(request, response, e, "ManageProductController.doPost");
         }
-}
-
+    }
 
     private boolean isAdmin(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        if (session == null) return false;
+        if (session == null)
+            return false;
 
         Object userObj = session.getAttribute("user");
-        if (!(userObj instanceof User)) return false;
+        if (!(userObj instanceof User))
+            return false;
 
         User user = (User) userObj;
         return "staff".equalsIgnoreCase(user.getRole());

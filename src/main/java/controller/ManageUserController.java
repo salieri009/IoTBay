@@ -19,7 +19,7 @@ import dao.interfaces.UserDAO;
 import db.DBConnection;
 import model.User;
 
-@WebServlet("/manage/users")
+@WebServlet("/manage/users/*")
 public class ManageUserController extends HttpServlet {
     private UserDAO userDAO;
 
@@ -44,6 +44,14 @@ public class ManageUserController extends HttpServlet {
         }
 
         try {
+            String pathInfo = request.getPathInfo();
+
+            // Check if requesting form page
+            if (pathInfo != null && pathInfo.equals("/form")) {
+                request.getRequestDispatcher("/manage-user-form.jsp").forward(request, response);
+                return;
+            }
+
             List<User> users = userDAO.getAllUsers();
             request.setAttribute("users", users);
 
@@ -130,8 +138,8 @@ public class ManageUserController extends HttpServlet {
 
             // Validate profile data
             String profileError = utils.ValidationUtil.validateRegisterUserProfile(
-                    firstName, lastName, phone != null ? phone : "", 
-                    postalCode != null ? postalCode : "", 
+                    firstName, lastName, phone != null ? phone : "",
+                    postalCode != null ? postalCode : "",
                     addressLine1 != null ? addressLine1 : "");
             if (profileError != null) {
                 utils.ErrorAction.handleValidationError(request, response, profileError,
@@ -148,7 +156,7 @@ public class ManageUserController extends HttpServlet {
             }
 
             // Validate role
-            String[] validRoles = {"customer", "staff", "admin"};
+            String[] validRoles = { "customer", "staff", "admin" };
             boolean isValidRole = false;
             for (String validRole : validRoles) {
                 if (validRole.equalsIgnoreCase(role)) {
@@ -190,7 +198,7 @@ public class ManageUserController extends HttpServlet {
                     true // isActive
             );
             userDAO.createUser(user);
-            
+
             // Log security event
             utils.ErrorAction.logSecurityEvent("USER_CREATED_BY_ADMIN", request,
                     "User created: " + email + ", Role: " + role);
@@ -207,13 +215,14 @@ public class ManageUserController extends HttpServlet {
         }
     }
 
-
     private boolean isAdmin(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        if (session == null) return false;
+        if (session == null)
+            return false;
 
         Object userObj = session.getAttribute("user");
-        if (!(userObj instanceof User)) return false;
+        if (!(userObj instanceof User))
+            return false;
 
         User user = (User) userObj;
         return "staff".equalsIgnoreCase(user.getRole());

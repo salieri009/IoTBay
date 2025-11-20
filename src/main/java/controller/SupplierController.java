@@ -18,9 +18,9 @@ import java.util.List;
 
 @WebServlet("/admin/supplier/*")
 public class SupplierController extends HttpServlet {
-    
+
     private SupplierDAOImpl supplierDAO;
-    
+
     @Override
     public void init() throws ServletException {
         try {
@@ -30,19 +30,19 @@ public class SupplierController extends HttpServlet {
             throw new ServletException("Failed to initialize SupplierController", e);
         }
     }
-    
+
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         // Check staff privileges
         if (!isStaff(request)) {
             response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
-        
+
         String pathInfo = request.getPathInfo();
-        
+
         try {
             if (pathInfo == null || pathInfo.equals("/")) {
                 listSuppliers(request, response);
@@ -61,19 +61,19 @@ public class SupplierController extends HttpServlet {
             handleError(request, response, "Error processing supplier request", e);
         }
     }
-    
+
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         // Check staff privileges
         if (!isStaff(request)) {
             response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
-        
+
         String pathInfo = request.getPathInfo();
-        
+
         try {
             if (pathInfo == null || pathInfo.equals("/create")) {
                 createSupplier(request, response);
@@ -90,10 +90,10 @@ public class SupplierController extends HttpServlet {
             handleError(request, response, "Error processing supplier", e);
         }
     }
-    
-    private void createSupplier(HttpServletRequest request, HttpServletResponse response) 
+
+    private void createSupplier(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
-        
+
         // Rate limiting check
         if (utils.SecurityUtil.isRateLimited(request, 10, 60000)) { // 10 requests per minute
             utils.ErrorAction.handleRateLimitError(request, response, "SupplierController.createSupplier");
@@ -119,7 +119,7 @@ public class SupplierController extends HttpServlet {
         String country = utils.SecurityUtil.getValidatedStringParameter(request, "country", 100);
         String website = request.getParameter("website"); // Optional
         String description = request.getParameter("description"); // Optional
-        
+
         // Sanitize inputs
         contactName = utils.SecurityUtil.sanitizeInput(contactName);
         companyName = utils.SecurityUtil.sanitizeInput(companyName);
@@ -136,7 +136,7 @@ public class SupplierController extends HttpServlet {
         if (description != null) {
             description = utils.SecurityUtil.sanitizeInput(description);
         }
-        
+
         // Validate email format
         String emailError = utils.ValidationUtil.validateEmail(email);
         if (emailError != null) {
@@ -144,14 +144,14 @@ public class SupplierController extends HttpServlet {
                     "SupplierController.createSupplier");
             return;
         }
-        
+
         // Check if supplier already exists
         if (supplierDAO.findByEmail(email) != null) {
             utils.ErrorAction.handleValidationError(request, response,
                     "Supplier with this email already exists", "SupplierController.createSupplier");
             return;
         }
-        
+
         // Create supplier
         Supplier supplier = new Supplier();
         supplier.setContactName(contactName);
@@ -167,30 +167,30 @@ public class SupplierController extends HttpServlet {
         supplier.setDescription(description);
         supplier.setActive(true);
         supplier.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-        
+
         Supplier createdSupplier = supplierDAO.createSupplier(supplier);
         int supplierId = createdSupplier.getId();
-        
+
         // Log security event
         utils.ErrorAction.logSecurityEvent("SUPPLIER_CREATED", request,
                 "Supplier created: " + companyName + ", Email: " + email);
-        
+
         HttpSession session = request.getSession();
         session.setAttribute("successMessage", "Supplier created successfully");
         response.sendRedirect(request.getContextPath() + "/admin/supplier/view/" + supplierId);
     }
-    
-    private void updateSupplier(HttpServletRequest request, HttpServletResponse response) 
+
+    private void updateSupplier(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
-        
+
         Integer supplierId = Integer.parseInt(request.getParameter("supplierId"));
         Supplier supplier = supplierDAO.findById(supplierId);
-        
+
         if (supplier == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
-        
+
         // Rate limiting check
         if (utils.SecurityUtil.isRateLimited(request, 10, 60000)) { // 10 requests per minute
             utils.ErrorAction.handleRateLimitError(request, response, "SupplierController.updateSupplier");
@@ -216,7 +216,7 @@ public class SupplierController extends HttpServlet {
         String country = utils.SecurityUtil.getValidatedStringParameter(request, "country", 100);
         String website = request.getParameter("website"); // Optional
         String description = request.getParameter("description"); // Optional
-        
+
         // Sanitize inputs
         contactName = utils.SecurityUtil.sanitizeInput(contactName);
         companyName = utils.SecurityUtil.sanitizeInput(companyName);
@@ -233,7 +233,7 @@ public class SupplierController extends HttpServlet {
         if (description != null) {
             description = utils.SecurityUtil.sanitizeInput(description);
         }
-        
+
         // Validate email format
         String emailError = utils.ValidationUtil.validateEmail(email);
         if (emailError != null) {
@@ -241,7 +241,7 @@ public class SupplierController extends HttpServlet {
                     "SupplierController.updateSupplier");
             return;
         }
-        
+
         // Check if email is already used by another supplier
         Supplier existingSupplier = supplierDAO.findByEmail(email);
         if (existingSupplier != null && existingSupplier.getSupplierId() != supplierId) {
@@ -249,7 +249,7 @@ public class SupplierController extends HttpServlet {
                     "Email already used by another supplier", "SupplierController.updateSupplier");
             return;
         }
-        
+
         supplier.setContactName(contactName);
         supplier.setCompanyName(companyName);
         supplier.setEmail(email);
@@ -262,74 +262,74 @@ public class SupplierController extends HttpServlet {
         supplier.setWebsite(website);
         supplier.setDescription(description);
         supplier.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
-        
+
         supplierDAO.update(supplier);
-        
+
         // Log security event
         utils.ErrorAction.logSecurityEvent("SUPPLIER_UPDATED", request,
                 "Supplier updated: " + companyName + ", ID: " + supplierId);
-        
+
         HttpSession session = request.getSession();
         session.setAttribute("successMessage", "Supplier updated successfully");
         response.sendRedirect(request.getContextPath() + "/admin/supplier/view/" + supplierId);
     }
-    
-    private void deleteSupplier(HttpServletRequest request, HttpServletResponse response) 
+
+    private void deleteSupplier(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
-        
+
         Integer supplierId = Integer.parseInt(request.getParameter("supplierId"));
         Supplier supplier = supplierDAO.findById(supplierId);
-        
+
         if (supplier == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
-        
+
         // Check if supplier has associated products
         if (supplierDAO.hasAssociatedProducts(supplierId)) {
             HttpSession session = request.getSession();
-            session.setAttribute("errorMessage", 
-                "Cannot delete supplier with associated products. Please deactivate instead.");
+            session.setAttribute("errorMessage",
+                    "Cannot delete supplier with associated products. Please deactivate instead.");
             response.sendRedirect(request.getContextPath() + "/admin/supplier/view/" + supplierId);
             return;
         }
-        
+
         supplierDAO.delete(supplierId);
-        
+
         HttpSession session = request.getSession();
         session.setAttribute("successMessage", "Supplier deleted successfully");
         response.sendRedirect(request.getContextPath() + "/admin/supplier/");
     }
-    
-    private void toggleSupplierStatus(HttpServletRequest request, HttpServletResponse response) 
+
+    private void toggleSupplierStatus(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
-        
+
         Integer supplierId = Integer.parseInt(request.getParameter("supplierId"));
         Supplier supplier = supplierDAO.findById(supplierId);
-        
+
         if (supplier == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
-        
+
         // Toggle active status
         supplier.setActive(!supplier.isActive());
         supplier.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
         supplierDAO.update(supplier);
-        
+
         HttpSession session = request.getSession();
         String status = supplier.isActive() ? "activated" : "deactivated";
         session.setAttribute("successMessage", "Supplier " + status + " successfully");
-        
+
         response.sendRedirect(request.getContextPath() + "/admin/supplier/view/" + supplierId);
     }
-    
-    private void listSuppliers(HttpServletRequest request, HttpServletResponse response) 
+
+    private void listSuppliers(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
-        
+
         String statusFilter = request.getParameter("status");
         List<Supplier> suppliers;
-        
+
         if ("active".equals(statusFilter)) {
             suppliers = supplierDAO.findActiveSuppliers();
         } else if ("inactive".equals(statusFilter)) {
@@ -337,64 +337,64 @@ public class SupplierController extends HttpServlet {
         } else {
             suppliers = supplierDAO.findAll();
         }
-        
+
         request.setAttribute("suppliers", suppliers);
         request.setAttribute("statusFilter", statusFilter);
         request.getRequestDispatcher("/admin/supplier-list.jsp").forward(request, response);
     }
-    
-    private void viewSupplier(HttpServletRequest request, HttpServletResponse response) 
+
+    private void viewSupplier(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
-        
+
         String pathInfo = request.getPathInfo();
         Integer supplierId = Integer.parseInt(pathInfo.substring(6)); // Remove "/view/"
-        
+
         Supplier supplier = supplierDAO.findById(supplierId);
-        
+
         if (supplier == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
-        
+
         // Get supplier statistics
         int totalProducts = supplierDAO.getProductCount(supplierId);
         int activeProducts = supplierDAO.getActiveProductCount(supplierId);
-        
+
         request.setAttribute("supplier", supplier);
         request.setAttribute("totalProducts", totalProducts);
         request.setAttribute("activeProducts", activeProducts);
         request.getRequestDispatcher("/admin/supplier-view.jsp").forward(request, response);
     }
-    
-    private void editSupplier(HttpServletRequest request, HttpServletResponse response) 
+
+    private void editSupplier(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
-        
+
         String pathInfo = request.getPathInfo();
         Integer supplierId = Integer.parseInt(pathInfo.substring(6)); // Remove "/edit/"
-        
+
         Supplier supplier = supplierDAO.findById(supplierId);
-        
+
         if (supplier == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
-        
+
         request.setAttribute("supplier", supplier);
         request.setAttribute("editMode", true);
         request.getRequestDispatcher("/admin/supplier-form.jsp").forward(request, response);
     }
-    
-    private void searchSuppliers(HttpServletRequest request, HttpServletResponse response) 
+
+    private void searchSuppliers(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
-        
+
         String contactName = request.getParameter("contactName");
         String companyName = request.getParameter("companyName");
         String email = request.getParameter("email");
         String city = request.getParameter("city");
         String country = request.getParameter("country");
-        
+
         List<Supplier> suppliers;
-        
+
         if (contactName != null && !contactName.trim().isEmpty()) {
             suppliers = supplierDAO.findByContactName(contactName);
         } else if (companyName != null && !companyName.trim().isEmpty()) {
@@ -413,28 +413,28 @@ public class SupplierController extends HttpServlet {
         } else {
             suppliers = supplierDAO.findAll();
         }
-        
+
         request.setAttribute("suppliers", suppliers);
-        request.setAttribute("searchCriteria", 
-            "Contact Name: " + contactName + ", Company Name: " + companyName + 
-            ", Email: " + email + ", City: " + city + ", Country: " + country);
+        request.setAttribute("searchCriteria",
+                "Contact Name: " + contactName + ", Company Name: " + companyName +
+                        ", Email: " + email + ", City: " + city + ", Country: " + country);
         request.getRequestDispatcher("/admin/supplier-list.jsp").forward(request, response);
     }
 
-    private void showSupplierForm(HttpServletRequest request, HttpServletResponse response) 
+    private void showSupplierForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Forward to supplier form page
         request.getRequestDispatcher("/admin/supplier-form.jsp").forward(request, response);
     }
-    
-    private void handleError(HttpServletRequest request, HttpServletResponse response, 
+
+    private void handleError(HttpServletRequest request, HttpServletResponse response,
             String message, Exception e) throws ServletException, IOException {
-        
+
         request.setAttribute("errorMessage", message);
         request.setAttribute("exception", e);
-        request.getRequestDispatcher("/admin/error.jsp").forward(request, response);
+        request.getRequestDispatcher("/error.jsp").forward(request, response);
     }
-    
+
     private boolean isStaff(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         return (session != null && session.getAttribute("user") != null);

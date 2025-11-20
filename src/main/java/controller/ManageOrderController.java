@@ -45,7 +45,7 @@ public class ManageOrderController extends HttpServlet {
         try {
             List<Order> orders = orderDAO.getAllOrders();
             request.setAttribute("orders", orders);
-            request.getRequestDispatcher("/WEB-INF/views/manage-orders.jsp").forward(request, response);
+            request.getRequestDispatcher("/manage-orders.jsp").forward(request, response);
         } catch (SQLException e) {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             response.getWriter().write("{\"error\":\"Database error: " + e.getMessage() + "\"}");

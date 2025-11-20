@@ -129,5 +129,8 @@ public class DatabaseInitializer {
             }
         }
     }
-}
 
+    public static void main(String[] args) {
+        initialize();
+    }
+}

@@ -188,6 +188,6 @@ public class DataManagementController extends HttpServlet {
         request.setAttribute("totalOrders", totalOrders);
         request.setAttribute("totalProducts", totalProducts);
         
-        request.getRequestDispatcher("/WEB-INF/views/dataManagement.jsp").forward(request, response);
+        request.getRequestDispatcher("/data-management.jsp").forward(request, response);
     }
 }

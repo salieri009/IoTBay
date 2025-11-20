@@ -77,14 +77,14 @@
                 </div>
 
                 <!-- Admin (if logged in as staff) -->
-                <c:if test="${sessionScope.user != null && sessionScope.user.role == 'staff'}">
+                <c:if test="${sessionScope.user != null && (sessionScope.user.role eq 'staff' || sessionScope.user.role eq 'admin')}">
                     <div class="bg-white rounded-lg border border-neutral-200 p-6">
                         <h2 class="text-xl font-bold text-neutral-900 mb-4">Admin</h2>
                         <ul class="space-y-2">
                             <li><a href="${pageContext.request.contextPath}/admin-dashboard.jsp" class="text-neutral-600 hover:text-brand-primary transition-colors">Dashboard</a></li>
-                            <li><a href="${pageContext.request.contextPath}/api/manage/products" class="text-neutral-600 hover:text-brand-primary transition-colors">Manage Products</a></li>
-                            <li><a href="${pageContext.request.contextPath}/api/manage/users" class="text-neutral-600 hover:text-brand-primary transition-colors">Manage Users</a></li>
-                            <li><a href="${pageContext.request.contextPath}/api/manage/access-logs" class="text-neutral-600 hover:text-brand-primary transition-colors">Access Logs</a></li>
+                            <li><a href="${pageContext.request.contextPath}/manage/products" class="text-neutral-600 hover:text-brand-primary transition-colors">Manage Products</a></li>
+                            <li><a href="${pageContext.request.contextPath}/manage/users" class="text-neutral-600 hover:text-brand-primary transition-colors">Manage Users</a></li>
+                            <li><a href="${pageContext.request.contextPath}/manage/access-logs" class="text-neutral-600 hover:text-brand-primary transition-colors">Access Logs</a></li>
                         </ul>
                     </div>
                 </c:if>

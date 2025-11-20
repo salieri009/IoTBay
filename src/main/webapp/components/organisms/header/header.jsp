@@ -32,7 +32,7 @@
   request.setAttribute("currentPath", currentPath);
 %>
 
-<header class="bg-white border-b border-neutral-200 sticky top-0 z-50" role="banner">
+<header class="bg-white border-b border-neutral-200 sticky top-0 z-50" role="banner" style="z-index: 50;">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
     <%-- Logo (Atom) --%>
     <a href="<c:url value='/' />" class="flex items-center gap-2" aria-label="IoT Bay - Home">
@@ -89,15 +89,15 @@
       <%-- User Menu --%>
       <c:choose>
         <c:when test="${user != null}">
-          <div class="relative">
-            <button class="flex items-center gap-2 text-sm font-medium text-neutral-700 hover:text-neutral-900 focus:outline-none" 
+          <div class="relative z-[100]">
+            <button class="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-neutral-700 hover:bg-neutral-50 hover:text-neutral-900 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-2 transition-all duration-200 group relative z-[100]" 
                     onclick="toggleUserMenu()"
                     aria-expanded="false"
                     aria-haspopup="true"
                     aria-controls="userMenuDropdown"
                     aria-label="User menu for ${user.firstName != null ? user.firstName : ''} ${user.lastName != null ? user.lastName : ''}"
                     id="userMenuButton">
-              <div class="h-8 w-8 rounded-full bg-brand-primary text-white flex items-center justify-center text-xs font-bold overflow-hidden" aria-hidden="true">
+              <div class="h-10 w-10 rounded-full bg-gradient-to-br from-brand-primary to-brand-secondary text-white flex items-center justify-center text-sm font-bold shadow-md ring-2 ring-white group-hover:ring-brand-primary/20 transition-all" aria-hidden="true">
                 <c:choose>
                   <c:when test="${user.firstName != null && !empty user.firstName && user.lastName != null && !empty user.lastName}">
                     ${fn:toUpperCase(fn:substring(user.firstName, 0, 1))}${fn:toUpperCase(fn:substring(user.lastName, 0, 1))}
@@ -113,23 +113,54 @@
                   </c:otherwise>
                 </c:choose>
               </div>
-              <span class="hidden lg:block">${user.firstName != null ? user.firstName : 'User'}</span>
-              <jsp:include page="/components/atoms/icon/icon.jsp">
-                <jsp:param name="name" value="chevron-down" />
-                <jsp:param name="size" value="small" />
-              </jsp:include>
+              <div class="hidden lg:flex flex-col items-start">
+                <span class="text-sm font-semibold text-neutral-900">${user.firstName != null ? user.firstName : 'User'} ${user.lastName != null ? user.lastName : ''}</span>
+                <span class="text-xs text-neutral-500 capitalize">${user.role != null ? user.role : 'Customer'}</span>
+              </div>
+              <svg class="w-4 h-4 text-neutral-400 group-hover:text-neutral-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+              </svg>
             </button>
             
-            <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5 focus:outline-none hidden" 
+            <div class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl py-2 ring-1 ring-neutral-200 focus:outline-none hidden z-[9999]" 
                  id="userMenuDropdown"
                  role="menu"
-                 aria-labelledby="userMenuButton">
-              <a href="<c:url value='/profile.jsp' />" class="block px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100" role="menuitem">Profile</a>
-              <a href="<c:url value='/orderList.jsp' />" class="block px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100" role="menuitem">Orders</a>
-              <c:if test="${isStaff}">
-                <a href="<c:url value='/admin-dashboard.jsp' />" class="block px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100" role="menuitem">Admin</a>
-              </c:if>
-              <a href="<c:url value='/logout' />" class="block px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100" role="menuitem">Logout</a>
+                 aria-labelledby="userMenuButton"
+                 style="z-index: 9999;">
+              <div class="px-4 py-3 border-b border-neutral-100">
+                <p class="text-sm font-semibold text-neutral-900">${user.firstName != null ? user.firstName : 'User'} ${user.lastName != null ? user.lastName : ''}</p>
+                <p class="text-xs text-neutral-500 mt-0.5">${user.email != null ? user.email : ''}</p>
+              </div>
+              <div class="py-1">
+                <a href="<c:url value='/profile.jsp' />" class="flex items-center gap-3 px-4 py-2.5 text-sm text-neutral-700 hover:bg-brand-primary/5 hover:text-brand-primary transition-colors" role="menuitem">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                  </svg>
+                  Profile
+                </a>
+                <a href="<c:url value='/orderList.jsp' />" class="flex items-center gap-3 px-4 py-2.5 text-sm text-neutral-700 hover:bg-brand-primary/5 hover:text-brand-primary transition-colors" role="menuitem">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                  </svg>
+                  Orders
+                </a>
+                <c:if test="${isStaff}">
+                  <a href="<c:url value='/admin-dashboard.jsp' />" class="flex items-center gap-3 px-4 py-2.5 text-sm text-neutral-700 hover:bg-brand-primary/5 hover:text-brand-primary transition-colors" role="menuitem">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                    </svg>
+                    Admin Dashboard
+                  </a>
+                </c:if>
+              </div>
+              <div class="border-t border-neutral-100 pt-1">
+                <a href="<c:url value='/logout' />" class="flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors" role="menuitem">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                  </svg>
+                  Logout
+                </a>
+              </div>
             </div>
           </div>
         </c:when>
