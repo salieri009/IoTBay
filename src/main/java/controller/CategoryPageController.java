@@ -24,6 +24,7 @@ import model.Product;
  * Category Page Controller
  * 
  * Handles individual category pages (e.g., /category-smarthome.jsp)
+ * Maps to /category/* URL pattern
  */
 @WebServlet("/category/*")
 public class CategoryPageController extends HttpServlet {

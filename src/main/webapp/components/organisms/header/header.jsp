@@ -23,8 +23,13 @@
 
 <% 
   User user = (User) session.getAttribute("user");
-  boolean isStaff = user != null && "staff".equalsIgnoreCase(user.getRole());
+  boolean isStaff = user != null && ("staff".equalsIgnoreCase(user.getRole()) || "admin".equalsIgnoreCase(user.getRole()));
   String currentPath = request.getRequestURI();
+  
+  // Expose to EL
+  request.setAttribute("user", user);
+  request.setAttribute("isStaff", isStaff);
+  request.setAttribute("currentPath", currentPath);
 %>
 
 <header class="bg-white border-b border-neutral-200 sticky top-0 z-50" role="banner">

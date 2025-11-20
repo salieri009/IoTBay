@@ -1,12 +1,17 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-    <%@ page import="java.util.*" %>
-        <%@ page import="model.User" %>
-            <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="java.util.*" %>
+<%@ page import="model.User" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-                <% // Admin authorization check User currentUser=(User) session.getAttribute("user"); if
-                    (currentUser==null || (!"staff".equalsIgnoreCase(currentUser.getRole()) &&
-                    !"admin".equalsIgnoreCase(currentUser.getRole()))) { response.sendRedirect(request.getContextPath()
-                    + "/login.jsp" ); return; } %>
+<%
+    // Admin authorization check
+    User currentUser = (User) session.getAttribute("user");
+    if (currentUser == null || (!"staff".equalsIgnoreCase(currentUser.getRole()) && 
+        !"admin".equalsIgnoreCase(currentUser.getRole()))) {
+        response.sendRedirect(request.getContextPath() + "/login.jsp");
+        return;
+    }
+%>
 
                     <!DOCTYPE html>
                     <html lang="en">
@@ -39,16 +44,16 @@
                                         class="admin-nav-link active" aria-current="page">
                                         Dashboard
                                     </a>
-                                    <a href="<%=request.getContextPath()%>/api/manage/users" class="admin-nav-link">
+                                    <a href="<%=request.getContextPath()%>/manage/users" class="admin-nav-link">
                                         User Management
                                     </a>
-                                    <a href="<%=request.getContextPath()%>/api/manage/products" class="admin-nav-link">
+                                    <a href="<%=request.getContextPath()%>/manage/products" class="admin-nav-link">
                                         Product Management
                                     </a>
-                                    <a href="<%=request.getContextPath()%>/admin/supplier/" class="admin-nav-link">
+                                    <a href="<%=request.getContextPath()%>/manage/suppliers" class="admin-nav-link">
                                         Supplier Management
                                     </a>
-                                    <a href="<%=request.getContextPath()%>/api/manage/access-logs"
+                                    <a href="<%=request.getContextPath()%>/manage/access-logs"
                                         class="admin-nav-link">
                                         Access Logs
                                     </a>

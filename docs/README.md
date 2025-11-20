@@ -45,3 +45,4 @@ Deprecated documents, past sprint summaries, and old logs.
 - [Contributing Guidelines](./development/CONTRIBUTING.md)
 - [Git Workflow](./development/GIT_WORKFLOW.md)
 - [API Documentation](./development/API_DOCUMENTATION.en_docs.md)
+- [Project Overview (README)](./README.en_docs.md)
