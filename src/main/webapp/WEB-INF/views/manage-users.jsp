@@ -9,8 +9,9 @@
                             <% User user=(User) session.getAttribute("user"); if (user==null ||
                                 !"staff".equalsIgnoreCase(user.getRole())) {
                                 response.sendRedirect(request.getContextPath() + "/login.jsp" ); return; } String
-                                contextPath=request.getContextPath(); // Get users from request attribute (set by
-                                ManageUserController) List<User> users = (List<User>) request.getAttribute("users");
+                                contextPath=request.getContextPath(); 
+                                // Get users from request attribute (set by ManageUserController) 
+                                List<User> users = (List<User>) request.getAttribute("users");
                                     if (users == null) {
                                     users = new ArrayList<>();
                                         }
@@ -69,7 +70,7 @@
                                                                         </svg>
                                                                         Export Users
                                                                     </button>
-                                                                    <a href="${pageContext.request.contextPath}/manage/users/form"
+                                                                    <a href="${pageContext.request.contextPath}/api/manage/users/form"
                                                                         class="btn btn--primary">
                                                                         <svg class="w-4 h-4 mr-2" fill="none"
                                                                             stroke="currentColor" viewBox="0 0 24 24">
@@ -267,7 +268,7 @@
                                                                                                             </path>
                                                                                                         </svg>
                                                                                                     </a>
-                                                                                                    <a href="${pageContext.request.contextPath}/Profiles.jsp?id=${userItem.id}"
+                                                                                                    <a href="${pageContext.request.contextPath}/profile.jsp?id=${userItem.id}"
                                                                                                         class="btn btn--ghost btn--sm"
                                                                                                         title="View User">
                                                                                                         <svg class="w-4 h-4"

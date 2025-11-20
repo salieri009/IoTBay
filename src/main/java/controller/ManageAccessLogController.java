@@ -18,7 +18,7 @@ import db.DBConnection;
 import model.AccessLog;
 import model.User;
 
-@WebServlet("/manage/access-logs")
+@WebServlet("/api/manage/access-logs")
 public class ManageAccessLogController extends HttpServlet {
     private AccessLogDAO accessLogDAO;
 

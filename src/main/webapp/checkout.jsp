@@ -1078,6 +1078,57 @@
             }
         }
         
+        // Update Review Section
+        function updateReviewSection() {
+            // Update Shipping Address Review
+            const fullName = document.querySelector('[name="fullName"]')?.value || '';
+            const address1 = document.querySelector('[name="address1"]')?.value || '';
+            const address2 = document.querySelector('[name="address2"]')?.value || '';
+            const city = document.querySelector('[name="city"]')?.value || '';
+            const state = document.querySelector('[name="state"]')?.value || '';
+            const postalCode = document.querySelector('[name="postalCode"]')?.value || '';
+            const country = document.querySelector('[name="country"]')?.value || '';
+
+            const reviewFullName = document.getElementById('reviewFullName');
+            if (reviewFullName) reviewFullName.textContent = fullName;
+
+            const reviewAddress1 = document.getElementById('reviewAddress1');
+            if (reviewAddress1) reviewAddress1.textContent = address1;
+
+            const reviewAddress2 = document.getElementById('reviewAddress2');
+            if (reviewAddress2) reviewAddress2.textContent = address2;
+
+            const reviewCityState = document.getElementById('reviewCityState');
+            if (reviewCityState) reviewCityState.textContent = `${city}, ${state} ${postalCode}`;
+
+            const reviewCountry = document.getElementById('reviewCountry');
+            if (reviewCountry) reviewCountry.textContent = country;
+
+            // Update Payment Method Review
+            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked')?.value;
+            const paymentReview = document.getElementById('paymentMethodReview');
+            if (paymentReview) {
+                if (paymentMethod === 'credit') {
+                    const last4 = document.getElementById('cardNumber')?.value.slice(-4) || 'xxxx';
+                    paymentReview.innerHTML = `<p>Credit/Debit Card ending in •••• ${last4}</p>`;
+                } else if (paymentMethod === 'paypal') {
+                    paymentReview.innerHTML = '<p>PayPal</p>';
+                } else if (paymentMethod === 'bank') {
+                    paymentReview.innerHTML = '<p>Bank Transfer</p>';
+                }
+            }
+        }
+
+        // Add event listeners for review updates
+        const formInputs = document.querySelectorAll('#checkoutForm input, #checkoutForm select');
+        formInputs.forEach(input => {
+            input.addEventListener('input', updateReviewSection);
+            input.addEventListener('change', updateReviewSection);
+        });
+
+        // Initial update
+        updateReviewSection();
+
         // Nielsen Heuristics Improvements for checkout.jsp
         document.addEventListener('DOMContentLoaded', function() {
             // 1. Visibility of System Status - Progress indicator

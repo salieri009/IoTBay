@@ -53,7 +53,7 @@ public class UserProfileController extends HttpServlet {
                 return;
             }
             request.setAttribute("user", freshUser);
-            request.getRequestDispatcher("/Profiles.jsp").forward(request, response);
+            request.getRequestDispatcher("/profile.jsp").forward(request, response);
         } catch (SQLException e) {
             System.err.println("Database error loading profile: " + e.getMessage());
             request.setAttribute("errorMessage", "Database error occurred");

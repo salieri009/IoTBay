@@ -215,6 +215,36 @@
             }
         });
         
+        // Mock CompatibilityEngine if not defined
+        if (typeof CompatibilityEngine === 'undefined') {
+            window.CompatibilityEngine = {
+                checkCartCompatibility: function() {
+                    // In a real implementation, this would check for incompatible items in the cart
+                    // For now, we return an empty array to prevent errors
+                    return Promise.resolve([]); 
+                },
+                displayWarnings: function(warnings, container) {
+                    if (!container) return;
+                    container.innerHTML = '';
+                    if (warnings.length === 0) return;
+                    
+                    const title = document.createElement('h3');
+                    title.className = 'text-sm font-medium text-warning-800 mb-2';
+                    title.textContent = 'Compatibility Warnings';
+                    container.appendChild(title);
+                    
+                    const list = document.createElement('ul');
+                    list.className = 'list-disc list-inside text-sm text-warning-700';
+                    warnings.forEach(warning => {
+                        const item = document.createElement('li');
+                        item.textContent = warning;
+                        list.appendChild(item);
+                    });
+                    container.appendChild(list);
+                }
+            };
+        }
+        
         function updateQuantity(event, itemId, newQuantity) {
             event.preventDefault();
             if (newQuantity < 1) {
@@ -230,9 +260,25 @@
             const productId = cartItem.getAttribute('data-product-id') || itemId;
             
             quantityBtn.disabled = true;
-            quantityInput.value = '??;
+            // quantityInput.value = '...'; // Loading state
             if (typeof showLoading === 'function') {
                 showLoading(quantityBtn);
+            }
+            
+            // Client-side stock validation
+            const maxStock = parseInt(quantityInput.getAttribute('max') || quantityInput.getAttribute('data-max-stock') || '999');
+            if (newQuantity > maxStock) {
+                if (typeof showToast === 'function') {
+                    showToast('Only ' + maxStock + ' items available in stock', 'warning');
+                } else {
+                    alert('Only ' + maxStock + ' items available in stock');
+                }
+                quantityInput.value = maxStock;
+                quantityBtn.disabled = false;
+                if (typeof hideLoading === 'function') {
+                    hideLoading(quantityBtn);
+                }
+                return;
             }
             
             const contextPath = '${pageContext.request.contextPath}';

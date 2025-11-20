@@ -6,12 +6,15 @@
                     <%@ page import="model.AccessLog" %>
                         <%@ page import="model.User" %>
 
-                            <% // Staff authorization check User currentUser=(User) session.getAttribute("user"); if
+                            <% 
+                                // Staff authorization check 
+                                User currentUser=(User) session.getAttribute("user"); if
                                 (currentUser==null || (!"staff".equalsIgnoreCase(currentUser.getRole()) &&
                                 !"admin".equalsIgnoreCase(currentUser.getRole()))) {
                                 response.sendRedirect(request.getContextPath() + "/login.jsp" ); return; } String
-                                contextPath=request.getContextPath(); // Get logs from request attribute (set by
-                                ManageAccessLogController) List<AccessLog> logs = (List<AccessLog>)
+                                contextPath=request.getContextPath(); 
+                                // Get logs from request attribute (set by ManageAccessLogController) 
+                                List<AccessLog> logs = (List<AccessLog>)
                                     request.getAttribute("accessLogs");
                                     if (logs == null) {
                                     logs = new java.util.ArrayList<>();

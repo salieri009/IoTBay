@@ -18,7 +18,7 @@ import db.DBConnection;
 import model.Product;
 import model.User;
 
-@WebServlet("/manage/products/*")
+@WebServlet("/api/manage/products/*")
 public class ManageProductController extends HttpServlet {
     private ProductDAO productDAO;
 

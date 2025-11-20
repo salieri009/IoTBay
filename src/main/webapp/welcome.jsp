@@ -38,14 +38,14 @@
         } else {
             heading = "Welcome back, " + user.getFirstName() + "!";
             status = "You're signed in";
-            description = "Pick up where you left off?”saved carts, recommendations, and order activity are synced to your account.";
+            description = "Pick up where you left off?ï¿½saved carts, recommendations, and order activity are synced to your account.";
             primaryCtaHref = contextPath + "/";
             primaryCtaLabel = "Continue to homepage";
             secondaryCtaHref = contextPath + "/orderList.jsp";
             secondaryCtaLabel = "View recent orders";
             highlightTitle = "Account snapshot";
             highlightDetail = "Review open orders, manage payment options, or jump back into active projects in one place.";
-            highlightLinkHref = contextPath + "/Profiles.jsp";
+            highlightLinkHref = contextPath + "/profile.jsp";
             highlightLinkLabel = "Manage account";
         }
     } else {
@@ -205,7 +205,7 @@
                             </svg>
                         </div>
                         <h3 class="text-base font-semibold text-neutral-900">Get expert help</h3>
-                        <p class="text-sm text-neutral-600">Need tailored procurement or a custom architecture review? We?™ll pair you with a specialist.</p>
+                        <p class="text-sm text-neutral-600">Need tailored procurement or a custom architecture review? We?ï¿½ll pair you with a specialist.</p>
                         <a href="${contextPath}/contact.jsp" class="text-sm font-semibold text-brand-primary hover:underline">Contact support</a>
                     </article>
                 </div>

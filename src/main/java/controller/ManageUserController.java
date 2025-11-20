@@ -19,7 +19,7 @@ import dao.interfaces.UserDAO;
 import db.DBConnection;
 import model.User;
 
-@WebServlet("/manage/users/*")
+@WebServlet("/api/manage/users/*")
 public class ManageUserController extends HttpServlet {
     private UserDAO userDAO;
 

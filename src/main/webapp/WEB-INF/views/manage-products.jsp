@@ -11,9 +11,9 @@
                                     (!"staff".equalsIgnoreCase(user.getRole()) &&
                                     !"admin".equalsIgnoreCase(user.getRole()))) {
                                     response.sendRedirect(request.getContextPath() + "/login.jsp" ); return; } String
-                                    contextPath=request.getContextPath(); // Get products from request attribute (set by
-                                    ManageProductController) List<Product> products = (List<Product>)
-                                        request.getAttribute("products");
+                                    contextPath=request.getContextPath(); 
+                                    // Get products from request attribute (set by ManageProductController) 
+                                    List<Product> products = (List<Product>) request.getAttribute("products");
                                         if (products == null) {
                                         products = new ArrayList<>();
                                             }
@@ -56,7 +56,7 @@
                                                                         <button class="btn btn--secondary"
                                                                             onclick="alert('Export feature coming soon')">Export
                                                                             Products</button>
-                                                                        <a href="${pageContext.request.contextPath}/manage/products/form"
+                                                                        <a href="${pageContext.request.contextPath}/api/manage/products/form"
                                                                             class="btn btn--primary">Add Product</a>
                                                                     </div>
                                                                 </div>

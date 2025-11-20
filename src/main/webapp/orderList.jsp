@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" isELIgnored="false" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
 <%@ page import="model.User" %>
 <%@ page import="model.Order" %>
@@ -162,7 +163,30 @@
                                     
                                     <!-- Order Items Summary -->
                                     <div class="border-t border-neutral-200 pt-4 mb-4">
-                                        <p class="text-sm text-neutral-600 mb-2">Order items will be displayed here</p>
+                                        <div class="flex -space-x-2 overflow-hidden mb-2">
+                                            <c:forEach var="item" items="${order.orderItems}" end="4">
+                                                <img class="inline-block h-10 w-10 rounded-full ring-2 ring-white object-cover" 
+                                                     src="${not empty item.product.imageUrl ? item.product.imageUrl : 'images/default-product.png'}" 
+                                                     alt="${item.product.name}"
+                                                     title="${item.product.name} (x${item.quantity})"
+                                                     onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/default-product.png';">
+                                            </c:forEach>
+                                            <c:if test="${fn:length(order.orderItems) > 5}">
+                                                <div class="flex items-center justify-center h-10 w-10 rounded-full ring-2 ring-white bg-neutral-100 text-xs font-medium text-neutral-600">
+                                                    +${fn:length(order.orderItems) - 5}
+                                                </div>
+                                            </c:if>
+                                        </div>
+                                        <p class="text-sm text-neutral-600">
+                                            <c:forEach var="item" items="${order.orderItems}" varStatus="status">
+                                                <c:if test="${status.index < 2}">
+                                                    ${item.product.name} (x${item.quantity})<c:if test="${!status.last && status.index < 1}">, </c:if>
+                                                </c:if>
+                                            </c:forEach>
+                                            <c:if test="${fn:length(order.orderItems) > 2}">
+                                                and ${fn:length(order.orderItems) - 2} more items
+                                            </c:if>
+                                        </p>
                                     </div>
                                     
                                     <!-- Tracking Information -->
@@ -177,4 +201,29 @@
                                     
                                     <!-- Order Actions -->
                                     <div class="flex flex-col sm:flex-row gap-3">
-                                            ... (rest of file remains unchanged) ...
+                                        <!-- View Details Button -->
+                                        <jsp:include page="/components/atoms/button/button.jsp">
+                                            <jsp:param name="type" value="secondary" />
+                                            <jsp:param name="text" value="View Details" />
+                                            <jsp:param name="href" value="${pageContext.request.contextPath}/order-details.jsp?orderId=${order.id}" />
+                                        </jsp:include>
+                                        <!-- Reorder Button (if delivered or cancelled) -->
+                                        <c:choose>
+                                            <c:when test="${order.status == 'DELIVERED' || order.status == 'CANCELLED'}">
+                                                <jsp:include page="/components/atoms/button/button.jsp">
+                                                    <jsp:param name="type" value="primary" />
+                                                    <jsp:param name="text" value="Reorder" />
+                                                    <jsp:param name="href" value="${pageContext.request.contextPath}/reorder.jsp?orderId=${order.id}" />
+                                                </jsp:include>
+                                            </c:when>
+                                        </c:choose>
+                                    </div>
+                                </div>
+                            </c:forEach>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+            </div>
+        </div>
+    </section>
+</t:base>

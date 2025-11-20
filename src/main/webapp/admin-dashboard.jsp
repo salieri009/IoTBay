@@ -40,20 +40,20 @@
                                     <p class="sidebar-subtitle">IoT Bay Management</p>
                                 </div>
                                 <nav class="sidebar-nav">
-                                    <a href="<%=request.getContextPath()%>/admin-dashboard"
+                                    <a href="<%=request.getContextPath()%>/admin-dashboard.jsp"
                                         class="admin-nav-link active" aria-current="page">
                                         Dashboard
                                     </a>
-                                    <a href="<%=request.getContextPath()%>/manage/users" class="admin-nav-link">
+                                    <a href="<%=request.getContextPath()%>/api/manage/users" class="admin-nav-link">
                                         User Management
                                     </a>
-                                    <a href="<%=request.getContextPath()%>/manage/products" class="admin-nav-link">
+                                    <a href="<%=request.getContextPath()%>/api/manage/products" class="admin-nav-link">
                                         Product Management
                                     </a>
                                     <a href="<%=request.getContextPath()%>/admin/supplier/" class="admin-nav-link">
                                         Supplier Management
                                     </a>
-                                    <a href="<%=request.getContextPath()%>/manage/access-logs"
+                                    <a href="<%=request.getContextPath()%>/api/manage/access-logs"
                                         class="admin-nav-link">
                                         Access Logs
                                     </a>
@@ -325,11 +325,11 @@
                                                     </li>
                                                 </ul>
                                                 <div class="action-buttons">
-                                                    <a href="<%=request.getContextPath()%>/manage/products"
+                                                    <a href="<%=request.getContextPath()%>/api/manage/products"
                                                         class="btn btn--primary action-btn">
                                                         Manage Inventory
                                                     </a>
-                                                    <a href="<%=request.getContextPath()%>/manage/products"
+                                                    <a href="<%=request.getContextPath()%>/api/manage/products"
                                                         class="btn btn--outline action-btn">
                                                         Product Admin
                                                     </a>
@@ -418,11 +418,11 @@
                                                     </li>
                                                 </ul>
                                                 <div class="action-buttons">
-                                                    <a href="<%=request.getContextPath()%>/manage/users"
+                                                    <a href="<%=request.getContextPath()%>/api/manage/users"
                                                         class="btn btn--primary action-btn">
                                                         Manage Users
                                                     </a>
-                                                    <a href="<%=request.getContextPath()%>/manage/access-logs"
+                                                    <a href="<%=request.getContextPath()%>/api/manage/access-logs"
                                                         class="btn btn--outline action-btn">
                                                         Access Logs
                                                     </a>
@@ -444,7 +444,7 @@
                                                 </svg>
                                                 Browse Products
                                             </a>
-                                            <a href="<%=request.getContextPath()%>/manage/products"
+                                            <a href="<%=request.getContextPath()%>/api/manage/products"
                                                 class="quick-action-btn">
                                                 <svg class="quick-action-icon" fill="none" stroke="currentColor"
                                                     viewBox="0 0 24 24" aria-hidden="true">

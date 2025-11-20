@@ -110,7 +110,7 @@
 
     <servlet-mapping>
         <servlet-name>UserProfileController</servlet-name>
-        <url-pattern>/api/Profiles</url-pattern>
+        <url-pattern>/api/profile</url-pattern>
     </servlet-mapping>
 
     <servlet>

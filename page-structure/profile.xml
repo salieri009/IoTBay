@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
   {IoTBay User Profile Pages Structure}
-  {This XML describes Profiles.jsp and updateProfile.jsp - user profile management pages}
+  {This XML describes profile.jsp and updateProfile.jsp - user profile management pages}
   {Purpose: Document profile viewing and editing page structure}
 -->
 <pages name="profile" type="user-profile">
   
   <!-- {Profile View Page} -->
-  <page name="profile-view" jsp-file="Profiles.jsp">
+  <page name="profile-view" jsp-file="profile.jsp">
     
     <metadata>
       <title>My Profile - IoTBay</title>

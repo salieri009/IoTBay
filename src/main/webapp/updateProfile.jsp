@@ -11,7 +11,7 @@
                         <h1 class="text-xl font-bold text-neutral-900">Update Profile</h1>
                         <p class="mt-1 text-sm text-neutral-500">Update your personal details</p>
                     </div>
-                    <a href="Profiles.jsp" class="text-sm text-brand-primary hover:text-brand-primary-700 font-medium">
+                    <a href="profile.jsp" class="text-sm text-brand-primary hover:text-brand-primary-700 font-medium">
                         Back to Profile
                     </a>
                 </div>
