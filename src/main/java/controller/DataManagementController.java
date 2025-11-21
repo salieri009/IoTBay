@@ -71,15 +71,19 @@ public class DataManagementController extends HttpServlet {
             return;
         }
 
-        User user = (User) session.getAttribute("user");
-        if (user == null) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Please log in");
+        Object userObj = session.getAttribute("user");
+        if (!(userObj instanceof User)) {
+            utils.ErrorAction.handleAuthenticationError(request, response, "DataManagementController.doGet");
             return;
         }
 
+        User user = (User) userObj;
+
         // Check if user is admin/staff for data management operations
-        if (!"ADMIN".equals(user.getRole()) && !"STAFF".equals(user.getRole())) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Insufficient permissions");
+        // Note: Role comparison should be case-insensitive
+        String role = user.getRole();
+        if (role == null || (!"admin".equalsIgnoreCase(role) && !"staff".equalsIgnoreCase(role))) {
+            utils.ErrorAction.handleAuthorizationError(request, response, "DataManagementController.doGet");
             return;
         }
 
@@ -104,8 +108,9 @@ public class DataManagementController extends HttpServlet {
                     response.sendError(HttpServletResponse.SC_NOT_FOUND);
             }
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Database error in data management", e);
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database error");
+            utils.ErrorAction.handleDatabaseError(request, response, e, "DataManagementController.doGet");
+        } catch (Exception e) {
+            utils.ErrorAction.handleServerError(request, response, e, "DataManagementController.doGet");
         }
     }
 

@@ -173,6 +173,85 @@
         <url-pattern>/api/dataManagement/*</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>HomeController</servlet-name>
+        <servlet-class>controller.HomeController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>HomeController</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>HomeController</servlet-name>
+        <url-pattern>/index.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>BrowsePageController</servlet-name>
+        <servlet-class>controller.BrowsePageController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>BrowsePageController</servlet-name>
+        <url-pattern>/browse</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BrowsePageController</servlet-name>
+        <url-pattern>/browse.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CategoryController</servlet-name>
+        <servlet-class>controller.CategoryController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CategoryController</servlet-name>
+        <url-pattern>/categories</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CategoryPageController</servlet-name>
+        <servlet-class>controller.CategoryPageController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CategoryPageController</servlet-name>
+        <url-pattern>/category/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AdminDashboardController</servlet-name>
+        <servlet-class>controller.AdminDashboardController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminDashboardController</servlet-name>
+        <url-pattern>/admin-dashboard</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>DataManagementPageController</servlet-name>
+        <servlet-class>controller.DataManagementPageController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DataManagementPageController</servlet-name>
+        <url-pattern>/data-management</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DataManagementPageController</servlet-name>
+        <url-pattern>/data-management.jsp</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ReportsDashboardController</servlet-name>
+        <servlet-class>controller.ReportsDashboardController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ReportsDashboardController</servlet-name>
+        <url-pattern>/reports-dashboard</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ReportsDashboardController</servlet-name>
+        <url-pattern>/reports-dashboard.jsp</url-pattern>
+    </servlet-mapping>
+
     <error-page>
     <error-code>400</error-code>
     <location>/error.jsp</location>
@@ -187,10 +266,17 @@
     </error-page>
 
     <error-page>
+        <error-code>403</error-code>
+        <location>/error.jsp</location>
+    </error-page>
+
+    <error-page>
         <error-code>404</error-code>
         <location>/error.jsp</location>
     </error-page>
 
-
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
     
 </web-app>

@@ -96,8 +96,8 @@
           <h3 class="text-white font-semibold text-lg mb-4 tracking-wide">Shop</h3>
           <ul class="space-y-3">
             <li><a href="${pageContext.request.contextPath}/browse.jsp" class="text-neutral-400 hover:text-brand-primary transition-colors text-sm">All Products</a></li>
-            <li><a href="${pageContext.request.contextPath}/category-industrial.jsp" class="text-neutral-400 hover:text-brand-primary transition-colors text-sm">Industrial</a></li>
-            <li><a href="${pageContext.request.contextPath}/category-smarthome.jsp" class="text-neutral-400 hover:text-brand-primary transition-colors text-sm">Smart Home</a></li>
+            <li><a href="${pageContext.request.contextPath}/category/industrial" class="text-neutral-400 hover:text-brand-primary transition-colors text-sm">Industrial</a></li>
+            <li><a href="${pageContext.request.contextPath}/category/smarthome" class="text-neutral-400 hover:text-brand-primary transition-colors text-sm">Smart Home</a></li>
             <li><a href="${pageContext.request.contextPath}/browse.jsp?featured=true" class="text-neutral-400 hover:text-brand-primary transition-colors text-sm">Featured</a></li>
             <li><a href="${pageContext.request.contextPath}/browse.jsp?new=true" class="text-neutral-400 hover:text-brand-primary transition-colors text-sm">New Arrivals</a></li>
           </ul>

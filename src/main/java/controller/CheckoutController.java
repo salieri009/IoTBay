@@ -41,7 +41,13 @@ public class CheckoutController extends HttpServlet{
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             HttpSession session = request.getSession(false);
-            User user = (session != null) ? (User) session.getAttribute("user") : null;
+            User user = null;
+            if (session != null) {
+                Object userObj = session.getAttribute("user");
+                if (userObj instanceof User) {
+                    user = (User) userObj;
+                }
+            }
 
             Integer userId;
             if (user != null) {
@@ -80,20 +86,11 @@ public class CheckoutController extends HttpServlet{
             request.setAttribute("total", total);
             request.getRequestDispatcher("/checkout.jsp").forward(request, response);
         } catch (SQLException e) {
-            System.err.println("Database error loading checkout: " + e.getMessage());
-            e.printStackTrace();
-            request.setAttribute("errorMessage", "Database error occurred while loading checkout");
-            request.getRequestDispatcher("/error.jsp").forward(request, response);
+            utils.ErrorAction.handleDatabaseError(request, response, e, "CheckoutController.doGet");
         } catch (NullPointerException e) {
-            System.err.println("Null pointer error in checkout: " + e.getMessage());
-            e.printStackTrace();
-            request.setAttribute("errorMessage", "Error loading checkout: Missing required data");
-            request.getRequestDispatcher("/error.jsp").forward(request, response);
+            utils.ErrorAction.handleServerError(request, response, e, "CheckoutController.doGet");
         } catch (Exception e) {
-            System.err.println("Error loading checkout: " + e.getMessage());
-            e.printStackTrace();
-            request.setAttribute("errorMessage", "Failed to load checkout: " + e.getMessage());
-            request.getRequestDispatcher("/error.jsp").forward(request, response);
+            utils.ErrorAction.handleServerError(request, response, e, "CheckoutController.doGet");
         }
     }
 
@@ -109,7 +106,13 @@ public class CheckoutController extends HttpServlet{
         
         try {
             HttpSession session = request.getSession(false);
-            User user = (session != null) ? (User) session.getAttribute("user") : null;
+            User user = null;
+            if (session != null) {
+                Object userObj = session.getAttribute("user");
+                if (userObj instanceof User) {
+                    user = (User) userObj;
+                }
+            }
 
             Integer userId;
             if (user != null) {
@@ -139,10 +142,10 @@ public class CheckoutController extends HttpServlet{
             }
 
             // Validate shipping information if provided
-            String shippingAddress = request.getParameter("shippingAddress");
-            String shippingCity = request.getParameter("shippingCity");
-            String shippingPostalCode = request.getParameter("shippingPostalCode");
-            String shippingCountry = request.getParameter("shippingCountry");
+            String shippingAddress = utils.SecurityUtil.getValidatedStringParameter(request, "shippingAddress", 200);
+            String shippingCity = utils.SecurityUtil.getValidatedStringParameter(request, "shippingCity", 100);
+            String shippingPostalCode = utils.SecurityUtil.getValidatedStringParameter(request, "shippingPostalCode", 10);
+            String shippingCountry = utils.SecurityUtil.getValidatedStringParameter(request, "shippingCountry", 100);
             
             if (shippingAddress != null && !shippingAddress.trim().isEmpty()) {
                 // Validate shipping address

@@ -39,11 +39,18 @@ public class UserProfileController extends HttpServlet {
                 //brings user to profile page
         // Check if user is logged in
         HttpSession session = request.getSession(false);
-        User user = (session != null) ? (User) session.getAttribute("user") : null;
-        if (user == null) {
+        if (session == null) {
             response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
+        
+        Object userObj = session.getAttribute("user");
+        if (!(userObj instanceof User)) {
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            return;
+        }
+        
+        User user = (User) userObj;
         // update user info
         try {
             User freshUser = userDAO.getUserById(user.getId());
@@ -71,29 +78,43 @@ public class UserProfileController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession(false);
-        User sessionUser = (session != null) ? (User) session.getAttribute("user") : null;
-        if (sessionUser == null) {
+        Object userObj = session.getAttribute("user");
+        if (!(userObj instanceof User)) {
             response.sendRedirect(request.getContextPath() + "/login.jsp");
+            return;
+        }
+        
+        User sessionUser = (User) userObj;
+
+        // CSRF protection
+        if (!utils.SecurityUtil.validateCSRFToken(request)) {
+            utils.ErrorAction.handleValidationError(request, response,
+                "CSRF token validation failed", "UserProfileController.doPost");
             return;
         }
 
         // 파라미터 추출
-        String firstName = request.getParameter("firstName");
-        String lastName = request.getParameter("lastName");
-        String phone = request.getParameter("phone");
-        String postalCode = request.getParameter("postalCode");
-        String addressLine1 = request.getParameter("addressLine1");
-        String addressLine2 = request.getParameter("addressLine2");
-        String dobString = request.getParameter("dateOfBirth");
-        String paymentMethod = request.getParameter("paymentMethod");
+        String firstName = utils.SecurityUtil.getValidatedStringParameter(request, "firstName", 50);
+        String lastName = utils.SecurityUtil.getValidatedStringParameter(request, "lastName", 50);
+        String phone = utils.SecurityUtil.getValidatedStringParameter(request, "phone", 20);
+        String postalCode = utils.SecurityUtil.getValidatedStringParameter(request, "postalCode", 10);
+        String addressLine1 = utils.SecurityUtil.getValidatedStringParameter(request, "addressLine1", 200);
+        String addressLine2 = utils.SecurityUtil.getValidatedStringParameter(request, "addressLine2", 200);
+        String dobString = utils.SecurityUtil.getValidatedStringParameter(request, "dateOfBirth", 20);
+        String paymentMethod = utils.SecurityUtil.getValidatedStringParameter(request, "paymentMethod", 50);
 
         // 유효성 검사
+        if (firstName == null || lastName == null || phone == null || postalCode == null || addressLine1 == null) {
+            utils.ErrorAction.handleMissingParameterError(request, response,
+                "Required fields are missing", "UserProfileController.doPost");
+            return;
+        }
+        
         String profileError = ValidationUtil.validateRegisterUserProfile(
             firstName, lastName, phone, postalCode, addressLine1
         );
         if (profileError != null) {
-            request.setAttribute("error", profileError);
-            doGet(request, response); // Error page, 
+            utils.ErrorAction.handleValidationError(request, response, profileError, "UserProfileController.doPost");
             return;
         }
 
@@ -144,12 +165,20 @@ public class UserProfileController extends HttpServlet {
 protected void doDelete(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
     HttpSession session = request.getSession(false);
-    User sessionUser = (session != null) ? (User) session.getAttribute("user") : null;
-    if (sessionUser == null) {
+    if (session == null) {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.getWriter().write("Unauthorized: Please login.");
         return;
     }
+    
+    Object userObj = session.getAttribute("user");
+    if (!(userObj instanceof User)) {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.getWriter().write("Unauthorized: Please login.");
+        return;
+    }
+    
+    User sessionUser = (User) userObj;
 
     try {
         // 실제로 DB에서 사용자 삭제

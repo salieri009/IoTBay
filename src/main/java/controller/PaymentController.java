@@ -49,12 +49,19 @@ public class PaymentController extends HttpServlet {
         
         String pathInfo = request.getPathInfo();
         HttpSession session = request.getSession(false);
-        User user = (session != null) ? (User) session.getAttribute("user") : null;
         
-        if (user == null) {
+        if (session == null) {
             response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
+        
+        Object userObj = session.getAttribute("user");
+        if (!(userObj instanceof User)) {
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            return;
+        }
+        
+        User user = (User) userObj;
 
         String acceptHeader = request.getHeader("Accept");
         boolean isJsonRequest = acceptHeader != null && acceptHeader.contains("application/json");
@@ -98,7 +105,7 @@ public class PaymentController extends HttpServlet {
                         listPayments(request, response, user);
                     }
                 } else {
-                    response.sendError(HttpServletResponse.SC_FORBIDDEN);
+                    utils.ErrorAction.handleAuthorizationError(request, response, "PaymentController.doGet");
                 }
             } else {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -119,10 +126,24 @@ public class PaymentController extends HttpServlet {
         
         String pathInfo = request.getPathInfo();
         HttpSession session = request.getSession(false);
-        User user = (session != null) ? (User) session.getAttribute("user") : null;
         
-        if (user == null) {
+        if (session == null) {
             response.sendRedirect(request.getContextPath() + "/login.jsp");
+            return;
+        }
+        
+        Object userObj = session.getAttribute("user");
+        if (!(userObj instanceof User)) {
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            return;
+        }
+        
+        User user = (User) userObj;
+
+        // CSRF protection
+        if (!utils.SecurityUtil.validateCSRFToken(request)) {
+            utils.ErrorAction.handleValidationError(request, response,
+                "CSRF token validation failed", "PaymentController.doPost");
             return;
         }
 
@@ -135,8 +156,7 @@ public class PaymentController extends HttpServlet {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
             }
         } catch (Exception e) {
-            request.setAttribute("error", "Error processing payment: " + e.getMessage());
-            request.getRequestDispatcher("/error.jsp").forward(request, response);
+            utils.ErrorAction.handleServerError(request, response, e, "PaymentController.doPost");
         }
     }
 
@@ -145,21 +165,28 @@ public class PaymentController extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession(false);
-        User user = (session != null) ? (User) session.getAttribute("user") : null;
         
-        if (user == null) {
+        if (session == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
+        
+        Object userObj = session.getAttribute("user");
+        if (!(userObj instanceof User)) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+        
+        User user = (User) userObj;
 
         try {
-            String paymentIdStr = request.getParameter("paymentId");
+            String paymentIdStr = utils.SecurityUtil.getValidatedStringParameter(request, "paymentId", 10);
             if (paymentIdStr == null) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 return;
             }
 
-            int paymentId = Integer.parseInt(paymentIdStr);
+            int paymentId = utils.SecurityUtil.getValidatedIntParameter(request, "paymentId", 1, Integer.MAX_VALUE);
             Payment payment = paymentDAO.getPaymentById(paymentId);
             
             if (payment == null || !payment.getUserId().equals(user.getId())) {
@@ -181,8 +208,7 @@ public class PaymentController extends HttpServlet {
             response.getWriter().write("Payment deleted successfully");
             
         } catch (Exception e) {
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write("Error deleting payment: " + e.getMessage());
+            utils.ErrorAction.handleServerError(request, response, e, "PaymentController.doDelete");
         }
     }
 
@@ -198,7 +224,7 @@ public class PaymentController extends HttpServlet {
         Payment payment = paymentDAO.getPaymentById(paymentId);
         
         if (payment == null || !payment.getUserId().equals(user.getId())) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            utils.ErrorAction.handleAuthorizationError(request, response, "PaymentController.viewPayment");
             return;
         }
 
@@ -213,24 +239,23 @@ public class PaymentController extends HttpServlet {
             throws Exception {
         
         // Extract and validate parameters
-        String orderIdStr = request.getParameter("orderId");
-        String amountStr = request.getParameter("amount");
-        String paymentMethod = request.getParameter("paymentMethod");
-        String cardNumber = request.getParameter("cardNumber");
-        String expiryDate = request.getParameter("expiryDate");
-        String cvv = request.getParameter("cvv");
+        String orderIdStr = utils.SecurityUtil.getValidatedStringParameter(request, "orderId", 10);
+        String amountStr = utils.SecurityUtil.getValidatedStringParameter(request, "amount", 20);
+        String paymentMethod = utils.SecurityUtil.getValidatedStringParameter(request, "paymentMethod", 50);
+        String cardNumber = utils.SecurityUtil.getValidatedStringParameter(request, "cardNumber", 20);
+        String expiryDate = utils.SecurityUtil.getValidatedStringParameter(request, "expiryDate", 10);
+        String cvv = utils.SecurityUtil.getValidatedStringParameter(request, "cvv", 5);
 
         // Validation
         if (orderIdStr == null || amountStr == null || paymentMethod == null) {
-            request.setAttribute("error", "Missing required payment information");
-            request.getRequestDispatcher("/payment-form.jsp").forward(request, response);
+            utils.ErrorAction.handleMissingParameterError(request, response,
+                "Missing required payment information", "PaymentController.createPayment");
             return;
         }
 
         String validationError = ValidationUtil.validatePayment(amountStr, paymentMethod, cardNumber, expiryDate, cvv);
         if (validationError != null) {
-            request.setAttribute("error", validationError);
-            request.getRequestDispatcher("/payment-form.jsp").forward(request, response);
+            utils.ErrorAction.handleValidationError(request, response, validationError, "PaymentController.createPayment");
             return;
         }
 
@@ -262,30 +287,31 @@ public class PaymentController extends HttpServlet {
     private void updatePayment(HttpServletRequest request, HttpServletResponse response, User user)
             throws Exception {
         
-        String paymentIdStr = request.getParameter("paymentId");
+        String paymentIdStr = utils.SecurityUtil.getValidatedStringParameter(request, "paymentId", 10);
         if (paymentIdStr == null) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+            utils.ErrorAction.handleMissingParameterError(request, response,
+                "Payment ID is required", "PaymentController.updatePayment");
             return;
         }
 
-        int paymentId = Integer.parseInt(paymentIdStr);
+        int paymentId = utils.SecurityUtil.getValidatedIntParameter(request, "paymentId", 1, Integer.MAX_VALUE);
         Payment payment = paymentDAO.getPaymentById(paymentId);
         
         if (payment == null || !payment.getUserId().equals(user.getId())) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            utils.ErrorAction.handleAuthorizationError(request, response, "PaymentController.updatePayment");
             return;
         }
 
         // Only allow updating pending payments
         if (!"PENDING".equals(payment.getStatus())) {
-            request.setAttribute("error", "Cannot update processed payment");
-            viewPayment(request, response, user, paymentId);
+            utils.ErrorAction.handleValidationError(request, response,
+                "Cannot update processed payment", "PaymentController.updatePayment");
             return;
         }
 
         // Update payment details
-        String amountStr = request.getParameter("amount");
-        String paymentMethod = request.getParameter("paymentMethod");
+        String amountStr = utils.SecurityUtil.getValidatedStringParameter(request, "amount", 20);
+        String paymentMethod = utils.SecurityUtil.getValidatedStringParameter(request, "paymentMethod", 50);
 
         if (amountStr != null && ValidationUtil.isValidAmount(amountStr)) {
             payment.setAmount(new BigDecimal(amountStr));
@@ -303,9 +329,9 @@ public class PaymentController extends HttpServlet {
     private void searchPayments(HttpServletRequest request, HttpServletResponse response, User user)
             throws Exception {
         
-        String paymentIdStr = request.getParameter("paymentId");
-        String dateFrom = request.getParameter("dateFrom");
-        String dateTo = request.getParameter("dateTo");
+        String paymentIdStr = utils.SecurityUtil.getValidatedStringParameter(request, "paymentId", 10);
+        String dateFrom = utils.SecurityUtil.getValidatedStringParameter(request, "dateFrom", 20);
+        String dateTo = utils.SecurityUtil.getValidatedStringParameter(request, "dateTo", 20);
 
         List<Payment> payments;
 
@@ -398,10 +424,10 @@ public class PaymentController extends HttpServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         
-        String paymentIdStr = request.getParameter("paymentId");
-        String dateFrom = request.getParameter("dateFrom");
-        String dateTo = request.getParameter("dateTo");
-        String status = request.getParameter("status");
+        String paymentIdStr = utils.SecurityUtil.getValidatedStringParameter(request, "paymentId", 10);
+        String dateFrom = utils.SecurityUtil.getValidatedStringParameter(request, "dateFrom", 20);
+        String dateTo = utils.SecurityUtil.getValidatedStringParameter(request, "dateTo", 20);
+        String status = utils.SecurityUtil.getValidatedStringParameter(request, "status", 20);
         
         List<Payment> payments;
         

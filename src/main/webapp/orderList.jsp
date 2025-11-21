@@ -3,16 +3,15 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
-<%@ page import="model.User" %>
-<%@ page import="model.Order" %>
-<%@ page import="java.util.List" %>
+<%@ page import="java.util.*, model.*" %>
 
 <%
-    User user = (User) session.getAttribute("user");
-    if (user == null) {
+    Object userObj = session.getAttribute("user");
+    if (!(userObj instanceof User)) {
         response.sendRedirect("login.jsp");
         return;
     }
+    User user = (User) userObj;
     String contextPath = request.getContextPath();
     
     // Orders should be set by OrderHistoryController

@@ -34,41 +34,39 @@ public class DeleteProductController extends HttpServlet {
         throws ServletException, IOException {
 
         HttpSession session = request.getSession(false);
-        if (session == null || !(session.getAttribute("user") instanceof model.User)) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.getWriter().write("{\"error\": \"Access denied\"}");
+        if (session == null) {
+            utils.ErrorAction.handleAuthorizationError(request, response, "DeleteProductController.doPost");
             return;
         }
 
-        model.User user = (model.User) session.getAttribute("user");
+        Object userObj = session.getAttribute("user");
+        if (!(userObj instanceof model.User)) {
+            utils.ErrorAction.handleAuthorizationError(request, response, "DeleteProductController.doPost");
+            return;
+        }
+
+        model.User user = (model.User) userObj;
         if (!"staff".equalsIgnoreCase(user.getRole())) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.getWriter().write("{\"error\": \"Access denied\"}");
+            utils.ErrorAction.handleAuthorizationError(request, response, "DeleteProductController.doPost");
             return;
         }
         
         // CSRF protection
         if (!utils.SecurityUtil.validateCSRFToken(request)) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.getWriter().write("{\"error\": \"CSRF token validation failed\"}");
-            return;
-        }
-
-        String idParam = request.getParameter("id");
-        if (idParam == null || idParam.isEmpty()) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("{\"error\": \"Missing product ID\"}");
+            utils.ErrorAction.handleValidationError(request, response, "CSRF token validation failed", "DeleteProductController.doPost");
             return;
         }
 
         try {
-            int id = Integer.parseInt(idParam);
+            int id = utils.SecurityUtil.getValidatedIntParameter(request, "id", 1, Integer.MAX_VALUE);
             productDAO.deleteProduct(id);
             response.sendRedirect(request.getContextPath() + "/manage/products");
-        } catch (NumberFormatException | SQLException e) {
-            System.err.println("Delete product error: " + e.getMessage());
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write("{\"error\":\"Failed to delete product: " + e.getMessage() + "\"}");
+        } catch (SQLException e) {
+            utils.ErrorAction.handleDatabaseError(request, response, e, "DeleteProductController.doPost");
+        } catch (IllegalArgumentException e) {
+            utils.ErrorAction.handleValidationError(request, response, e.getMessage(), "DeleteProductController.doPost");
+        } catch (Exception e) {
+            utils.ErrorAction.handleServerError(request, response, e, "DeleteProductController.doPost");
         }
     }
 }

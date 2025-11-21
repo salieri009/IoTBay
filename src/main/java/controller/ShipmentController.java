@@ -132,13 +132,19 @@ public class ShipmentController extends HttpServlet {
     private void createShipment(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException, SQLException {
         
-        HttpSession session = request.getSession();
-        User currentUser = (User) session.getAttribute("user");
-        
-        if (currentUser == null) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
             response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
+        
+        Object userObj = session.getAttribute("user");
+        if (!(userObj instanceof User)) {
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            return;
+        }
+        
+        User currentUser = (User) userObj;
         
         // Rate limiting check
         if (utils.SecurityUtil.isRateLimited(request, 10, 60000)) { // 10 requests per minute
@@ -248,8 +254,19 @@ public class ShipmentController extends HttpServlet {
         }
         
         // Verify user access
-        HttpSession session = request.getSession();
-        User currentUser = (User) session.getAttribute("user");
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+        
+        Object userObj = session.getAttribute("user");
+        if (!(userObj instanceof User)) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+        
+        User currentUser = (User) userObj;
         Order order = orderDAO.findById(shipment.getOrderId());
         
         if (order.getUserId() != currentUser.getUserId() && 
@@ -306,8 +323,19 @@ public class ShipmentController extends HttpServlet {
         }
         
         // Verify user access
-        HttpSession session = request.getSession();
-        User currentUser = (User) session.getAttribute("user");
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+        
+        Object userObj = session.getAttribute("user");
+        if (!(userObj instanceof User)) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+        
+        User currentUser = (User) userObj;
         Order order = orderDAO.findById(shipment.getOrderId());
         
         if (order.getUserId() != currentUser.getUserId() && 
@@ -326,11 +354,22 @@ public class ShipmentController extends HttpServlet {
             throws ServletException, IOException, SQLException {
         
         // Only staff can update shipment status
-        HttpSession session = request.getSession();
-        User currentUser = (User) session.getAttribute("user");
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+        
+        Object userObj = session.getAttribute("user");
+        if (!(userObj instanceof User)) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+        
+        User currentUser = (User) userObj;
         
         if (!"staff".equalsIgnoreCase(currentUser.getRole())) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            utils.ErrorAction.handleAuthorizationError(request, response, "ShipmentController.methodName");
             return;
         }
         
@@ -368,13 +407,19 @@ public class ShipmentController extends HttpServlet {
     private void listShipments(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException, SQLException {
         
-        HttpSession session = request.getSession();
-        User currentUser = (User) session.getAttribute("user");
-        
-        if (currentUser == null) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
             response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
+        
+        Object userObj = session.getAttribute("user");
+        if (!(userObj instanceof User)) {
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            return;
+        }
+        
+        User currentUser = (User) userObj;
         
         List<Shipment> shipments;
         
@@ -404,8 +449,19 @@ public class ShipmentController extends HttpServlet {
         }
         
         // Verify user access
-        HttpSession session = request.getSession();
-        User currentUser = (User) session.getAttribute("user");
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+        
+        Object userObj = session.getAttribute("user");
+        if (!(userObj instanceof User)) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+        
+        User currentUser = (User) userObj;
         Order order = orderDAO.findById(shipment.getOrderId());
         
         if (order.getUserId() != currentUser.getUserId() && 
@@ -422,13 +478,19 @@ public class ShipmentController extends HttpServlet {
     private void searchShipments(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException, SQLException {
         
-        HttpSession session = request.getSession();
-        User currentUser = (User) session.getAttribute("user");
-        
-        if (currentUser == null) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
             response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
+        
+        Object userObj = session.getAttribute("user");
+        if (!(userObj instanceof User)) {
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            return;
+        }
+        
+        User currentUser = (User) userObj;
         
         String shipmentIdStr = request.getParameter("shipmentId");
         String trackingNumber = request.getParameter("trackingNumber");
@@ -530,10 +592,8 @@ public class ShipmentController extends HttpServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         
-        HttpSession session = request.getSession();
-        User currentUser = (User) session.getAttribute("user");
-        
-        if (currentUser == null) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             JsonObject json = new JsonObject();
             json.addProperty("success", false);
@@ -541,6 +601,18 @@ public class ShipmentController extends HttpServlet {
             response.getWriter().write(gson.toJson(json));
             return;
         }
+        
+        Object userObj = session.getAttribute("user");
+        if (!(userObj instanceof User)) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            JsonObject json = new JsonObject();
+            json.addProperty("success", false);
+            json.addProperty("error", "Not logged in");
+            response.getWriter().write(gson.toJson(json));
+            return;
+        }
+        
+        User currentUser = (User) userObj;
         
         List<Shipment> shipments;
         
@@ -576,8 +648,19 @@ public class ShipmentController extends HttpServlet {
             return;
         }
         
-        HttpSession session = request.getSession();
-        User currentUser = (User) session.getAttribute("user");
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+        
+        Object userObj = session.getAttribute("user");
+        if (!(userObj instanceof User)) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+        
+        User currentUser = (User) userObj;
         Order order = orderDAO.findById(shipment.getOrderId());
         
         if (order.getUserId() != currentUser.getUserId() && 
@@ -640,10 +723,8 @@ public class ShipmentController extends HttpServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         
-        HttpSession session = request.getSession();
-        User currentUser = (User) session.getAttribute("user");
-        
-        if (currentUser == null) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             JsonObject json = new JsonObject();
             json.addProperty("success", false);
@@ -651,6 +732,18 @@ public class ShipmentController extends HttpServlet {
             response.getWriter().write(gson.toJson(json));
             return;
         }
+        
+        Object userObj = session.getAttribute("user");
+        if (!(userObj instanceof User)) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            JsonObject json = new JsonObject();
+            json.addProperty("success", false);
+            json.addProperty("error", "Not logged in");
+            response.getWriter().write(gson.toJson(json));
+            return;
+        }
+        
+        User currentUser = (User) userObj;
         
         String shipmentIdStr = request.getParameter("shipmentId");
         String trackingNumber = request.getParameter("trackingNumber");

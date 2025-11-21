@@ -777,7 +777,7 @@
                 <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                 </svg>
-                <div class="upload-text">Selected: ${fileName}</div>
+                <div class="upload-text">Selected: \${fileName}</div>
                 <div class="upload-hint">Click to select a different file</div>
             `;
         }
@@ -814,7 +814,7 @@
                 if (progress > 100) progress = 100;
                 
                 progressFill.style.width = progress + '%';
-                progressText.textContent = `Processing ${entityType}... ${Math.round(progress)}%`;
+                progressText.textContent = `Processing \${entityType}... \${Math.round(progress)}%`;
                 
                 if (progress >= 100) {
                     clearInterval(interval);
@@ -847,7 +847,7 @@
                     const errorDiv = document.createElement('div');
                     errorDiv.className = 'error-item';
                     const columnName = entityType === 'users' ? 'email' : 'name';
-                    errorDiv.textContent = `Row ${Math.floor(Math.random() * totalRecords) + 1}: Invalid data format in column '${columnName}'`;
+                    errorDiv.textContent = `Row \${Math.floor(Math.random() * totalRecords) + 1}: Invalid data format in column '\${columnName}'`;
                     errorList.appendChild(errorDiv);
                 }
             }
@@ -857,22 +857,22 @@
             // Add to logs
             addOperationLog('Import', entityType, totalRecords, errors > 0 ? 'error' : 'success');
             
-            showNotification(`Import completed! ${successful} records processed successfully.`, errors > 0 ? 'warning' : 'success');
+            showNotification(`Import completed! \${successful} records processed successfully.`, errors > 0 ? 'warning' : 'success');
         }
         
         // Export Functions
         function exportData(entityType) {
-            showNotification(`Preparing ${entityType} export...`, 'info');
+            showNotification(`Preparing \${entityType} export...`, 'info');
             
             // Simulate export process
             setTimeout(() => {
                 const recordCount = Math.floor(Math.random() * 1000) + 100;
                 
                 // Create and trigger download (simulation)
-                const filename = `${entityType}_export_${new Date().toISOString().split('T')[0]}.csv`;
+                const filename = `\${entityType}_export_\${new Date().toISOString().split('T')[0]}.csv`;
                 
                 // In a real implementation, this would trigger an actual file download
-                showNotification(`${entityType} export completed! ${recordCount} records exported.`, 'success');
+                showNotification(`\${entityType} export completed! \${recordCount} records exported.`, 'success');
                 
                 // Add to logs
                 addOperationLog('Export', entityType, recordCount, 'success');
@@ -891,12 +891,12 @@
         // Backup Functions
         function createBackup(type) {
             const backupType = type === 'full' ? 'Full System' : 'Data Only';
-            showNotification(`Creating ${backupType.toLowerCase()} backup...`, 'info');
+            showNotification(`Creating \${backupType.toLowerCase()} backup...`, 'info');
             
             setTimeout(() => {
                 const timestamp = new Date().toLocaleString();
                 document.getElementById('lastBackupTime').textContent = timestamp;
-                showNotification(`${backupType} backup completed successfully!`, 'success');
+                showNotification(`\${backupType} backup completed successfully!`, 'success');
                 
                 addOperationLog('Backup', backupType, '-', 'success');
             }, 3000);
@@ -916,12 +916,12 @@
             const user = 'Current User'; // Would get from session
             
             row.innerHTML = `
-                <td>${operation}</td>
-                <td>${entityType}</td>
-                <td>${records}</td>
-                <td><span class="log-status ${status}">${status.charAt(0).toUpperCase() + status.slice(1)}</span></td>
-                <td>${user}</td>
-                <td>${timestamp}</td>
+                <td>\${operation}</td>
+                <td>\${entityType}</td>
+                <td>\${records}</td>
+                <td><span class="log-status \${status}">\${status.charAt(0).toUpperCase() + status.slice(1)}</span></td>
+                <td>\${user}</td>
+                <td>\${timestamp}</td>
             `;
             
             tbody.insertBefore(row, tbody.firstChild);
@@ -938,14 +938,14 @@
         
         function showNotification(message, type = 'info') {
             const notification = document.createElement('div');
-            notification.className = `notification notification--${type}`;
+            notification.className = `notification notification--\${type}`;
             notification.textContent = message;
             notification.style.cssText = `
                 position: fixed;
                 top: 2rem;
                 right: 2rem;
                 padding: 1rem 1.5rem;
-                background: ${type === 'success' ? 'var(--success)' : type === 'warning' ? 'var(--warning)' : 'var(--brand-primary)'};
+                background: \${type === 'success' ? 'var(--success)' : type === 'warning' ? 'var(--warning)' : 'var(--brand-primary)'};
                 color: var(--neutral-0);
                 border-radius: var(--border-radius-lg);
                 box-shadow: var(--shadow-lg);

@@ -72,7 +72,13 @@
         <h1>Oops! Something went wrong</h1>
         <p>We're experiencing some technical difficulties. Please try again later.</p>
 
-        <% if (isLocal) { %>
+        <% 
+            // Only show detailed error information in development/localhost
+            // Never expose stack traces in production
+            String environment = application.getInitParameter("app.environment");
+            boolean isDevelopment = isLocal || (environment != null && "development".equalsIgnoreCase(environment));
+        %>
+        <% if (isDevelopment) { %>
             <div class="error-info">
                 <h3>Development Error Information:</h3>
                 <% if (exceptionClassName != null) { %>

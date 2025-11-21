@@ -91,12 +91,18 @@ public class CartController extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession(false);
-        User user = (session != null) ? (User) session.getAttribute("user") : null;
-        
-        if (user == null) {
+        if (session == null) {
             ResponseUtil.sendJsonError(response, HttpServletResponse.SC_UNAUTHORIZED, "User not authenticated");
             return;
         }
+        
+        Object userObj = session.getAttribute("user");
+        if (!(userObj instanceof User)) {
+            ResponseUtil.sendJsonError(response, HttpServletResponse.SC_UNAUTHORIZED, "User not authenticated");
+            return;
+        }
+        
+        User user = (User) userObj;
 
         String requestURI = request.getRequestURI();
         String contextPath = request.getContextPath();
@@ -123,12 +129,18 @@ public class CartController extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession(false);
-        User user = (session != null) ? (User) session.getAttribute("user") : null;
-        
-        if (user == null) {
+        if (session == null) {
             ResponseUtil.sendJsonError(response, HttpServletResponse.SC_UNAUTHORIZED, "User not authenticated");
             return;
         }
+        
+        Object userObj = session.getAttribute("user");
+        if (!(userObj instanceof User)) {
+            ResponseUtil.sendJsonError(response, HttpServletResponse.SC_UNAUTHORIZED, "User not authenticated");
+            return;
+        }
+        
+        User user = (User) userObj;
 
         String requestURI = request.getRequestURI();
         String contextPath = request.getContextPath();
@@ -157,12 +169,18 @@ public class CartController extends HttpServlet {
             throws ServletException, IOException {
         
         HttpSession session = request.getSession(false);
-        User user = (session != null) ? (User) session.getAttribute("user") : null;
-        
-        if (user == null) {
+        if (session == null) {
             ResponseUtil.sendJsonError(response, HttpServletResponse.SC_UNAUTHORIZED, "User not authenticated");
             return;
         }
+        
+        Object userObj = session.getAttribute("user");
+        if (!(userObj instanceof User)) {
+            ResponseUtil.sendJsonError(response, HttpServletResponse.SC_UNAUTHORIZED, "User not authenticated");
+            return;
+        }
+        
+        User user = (User) userObj;
 
         String requestURI = request.getRequestURI();
         String contextPath = request.getContextPath();
@@ -294,7 +312,18 @@ public class CartController extends HttpServlet {
         
         try {
             HttpSession session = request.getSession(false);
-            User user = (session != null) ? (User) session.getAttribute("user") : null;
+            if (session == null) {
+                ResponseUtil.sendJsonError(response, HttpServletResponse.SC_UNAUTHORIZED, "User not authenticated");
+                return;
+            }
+            
+            Object userObj = session.getAttribute("user");
+            if (!(userObj instanceof User)) {
+                ResponseUtil.sendJsonError(response, HttpServletResponse.SC_UNAUTHORIZED, "User not authenticated");
+                return;
+            }
+            
+            User user = (User) userObj;
 
             Integer userId;
             if (user != null) {

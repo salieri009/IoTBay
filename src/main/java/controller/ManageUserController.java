@@ -38,13 +38,19 @@ public class ManageUserController extends HttpServlet {
             throws ServletException, IOException {
 
         if (!isAdmin(request)) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.getWriter().write("{\"error\": \"Access denied\"}");
+            utils.ErrorAction.handleAuthorizationError(request, response, "ManageUserController.doGet");
             return;
         }
 
         try {
             String pathInfo = request.getPathInfo();
+
+            // Validate pathInfo
+            if (pathInfo != null && !pathInfo.isEmpty() && !pathInfo.equals("/") && !pathInfo.equals("/form")) {
+                utils.ErrorAction.handleMissingParameterError(request, response,
+                    "Invalid path", "ManageUserController.doGet");
+                return;
+            }
 
             // Check if requesting form page
             if (pathInfo != null && pathInfo.equals("/form")) {
@@ -58,8 +64,9 @@ public class ManageUserController extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/views/manage-users.jsp").forward(request, response);
 
         } catch (SQLException e) {
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write("{\"error\":\"Database error: " + e.getMessage() + "\"}");
+            utils.ErrorAction.handleDatabaseError(request, response, e, "ManageUserController.doGet");
+        } catch (Exception e) {
+            utils.ErrorAction.handleServerError(request, response, e, "ManageUserController.doGet");
         }
     }
 

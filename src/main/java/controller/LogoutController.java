@@ -37,8 +37,9 @@ public class LogoutController extends HttpServlet {
             throws ServletException, IOException {
         HttpSession session = request.getSession(false); // Don't create if not exists
         if (session != null) {
-            User user = (User) session.getAttribute("user");
-            if (user != null) {
+            Object userObj = session.getAttribute("user");
+            if (userObj instanceof User) {
+                User user = (User) userObj;
                 // Log the logout event
                 LocalDateTime now = LocalDateTime.now();
                 AccessLog accessLog = new AccessLog(0, user.getId(), "User " + user.getEmail() + " Logged out", now);

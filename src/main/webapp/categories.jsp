@@ -120,7 +120,7 @@
                 </div>
                 
                 <div class="text-center mt-8">
-                    <a href="/browse.jsp" class="btn btn--outline btn--lg">
+                    <a href="${pageContext.request.contextPath}/browse" class="btn btn--outline btn--lg">
                         View All Products
                     </a>
                 </div>

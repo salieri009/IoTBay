@@ -24,7 +24,7 @@
                 <jsp:param name="title" value="Build Your <br/> Connected World" />
                 <jsp:param name="description" value="From Arduino and Raspberry Pi to industrial sensors.<br/> Everything you need to turn your projects into reality is here." />
                 <jsp:param name="primaryCtaText" value="Start Building" />
-                <jsp:param name="primaryCtaHref" value="${pageContext.request.contextPath}/browse.jsp" />
+                <jsp:param name="primaryCtaHref" value="${pageContext.request.contextPath}/browse" />
                 <jsp:param name="secondaryCtaText" value="Watch Demo" />
                 <jsp:param name="secondaryCtaHref" value="${pageContext.request.contextPath}/about.jsp" />
                 <jsp:param name="imageUrl" value="${pageContext.request.contextPath}/images/iot-device-hero-3d.png" />
@@ -132,7 +132,7 @@
                                         </div>
                                     </div>
                                     <div class="product-card__actions">
-                                        <a href="${pageContext.request.contextPath}/productDetails.jsp?id=2" class="btn btn--outline btn--sm">View Details</a>
+                                        <a href="${pageContext.request.contextPath}/product?id=2" class="btn btn--outline btn--sm">View Details</a>
                                         <button type="button" onclick="if(typeof OptimisticUI !== 'undefined' && typeof OptimisticUI.addToCart === 'function') { OptimisticUI.addToCart(2, 1); }" class="btn btn--primary btn--sm">Add to Cart</button>
                                     </div>
                                     </div>
@@ -168,7 +168,7 @@
                                         </div>
                                     </div>
                                     <div class="product-card__actions">
-                                        <a href="${pageContext.request.contextPath}/productDetails.jsp?id=3" class="btn btn--outline btn--sm">View Details</a>
+                                        <a href="${pageContext.request.contextPath}/product?id=3" class="btn btn--outline btn--sm">View Details</a>
                                         <button type="button" onclick="if(typeof OptimisticUI !== 'undefined' && typeof OptimisticUI.addToCart === 'function') { OptimisticUI.addToCart(3, 1); }" class="btn btn--primary btn--sm">Add to Cart</button>
                                     </div>
                                 </div>
@@ -200,7 +200,7 @@
                                             <div class="product-card__price">$599.00</div>
                                         </div>
                                         <div class="product-card__actions">
-                                            <a href="${pageContext.request.contextPath}/productDetails.jsp?id=4" class="btn btn--outline btn--sm">View Details</a>
+                                            <a href="${pageContext.request.contextPath}/product?id=4" class="btn btn--outline btn--sm">View Details</a>
                                             <button type="button" onclick="if(typeof OptimisticUI !== 'undefined' && typeof OptimisticUI.addToCart === 'function') { OptimisticUI.addToCart(4, 1); }" class="btn btn--primary btn--sm">Add to Cart</button>
                                         </div>
                                     </div>
@@ -213,7 +213,7 @@
             
             <!-- Call to Action -->
             <div class="text-center mt-12">
-                <a href="${pageContext.request.contextPath}/browse.jsp" class="btn btn--secondary btn--lg">
+                <a href="${pageContext.request.contextPath}/browse" class="btn btn--secondary btn--lg">
                     View All Products
                     <svg class="w-4 h-4 inline ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -279,7 +279,7 @@
                 // 'b' key goes to browse
                 if (e.key === 'b' || e.key === 'B') {
                     e.preventDefault();
-                    window.location.href = '${pageContext.request.contextPath}/browse.jsp';
+                    window.location.href = '${pageContext.request.contextPath}/browse';
                 }
             });
             

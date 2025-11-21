@@ -13,27 +13,19 @@ import javax.servlet.http.HttpSession;
 
 import dao.OrderDAOImpl;
 import dao.ProductDAOImpl;
-import dao.SupplierDAOImpl;
 import dao.UserDAOImpl;
 import dao.interfaces.OrderDAO;
 import dao.interfaces.ProductDAO;
-import dao.interfaces.SupplierDAO;
 import dao.interfaces.UserDAO;
 import db.DBConnection;
 import model.User;
 
-/**
- * Admin Dashboard Controller
- * 
- * Provides dashboard statistics from the database
- */
-@WebServlet("/admin-dashboard")
-public class AdminDashboardController extends HttpServlet {
+@WebServlet("/reports-dashboard.jsp")
+public class ReportsDashboardController extends HttpServlet {
     private UserDAO userDAO;
     private ProductDAO productDAO;
     private OrderDAO orderDAO;
-    private SupplierDAO supplierDAO;
-    
+
     @Override
     public void init() throws ServletException {
         try {
@@ -41,17 +33,16 @@ public class AdminDashboardController extends HttpServlet {
             this.userDAO = new UserDAOImpl(connection);
             this.productDAO = new ProductDAOImpl(connection);
             this.orderDAO = new OrderDAOImpl(connection);
-            this.supplierDAO = new SupplierDAOImpl(connection);
         } catch (SQLException | ClassNotFoundException e) {
             throw new ServletException("Failed to initialize database connection", e);
         }
     }
-    
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        // Check authorization
+        // Authorization check
         HttpSession session = request.getSession(false);
         if (session == null) {
             response.sendRedirect(request.getContextPath() + "/login.jsp");
@@ -64,32 +55,47 @@ public class AdminDashboardController extends HttpServlet {
             return;
         }
         
-        User currentUser = (User) userObj;
-        if (!"staff".equalsIgnoreCase(currentUser.getRole()) && !"admin".equalsIgnoreCase(currentUser.getRole())) {
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
+        User user = (User) userObj;
+        if (!"staff".equalsIgnoreCase(user.getRole()) && !"admin".equalsIgnoreCase(user.getRole())) {
+            utils.ErrorAction.handleAuthorizationError(request, response, "ReportsDashboardController.doGet");
             return;
         }
-        
+
         try {
-            // Get statistics from database
+            // Fetch statistics from database
             int totalUsers = userDAO.getTotalUserCount();
             int totalProducts = productDAO.getTotalProductCount();
             int totalOrders = orderDAO.getTotalOrderCount();
-            int totalSuppliers = supplierDAO.getTotalSupplierCount();
+            
+            // Calculate revenue (sum of all order totals)
+            // Note: This is a simplified calculation. In a real system, you'd have a dedicated method
+            double totalRevenue = 0.0;
+            try {
+                // Get all orders and sum their totals
+                java.util.List<model.Order> orders = orderDAO.getAllOrders();
+                for (model.Order order : orders) {
+                    if (order.getTotalAmount() != null) {
+                        totalRevenue += order.getTotalAmount().doubleValue();
+                    }
+                }
+            } catch (Exception e) {
+                // If calculation fails, use 0
+                totalRevenue = 0.0;
+            }
             
             // Set attributes for JSP
             request.setAttribute("totalUsers", totalUsers);
             request.setAttribute("totalProducts", totalProducts);
             request.setAttribute("totalOrders", totalOrders);
-            request.setAttribute("totalSuppliers", totalSuppliers);
+            request.setAttribute("totalRevenue", totalRevenue);
             
-            // Forward to admin dashboard JSP
-            request.getRequestDispatcher("/admin-dashboard.jsp").forward(request, response);
+            // Forward to JSP
+            request.getRequestDispatcher("/reports-dashboard.jsp").forward(request, response);
             
         } catch (SQLException e) {
-            utils.ErrorAction.handleDatabaseError(request, response, e, "AdminDashboardController.doGet");
+            utils.ErrorAction.handleDatabaseError(request, response, e, "ReportsDashboardController.doGet");
         } catch (Exception e) {
-            utils.ErrorAction.handleServerError(request, response, e, "AdminDashboardController.doGet");
+            utils.ErrorAction.handleServerError(request, response, e, "ReportsDashboardController.doGet");
         }
     }
 }

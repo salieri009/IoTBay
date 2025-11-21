@@ -49,13 +49,24 @@ public class AccesslogController extends HttpServlet {
 
         // 1. Session check: Only allow logged-in users
         HttpSession session = request.getSession(false);
-        if (session == null || session.getAttribute("user") == null) {
+        if (session == null) {
             response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
 
-        User user = (User) session.getAttribute("user");
+        Object userObj = session.getAttribute("user");
+        if (!(userObj instanceof User)) {
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            return;
+        }
+
+        User user = (User) userObj;
         String pathInfo = request.getPathInfo();
+        
+        // Validate pathInfo
+        if (pathInfo == null) {
+            pathInfo = "/";
+        }
         String acceptHeader = request.getHeader("Accept");
         boolean isJsonRequest = acceptHeader != null && acceptHeader.contains("application/json");
         
@@ -76,7 +87,7 @@ public class AccesslogController extends HttpServlet {
                             response.sendRedirect(request.getContextPath() + "/api/accessLog");
                         }
                     } else {
-                        response.sendError(HttpServletResponse.SC_FORBIDDEN);
+                        utils.ErrorAction.handleAuthorizationError(request, response, "AccesslogController.doGet");
                     }
                 } catch (NumberFormatException e) {
                     response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid user ID");
@@ -95,8 +106,8 @@ public class AccesslogController extends HttpServlet {
         }
 
         // 2. Date parameter check and validation
-        String startDateStr = request.getParameter("startDate");
-        String endDateStr = request.getParameter("endDate");
+        String startDateStr = utils.SecurityUtil.getValidatedStringParameter(request, "startDate", 20);
+        String endDateStr = utils.SecurityUtil.getValidatedStringParameter(request, "endDate", 20);
         LocalDate startDate = null, endDate = null;
         LocalDate today = LocalDate.now();
 
@@ -110,22 +121,22 @@ public class AccesslogController extends HttpServlet {
                 endDate = LocalDate.parse(endDateStr);
             }
         } catch (DateTimeParseException e) {
-            request.setAttribute("error", "Date format is invalid. Please use YYYY-MM-DD.");
-            request.getRequestDispatcher("/WEB-INF/views/accessLog.jsp").forward(request, response);
+            utils.ErrorAction.handleValidationError(request, response, 
+                "Date format is invalid. Please use YYYY-MM-DD.", "AccesslogController.doPost");
             return;
         }
 
         // 3. Date validation
         if ((startDate != null && startDate.isAfter(today)) || (endDate != null && endDate.isAfter(today))) {
-            request.setAttribute("error", "You cannot search for access logs in the future.");
-            request.getRequestDispatcher("/WEB-INF/views/accessLog.jsp").forward(request, response);
+            utils.ErrorAction.handleValidationError(request, response, 
+                "You cannot search for access logs in the future.", "AccesslogController.doPost");
             return;
         }
 
       //the start date is null and end date is not null
         if (startDate == null && endDate != null) {
-            request.setAttribute("error", "Please select a start date when searching with an end date.");
-            request.getRequestDispatcher("/WEB-INF/views/accessLog.jsp").forward(request, response);
+            utils.ErrorAction.handleValidationError(request, response, 
+                "Please select a start date when searching with an end date.", "AccesslogController.doPost");
             return;
         }
 

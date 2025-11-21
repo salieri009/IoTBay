@@ -69,7 +69,8 @@ public class CategoryPageController extends HttpServlet {
             }
             
             if (category == null) {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Category not found");
+                // If category not found, redirect to browse page with category filter
+                response.sendRedirect(request.getContextPath() + "/browse?category=" + categorySlug);
                 return;
             }
             
@@ -89,7 +90,9 @@ public class CategoryPageController extends HttpServlet {
             request.getRequestDispatcher(jspPath).forward(request, response);
             
         } catch (SQLException e) {
-            throw new ServletException("Database error while fetching category data", e);
+            utils.ErrorAction.handleDatabaseError(request, response, e, "CategoryPageController.doGet");
+        } catch (Exception e) {
+            utils.ErrorAction.handleServerError(request, response, e, "CategoryPageController.doGet");
         }
     }
     

@@ -36,21 +36,53 @@ public class UpdateProductController extends HttpServlet {
             throws ServletException, IOException {
 
         if (!isAdmin(request)) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.getWriter().write("{\"error\": \"Access denied\"}");
+            utils.ErrorAction.handleAuthorizationError(request, response, "UpdateProductController.doPost");
+            return;
+        }
+
+        // CSRF protection
+        if (!utils.SecurityUtil.validateCSRFToken(request)) {
+            utils.ErrorAction.handleValidationError(request, response,
+                "CSRF token validation failed", "UpdateProductController.doPost");
             return;
         }
 
         try {
-            int id = Integer.parseInt(request.getParameter("product_id"));
-            int categoryId = Integer.parseInt(request.getParameter("categoryId"));
-            String name = request.getParameter("name");
-            String description = request.getParameter("description");
-            double price = Double.parseDouble(request.getParameter("price"));
-            int stockQuantity = Integer.parseInt(request.getParameter("stockQuantity"));
-            String imageUrl = request.getParameter("imageUrl");
+            // Secure parameter extraction with validation
+            int id = utils.SecurityUtil.getValidatedIntParameter(request, "product_id", 1, Integer.MAX_VALUE);
+            int categoryId = utils.SecurityUtil.getValidatedIntParameter(request, "categoryId", 1, 100);
+            String name = utils.SecurityUtil.getValidatedStringParameter(request, "name", 200);
+            String description = utils.SecurityUtil.getValidatedStringParameter(request, "description", 2000);
+            double price = utils.SecurityUtil.getValidatedDoubleParameter(request, "price");
+            int stockQuantity = utils.SecurityUtil.getValidatedIntParameter(request, "stockQuantity", 0, 10000);
+            String imageUrl = utils.SecurityUtil.getValidatedStringParameter(request, "imageUrl", 500);
+            
+            // Validate price range
+            if (price <= 0 || price > 1000000) {
+                utils.ErrorAction.handleValidationError(request, response,
+                        "Price must be between 0 and 1,000,000", "UpdateProductController.doPost");
+                return;
+            }
+
+            // Sanitize inputs
+            name = utils.SecurityUtil.sanitizeInput(name);
+            description = utils.SecurityUtil.sanitizeInput(description);
+            imageUrl = utils.SecurityUtil.sanitizeInput(imageUrl);
+
             String createdAtStr = request.getParameter("created_at");
-            java.time.LocalDate createdAt = java.time.LocalDate.parse(createdAtStr);
+            java.time.LocalDate createdAt;
+            if (createdAtStr != null && !createdAtStr.trim().isEmpty()) {
+                try {
+                    createdAt = java.time.LocalDate.parse(createdAtStr);
+                } catch (Exception e) {
+                    utils.ErrorAction.handleValidationError(request, response,
+                            "Invalid date format", "UpdateProductController.doPost");
+                    return;
+                }
+            } else {
+                createdAt = java.time.LocalDate.now();
+            }
+
             Product updatedProduct = new Product(
                 id,
                 categoryId,
@@ -66,10 +98,12 @@ public class UpdateProductController extends HttpServlet {
 
             response.sendRedirect(request.getContextPath() + "/manage/products");
 
-        } catch (SQLException | NumberFormatException e) {
-            System.err.println("Update product error: " + e.getMessage());
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write("{\"error\": \"Failed to update product: " + e.getMessage() + "\"}");
+        } catch (SQLException e) {
+            utils.ErrorAction.handleDatabaseError(request, response, e, "UpdateProductController.doPost");
+        } catch (IllegalArgumentException e) {
+            utils.ErrorAction.handleValidationError(request, response, e.getMessage(), "UpdateProductController.doPost");
+        } catch (Exception e) {
+            utils.ErrorAction.handleServerError(request, response, e, "UpdateProductController.doPost");
         }
     }
 

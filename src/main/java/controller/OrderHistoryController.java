@@ -41,13 +41,19 @@ public class OrderHistoryController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
-        
-        if (user == null) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
             response.sendRedirect("login.jsp");
             return;
         }
+        
+        Object userObj = session.getAttribute("user");
+        if (!(userObj instanceof User)) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+        
+        User user = (User) userObj;
 
         String acceptHeader = request.getHeader("Accept");
         boolean isJsonRequest = acceptHeader != null && acceptHeader.contains("application/json");
@@ -96,16 +102,9 @@ public class OrderHistoryController extends HttpServlet {
                 request.getRequestDispatcher("orderList.jsp").forward(request, response);
             }
         } catch (SQLException e) {
-            if (isJsonRequest) {
-                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                JsonObject json = new JsonObject();
-                json.addProperty("success", false);
-                json.addProperty("error", "Failed to retrieve orders: " + e.getMessage());
-                response.getWriter().write(gson.toJson(json));
-            } else {
-                request.setAttribute("error", "Failed to retrieve orders: " + e.getMessage());
-                request.getRequestDispatcher("error.jsp").forward(request, response);
-            }
+            utils.ErrorAction.handleDatabaseError(request, response, e, "OrderHistoryController.doGet");
+        } catch (Exception e) {
+            utils.ErrorAction.handleServerError(request, response, e, "OrderHistoryController.doGet");
         }
     }
     
@@ -113,11 +112,24 @@ public class OrderHistoryController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         // Handle order status updates (staff/admin only)
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
-        
-        if (user == null) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
             response.sendRedirect("login.jsp");
+            return;
+        }
+        
+        Object userObj = session.getAttribute("user");
+        if (!(userObj instanceof User)) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
+        
+        User user = (User) userObj;
+        
+        // CSRF protection
+        if (!utils.SecurityUtil.validateCSRFToken(request)) {
+            utils.ErrorAction.handleValidationError(request, response,
+                "CSRF token validation failed", "OrderHistoryController.doPost");
             return;
         }
         
@@ -125,15 +137,16 @@ public class OrderHistoryController extends HttpServlet {
                          "admin".equalsIgnoreCase(user.getRole());
         
         if (!isStaff) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Only staff can update order status");
+            utils.ErrorAction.handleAuthorizationError(request, response, "OrderHistoryController.doPost");
             return;
         }
         
-        String orderIdStr = request.getParameter("orderId");
-        String newStatus = request.getParameter("status");
+        String orderIdStr = utils.SecurityUtil.getValidatedStringParameter(request, "orderId", 10);
+        String newStatus = utils.SecurityUtil.getValidatedStringParameter(request, "status", 50);
         
         if (orderIdStr == null || newStatus == null) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Order ID and status are required");
+            utils.ErrorAction.handleMissingParameterError(request, response, 
+                "Order ID and status are required", "OrderHistoryController.doPost");
             return;
         }
         
@@ -169,8 +182,9 @@ public class OrderHistoryController extends HttpServlet {
                 response.sendRedirect(request.getContextPath() + "/orderhistory");
             }
         } catch (SQLException e) {
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, 
-                "Failed to update order status: " + e.getMessage());
+            utils.ErrorAction.handleDatabaseError(request, response, e, "OrderHistoryController.doPost");
+        } catch (Exception e) {
+            utils.ErrorAction.handleServerError(request, response, e, "OrderHistoryController.doPost");
         }
     }
 }

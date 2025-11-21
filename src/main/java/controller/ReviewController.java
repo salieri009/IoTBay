@@ -96,6 +96,19 @@ public class ReviewController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
+        // CSRF protection
+        if (!utils.SecurityUtil.validateCSRFToken(request)) {
+            String acceptHeader = request.getHeader("Accept");
+            boolean isJsonRequest = acceptHeader != null && acceptHeader.contains("application/json");
+            if (isJsonRequest) {
+                handleJsonError(response, "CSRF token validation failed", null);
+            } else {
+                utils.ErrorAction.handleValidationError(request, response,
+                    "CSRF token validation failed", "ReviewController.doPost");
+            }
+            return;
+        }
+        
         String pathInfo = request.getPathInfo();
         String acceptHeader = request.getHeader("Accept");
         boolean isJsonRequest = acceptHeader != null && acceptHeader.contains("application/json");
@@ -134,13 +147,19 @@ public class ReviewController extends HttpServlet {
     private void createReview(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException, SQLException {
         
-        HttpSession session = request.getSession();
-        User currentUser = (User) session.getAttribute("user");
-        
-        if (currentUser == null) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
             response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
+        
+        Object userObj = session.getAttribute("user");
+        if (!(userObj instanceof User)) {
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            return;
+        }
+        
+        User currentUser = (User) userObj;
         
         // Rate limiting check
         if (utils.SecurityUtil.isRateLimited(request, 5, 60000)) { // 5 requests per minute
@@ -215,10 +234,8 @@ public class ReviewController extends HttpServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         
-        HttpSession session = request.getSession();
-        User currentUser = (User) session.getAttribute("user");
-        
-        if (currentUser == null) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             JsonObject json = new JsonObject();
             json.addProperty("success", false);
@@ -226,6 +243,18 @@ public class ReviewController extends HttpServlet {
             response.getWriter().write(gson.toJson(json));
             return;
         }
+        
+        Object userObj = session.getAttribute("user");
+        if (!(userObj instanceof User)) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            JsonObject json = new JsonObject();
+            json.addProperty("success", false);
+            json.addProperty("error", "Not logged in");
+            response.getWriter().write(gson.toJson(json));
+            return;
+        }
+        
+        User currentUser = (User) userObj;
         
         // Parse JSON request body or form parameters
         String productIdStr = request.getParameter("productId");
@@ -264,13 +293,19 @@ public class ReviewController extends HttpServlet {
     private void updateReview(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException, SQLException {
         
-        HttpSession session = request.getSession();
-        User currentUser = (User) session.getAttribute("user");
-        
-        if (currentUser == null) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
             response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
+        
+        Object userObj = session.getAttribute("user");
+        if (!(userObj instanceof User)) {
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            return;
+        }
+        
+        User currentUser = (User) userObj;
         
         Integer reviewId = Integer.parseInt(request.getParameter("reviewId"));
         String ratingStr = request.getParameter("rating");
@@ -306,10 +341,8 @@ public class ReviewController extends HttpServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         
-        HttpSession session = request.getSession();
-        User currentUser = (User) session.getAttribute("user");
-        
-        if (currentUser == null) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             JsonObject json = new JsonObject();
             json.addProperty("success", false);
@@ -317,6 +350,18 @@ public class ReviewController extends HttpServlet {
             response.getWriter().write(gson.toJson(json));
             return;
         }
+        
+        Object userObj = session.getAttribute("user");
+        if (!(userObj instanceof User)) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            JsonObject json = new JsonObject();
+            json.addProperty("success", false);
+            json.addProperty("error", "Not logged in");
+            response.getWriter().write(gson.toJson(json));
+            return;
+        }
+        
+        User currentUser = (User) userObj;
         
         String reviewIdStr = request.getParameter("reviewId");
         if (reviewIdStr == null) {
@@ -360,13 +405,19 @@ public class ReviewController extends HttpServlet {
     private void deleteReview(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException, SQLException {
         
-        HttpSession session = request.getSession();
-        User currentUser = (User) session.getAttribute("user");
-        
-        if (currentUser == null) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
             response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
+        
+        Object userObj = session.getAttribute("user");
+        if (!(userObj instanceof User)) {
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            return;
+        }
+        
+        User currentUser = (User) userObj;
         
         Integer reviewId = Integer.parseInt(request.getParameter("reviewId"));
         boolean isStaff = "staff".equalsIgnoreCase(currentUser.getRole()) || 
@@ -402,10 +453,8 @@ public class ReviewController extends HttpServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         
-        HttpSession session = request.getSession();
-        User currentUser = (User) session.getAttribute("user");
-        
-        if (currentUser == null) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             JsonObject json = new JsonObject();
             json.addProperty("success", false);
@@ -413,6 +462,18 @@ public class ReviewController extends HttpServlet {
             response.getWriter().write(gson.toJson(json));
             return;
         }
+        
+        Object userObj = session.getAttribute("user");
+        if (!(userObj instanceof User)) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            JsonObject json = new JsonObject();
+            json.addProperty("success", false);
+            json.addProperty("error", "Not logged in");
+            response.getWriter().write(gson.toJson(json));
+            return;
+        }
+        
+        User currentUser = (User) userObj;
         
         String reviewIdStr = request.getParameter("reviewId");
         if (reviewIdStr == null) {
@@ -446,13 +507,19 @@ public class ReviewController extends HttpServlet {
     private void listReviews(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException, SQLException {
         
-        HttpSession session = request.getSession();
-        User currentUser = (User) session.getAttribute("user");
-        
-        if (currentUser == null) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
             response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
+        
+        Object userObj = session.getAttribute("user");
+        if (!(userObj instanceof User)) {
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            return;
+        }
+        
+        User currentUser = (User) userObj;
         
         List<Review> reviews;
         
@@ -523,11 +590,17 @@ public class ReviewController extends HttpServlet {
         
         // Verify access
         HttpSession session = request.getSession();
-        User currentUser = (User) session.getAttribute("user");
+        Object userObj = session.getAttribute("user");
+        if (!(userObj instanceof User)) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+        
+        User currentUser = (User) userObj;
         
         if (review.getUserId() != currentUser.getUserId() && 
             !"staff".equalsIgnoreCase(currentUser.getRole())) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            utils.ErrorAction.handleAuthorizationError(request, response, "ReviewController.viewReview");
             return;
         }
         
@@ -567,10 +640,8 @@ public class ReviewController extends HttpServlet {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         
-        HttpSession session = request.getSession();
-        User currentUser = (User) session.getAttribute("user");
-        
-        if (currentUser == null) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             JsonObject json = new JsonObject();
             json.addProperty("success", false);
@@ -578,6 +649,18 @@ public class ReviewController extends HttpServlet {
             response.getWriter().write(gson.toJson(json));
             return;
         }
+        
+        Object userObj = session.getAttribute("user");
+        if (!(userObj instanceof User)) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            JsonObject json = new JsonObject();
+            json.addProperty("success", false);
+            json.addProperty("error", "Not logged in");
+            response.getWriter().write(gson.toJson(json));
+            return;
+        }
+        
+        User currentUser = (User) userObj;
         
         List<Review> reviews;
         if ("staff".equalsIgnoreCase(currentUser.getRole()) || 
@@ -667,7 +750,13 @@ public class ReviewController extends HttpServlet {
         }
         
         HttpSession session = request.getSession();
-        User currentUser = (User) session.getAttribute("user");
+        Object userObj = session.getAttribute("user");
+        if (!(userObj instanceof User)) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+        
+        User currentUser = (User) userObj;
         
         if (review.getUserId() != currentUser.getUserId() && 
             !"staff".equalsIgnoreCase(currentUser.getRole())) {
@@ -676,6 +765,7 @@ public class ReviewController extends HttpServlet {
             json.addProperty("success", false);
             json.addProperty("error", "Access denied");
             response.getWriter().write(gson.toJson(json));
+            // Note: For JSON responses, we keep the direct response but log it
             return;
         }
         

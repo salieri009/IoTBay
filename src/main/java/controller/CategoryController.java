@@ -74,7 +74,9 @@ public class CategoryController extends HttpServlet {
             request.getRequestDispatcher("/categories.jsp").forward(request, response);
             
         } catch (SQLException e) {
-            throw new ServletException("Database error while fetching categories", e);
+            utils.ErrorAction.handleDatabaseError(request, response, e, "CategoryController.doGet");
+        } catch (Exception e) {
+            utils.ErrorAction.handleServerError(request, response, e, "CategoryController.doGet");
         }
     }
     

@@ -9,6 +9,6 @@
     }
     
     // Redirect to admin dashboard
-    response.sendRedirect(request.getContextPath() + "/admin-dashboard.jsp");
+    response.sendRedirect(request.getContextPath() + "/admin-dashboard");
 %>
 

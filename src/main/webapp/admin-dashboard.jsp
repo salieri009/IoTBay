@@ -40,7 +40,7 @@
                                     <p class="sidebar-subtitle">IoT Bay Management</p>
                                 </div>
                                 <nav class="sidebar-nav">
-                                    <a href="<%=request.getContextPath()%>/admin-dashboard.jsp"
+                                    <a href="<%=request.getContextPath()%>/admin-dashboard"
                                         class="admin-nav-link active" aria-current="page">
                                         Dashboard
                                     </a>
@@ -227,11 +227,11 @@
                                                     </li>
                                                 </ul>
                                                 <div class="action-buttons">
-                                                    <a href="<%=request.getContextPath()%>/data-management.jsp"
+                                                    <a href="<%=request.getContextPath()%>/data-management"
                                                         class="btn btn--primary action-btn">
                                                         Data Tools
                                                     </a>
-                                                    <a href="<%=request.getContextPath()%>/data-management.jsp"
+                                                    <a href="<%=request.getContextPath()%>/data-management"
                                                         class="btn btn--outline action-btn">
                                                         Import Data
                                                     </a>
@@ -274,15 +274,15 @@
                                                     </li>
                                                 </ul>
                                                 <div class="action-buttons">
-                                                    <a href="<%=request.getContextPath()%>/reports-dashboard.jsp"
+                                                    <a href="<%=request.getContextPath()%>/reports-dashboard"
                                                         class="btn btn--primary action-btn">
                                                         View Reports
                                                     </a>
-                                                    <a href="<%=request.getContextPath()%>/admin-statistics.jsp"
+                                                    <a href="<%=request.getContextPath()%>/admin-statistics"
                                                         class="btn btn--secondary action-btn">
                                                         Statistics & Analytics
                                                     </a>
-                                                    <a href="<%=request.getContextPath()%>/reports-dashboard.jsp#create"
+                                                    <a href="<%=request.getContextPath()%>/reports-dashboard#create"
                                                         class="btn btn--outline action-btn">
                                                         Create Report
                                                     </a>
@@ -463,7 +463,7 @@
                                                 </svg>
                                                 View Orders
                                             </a>
-                                            <a href="<%=request.getContextPath()%>/data-management.jsp"
+                                            <a href="<%=request.getContextPath()%>/data-management"
                                                 class="quick-action-btn">
                                                 <svg class="quick-action-icon" fill="none" stroke="currentColor"
                                                     viewBox="0 0 24 24" aria-hidden="true">
@@ -473,7 +473,7 @@
                                                 </svg>
                                                 Backup Data
                                             </a>
-                                            <a href="<%=request.getContextPath()%>/reports-dashboard.jsp#analytics"
+                                            <a href="<%=request.getContextPath()%>/reports-dashboard#analytics"
                                                 class="quick-action-btn">
                                                 <svg class="quick-action-icon" fill="none" stroke="currentColor"
                                                     viewBox="0 0 24 24" aria-hidden="true">

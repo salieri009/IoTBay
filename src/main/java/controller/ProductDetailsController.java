@@ -34,18 +34,19 @@ public class ProductDetailsController extends HttpServlet {
             throws ServletException, IOException {
         try {
             String productIdParam = request.getParameter("productId");
+            String paramName = "productId";
             if (productIdParam == null || productIdParam.isEmpty()) {
                 productIdParam = request.getParameter("id");
+                paramName = "id";
             }
             
             if (productIdParam == null || productIdParam.isEmpty()) {
-                request.setAttribute("errorMessage", "Product ID is required");
-                request.getRequestDispatcher("error.jsp").forward(request, response);
+                utils.ErrorAction.handleMissingParameterError(request, response, paramName, "ProductDetailsController.doGet");
                 return;
             }
             
             try {
-                int productId = Integer.parseInt(productIdParam);
+                int productId = utils.SecurityUtil.getValidatedIntParameter(request, paramName, 1, Integer.MAX_VALUE);
                 
                 if (productDAO == null) {
                     request.setAttribute("errorMessage", "Service temporarily unavailable");
@@ -62,18 +63,12 @@ public class ProductDetailsController extends HttpServlet {
                     request.getRequestDispatcher("error.jsp").forward(request, response);
                 }
             } catch (NumberFormatException e) {
-                request.setAttribute("errorMessage", "Invalid product ID format");
-                request.getRequestDispatcher("error.jsp").forward(request, response);
+                utils.ErrorAction.handleValidationError(request, response, "Invalid product ID format", "ProductDetailsController.doGet");
             } catch (SQLException e) {
-                System.err.println("Database error in ProductDetailsController: " + e.getMessage());
-                request.setAttribute("errorMessage", "Database error occurred");
-                request.getRequestDispatcher("error.jsp").forward(request, response);
+                utils.ErrorAction.handleDatabaseError(request, response, e, "ProductDetailsController.doGet");
             }
         } catch (Exception e) {
-            System.err.println("Unexpected error in ProductDetailsController: " + e.getMessage());
-            e.printStackTrace();
-            request.setAttribute("errorMessage", "An error occurred while loading product details");
-            request.getRequestDispatcher("error.jsp").forward(request, response);
+            utils.ErrorAction.handleServerError(request, response, e, "ProductDetailsController.doGet");
         }
     }
 }

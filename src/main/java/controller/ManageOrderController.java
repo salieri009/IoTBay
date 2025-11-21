@@ -37,8 +37,7 @@ public class ManageOrderController extends HttpServlet {
             throws ServletException, IOException {
     
         if (!isAdmin(request)) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.getWriter().write("{\"error\": \"Access denied\"}");
+            utils.ErrorAction.handleAuthorizationError(request, response, "ManageOrderController.doGet");
             return;
         }
     
@@ -47,15 +46,20 @@ public class ManageOrderController extends HttpServlet {
             request.setAttribute("orders", orders);
             request.getRequestDispatcher("/manage-orders.jsp").forward(request, response);
         } catch (SQLException e) {
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write("{\"error\":\"Database error: " + e.getMessage() + "\"}");
+            utils.ErrorAction.handleDatabaseError(request, response, e, "ManageOrderController.doGet");
+        } catch (Exception e) {
+            utils.ErrorAction.handleServerError(request, response, e, "ManageOrderController.doGet");
         }
     }
 
     private boolean isAdmin(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session == null) return false;
-        User user = (User) session.getAttribute("user");
-        return user != null && ("admin".equalsIgnoreCase(user.getRole()) || "staff".equalsIgnoreCase(user.getRole()));
+        
+        Object userObj = session.getAttribute("user");
+        if (!(userObj instanceof User)) return false;
+        
+        User user = (User) userObj;
+        return "admin".equalsIgnoreCase(user.getRole()) || "staff".equalsIgnoreCase(user.getRole());
     }
 }

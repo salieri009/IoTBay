@@ -43,7 +43,7 @@
   <div class="group relative bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border border-neutral-200 overflow-hidden flex flex-col h-full">
     <%-- Product Image --%>
     <div class="relative aspect-square bg-neutral-100 overflow-hidden">
-      <a href="${pageContext.request.contextPath}/productDetails.jsp?id=${product.id}" class="block w-full h-full">
+      <a href="${pageContext.request.contextPath}/product?id=${product.id}" class="block w-full h-full">
         <img src="${pageContext.request.contextPath}/images/products/${product.id}.png" 
              alt="${product.name}"
              class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
@@ -82,7 +82,7 @@
     <div class="p-4 flex-1 flex flex-col">
       <p class="text-xs text-neutral-500 mb-1 uppercase tracking-wider font-medium">${product.category}</p>
       <h3 class="text-lg font-semibold text-neutral-900 mb-2 leading-tight group-hover:text-brand-primary transition-colors line-clamp-2">
-        <a href="${pageContext.request.contextPath}/productDetails.jsp?id=${product.id}">
+        <a href="${pageContext.request.contextPath}/product?id=${product.id}">
           ${product.name}
         </a>
       </h3>

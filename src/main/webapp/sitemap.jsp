@@ -21,7 +21,7 @@
                     <ul class="space-y-2">
                         <li><a href="${pageContext.request.contextPath}/" class="text-neutral-600 hover:text-brand-primary transition-colors">Home</a></li>
                         <li><a href="${pageContext.request.contextPath}/browse.jsp" class="text-neutral-600 hover:text-brand-primary transition-colors">Browse Products</a></li>
-                        <li><a href="${pageContext.request.contextPath}/categories.jsp" class="text-neutral-600 hover:text-brand-primary transition-colors">Categories</a></li>
+                        <li><a href="${pageContext.request.contextPath}/categories" class="text-neutral-600 hover:text-brand-primary transition-colors">Categories</a></li>
                         <li><a href="${pageContext.request.contextPath}/about.jsp" class="text-neutral-600 hover:text-brand-primary transition-colors">About Us</a></li>
                         <li><a href="${pageContext.request.contextPath}/contact.jsp" class="text-neutral-600 hover:text-brand-primary transition-colors">Contact</a></li>
                     </ul>
@@ -32,10 +32,10 @@
                     <h2 class="text-xl font-bold text-neutral-900 mb-4">Shopping</h2>
                     <ul class="space-y-2">
                         <li><a href="${pageContext.request.contextPath}/browse.jsp" class="text-neutral-600 hover:text-brand-primary transition-colors">All Products</a></li>
-                        <li><a href="${pageContext.request.contextPath}/category-smarthome.jsp" class="text-neutral-600 hover:text-brand-primary transition-colors">Smart Home</a></li>
-                        <li><a href="${pageContext.request.contextPath}/category-industrial.jsp" class="text-neutral-600 hover:text-brand-primary transition-colors">Industrial</a></li>
-                        <li><a href="${pageContext.request.contextPath}/category-agriculture.jsp" class="text-neutral-600 hover:text-brand-primary transition-colors">Agriculture</a></li>
-                        <li><a href="${pageContext.request.contextPath}/category-warehouse.jsp" class="text-neutral-600 hover:text-brand-primary transition-colors">Warehouse</a></li>
+                        <li><a href="${pageContext.request.contextPath}/category/smarthome" class="text-neutral-600 hover:text-brand-primary transition-colors">Smart Home</a></li>
+                        <li><a href="${pageContext.request.contextPath}/category/industrial" class="text-neutral-600 hover:text-brand-primary transition-colors">Industrial</a></li>
+                        <li><a href="${pageContext.request.contextPath}/category/agriculture" class="text-neutral-600 hover:text-brand-primary transition-colors">Agriculture</a></li>
+                        <li><a href="${pageContext.request.contextPath}/category/warehouse" class="text-neutral-600 hover:text-brand-primary transition-colors">Warehouse</a></li>
                         <li><a href="${pageContext.request.contextPath}/browse.jsp?featured=true" class="text-neutral-600 hover:text-brand-primary transition-colors">Featured Products</a></li>
                         <li><a href="${pageContext.request.contextPath}/browse.jsp?new=true" class="text-neutral-600 hover:text-brand-primary transition-colors">New Arrivals</a></li>
                     </ul>
@@ -81,10 +81,10 @@
                     <div class="bg-white rounded-lg border border-neutral-200 p-6">
                         <h2 class="text-xl font-bold text-neutral-900 mb-4">Admin</h2>
                         <ul class="space-y-2">
-                            <li><a href="${pageContext.request.contextPath}/admin-dashboard.jsp" class="text-neutral-600 hover:text-brand-primary transition-colors">Dashboard</a></li>
-                            <li><a href="${pageContext.request.contextPath}/manage/products" class="text-neutral-600 hover:text-brand-primary transition-colors">Manage Products</a></li>
-                            <li><a href="${pageContext.request.contextPath}/manage/users" class="text-neutral-600 hover:text-brand-primary transition-colors">Manage Users</a></li>
-                            <li><a href="${pageContext.request.contextPath}/manage/access-logs" class="text-neutral-600 hover:text-brand-primary transition-colors">Access Logs</a></li>
+                            <li><a href="${pageContext.request.contextPath}/admin-dashboard" class="text-neutral-600 hover:text-brand-primary transition-colors">Dashboard</a></li>
+                            <li><a href="${pageContext.request.contextPath}/api/manage/products" class="text-neutral-600 hover:text-brand-primary transition-colors">Manage Products</a></li>
+                            <li><a href="${pageContext.request.contextPath}/api/manage/users" class="text-neutral-600 hover:text-brand-primary transition-colors">Manage Users</a></li>
+                            <li><a href="${pageContext.request.contextPath}/api/manage/access-logs" class="text-neutral-600 hover:text-brand-primary transition-colors">Access Logs</a></li>
                         </ul>
                     </div>
                 </c:if>

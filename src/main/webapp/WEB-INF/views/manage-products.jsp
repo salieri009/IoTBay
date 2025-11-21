@@ -149,7 +149,7 @@
                                                                                     <div class="flex gap-2">
                                                                                         <a href="${pageContext.request.contextPath}/manage/products/update?id=${product.id}"
                                                                                             class="btn btn--outline btn--sm flex-1">Edit</a>
-                                                                                        <a href="${pageContext.request.contextPath}/productDetails.jsp?id=${product.id}"
+                                                                                        <a href="${pageContext.request.contextPath}/product?id=${product.id}"
                                                                                             class="btn btn--secondary btn--sm">View</a>
                                                                                     </div>
                                                                                 </div>

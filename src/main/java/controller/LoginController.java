@@ -56,8 +56,8 @@ public class LoginController extends HttpServlet {
             // CSRF protection
             if (!utils.SecurityUtil.validateCSRFToken(request)) {
                 logger.log(Level.WARNING, "CSRF validation failed for login attempt");
-                request.setAttribute("errorMessage", "Invalid security token. Please refresh the page and try again.");
-                request.getRequestDispatcher("/login.jsp").forward(request, response);
+                utils.ErrorAction.handleValidationError(request, response,
+                    "Invalid security token. Please refresh the page and try again.", "LoginController.doPost");
                 return;
             }
             
@@ -65,22 +65,13 @@ public class LoginController extends HttpServlet {
             String password = request.getParameter("password");
             
             // Validate parameters are not empty
-            if (email == null || email.trim().isEmpty() || password == null || password.trim().isEmpty()) {
-                logger.log(Level.WARNING, "Login attempt with empty credentials - email: " + 
-                        (email != null ? email : "null") + ", password: " + 
-                        (password != null ? "provided" : "null"));
-                request.setAttribute("errorMessage", "Email and password are required");
-                request.getRequestDispatcher("/login.jsp").forward(request, response);
-                return;
-            }
+            email = utils.SecurityUtil.getValidatedStringParameter(request, "email", 100);
+            password = utils.SecurityUtil.getValidatedStringParameter(request, "password", 255);
             
-            // Validate and sanitize - handle potential exceptions
-            try {
-                email = utils.SecurityUtil.getValidatedStringParameter(request, "email", 100);
-                password = utils.SecurityUtil.getValidatedStringParameter(request, "password", 255);
-            } catch (IllegalArgumentException e) {
-                request.setAttribute("errorMessage", "Invalid input format");
-                request.getRequestDispatcher("/login.jsp").forward(request, response);
+            if (email == null || password == null) {
+                logger.log(Level.WARNING, "Login attempt with empty credentials");
+                utils.ErrorAction.handleMissingParameterError(request, response,
+                    "Email and password are required", "LoginController.doPost");
                 return;
             }
             
@@ -89,8 +80,8 @@ public class LoginController extends HttpServlet {
             
             // Validate email format
             if (!utils.SecurityUtil.isValidEmail(email)) {
-                request.setAttribute("errorMessage", "Invalid login credentials");
-                request.getRequestDispatcher("/login.jsp").forward(request, response);
+                utils.ErrorAction.handleValidationError(request, response,
+                    "Invalid login credentials", "LoginController.doPost");
                 return;
             }
             
@@ -103,14 +94,14 @@ public class LoginController extends HttpServlet {
                 user = userService.authenticateUser(email, password);
             } catch (IllegalArgumentException e) {
                 // Authentication failed - use generic error to prevent enumeration
-                request.setAttribute("errorMessage", genericError);
-                request.getRequestDispatcher("/login.jsp").forward(request, response);
+                utils.ErrorAction.handleValidationError(request, response, genericError, "LoginController.doPost");
                 return;
             } catch (SQLException e) {
                 // Database error
-                System.err.println("Login error: " + e.getMessage());
-                request.setAttribute("errorMessage", "An error occurred. Please try again later.");
-                request.getRequestDispatcher("/login.jsp").forward(request, response);
+                utils.ErrorAction.handleDatabaseError(request, response, e, "LoginController.doPost");
+                return;
+            } catch (Exception e) {
+                utils.ErrorAction.handleServerError(request, response, e, "LoginController.doPost");
                 return;
             }
 

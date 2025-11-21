@@ -24,21 +24,25 @@ public class MeController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
+        try {
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
 
-        HttpSession session = request.getSession(false);
+            HttpSession session = request.getSession(false);
 
-        if (session != null) {
-            Object userObj = session.getAttribute("user");
-            if (userObj instanceof User) {
-                User user = (User) userObj;
-                response.getWriter().write(gson.toJson(user));
-                return;
+            if (session != null) {
+                Object userObj = session.getAttribute("user");
+                if (userObj instanceof User) {
+                    User user = (User) userObj;
+                    response.getWriter().write(gson.toJson(user));
+                    return;
+                }
             }
-        }
 
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.getWriter().write("{\"error\": \"Not logged in\"}");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("{\"error\": \"Not logged in\"}");
+        } catch (Exception e) {
+            utils.ErrorAction.handleServerError(request, response, e, "MeController.doGet");
+        }
     }
 }

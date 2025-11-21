@@ -37,8 +37,7 @@ public class ManageAccessLogController extends HttpServlet {
             throws ServletException, IOException {
 
         if (!isAdmin(request)) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.getWriter().write("{\"error\": \"Access denied\"}");
+            utils.ErrorAction.handleAuthorizationError(request, response, "ManageAccessLogController.doGet");
             return;
         }
 
@@ -49,8 +48,9 @@ public class ManageAccessLogController extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/views/manage-access-logs.jsp").forward(request, response);
 
         } catch (SQLException e) {
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write("{\"error\":\"Database error: " + e.getMessage() + "\"}");
+            utils.ErrorAction.handleDatabaseError(request, response, e, "ManageAccessLogController.doGet");
+        } catch (Exception e) {
+            utils.ErrorAction.handleServerError(request, response, e, "ManageAccessLogController.doGet");
         }
     }
 

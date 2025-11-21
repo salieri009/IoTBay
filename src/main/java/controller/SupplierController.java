@@ -437,6 +437,11 @@ public class SupplierController extends HttpServlet {
 
     private boolean isStaff(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        return (session != null && session.getAttribute("user") != null);
+        if (session == null) {
+            return false;
+        }
+        
+        Object userObj = session.getAttribute("user");
+        return (userObj instanceof model.User);
     }
 }

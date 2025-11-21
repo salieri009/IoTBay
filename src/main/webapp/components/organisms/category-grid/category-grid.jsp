@@ -20,7 +20,7 @@
                 <h2 class="text-display-sm font-bold text-neutral-900 mb-2">Shop by Category</h2>
                 <p class="text-lg text-neutral-600">Find exactly what you need for your IoT projects</p>
             </div>
-            <a href="${pageContext.request.contextPath}/categories.jsp" class="text-brand-primary font-medium hover:underline inline-flex items-center group">
+            <a href="${pageContext.request.contextPath}/categories" class="text-brand-primary font-medium hover:underline inline-flex items-center group">
                 View All Categories
                 <svg class="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
@@ -31,7 +31,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <!-- Industrial Category Card -->
             <jsp:include page="/components/molecules/category-card/category-card.jsp">
-                <jsp:param name="href" value="${pageContext.request.contextPath}/category-industrial.jsp" />
+                <jsp:param name="href" value="${pageContext.request.contextPath}/category/industrial" />
                 <jsp:param name="title" value="Industrial" />
                 <jsp:param name="iconColorClass" value="bg-brand-primary-100" />
                 <jsp:param name="iconTextClass" value="text-brand-primary" />
@@ -41,7 +41,7 @@
 
             <!-- Warehouse Category Card -->
             <jsp:include page="/components/molecules/category-card/category-card.jsp">
-                <jsp:param name="href" value="${pageContext.request.contextPath}/category-warehouse.jsp" />
+                <jsp:param name="href" value="${pageContext.request.contextPath}/category/warehouse" />
                 <jsp:param name="title" value="Warehouse" />
                 <jsp:param name="iconColorClass" value="bg-brand-secondary-100" />
                 <jsp:param name="iconTextClass" value="text-brand-secondary" />
@@ -51,7 +51,7 @@
 
             <!-- Agriculture Category Card -->
             <jsp:include page="/components/molecules/category-card/category-card.jsp">
-                <jsp:param name="href" value="${pageContext.request.contextPath}/category-agriculture.jsp" />
+                <jsp:param name="href" value="${pageContext.request.contextPath}/category/agriculture" />
                 <jsp:param name="title" value="Agriculture" />
                 <jsp:param name="iconColorClass" value="bg-success-100" />
                 <jsp:param name="iconTextClass" value="text-success" />
@@ -61,7 +61,7 @@
 
             <!-- Smart Home Category Card -->
             <jsp:include page="/components/molecules/category-card/category-card.jsp">
-                <jsp:param name="href" value="${pageContext.request.contextPath}/category-smarthome.jsp" />
+                <jsp:param name="href" value="${pageContext.request.contextPath}/category/smarthome" />
                 <jsp:param name="title" value="Smart Home" />
                 <jsp:param name="iconColorClass" value="bg-accent-100" />
                 <jsp:param name="iconTextClass" value="text-accent" />

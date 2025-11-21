@@ -67,7 +67,7 @@
                     <c:choose>
                         <c:when test="${category != null && !empty category}">
                             <li>
-                                <a href="${pageContext.request.contextPath}/categories.jsp" class="hover:text-brand-primary">Categories</a>
+                                <a href="${pageContext.request.contextPath}/categories" class="hover:text-brand-primary">Categories</a>
                             </li>
                             <li aria-hidden="true">/</li>
                             <li class="text-neutral-900 font-medium" aria-current="page">
@@ -450,7 +450,7 @@
             
             // Announce to screen readers
             if (typeof announceToScreenReader === 'function') {
-                announceToScreenReader(`Products sorted by ${sortSelect.options[sortSelect.selectedIndex].text}`);
+                announceToScreenReader(`Products sorted by \${sortSelect.options[sortSelect.selectedIndex].text}`);
             }
         }
         
@@ -616,7 +616,7 @@
                     skeleton.classList.add('hidden');
                     const liveRegion = document.getElementById('aria-live-announcements');
                     if (liveRegion) {
-                        liveRegion.textContent = `Loaded ${grid.children.length} products`;
+                        liveRegion.textContent = `Loaded \${grid.children.length} products`;
                     }
                 }
             }
@@ -629,13 +629,13 @@
                 filterSummary.innerHTML = `
                     <span class="text-sm font-medium">Active filters:</span>
                     <div class="flex flex-wrap gap-2 mt-2">
-                        ${Array.from(activeFilters).map(f => 
-                            `<span class="inline-flex items-center gap-1 px-2 py-1 bg-white rounded text-sm">
-                                ${f.textContent}
-                                <button onclick="clearFilter('${f.getAttribute('data-filter-type')}')" 
+                        \${Array.from(activeFilters).map(f => 
+                            \`<span class="inline-flex items-center gap-1 px-2 py-1 bg-white rounded text-sm">
+                                \${f.textContent}
+                                <button onclick="clearFilter('\${f.getAttribute('data-filter-type')}')" 
                                         class="text-neutral-500 hover:text-neutral-900" 
                                         aria-label="Remove filter">×</button>
-                            </span>`
+                            </span>\`
                         ).join('')}
                     </div>
                 `;
@@ -687,7 +687,7 @@
         
         function clearFilter(filterType) {
             // Clear filter logic
-            const filterElement = document.querySelector(`[data-filter-type="${filterType}"]`);
+            const filterElement = document.querySelector(`[data-filter-type="\${filterType}"]`);
             if (filterElement) {
                 filterElement.setAttribute('data-filter-active', 'false');
                 // Trigger filter change

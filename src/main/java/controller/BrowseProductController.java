@@ -40,9 +40,9 @@ public class BrowseProductController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String keyword = request.getParameter("query");
-        String categoryIdParam = request.getParameter("categoryId");
-        String categoryParam = request.getParameter("category");
+        String keyword = utils.SecurityUtil.getValidatedStringParameter(request, "query", 200);
+        String categoryIdParam = utils.SecurityUtil.getValidatedStringParameter(request, "categoryId", 10);
+        String categoryParam = utils.SecurityUtil.getValidatedStringParameter(request, "category", 100);
         List<Product> products;
         String categoryName = null;
         Integer categoryId = null;
@@ -117,12 +117,11 @@ public class BrowseProductController extends HttpServlet {
             request.getRequestDispatcher("browse.jsp").forward(request, response);
 
         } catch (SQLException e) {
-            System.err.println("Browse product error: " + e.getMessage());
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write("{\"error\":\"Database error: " + e.getMessage() + "\"}");
+            utils.ErrorAction.handleDatabaseError(request, response, e, "BrowseProductController.doGet");
         } catch (NumberFormatException e) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("{\"error\":\"Invalid category ID\"}");
+            utils.ErrorAction.handleValidationError(request, response, "Invalid category ID", "BrowseProductController.doGet");
+        } catch (Exception e) {
+            utils.ErrorAction.handleServerError(request, response, e, "BrowseProductController.doGet");
         }
     }
     

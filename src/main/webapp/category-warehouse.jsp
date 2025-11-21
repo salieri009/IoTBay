@@ -68,7 +68,7 @@
             <ol class="flex items-center gap-2 text-sm text-neutral-600">
                 <li><a href="${pageContext.request.contextPath}/index.jsp" class="hover:text-primary">Home</a></li>
                 <li>/</li>
-                <li><a href="/browse.jsp" class="hover:text-primary">Categories</a></li>
+                <li><a href="${pageContext.request.contextPath}/browse" class="hover:text-primary">Categories</a></li>
                 <li>/</li>
                 <li class="text-neutral-900 font-medium">Warehouse Management</li>
             </ol>
@@ -370,13 +370,13 @@
                                                 </div>
                                             </div>
                                             <div class="product-card__actions">
-                                                <a href="${pageContext.request.contextPath}/product?productId=${p.id}" 
+                                                <a href="${pageContext.request.contextPath}/product?id=${p.id}" 
                                                    class="btn btn--outline btn--sm"
                                                    aria-label="View details for ${p.name}">
                                                     View Details
                                                 </a>
                                                 <button type="button"
-                                                        onclick="if(typeof addToCart === 'function') { addToCart(${p.id}, 1); } else { window.location.href='${pageContext.request.contextPath}/productDetails.jsp?id=${p.id}'; }"
+                                                        onclick="if(typeof addToCart === 'function') { addToCart(${p.id}, 1); } else { window.location.href='${pageContext.request.contextPath}/product?id=${p.id}'; }"
                                                         class="btn btn--primary btn--sm"
                                                         aria-label="Add ${p.name} to cart"
                                                         <c:if test="${p.stockQuantity == 0}">disabled</c:if>>
@@ -411,7 +411,7 @@
                                     </c:otherwise>
                                 </c:choose>
                             </p>
-                            <a href="/browse.jsp" class="btn btn--primary">
+                            <a href="${pageContext.request.contextPath}/browse" class="btn btn--primary">
                                 Browse All Products
                             </a>
                         </div>
@@ -470,7 +470,7 @@
                         </svg>
                         Schedule Consultation
                     </a>
-                    <a href="/browse.jsp" class="btn btn--outline btn--lg border-white text-white hover:bg-white hover:text-indigo-600">
+                    <a href="${pageContext.request.contextPath}/browse" class="btn btn--outline btn--lg border-white text-white hover:bg-white hover:text-indigo-600">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
                         </svg>

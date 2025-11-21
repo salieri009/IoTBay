@@ -3,8 +3,20 @@
 <%@ page import="model.User" %>
 <%
     // Admin access check - consistent with admin-dashboard.jsp
-    User currentUser = (User) session.getAttribute("user");
-    if (currentUser == null || !"staff".equalsIgnoreCase(currentUser.getRole())) {
+    HttpSession session = request.getSession(false);
+    if (session == null) {
+        response.sendRedirect(request.getContextPath() + "/login.jsp?error=unauthorized");
+        return;
+    }
+    
+    Object userObj = session.getAttribute("user");
+    if (!(userObj instanceof User)) {
+        response.sendRedirect(request.getContextPath() + "/login.jsp?error=unauthorized");
+        return;
+    }
+    
+    User currentUser = (User) userObj;
+    if (!"staff".equalsIgnoreCase(currentUser.getRole()) && !"admin".equalsIgnoreCase(currentUser.getRole())) {
         response.sendRedirect(request.getContextPath() + "/login.jsp?error=unauthorized");
         return;
     }
@@ -33,7 +45,7 @@
                 <svg class="w-4 h-4 text-neutral-400" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
                 </svg>
-                <a href="<%=request.getContextPath()%>/admin-dashboard.jsp" class="text-neutral-600 hover:text-brand-primary">Admin Dashboard</a>
+                <a href="<%=request.getContextPath()%>/admin-dashboard" class="text-neutral-600 hover:text-brand-primary">Admin Dashboard</a>
                 <svg class="w-4 h-4 text-neutral-400" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
                 </svg>
@@ -196,7 +208,7 @@
 
             <!-- Action Buttons -->
             <div class="flex flex-wrap gap-4 mt-8">
-                <a href="<%=request.getContextPath()%>/admin-dashboard.jsp" class="btn btn--outline">
+                <a href="<%=request.getContextPath()%>/admin-dashboard" class="btn btn--outline">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
                     </svg>

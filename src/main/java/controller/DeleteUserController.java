@@ -31,28 +31,26 @@ public class DeleteUserController extends HttpServlet {
             throws ServletException, IOException {
 
         if (!isAdmin(request)) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.getWriter().write("Access denied");
+            utils.ErrorAction.handleAuthorizationError(request, response, "DeleteUserController.doPost");
             return;
         }
         
         // CSRF protection
         if (!utils.SecurityUtil.validateCSRFToken(request)) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.getWriter().write("CSRF token validation failed");
+            utils.ErrorAction.handleValidationError(request, response, "CSRF token validation failed", "DeleteUserController.doPost");
             return;
         }
 
         try {
-            int userId = Integer.parseInt(request.getParameter("id"));
+            int userId = utils.SecurityUtil.getValidatedIntParameter(request, "id", 1, Integer.MAX_VALUE);
             userDAO.deleteUser(userId);
             response.sendRedirect(request.getContextPath() + "/manage/users");
-        } catch (NumberFormatException e) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().write("Invalid user ID.");
         } catch (SQLException e) {
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            response.getWriter().write("Database error: " + e.getMessage());
+            utils.ErrorAction.handleDatabaseError(request, response, e, "DeleteUserController.doPost");
+        } catch (IllegalArgumentException e) {
+            utils.ErrorAction.handleValidationError(request, response, e.getMessage(), "DeleteUserController.doPost");
+        } catch (Exception e) {
+            utils.ErrorAction.handleServerError(request, response, e, "DeleteUserController.doPost");
         }
     }
 

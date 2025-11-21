@@ -29,7 +29,7 @@
             <div class="container">
                 <div class="max-w-3xl mx-auto">
                     <div class="mb-8">
-                        <a href="<%= contextPath %>/manage/products" class="text-neutral-500 hover:text-neutral-900 flex items-center gap-2 mb-4">
+                        <a href="<%= contextPath %>/api/manage/products" class="text-neutral-500 hover:text-neutral-900 flex items-center gap-2 mb-4">
                             &larr; Back to Products
                         </a>
                         <h1 class="text-display-md text-neutral-900">
@@ -38,7 +38,7 @@
                     </div>
 
                     <div class="bg-white p-8 rounded-xl shadow-sm border border-neutral-200">
-                        <form action="<%= contextPath %>/manage/products" method="post">
+                        <form action="<%= contextPath %>/api/manage/products" method="post">
                             <%
                                 String csrfToken = utils.SecurityUtil.generateCSRFToken(request);
                             %>
@@ -77,7 +77,7 @@
                             </div>
 
                             <div class="flex justify-end gap-4 pt-6 border-t border-neutral-100">
-                                <a href="<%= contextPath %>/manage/products" class="btn btn--outline">Cancel</a>
+                                <a href="<%= contextPath %>/api/manage/products" class="btn btn--outline">Cancel</a>
                                 <button type="submit" class="btn btn--primary">
                                     Create Product
                                 </button>
