@@ -1,7 +1,7 @@
 -- Access Logs Table
 -- Stores user access logs for security and analytics
 
-CREATE TABLE IF NOT EXISTS access_logs (
+gCREATE TABLE IF NOT EXISTS access_logs (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id INTEGER,
     action TEXT NOT NULL,

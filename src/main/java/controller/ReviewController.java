@@ -171,8 +171,8 @@ public class ReviewController extends HttpServlet {
         int productId = utils.SecurityUtil.getValidatedIntParameter(request, "productId", 1, Integer.MAX_VALUE);
         int rating = utils.SecurityUtil.getValidatedIntParameter(request, "rating", 1, 5);
         
-        String reviewText = request.getParameter("reviewText");
-        String title = request.getParameter("title");
+        String reviewText = utils.SecurityUtil.getValidatedStringParameter(request, "reviewText", 1000);
+        String title = utils.SecurityUtil.getValidatedStringParameter(request, "title", 200);
         
         // Sanitize inputs
         if (reviewText != null) {
@@ -256,13 +256,13 @@ public class ReviewController extends HttpServlet {
         
         User currentUser = (User) userObj;
         
-        // Parse JSON request body or form parameters
-        String productIdStr = request.getParameter("productId");
-        String ratingStr = request.getParameter("rating");
-        String reviewText = request.getParameter("reviewText");
-        String title = request.getParameter("title");
+        // Parse JSON request body or form parameters using SecurityUtil
+        int productId = utils.SecurityUtil.getValidatedIntParameter(request, "productId", 1, Integer.MAX_VALUE);
+        int rating = utils.SecurityUtil.getValidatedIntParameter(request, "rating", 1, 5);
+        String reviewText = utils.SecurityUtil.getValidatedStringParameter(request, "reviewText", 1000);
+        String title = utils.SecurityUtil.getValidatedStringParameter(request, "title", 200);
         
-        if (productIdStr == null || ratingStr == null || reviewText == null) {
+        if (reviewText == null) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             JsonObject json = new JsonObject();
             json.addProperty("success", false);
@@ -270,9 +270,6 @@ public class ReviewController extends HttpServlet {
             response.getWriter().write(gson.toJson(json));
             return;
         }
-        
-        Integer productId = Integer.parseInt(productIdStr);
-        Integer rating = Integer.parseInt(ratingStr);
         
         ReviewService.ReviewOperationResult result = reviewService.createReview(
             currentUser.getUserId(), productId, rating, title, reviewText);
@@ -307,16 +304,22 @@ public class ReviewController extends HttpServlet {
         
         User currentUser = (User) userObj;
         
-        Integer reviewId = Integer.parseInt(request.getParameter("reviewId"));
+        int reviewId = utils.SecurityUtil.getValidatedIntParameter(request, "reviewId", 1, Integer.MAX_VALUE);
         String ratingStr = request.getParameter("rating");
-        String reviewText = InputValidator.validateAndSanitize(
-            request.getParameter("reviewText"), "Review text");
-        String title = InputValidator.validateAndSanitize(
-            request.getParameter("title"), "Review title");
+        String reviewText = utils.SecurityUtil.getValidatedStringParameter(request, "reviewText", 1000);
+        String title = utils.SecurityUtil.getValidatedStringParameter(request, "title", 200);
+        
+        // Sanitize inputs
+        if (reviewText != null) {
+            reviewText = utils.SecurityUtil.sanitizeInput(reviewText);
+        }
+        if (title != null) {
+            title = utils.SecurityUtil.sanitizeInput(title);
+        }
         
         Integer rating = null;
         if (ratingStr != null && !ratingStr.isEmpty()) {
-            rating = Integer.parseInt(ratingStr);
+            rating = utils.SecurityUtil.getValidatedIntParameter(request, "rating", 1, 5);
         }
         
         boolean isStaff = "staff".equalsIgnoreCase(currentUser.getRole()) || 
@@ -363,24 +366,22 @@ public class ReviewController extends HttpServlet {
         
         User currentUser = (User) userObj;
         
-        String reviewIdStr = request.getParameter("reviewId");
-        if (reviewIdStr == null) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            JsonObject json = new JsonObject();
-            json.addProperty("success", false);
-            json.addProperty("error", "Review ID is required");
-            response.getWriter().write(gson.toJson(json));
-            return;
-        }
-        
-        Integer reviewId = Integer.parseInt(reviewIdStr);
+        int reviewId = utils.SecurityUtil.getValidatedIntParameter(request, "reviewId", 1, Integer.MAX_VALUE);
         String ratingStr = request.getParameter("rating");
-        String reviewText = request.getParameter("reviewText");
-        String title = request.getParameter("title");
+        String reviewText = utils.SecurityUtil.getValidatedStringParameter(request, "reviewText", 1000);
+        String title = utils.SecurityUtil.getValidatedStringParameter(request, "title", 200);
+        
+        // Sanitize inputs
+        if (reviewText != null) {
+            reviewText = utils.SecurityUtil.sanitizeInput(reviewText);
+        }
+        if (title != null) {
+            title = utils.SecurityUtil.sanitizeInput(title);
+        }
         
         Integer rating = null;
         if (ratingStr != null && !ratingStr.isEmpty()) {
-            rating = Integer.parseInt(ratingStr);
+            rating = utils.SecurityUtil.getValidatedIntParameter(request, "rating", 1, 5);
         }
         
         boolean isStaff = "staff".equalsIgnoreCase(currentUser.getRole()) || 

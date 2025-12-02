@@ -48,10 +48,13 @@ public class LoginController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            // Debug: Log all parameters
-            logger.log(Level.FINE, "Login attempt - Parameters: email=" + request.getParameter("email") + 
-                    ", password=" + (request.getParameter("password") != null ? "***" : "null") +
-                    ", csrfToken=" + request.getParameter("csrfToken"));
+            // Debug: Log all parameters (using getParameter for logging only, before validation)
+            String emailParam = request.getParameter("email");
+            String passwordParam = request.getParameter("password");
+            String csrfTokenParam = request.getParameter("csrfToken");
+            logger.log(Level.FINE, "Login attempt - Parameters: email=" + emailParam + 
+                    ", password=" + (passwordParam != null ? "***" : "null") +
+                    ", csrfToken=" + csrfTokenParam);
             
             // CSRF protection
             if (!utils.SecurityUtil.validateCSRFToken(request)) {
@@ -61,12 +64,9 @@ public class LoginController extends HttpServlet {
                 return;
             }
             
-            String email = request.getParameter("email");
-            String password = request.getParameter("password");
-            
-            // Validate parameters are not empty
-            email = utils.SecurityUtil.getValidatedStringParameter(request, "email", 100);
-            password = utils.SecurityUtil.getValidatedStringParameter(request, "password", 255);
+            // Validate parameters using SecurityUtil
+            String email = utils.SecurityUtil.getValidatedStringParameter(request, "email", 100);
+            String password = utils.SecurityUtil.getValidatedStringParameter(request, "password", 255);
             
             if (email == null || password == null) {
                 logger.log(Level.WARNING, "Login attempt with empty credentials");
@@ -177,8 +177,8 @@ public class LoginController extends HttpServlet {
             session.setAttribute("user", user);
             
 
-            // Redirect to index.jsp (with context path!)
-            response.sendRedirect(request.getContextPath() + "/index.jsp");
+            // Redirect to home page (with context path!)
+            response.sendRedirect(request.getContextPath() + "/");
         } catch (Exception e) {
             // Catch-all for unexpected errors (including SQLException from access log)
             logger.log(Level.SEVERE, "Error during login: " + e.getMessage(), e);

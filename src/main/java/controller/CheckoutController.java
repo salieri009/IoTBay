@@ -206,7 +206,7 @@ public class CheckoutController extends HttpServlet{
             // Clear cart after checkout
             cartItemDao.clearCartByUserId(userId);
 
-            response.sendRedirect("index.jsp");
+            response.sendRedirect(request.getContextPath() + "/");
 
         } catch (IllegalArgumentException e) {
             utils.ErrorAction.handleValidationError(request, response, e.getMessage(),

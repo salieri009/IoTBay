@@ -16,7 +16,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-@WebServlet({"/", "/index.jsp"})
+@WebServlet("/")
 public class HomeController extends HttpServlet {
     private ProductDAO productDAO;
 

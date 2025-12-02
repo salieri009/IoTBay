@@ -14,6 +14,7 @@
 /* Import Container Components */
 @import url('components/card.css');
 @import url('components/section-container.css');
+@import url('components/hero-card.css');
 
 /* === DESIGN TOKENS === */
 /* Refactored based on KickoffLabs best practices: https://kickofflabs.com/blog/landing-page-fonts-colors/ */

@@ -46,8 +46,9 @@ public class LogoutController extends HttpServlet {
                 try {
                     accessLogDAO.createAccessLog(accessLog);
                 } catch (SQLException e) {
-                    // Optionally log the error
-                    System.err.println("Logout error: " + e.getMessage());
+                    // Log error but don't fail logout
+                    utils.ErrorAction.handleDatabaseError(request, response, e, "LogoutController.doGet");
+                    return;
                 }
             }
             session.invalidate();
