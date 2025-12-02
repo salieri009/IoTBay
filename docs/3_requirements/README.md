@@ -12,6 +12,7 @@ This section contains all feature specifications, user stories, API contracts, a
 | [User Stories](./USER_STORIES.md) | User-centric feature descriptions | POs, developers |
 | [API Reference](./API_REFERENCE.md) | API endpoints and contracts | Backend & frontend devs |
 | [Acceptance Criteria](./acceptance-criteria/) | Feature-specific acceptance criteria | QA, developers |
+| [📄 Assignment Specification](./reference/41025_ISD_Assignment_2_Autumn_2025.pdf) | Original assignment PDF (41025 ISD Autumn 2025) | Students, instructors |
 
 ---
 
