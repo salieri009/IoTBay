@@ -64,31 +64,50 @@ Start here for doc structure, versioning, and contribution guidelines:
 | [**TECH_STACK.md**](./1_getting-started/TECH_STACK.md) | Developers, Architects | Technologies & versions |
 | [**README.md**](./1_getting-started/README.md) | Everyone | Section overview |
 
-### 🏗️ 2. Architecture (6 documents)
+### 🏗️ 2. Architecture (10 documents)
 **Purpose**: System design, technical decisions, standards
 
 | Document | Audience | Purpose |
 |----------|----------|---------|
 | [**COMPONENT_ARCHITECTURE.md**](./2_architecture/COMPONENT_ARCHITECTURE.md) | Developers, Architects | UI component hierarchy & design |
+| [**COMPONENT_ARCHITECTURE.en_docs.md**](./2_architecture/COMPONENT_ARCHITECTURE.en_docs.md) | Developers | Detailed multilingual component guide |
 | [**DATABASE_DESIGN.md**](./2_architecture/DATABASE_DESIGN.md) | Backend Devs, DBAs | Schema, tables, relationships |
-| [**DESIGN_SYSTEM.md**](./2_architecture/DESIGN_SYSTEM.md) | Designers, Frontend Devs | Visual design standards |
+| [**DATABASE_DESIGN.en_docs.md**](./2_architecture/DATABASE_DESIGN.en_docs.md) | Backend Devs, DBAs | Extended database documentation |
+| [**DESIGN_SYSTEM.en_docs.md**](./2_architecture/DESIGN_SYSTEM.en_docs.md) | Designers, Frontend Devs | Comprehensive design philosophy (1,069 lines) |
+| [**MODERN_DESIGN_SYSTEM.en_docs.md**](./2_architecture/MODERN_DESIGN_SYSTEM.en_docs.md) | Frontend Devs | CSS implementation guide (377 lines) |
 | [**API_DESIGN.md**](./2_architecture/API_DESIGN.md) | Backend Devs, Frontend Devs | API architecture & patterns |
 | [**SECURITY_ARCHITECTURE.md**](./2_architecture/SECURITY_ARCHITECTURE.md) | Architects, Security Team | Security design & threat model |
 | [**README.md**](./2_architecture/README.md) | Everyone | Section overview |
 
-### 📋 3. Requirements & Specifications (6 documents)
+### 📋 3. Requirements & Specifications (21 documents)
 **Purpose**: Feature definitions, APIs, acceptance criteria
 
 | Document | Audience | Purpose |
 |----------|----------|---------|
 | [**FEATURES.md**](./3_requirements/FEATURES.md) | Everyone | Complete feature checklist |
+| [**FEATURES.en_docs.md**](./3_requirements/FEATURES.en_docs.md) | Everyone | Extended multilingual feature documentation |
 | [**USER_STORIES.md**](./3_requirements/USER_STORIES.md) | PMs, Developers | User-centric feature descriptions |
 | [**API_REFERENCE.md**](./3_requirements/API_REFERENCE.md) | Backend & Frontend Devs | API endpoints & contracts |
+| **Feature Requirements (FR-001 through FR-008):** |  |  |
+| [**FR-001-User-Management.md**](./3_requirements/FR-001-User-Management.md) | All | User authentication & profile management |
+| [**FR-002-Product-Catalog.md**](./3_requirements/FR-002-Product-Catalog.md) | All | Product browsing & search |
+| [**FR-003-E-commerce.md**](./3_requirements/FR-003-E-commerce.md) | All | Cart, checkout, orders |
+| [**FR-004-Reviews-Ratings.md**](./3_requirements/FR-004-Reviews-Ratings.md) | All | Product reviews & ratings |
+| [**FR-005-Administrative-Features.md**](./3_requirements/FR-005-Administrative-Features.md) | Admin, Backend | Admin dashboard & management |
+| [**FR-006-Data-Management.md**](./3_requirements/FR-006-Data-Management.md) | Backend, DBA | Data operations & persistence |
+| [**FR-007-Security-Features.md**](./3_requirements/FR-007-Security-Features.md) | All | Security requirements |
+| [**FR-008-UI-UX-Features.md**](./3_requirements/FR-008-UI-UX-Features.md) | Frontend, UX | UI/UX requirements |
+| **User Experience Scenarios:** |  |  |
+| [**UX_SCENARIOS_USER_MANAGEMENT.md**](./3_requirements/UX_SCENARIOS_USER_MANAGEMENT.md) | UX, Frontend | User journey: Registration, login, profile |
+| [**UX_SCENARIOS_PRODUCT_CATALOG.md**](./3_requirements/UX_SCENARIOS_PRODUCT_CATALOG.md) | UX, Frontend | User journey: Browse, search, filter products |
+| [**UX_SCENARIOS_ECOMMERCE.md**](./3_requirements/UX_SCENARIOS_ECOMMERCE.md) | UX, Frontend | User journey: Cart, checkout, payment |
+| [**UX_SCENARIOS_REVIEWS_RATINGS.md**](./3_requirements/UX_SCENARIOS_REVIEWS_RATINGS.md) | UX, Frontend | User journey: Write, read, manage reviews |
+| [**UX_SCENARIOS_ADMINISTRATIVE.md**](./3_requirements/UX_SCENARIOS_ADMINISTRATIVE.md) | UX, Admin | User journey: Admin dashboard workflows |
 | [**acceptance-criteria/**](./3_requirements/acceptance-criteria/) | QA, Developers | Feature-by-feature AC |
 | [**reference/** (PDF)](./3_requirements/reference/41025_ISD_Assignment_2_Autumn_2025.pdf) | Everyone | Original assignment specification |
 | [**README.md**](./3_requirements/README.md) | Everyone | Section overview |
 
-### 💻 4. Development (9 documents)
+### 💻 4. Development (12 documents)
 **Purpose**: Coding practices, workflows, setup guides
 
 | Document | Audience | Purpose |
@@ -98,27 +117,40 @@ Start here for doc structure, versioning, and contribution guidelines:
 | [**CODE_STYLE.md**](./4_development/CODE_STYLE.md) | All Developers | Coding standards & conventions |
 | [**GIT_WORKFLOW.md**](./4_development/GIT_WORKFLOW.md) | All Developers | Branching & commit strategy |
 | [**CONTRIBUTING.md**](./4_development/CONTRIBUTING.md) | Contributors | How to contribute |
-| [**DATABASE_SETUP.md**](./4_development/DATABASE_SETUP.md) | Backend Devs, DBAs | DB initialization & migrations |
+| [**API_DOCUMENTATION.en_docs.md**](./4_development/API_DOCUMENTATION.en_docs.md) | Backend Devs | Extended API reference documentation |
+| [**COLOR_REFACTORING_GUIDE.en_docs.md**](./4_development/COLOR_REFACTORING_GUIDE.en_docs.md) | Frontend Devs, Designers | KickoffLabs-based design optimization (494 lines) |
+| [**JSP_DEVELOPER_DOCUMENTATION.en_docs.md**](./4_development/JSP_DEVELOPER_DOCUMENTATION.en_docs.md) | Backend Developers | JSP/Servlet implementation patterns |
+| [**UI_UX_DOCUMENTATION.en_docs.md**](./4_development/UI_UX_DOCUMENTATION.en_docs.md) | Frontend Developers | UI/UX implementation guide |
+| [**TYPESCRIPT_MIGRATION.md**](./4_development/TYPESCRIPT_MIGRATION.md) | Frontend Developers | TypeScript migration strategy |
 | [**deployment/**](./4_development/deployment/) | DevOps, Developers | Deployment guides |
 | [**README.md**](./4_development/README.md) | Everyone | Section overview |
 
-### 🧪 5. Testing (4 documents)
+### 🧪 5. Testing (9 documents)
 **Purpose**: QA strategies, test cases, error prevention
 
 | Document | Audience | Purpose |
 |----------|----------|---------|
 | [**TEST_STRATEGY.md**](./5_testing/TEST_STRATEGY.md) | QA, Developers | Overall testing approach |
 | [**ERROR_PREVENTION.md**](./5_testing/ERROR_PREVENTION.md) | QA, Developers | Prevent 403/404/500 errors |
-| [**ACCESSIBILITY_TESTING.md**](./5_testing/ACCESSIBILITY_TESTING.md) | QA, Frontend Devs | WCAG 2.1 AA compliance testing |
+| [**403_404_ERROR_PREVENTION_CHECKLIST.md**](./5_testing/403_404_ERROR_PREVENTION_CHECKLIST.md) | QA, Backend Devs | Specific HTTP error prevention strategies |
+| [**500_ERROR_PREVENTION_CHECKLIST.md**](./5_testing/500_ERROR_PREVENTION_CHECKLIST.md) | QA, Backend Devs | Server error prevention checklist |
+| [**ACCESSIBILITY_AUDIT_SUMMARY_docs.md**](./5_testing/ACCESSIBILITY_AUDIT_SUMMARY_docs.md) | QA, Frontend Devs | WCAG 2.1 compliance audit results |
+| [**NIELSEN_HEURISTICS_REVIEW.md**](./5_testing/NIELSEN_HEURISTICS_REVIEW.md) | UX, QA | Usability heuristics evaluation |
+| [**NIELSEN_HEURISTICS_IMPROVEMENTS.md**](./5_testing/NIELSEN_HEURISTICS_IMPROVEMENTS.md) | UX, Developers | Actionable usability improvements |
 | [**reports/**](./5_testing/reports/) | QA, Stakeholders | Test reports & audits |
 | [**README.md**](./5_testing/README.md) | Everyone | Section overview |
 
-### 📅 6. Planning (3 documents)
+### 📅 6. Planning (9 documents)
 **Purpose**: Roadmaps, strategic decisions, design reviews
 
 | Document | Audience | Purpose |
 |----------|----------|---------|
-| [**PROJECT_ROADMAP.md**](./6_planning/PROJECT_ROADMAP.md) | PMs, Architects | Feature roadmap & releases |
+| [**ATOMIC_DESIGN_IMPLEMENTATION_PLAN.en_docs.md**](./6_planning/ATOMIC_DESIGN_IMPLEMENTATION_PLAN.en_docs.md) | Frontend, Architects | Design system rollout roadmap |
+| [**ATOMIC_DESIGN_MIGRATION_GUIDE.en_docs.md**](./6_planning/ATOMIC_DESIGN_MIGRATION_GUIDE.en_docs.md) | Frontend Developers | Component migration strategy |
+| [**FRONTEND_REFACTORING_PLAN_docs.md**](./6_planning/FRONTEND_REFACTORING_PLAN_docs.md) | Frontend, Architects | Frontend modernization roadmap |
+| [**UX_IMPROVEMENT_PLAN.en_docs.md**](./6_planning/UX_IMPROVEMENT_PLAN.en_docs.md) | UX, Frontend | Usability enhancement plan |
+| [**UX_UI_REVIEW_AND_EXECUTION_PLAN_docs.md**](./6_planning/UX_UI_REVIEW_AND_EXECUTION_PLAN_docs.md) | UX, Designers | Design review & execution strategy |
+| [**automation-2624465c.plan_docs.md**](./6_planning/automation-2624465c.plan_docs.md) | DevOps, Developers | Automation strategy document |
 | [**migration-guides/**](./6_planning/migration-guides/) | Developers | Implementation guides |
 | [**design-reviews/**](./6_planning/design-reviews/) | Architects, Designers | Design decision records |
 | [**README.md**](./6_planning/README.md) | Everyone | Section overview |
@@ -138,8 +170,7 @@ Start here for doc structure, versioning, and contribution guidelines:
 |----------|---------|--------|
 | [**ARCHIVE_INDEX.md**](./8_archive/ARCHIVE_INDEX.md) | Guide to archived files | Current |
 | [**README.md**](./8_archive/README.md) | Archive guidelines | Current |
-| [**REFACTORING_PLAN.md.archived**](./8_archive/) | Historical refactoring plans | Deprecated |
-| [**Legacy Files** (27 files)](./8_archive/) | Historical context only | Deprecated |
+| [**Legacy Files** (33 files)](./8_archive/) | Historical context, deprecated guides | Deprecated |
 
 > ⚠️ **Do NOT use archive for current development.** Archive is for historical reference only.
 
