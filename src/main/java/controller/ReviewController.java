@@ -3,7 +3,7 @@ package controller;
 import dao.ReviewDAO;
 import dao.ProductDAOImpl;
 import dao.interfaces.ProductDAO;
-import db.DBConnection;
+import config.DIContainer;
 import model.Review;
 import model.Product;
 import model.User;
@@ -36,7 +36,7 @@ public class ReviewController extends HttpServlet {
     @Override
     public void init() throws ServletException {
         try {
-            Connection connection = DBConnection.getConnection();
+            Connection connection = DIContainer.getConnection();
             reviewDAO = new ReviewDAO(connection);
             productDAO = new ProductDAOImpl(connection);
             reviewService = new ReviewService(reviewDAO, productDAO);

@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import dao.CategoryDAO;
 import dao.ProductDAOImpl;
 import dao.interfaces.ProductDAO;
-import db.DBConnection;
+import config.DIContainer;
 import model.Category;
 import model.Product;
 
@@ -28,7 +28,7 @@ public class BrowseProductController extends HttpServlet {
     @Override
     public void init() {
         try {
-            Connection connection = DBConnection.getConnection();
+            Connection connection = DIContainer.getConnection();
             productDAO = new ProductDAOImpl(connection);
             categoryDAO = new CategoryDAO(connection);
         } catch (SQLException | ClassNotFoundException e) {

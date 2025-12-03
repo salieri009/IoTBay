@@ -6,7 +6,7 @@ import com.google.gson.JsonObject;
 import dao.ShipmentDAO;
 import dao.OrderDAOImpl;
 import dao.interfaces.OrderDAO;
-import db.DBConnection;
+import config.DIContainer;
 import model.Shipment;
 import model.Order;
 import model.User;
@@ -37,7 +37,7 @@ public class ShipmentController extends HttpServlet {
     @Override
     public void init() throws ServletException {
         try {
-            Connection connection = DBConnection.getConnection();
+            Connection connection = DIContainer.getConnection();
             shipmentDAO = new ShipmentDAO(connection);
             orderDAO = new OrderDAOImpl(connection);
         } catch (Exception e) {

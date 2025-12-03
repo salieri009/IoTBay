@@ -20,7 +20,7 @@ import com.google.gson.JsonObject;
 
 import dao.PaymentDAO;
 import dao.PaymentDetailDAO;
-import db.DBConnection;
+import config.DIContainer;
 import model.Payment;
 import model.PaymentDetail;
 import model.User;
@@ -35,7 +35,7 @@ public class PaymentController extends HttpServlet {
     @Override
     public void init() throws ServletException {
         try {
-            Connection conn = DBConnection.getConnection();
+            Connection conn = DIContainer.getConnection();
             paymentDAO = new PaymentDAO(conn);
             paymentDetailDAO = new PaymentDetailDAO(conn);
         } catch (SQLException | ClassNotFoundException e) {

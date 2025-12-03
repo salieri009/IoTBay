@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import dao.CategoryDAO;
 import dao.ProductDAOImpl;
 import dao.interfaces.ProductDAO;
-import db.DBConnection;
+import config.DIContainer;
 import model.Category;
 import model.Product;
 
@@ -34,8 +34,8 @@ public class CategoryController extends HttpServlet {
     @Override
     public void init() throws ServletException {
         try {
-            Connection connection = DBConnection.getConnection();
-            this.categoryDAO = new CategoryDAO(connection);
+            Connection connection = DIContainer.getConnection();
+            categoryDAO = new CategoryDAO(connection);
             this.productDAO = new ProductDAOImpl(connection);
         } catch (SQLException | ClassNotFoundException e) {
             throw new ServletException("Failed to initialize database connection", e);

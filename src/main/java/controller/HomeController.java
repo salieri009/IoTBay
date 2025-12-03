@@ -2,7 +2,7 @@ package controller;
 
 import dao.ProductDAOImpl;
 import dao.interfaces.ProductDAO;
-import db.DBConnection;
+import config.DIContainer;
 import model.Product;
 import utils.ErrorAction;
 
@@ -23,9 +23,9 @@ public class HomeController extends HttpServlet {
     @Override
     public void init() throws ServletException {
         try {
-            Connection connection = DBConnection.getConnection();
+            Connection connection = DIContainer.getConnection();
             productDAO = new ProductDAOImpl(connection);
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             throw new ServletException("Failed to initialize database connection", e);
         }
     }

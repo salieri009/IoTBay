@@ -13,7 +13,7 @@ import javax.servlet.http.HttpSession;
 
 import dao.ProductDAOImpl;
 import dao.interfaces.ProductDAO;
-import db.DBConnection;
+import config.DIContainer;
 import model.Product;
 import model.User;
 
@@ -24,7 +24,7 @@ public class UpdateProductController extends HttpServlet {
     @Override
     public void init() throws ServletException {
         try {
-            Connection connection = DBConnection.getConnection();
+            Connection connection = DIContainer.getConnection();
             productDAO = new ProductDAOImpl(connection);
         } catch (SQLException | ClassNotFoundException e) {
             throw new ServletException("Failed to connect to database", e);

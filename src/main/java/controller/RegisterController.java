@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import dao.UserDAOImpl;
 import dao.interfaces.UserDAO;
-import db.DBConnection;
+import config.DIContainer;
 import model.User;
 import utils.PasswordUtil;
 import utils.ValidationUtil;
@@ -25,7 +25,7 @@ public class RegisterController extends HttpServlet {
     @Override
     public void init() {
         try {
-            Connection connection = DBConnection.getConnection();
+            Connection connection = DIContainer.getConnection();
             userDAO = new UserDAOImpl(connection);
         } catch (SQLException | ClassNotFoundException e) {
             throw new RuntimeException("Failed to initialize database connection", e);

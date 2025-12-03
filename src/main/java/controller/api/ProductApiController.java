@@ -28,13 +28,13 @@ public class ProductApiController extends HttpServlet {
             this.productDAO = DIContainer.get(ProductDAO.class);
             if (this.productDAO == null) {
                 // Fallback to real implementation if DIContainer fails
-                java.sql.Connection connection = db.DBConnection.getConnection();
+                java.sql.Connection connection = config.DIContainer.getConnection();
                 this.productDAO = new dao.ProductDAOImpl(connection);
             }
         } catch (Exception e) {
             // Fallback to real implementation on any error
             try {
-                java.sql.Connection connection = db.DBConnection.getConnection();
+                java.sql.Connection connection = config.DIContainer.getConnection();
                 this.productDAO = new dao.ProductDAOImpl(connection);
             } catch (Exception ex) {
                 throw new ServletException("Failed to initialize ProductApiController", ex);

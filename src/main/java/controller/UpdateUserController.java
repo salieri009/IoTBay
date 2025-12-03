@@ -15,7 +15,7 @@ import javax.servlet.http.HttpSession;
 
 import dao.UserDAOImpl;
 import dao.interfaces.UserDAO;
-import db.DBConnection;
+import config.DIContainer;
 import model.User;
 
 @WebServlet("/manage/users/update")
@@ -25,7 +25,7 @@ public class UpdateUserController extends HttpServlet {
     @Override
     public void init() throws ServletException {
         try {
-            Connection connection = DBConnection.getConnection();
+            Connection connection = DIContainer.getConnection();
             userDAO = new UserDAOImpl(connection);
         } catch (SQLException | ClassNotFoundException e) {
             throw new ServletException("Failed to connect to database", e);

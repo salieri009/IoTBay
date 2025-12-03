@@ -15,7 +15,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import dao.OrderDAO;
-import db.DBConnection;
+import config.DIContainer;
 import model.Order;
 import model.User;
 import service.OrderService;

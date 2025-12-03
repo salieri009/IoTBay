@@ -16,7 +16,7 @@ import javax.servlet.http.HttpSession;
 
 import dao.UserDAOImpl;
 import dao.interfaces.UserDAO;
-import db.DBConnection;
+import config.DIContainer;
 import model.User;
 
 @WebServlet("/api/manage/users/*")
@@ -26,10 +26,10 @@ public class ManageUserController extends HttpServlet {
     @Override
     public void init() throws ServletException {
         try {
-            Connection connection = DBConnection.getConnection();
+            Connection connection = DIContainer.getConnection();
             userDAO = new UserDAOImpl(connection);
-        } catch (SQLException | ClassNotFoundException e) {
-            throw new RuntimeException("Failed to initialize database connection", e);
+        } catch (SQLException e) {
+            throw new ServletException("Failed to initialize database connection", e);
         }
     }
 

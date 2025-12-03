@@ -2,7 +2,7 @@ package controller;
 
 import dao.UserDAOImpl;
 import dao.interfaces.UserDAO;
-import db.DBConnection;
+import config.DIContainer;
 import model.User;
 
 import javax.servlet.ServletException;
@@ -19,7 +19,7 @@ public class DeleteUserController extends HttpServlet {
     @Override
     public void init() throws ServletException {
         try {
-            Connection connection = DBConnection.getConnection();
+            Connection connection = DIContainer.getConnection();
             userDAO = new UserDAOImpl(connection);
         } catch (SQLException | ClassNotFoundException e) {
             throw new RuntimeException("Failed to initialize database connection", e);

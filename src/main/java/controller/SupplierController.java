@@ -1,7 +1,7 @@
 package controller;
 
 import dao.SupplierDAOImpl;
-import db.DBConnection;
+import config.DIContainer;
 import model.Supplier;
 
 import javax.servlet.ServletException;
@@ -24,7 +24,7 @@ public class SupplierController extends HttpServlet {
     @Override
     public void init() throws ServletException {
         try {
-            Connection connection = DBConnection.getConnection();
+            Connection connection = DIContainer.getConnection();
             supplierDAO = new SupplierDAOImpl(connection);
         } catch (Exception e) {
             throw new ServletException("Failed to initialize SupplierController", e);

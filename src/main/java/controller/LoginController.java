@@ -12,7 +12,6 @@ import javax.servlet.http.HttpSession;
 
 import dao.interfaces.AccessLogDAO;
 import config.DIContainer;
-import db.DBConnection;
 import model.AccessLog;
 import model.User;
 import service.UserService;
@@ -28,12 +27,12 @@ public class LoginController extends HttpServlet {
     @Override
     public void init() {
         try {
-            // Use DIContainer for dependency injection, fallback to direct instantiation
+            // Use DIContainer for dependency injection
             accessLogDAO = DIContainer.get(AccessLogDAO.class);
             
             // Fallback if DIContainer not available
             if (accessLogDAO == null) {
-                java.sql.Connection connection = DBConnection.getConnection();
+                java.sql.Connection connection = DIContainer.getConnection();
                 accessLogDAO = new dao.AccessLogDAOImpl(connection);
             }
             

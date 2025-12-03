@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import dao.OrderDAOImpl;
 import dao.interfaces.OrderDAO;
-import db.DBConnection;
+import config.DIContainer;
 import model.Order;
 import model.User;
 
@@ -25,10 +25,10 @@ public class ManageOrderController extends HttpServlet {
     @Override
     public void init() throws ServletException {
         try {
-            Connection connection = DBConnection.getConnection();
+            Connection connection = DIContainer.getConnection();
             orderDAO = new OrderDAOImpl(connection);
-        } catch (SQLException | ClassNotFoundException e) {
-            throw new RuntimeException("Failed to initialize database connection", e);
+        } catch (SQLException e) {
+            throw new ServletException("Failed to initialize database connection", e);
         }
     }
 

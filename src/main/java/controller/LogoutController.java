@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import dao.AccessLogDAOImpl;
 import dao.interfaces.AccessLogDAO;
-import db.DBConnection;
+import config.DIContainer;
 import model.AccessLog;
 import model.User;
 

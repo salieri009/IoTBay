@@ -25,7 +25,7 @@ import dao.interfaces.AccessLogDAO;
 import dao.interfaces.UserDAO;
 import dao.interfaces.OrderDAO;
 import dao.interfaces.ProductDAO;
-import db.DBConnection;
+import config.DIContainer;
 import model.AccessLog;
 import model.User;
 import model.Order;
@@ -43,7 +43,7 @@ public class DataManagementController extends HttpServlet {
     @Override
     public void init() throws ServletException {
         try {
-            Connection connection = DBConnection.getConnection();
+            Connection connection = DIContainer.getConnection();
             this.accessLogDAO = new AccessLogDAOImpl(connection);
             this.userDAO = new UserDAOImpl(connection);
             this.orderDAO = new OrderDAOImpl(connection);

@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import dao.ProductDAOImpl;
 import dao.interfaces.ProductDAO;
-import db.DBConnection;
+import config.DIContainer;
 import model.Product;
 import model.User;
 
@@ -25,10 +25,10 @@ public class ManageProductController extends HttpServlet {
     @Override
     public void init() throws ServletException {
         try {
-            Connection connection = DBConnection.getConnection();
+            Connection connection = DIContainer.getConnection();
             productDAO = new ProductDAOImpl(connection);
-        } catch (SQLException | ClassNotFoundException e) {
-            throw new RuntimeException("Failed to initialize database connection", e);
+        } catch (SQLException e) {
+            throw new ServletException("Failed to initialize database connection", e);
         }
     }
 
@@ -55,7 +55,7 @@ public class ManageProductController extends HttpServlet {
             if (pathInfo != null && pathInfo.equals("/form")) {
                 // Get categories for dropdown
                 try {
-                    dao.CategoryDAO categoryDAO = new dao.CategoryDAO(DBConnection.getConnection());
+                    dao.CategoryDAO categoryDAO = new dao.CategoryDAO(DIContainer.getConnection());
                     List<model.Category> categories = categoryDAO.getAllCategories();
                     request.setAttribute("categories", categories);
                 } catch (Exception e) {

@@ -17,7 +17,7 @@ import dao.UserDAOImpl;
 import dao.interfaces.OrderDAO;
 import dao.interfaces.ProductDAO;
 import dao.interfaces.UserDAO;
-import db.DBConnection;
+import config.DIContainer;
 import model.User;
 
 @WebServlet("/reports-dashboard.jsp")
@@ -29,7 +29,7 @@ public class ReportsDashboardController extends HttpServlet {
     @Override
     public void init() throws ServletException {
         try {
-            Connection connection = DBConnection.getConnection();
+            Connection connection = DIContainer.getConnection();
             this.userDAO = new UserDAOImpl(connection);
             this.productDAO = new ProductDAOImpl(connection);
             this.orderDAO = new OrderDAOImpl(connection);

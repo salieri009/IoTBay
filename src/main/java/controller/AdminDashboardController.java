@@ -19,7 +19,7 @@ import dao.interfaces.OrderDAO;
 import dao.interfaces.ProductDAO;
 import dao.interfaces.SupplierDAO;
 import dao.interfaces.UserDAO;
-import db.DBConnection;
+import config.DIContainer;
 import model.User;
 
 /**
@@ -37,12 +37,12 @@ public class AdminDashboardController extends HttpServlet {
     @Override
     public void init() throws ServletException {
         try {
-            Connection connection = DBConnection.getConnection();
+            Connection connection = DIContainer.getConnection();
             this.userDAO = new UserDAOImpl(connection);
             this.productDAO = new ProductDAOImpl(connection);
             this.orderDAO = new OrderDAOImpl(connection);
             this.supplierDAO = new SupplierDAOImpl(connection);
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException e) {
             throw new ServletException("Failed to initialize database connection", e);
         }
     }
