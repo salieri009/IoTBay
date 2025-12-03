@@ -46,8 +46,10 @@ Start here for features, requirements, and project status:
 ### 📚 For Documentation Maintainers
 Start here for doc structure, versioning, and contribution guidelines:
 1. [**Contributing Guide**](./4_development/CONTRIBUTING.md) - Contribution process
-2. [**Refactoring Plan**](./0_refactoring/REFACTORING_ACTION_PLAN.md) - Structure improvements
-3. [**Archive Guide**](./8_archive/README.md) - Legacy document management
+2. [**Refactoring Documentation**](./0_refactoring/) - Structure improvement initiative ⭐
+3. [**Refactoring Plan**](./0_refactoring/REFACTORING_ACTION_PLAN.md) - 5-phase refactoring strategy
+4. [**Archive Guide**](./8_archive/README.md) - Legacy document management
+5. [**Archive Index**](./8_archive/ARCHIVE_INDEX.md) - Complete catalog of archived files
 
 ---
 
@@ -168,11 +170,11 @@ Start here for doc structure, versioning, and contribution guidelines:
 
 | Document | Purpose | Status |
 |----------|---------|--------|
-| [**ARCHIVE_INDEX.md**](./8_archive/ARCHIVE_INDEX.md) | Guide to archived files | Current |
-| [**README.md**](./8_archive/README.md) | Archive guidelines | Current |
-| [**Legacy Files** (33 files)](./8_archive/) | Historical context, deprecated guides | Deprecated |
+| [**ARCHIVE_INDEX.md**](./8_archive/ARCHIVE_INDEX.md) | Complete catalog of 34 archived files with deprecation details | ✅ Current |
+| [**README.md**](./8_archive/README.md) | Archive guidelines and usage policy | ✅ Current |
+| [**Legacy Files** (34 archived documents)](./8_archive/) | Historical context - refactoring summaries, legacy guides, README variants | 📦 Deprecated |
 
-> ⚠️ **Do NOT use archive for current development.** Archive is for historical reference only.
+> ⚠️ **Do NOT use archive for current development.** Archive is for historical reference only. Use [ARCHIVE_INDEX.md](./8_archive/ARCHIVE_INDEX.md)to find current replacement documents.
 
 ---
 
@@ -216,9 +218,10 @@ Start here for doc structure, versioning, and contribution guidelines:
 
 | Metric | Count | Status |
 |--------|-------|--------|
-| Active Documents | 35+ | ✅ Current |
-| Archived Documents | 27 | 📦 Legacy |
-| Sections | 8 | ✅ Organized |
+| Active Documents | 71+ | ✅ Current |
+| Archived Documents | 34 | 📦 Cataloged |
+| Sections | 9 (0-8) | ✅ Organized |
+| Section READMEs | 9/9 | ✅ Standardized |
 | Cross-References | 100+ | ✅ Verified |
 | Version Control | 1.0.0 | ✅ Aligned |
 | Last Updated | Dec 3, 2025 | ✅ Current |

@@ -1,5 +1,12 @@
 # Getting Started with IoT Bay
 
+**Version**: 1.0.0  
+**Last Updated**: December 3, 2025  
+**Status**: Published  
+**Audience**: Everyone (New Developers, Contributors, Stakeholders)
+
+---
+
 Welcome to the IoT Bay onboarding documentation. This section helps new team members understand the project, set up their environment, and start contributing quickly.
 
 **Expected reading time**: 20-30 minutes  
@@ -92,4 +99,7 @@ A: See [Contributing Guidelines](../4_development/CONTRIBUTING.md).
 
 ---
 
-**Last Updated**: December 3, 2025
+**Version**: 1.0.0  
+**Status**: Published  
+**Last Updated**: December 3, 2025  
+**Maintained By**: IoT Bay Documentation Team

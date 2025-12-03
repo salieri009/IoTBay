@@ -1,5 +1,12 @@
 # Architecture Overview
 
+**Version**: 1.0.0  
+**Last Updated**: December 3, 2025  
+**Status**: Published  
+**Audience**: Architects, Developers, Technical Leads
+
+---
+
 This section contains high-level system design documentation, including component organization, database schema, API design, and security architecture.
 
 ---
@@ -8,11 +15,14 @@ This section contains high-level system design documentation, including componen
 
 | Document | Purpose | Audience |
 |---|---|---|
-| [Component Architecture](./COMPONENT_ARCHITECTURE.md) | How UI components are organized and designed | Frontend devs, architects |
-| [Database Design](./DATABASE_DESIGN.md) | Database schema, tables, relationships | Backend devs, DBAs |
-| [Design System](./DESIGN_SYSTEM.md) | Visual design, colors, typography, components | Designers, frontend devs |
-| [API Design](./API_DESIGN.md) | API endpoints, request/response formats | Backend devs, frontend devs |
-| [Security Architecture](./SECURITY_ARCHITECTURE.md) | Authentication, authorization, security measures | Security team, backend devs |
+| [COMPONENT_ARCHITECTURE.md](./COMPONENT_ARCHITECTURE.md) | UI component organization and design patterns | Frontend devs, architects |
+| [COMPONENT_ARCHITECTURE.en_docs.md](./COMPONENT_ARCHITECTURE.en_docs.md) | Detailed multilingual component guide (1,162 lines) | Frontend devs, architects |
+| [DATABASE_DESIGN.md](./DATABASE_DESIGN.md) | Database schema, tables, relationships | Backend devs, DBAs |
+| [DATABASE_DESIGN.en_docs.md](./DATABASE_DESIGN.en_docs.md) | Extended database documentation | Backend devs, DBAs |
+| [DESIGN_SYSTEM.en_docs.md](./DESIGN_SYSTEM.en_docs.md) | Comprehensive design philosophy (1,069 lines) | Designers, frontend devs |
+| [MODERN_DESIGN_SYSTEM.en_docs.md](./MODERN_DESIGN_SYSTEM.en_docs.md) | CSS implementation guide (377 lines) | Frontend devs |
+
+> **Note**: `.en_docs.md` files contain multilingual content and specialized implementation details complementing the standard English-only versions.
 
 ---
 
