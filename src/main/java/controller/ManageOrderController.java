@@ -35,16 +35,16 @@ public class ManageOrderController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-    
+
         if (!isAdmin(request)) {
             utils.ErrorAction.handleAuthorizationError(request, response, "ManageOrderController.doGet");
             return;
         }
-    
+
         try {
             List<Order> orders = orderDAO.getAllOrders();
             request.setAttribute("orders", orders);
-            request.getRequestDispatcher("/manage-orders.jsp").forward(request, response);
+            request.getRequestDispatcher("/WEB-INF/views/manage-orders.jsp").forward(request, response);
         } catch (SQLException e) {
             utils.ErrorAction.handleDatabaseError(request, response, e, "ManageOrderController.doGet");
         } catch (Exception e) {
@@ -54,11 +54,13 @@ public class ManageOrderController extends HttpServlet {
 
     private boolean isAdmin(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        if (session == null) return false;
-        
+        if (session == null)
+            return false;
+
         Object userObj = session.getAttribute("user");
-        if (!(userObj instanceof User)) return false;
-        
+        if (!(userObj instanceof User))
+            return false;
+
         User user = (User) userObj;
         return "admin".equalsIgnoreCase(user.getRole()) || "staff".equalsIgnoreCase(user.getRole());
     }

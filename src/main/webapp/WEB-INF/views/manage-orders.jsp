@@ -1,114 +1,123 @@
-<jsp:body>
-    <!-- Page Header -->
-    <section class="py-12 bg-gradient-to-br from-blue-50 via-white to-purple-50">
-        <div class="container">
-            <div class="max-w-6xl mx-auto">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h1 class="text-display-lg text-neutral-900 mb-2">
-                            Manage <span
-                                class="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-brand-secondary">Orders</span>
-                        </h1>
-                        <p class="text-lg text-neutral-600">View and manage
-                            customer orders</p>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <jsp:include page="/components/atoms/button/button.jsp">
-                            <jsp:param name="text" value="Export Orders" />
-                            <jsp:param name="type" value="secondary" />
-                            <jsp:param name="href"
-                                value="${pageContext.request.contextPath}/api/dataManagement/exportOrders" />
-                        </jsp:include>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+        <%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
 
-    <!-- Orders Table -->
-    <section class="py-8">
-        <div class="container">
-            <div class="max-w-6xl mx-auto">
-                <div class="bg-white rounded-xl shadow-sm border border-neutral-200 overflow-hidden">
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left border-collapse">
-                            <thead>
-                                <tr class="bg-neutral-50 border-b border-neutral-200">
-                                    <th class="p-4 font-semibold text-neutral-700">
-                                        Order ID</th>
-                                    <th class="p-4 font-semibold text-neutral-700">
-                                        User ID</th>
-                                    <th class="p-4 font-semibold text-neutral-700">
-                                        Date</th>
-                                    <th class="p-4 font-semibold text-neutral-700">
-                                        Status</th>
-                                    <th class="p-4 font-semibold text-neutral-700">
-                                        Total</th>
-                                    <th class="p-4 font-semibold text-neutral-700">
-                                        Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-neutral-200">
-                                <c:forEach var="order" items="<%= orders %>">
-                                    <tr class="hover:bg-neutral-50 transition-colors">
-                                        <td class="p-4 font-medium text-neutral-900">
-                                            #${order.id}</td>
-                                        <td class="p-4 text-neutral-600">
-                                            ${order.userId}</td>
-                                        <td class="p-4 text-neutral-600">
-                                            ${order.orderDate}</td>
-                                        <td class="p-4">
-                                            <c:set var="badgeType" value="neutral" />
-                                            <c:choose>
-                                                <c:when test="${order.status == 'delivered'}">
-                                                    <c:set var="badgeType" value="success" />
-                                                </c:when>
-                                                <c:when test="${order.status == 'pending'}">
-                                                    <c:set var="badgeType" value="warning" />
-                                                </c:when>
-                                                <c:when test="${order.status == 'cancelled'}">
-                                                    <c:set var="badgeType" value="error" />
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <c:set var="badgeType" value="neutral" />
-                                                </c:otherwise>
-                                            </c:choose>
-                                            <jsp:include page="/components/atoms/badge/badge.jsp">
-                                                <jsp:param name="text" value="${order.status}" />
-                                                <jsp:param name="type" value="${badgeType}" />
-                                            </jsp:include>
-                                        </td>
-                                        <td class="p-4 font-medium text-neutral-900">
-                                            $${order.totalAmount}</td>
-                                        <td class="p-4">
-                                            <div class="flex items-center gap-2">
-                                                <jsp:include page="/components/atoms/button/button.jsp">
-                                                    <jsp:param name="text" value="View" />
-                                                    <jsp:param name="type" value="ghost" />
-                                                    <jsp:param name="size" value="small" />
-                                                </jsp:include>
-                                                <jsp:include page="/components/atoms/button/button.jsp">
-                                                    <jsp:param name="text" value="Edit" />
-                                                    <jsp:param name="type" value="ghost" />
-                                                    <jsp:param name="size" value="small" />
-                                                </jsp:include>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </c:forEach>
-                                <c:if test="${empty orders}">
-                                    <tr>
-                                        <td colspan="6" class="p-8 text-center text-neutral-500">
-                                            No orders found.
-                                        </td>
-                                    </tr>
-                                </c:if>
-                            </tbody>
-                        </table>
+            <t:base title="Manage Orders" description="View and manage customer orders">
+                <!-- Page Header -->
+                <section class="py-12 bg-gradient-to-br from-blue-50 via-white to-purple-50">
+                    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="max-w-6xl mx-auto">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h1 class="text-3xl font-bold text-neutral-900 mb-2">
+                                        Manage <span
+                                            class="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-brand-secondary">Orders</span>
+                                    </h1>
+                                    <p class="text-lg text-neutral-600">View and manage customer orders</p>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <a href="${pageContext.request.contextPath}/api/dataManagement/exportOrders"
+                                        class="inline-flex items-center px-4 py-2 border border-neutral-300 shadow-sm text-sm font-medium rounded-md text-neutral-700 bg-white hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary">
+                                        Export Orders
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </section>
-</jsp:body>
-</t:base>
+                </section>
+
+                <!-- Orders Table -->
+                <section class="py-8">
+                    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="max-w-6xl mx-auto">
+                            <div class="bg-white rounded-xl shadow-sm border border-neutral-200 overflow-hidden">
+                                <div class="overflow-x-auto">
+                                    <table class="min-w-full divide-y divide-neutral-200">
+                                        <thead class="bg-neutral-50">
+                                            <tr>
+                                                <th scope="col"
+                                                    class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                                    Order ID</th>
+                                                <th scope="col"
+                                                    class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                                    User ID</th>
+                                                <th scope="col"
+                                                    class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                                    Date</th>
+                                                <th scope="col"
+                                                    class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                                    Status</th>
+                                                <th scope="col"
+                                                    class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                                    Total</th>
+                                                <th scope="col"
+                                                    class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                                    Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="bg-white divide-y divide-neutral-200">
+                                            <c:choose>
+                                                <c:when test="${not empty orders}">
+                                                    <c:forEach var="order" items="${orders}">
+                                                        <tr class="hover:bg-neutral-50 transition-colors">
+                                                            <td
+                                                                class="px-6 py-4 whitespace-nowrap text-sm font-medium text-neutral-900">
+                                                                #
+                                                                <c:out value="${order.id}" />
+                                                            </td>
+                                                            <td
+                                                                class="px-6 py-4 whitespace-nowrap text-sm text-neutral-500">
+                                                                <c:out value="${order.userId}" />
+                                                            </td>
+                                                            <td
+                                                                class="px-6 py-4 whitespace-nowrap text-sm text-neutral-500">
+                                                                <c:out value="${order.orderDate}" />
+                                                            </td>
+                                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                                        <c:choose>
+                                                            <c:when test=" ${order.status=='delivered' }">bg-green-100
+                                                                    text-green-800
+                                                </c:when>
+                                                <c:when test="${order.status == 'pending'}">bg-yellow-100
+                                                    text-yellow-800</c:when>
+                                                <c:when test="${order.status == 'cancelled'}">bg-red-100 text-red-800
+                                                </c:when>
+                                                <c:otherwise>bg-gray-100 text-gray-800</c:otherwise>
+                                            </c:choose>">
+                                            <c:out value="${order.status}" />
+                                            </span>
+                                            </td>
+                                            <td
+                                                class="px-6 py-4 whitespace-nowrap text-sm font-medium text-neutral-900">
+                                                $
+                                                <c:out value="${order.totalAmount}" />
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                <div class="flex items-center gap-2">
+                                                    <a href="#"
+                                                        class="text-brand-primary hover:text-brand-secondary">View</a>
+                                                    <a href="#"
+                                                        class="text-brand-primary hover:text-brand-secondary">Edit</a>
+                                                </div>
+                                            </td>
+                                            </tr>
+                                            </c:forEach>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <tr>
+                                                    <td colspan="6"
+                                                        class="px-6 py-12 text-center text-sm text-neutral-500">
+                                                        No orders found.
+                                                    </td>
+                                                </tr>
+                                            </c:otherwise>
+                                            </c:choose>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </t:base>

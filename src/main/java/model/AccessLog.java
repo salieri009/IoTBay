@@ -70,7 +70,9 @@ public class AccessLog implements Serializable {
     }
 
     public String getFormattedTimestamp() {
-        return timestamp.toString();
+        if (timestamp == null)
+            return "";
+        return timestamp.format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
     @Override
