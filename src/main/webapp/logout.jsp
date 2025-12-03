@@ -1,11 +1,11 @@
 <%@ page import="javax.servlet.http.*, java.time.LocalDateTime" %>
-<%@ page import="dao.AccessLogDAOImpl, dao.interfaces.AccessLogDAO, db.DBConnection, model.AccessLog, model.User" %>
+<%@ page import="dao.AccessLogDAOImpl, dao.interfaces.AccessLogDAO, config.DIContainer, model.AccessLog, model.User" %>
 <%
     User user = (User) session.getAttribute("user");
 
     if (user != null) {
         try {
-            java.sql.Connection conn = db.DBConnection.getConnection();
+            java.sql.Connection conn = config.DIContainer.getConnection();
             AccessLogDAO accessLogDAO = new AccessLogDAOImpl(conn);
             AccessLog log = new AccessLog(
                 0,
