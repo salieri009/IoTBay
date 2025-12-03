@@ -20,3 +20,12 @@
 ## ðŸŽ¨ Design System Alignment
 - **Atomic Design**: Strictly follow the Atom -> Molecule -> Organism hierarchy.
 - **Variables**: Use CSS variables for colors, spacing, and typography to ensure consistency across the application.
+
+
+---
+
+**Document Version**: 1.0.0
+**Status**: Published
+**Last Updated**: 12¿ù 3, 2025
+**Audience**: Developers, Stakeholders
+**Maintained By**: IoT Bay Documentation Team

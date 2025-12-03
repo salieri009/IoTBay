@@ -380,3 +380,12 @@ IoTBay/
 ## 라이선스
 
 이 프로젝트는 **UTS 41025 Introduction to Software Development - Assignment 2 Autumn 2025**의 일부로 **학술적 목적**을 위해 개발되었습니다. 모든 코드와 문서는 교육용으로만 사용됩니다.
+
+
+---
+
+**Document Version**: 1.0.0
+**Status**: Published
+**Last Updated**: 12�� 3, 2025
+**Audience**: Developers, Stakeholders
+**Maintained By**: IoT Bay Documentation Team

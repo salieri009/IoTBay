@@ -1159,3 +1159,12 @@ export const AllSizes: Story = {
 ---
 
 이 컴포넌트 아키텍처는 확장성, 재사용성, 유지보수성을 핵심으로 하여 IoTBay 프로젝트의 장기적인 성장을 지원합니다. 각 컴포넌트는 명확한 책임을 가지며, 타입 안전성과 성능 최적화를 통해 안정적인 사용자 경험을 제공합니다.
+
+
+---
+
+**Document Version**: 1.0.0
+**Status**: Published
+**Last Updated**: 12�� 3, 2025
+**Audience**: Developers, Stakeholders
+**Maintained By**: IoT Bay Documentation Team

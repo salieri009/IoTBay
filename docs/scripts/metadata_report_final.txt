@@ -1,0 +1,42 @@
+﻿Starting metadata audit in: D:\UTS\IoTBayPersonnel\IoTBay\docs
+----------------------------------------
+MISSING METADATA: API_DESIGN.md
+  Missing: Version
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\2_architecture\API_DESIGN.md
+
+MISSING METADATA: DESIGN_SYSTEM.md
+  Missing: Version
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\2_architecture\DESIGN_SYSTEM.md
+
+MISSING METADATA: SECURITY_ARCHITECTURE.md
+  Missing: Version
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\2_architecture\SECURITY_ARCHITECTURE.md
+
+MISSING METADATA: ACCESSIBILITY_TESTING.md
+  Missing: Version
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\5_testing\ACCESSIBILITY_TESTING.md
+
+MISSING METADATA: E2E_TESTING.md
+  Missing: Version
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\5_testing\E2E_TESTING.md
+
+MISSING METADATA: INTEGRATION_TESTING.md
+  Missing: Version
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\5_testing\INTEGRATION_TESTING.md
+
+MISSING METADATA: UNIT_TESTING.md
+  Missing: Version
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\5_testing\UNIT_TESTING.md
+
+MISSING METADATA: PROJECT_ROADMAP.md
+  Missing: Version
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\6_planning\PROJECT_ROADMAP.md
+
+MISSING METADATA: TYPESCRIPT_MIGRATION.md
+  Missing: Version
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\6_planning\migration-guides\TYPESCRIPT_MIGRATION.md
+
+----------------------------------------
+Audit Complete.
+Files Checked: 121
+Files with Issues: 9

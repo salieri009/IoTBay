@@ -455,3 +455,9 @@ The new structure provides **clear paths for onboarding** different user roles, 
 ---
 
 **Master Navigation**: [IoT Bay Documentation Hub](./README.md)
+
+
+---
+
+**Document Version**: 1.0.0
+**Maintained By**: IoT Bay Documentation Team

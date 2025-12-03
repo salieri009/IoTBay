@@ -283,3 +283,11 @@ src/main/webapp/
 **Quick Ref Version**: 1.0.0
 
 🔗 **[Back to Main Docs](./README.md)**
+
+
+---
+
+**Document Version**: 1.0.0
+**Status**: Published
+**Audience**: Developers, Stakeholders
+**Maintained By**: IoT Bay Documentation Team

@@ -35,3 +35,12 @@ The `checkout.jsp` page has been refactored to remove legacy Java scriptlets and
 ## Next Steps
 - Verify the "Place Order" functionality ensures the `CheckoutController` processes the form data correctly.
 - Continue refactoring other pages (e.g., `profile.jsp`, `order-list.jsp`) to remove scriptlets.
+
+
+---
+
+**Document Version**: 1.0.0
+**Status**: Published
+**Last Updated**: 12¿ù 3, 2025
+**Audience**: Developers, Stakeholders
+**Maintained By**: IoT Bay Documentation Team

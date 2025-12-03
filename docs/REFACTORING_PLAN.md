@@ -271,3 +271,12 @@ Each document will be reviewed for:
 2. Do you want to version documentation alongside software releases?
 3. Should archived documents be deleted or kept for reference?
 4. Any specific tools or automation desired for documentation management?
+
+
+---
+
+**Document Version**: 1.0.0
+**Status**: Published
+**Last Updated**: 12¿ù 3, 2025
+**Audience**: Developers, Stakeholders
+**Maintained By**: IoT Bay Documentation Team

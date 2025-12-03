@@ -1612,3 +1612,10 @@
 **Document Maintained By**: Development Team  
 **For Questions**: Refer to `README.md` and `designplan/UI_UXdoc.md`  
 **Assignment Reference**: `design plan/41025 ISD Assignment 2 Autumn 2025.pdf`
+
+
+---
+
+**Status**: Published
+**Audience**: Developers, Stakeholders
+**Maintained By**: IoT Bay Documentation Team

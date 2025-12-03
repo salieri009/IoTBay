@@ -75,3 +75,12 @@ Update cadence:
 **Maintainer**: IoTBay Documentation Team  
 **Last reorganised**: 2025-?? (see git history for precise timestamp)
 
+
+
+---
+
+**Document Version**: 1.0.0
+**Status**: Published
+**Last Updated**: 12¿ù 3, 2025
+**Audience**: Developers, Stakeholders
+**Maintained By**: IoT Bay Documentation Team

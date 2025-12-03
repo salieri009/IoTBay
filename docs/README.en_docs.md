@@ -380,3 +380,12 @@ Currently using **DAO Stubs** for development. To use a real database:
 ## License
 
 This project is developed for **academic purposes** as part of **UTS 41025 Introduction to Software Development - Assignment 2 Autumn 2025**. All code and documentation are intended for educational use only.
+
+
+---
+
+**Document Version**: 1.0.0
+**Status**: Published
+**Last Updated**: 12¿ù 3, 2025
+**Audience**: Developers, Stakeholders
+**Maintained By**: IoT Bay Documentation Team

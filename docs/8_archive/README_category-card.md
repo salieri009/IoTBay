@@ -24,3 +24,12 @@ A card component used to display product categories on the homepage or category 
 | iconTextClass | String | Tailwind class for icon text color |
 | iconSvgPath | String | The SVG path data for the icon |
 | subItems | String | Comma-separated list of sub-categories |
+
+
+---
+
+**Document Version**: 1.0.0
+**Status**: Published
+**Last Updated**: 12¿ù 3, 2025
+**Audience**: Developers, Stakeholders
+**Maintained By**: IoT Bay Documentation Team

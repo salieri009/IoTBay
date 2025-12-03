@@ -1,0 +1,135 @@
+﻿Starting link verification in: D:\UTS\IoTBayPersonnel\IoTBay\docs
+----------------------------------------
+BROKEN LINK: README.md
+  Link: ./i18n/
+  Resolved: D:\UTS\IoTBayPersonnel\IoTBay\docs\.\i18n\
+
+BROKEN LINK: README.md
+  Link: ./3_requirements/acceptance-criteria/01_USER_MANAGEMENT.md
+  Resolved: D:\UTS\IoTBayPersonnel\IoTBay\docs\.\3_requirements\acceptance-criteria\01_USER_MANAGEMENT.md
+
+BROKEN LINK: README.md
+  Link: ./3_requirements/acceptance-criteria/02_PRODUCT_CATALOG.md
+  Resolved: D:\UTS\IoTBayPersonnel\IoTBay\docs\.\3_requirements\acceptance-criteria\02_PRODUCT_CATALOG.md
+
+BROKEN LINK: README.md
+  Link: ./3_requirements/acceptance-criteria/03_ECOMMERCE.md
+  Resolved: D:\UTS\IoTBayPersonnel\IoTBay\docs\.\3_requirements\acceptance-criteria\03_ECOMMERCE.md
+
+BROKEN LINK: README.md
+  Link: ./3_requirements/acceptance-criteria/04_REVIEWS_RATINGS.md
+  Resolved: D:\UTS\IoTBayPersonnel\IoTBay\docs\.\3_requirements\acceptance-criteria\04_REVIEWS_RATINGS.md
+
+BROKEN LINK: README.md
+  Link: ./3_requirements/acceptance-criteria/05_ADMIN_FEATURES.md
+  Resolved: D:\UTS\IoTBayPersonnel\IoTBay\docs\.\3_requirements\acceptance-criteria\05_ADMIN_FEATURES.md
+
+BROKEN LINK: REFACTORING_COMPLETION_REPORT.md
+  Link: ./docs/1_getting-started/README.md
+  Resolved: D:\UTS\IoTBayPersonnel\IoTBay\docs\.\docs\1_getting-started\README.md
+
+BROKEN LINK: TESTING_GUIDE.md
+  Link: ./3_requirements/acceptance-criteria/01_USER_MANAGEMENT.md
+  Resolved: D:\UTS\IoTBayPersonnel\IoTBay\docs\.\3_requirements\acceptance-criteria\01_USER_MANAGEMENT.md
+
+BROKEN LINK: TESTING_GUIDE.md
+  Link: ./3_requirements/acceptance-criteria/02_PRODUCT_CATALOG.md
+  Resolved: D:\UTS\IoTBayPersonnel\IoTBay\docs\.\3_requirements\acceptance-criteria\02_PRODUCT_CATALOG.md
+
+BROKEN LINK: TESTING_GUIDE.md
+  Link: ./3_requirements/acceptance-criteria/03_ECOMMERCE.md
+  Resolved: D:\UTS\IoTBayPersonnel\IoTBay\docs\.\3_requirements\acceptance-criteria\03_ECOMMERCE.md
+
+BROKEN LINK: TESTING_GUIDE.md
+  Link: ./3_requirements/acceptance-criteria/05_ADMIN_FEATURES.md
+  Resolved: D:\UTS\IoTBayPersonnel\IoTBay\docs\.\3_requirements\acceptance-criteria\05_ADMIN_FEATURES.md
+
+BROKEN LINK: TESTING_GUIDE.md
+  Link: ./3_requirements/acceptance-criteria/03_ECOMMERCE.md
+  Resolved: D:\UTS\IoTBayPersonnel\IoTBay\docs\.\3_requirements\acceptance-criteria\03_ECOMMERCE.md
+
+BROKEN LINK: PHASE_1_SUMMARY.md
+  Link: ./NEW_DEVELOPER_GUIDE.md
+  Resolved: D:\UTS\IoTBayPersonnel\IoTBay\docs\0_refactoring\.\NEW_DEVELOPER_GUIDE.md
+
+BROKEN LINK: PHASE_1_SUMMARY.md
+  Link: ./ARCHITECTURE_GUIDE.md
+  Resolved: D:\UTS\IoTBayPersonnel\IoTBay\docs\0_refactoring\.\ARCHITECTURE_GUIDE.md
+
+BROKEN LINK: PHASE_1_SUMMARY.md
+  Link: ./TESTING_GUIDE.md
+  Resolved: D:\UTS\IoTBayPersonnel\IoTBay\docs\0_refactoring\.\TESTING_GUIDE.md
+
+BROKEN LINK: PHASE_1_SUMMARY.md
+  Link: ./INDEX.md
+  Resolved: D:\UTS\IoTBayPersonnel\IoTBay\docs\0_refactoring\.\INDEX.md
+
+BROKEN LINK: REFACTORING_ACTION_PLAN.md
+  Link: ../path/to/DOCUMENT.md
+  Resolved: D:\UTS\IoTBayPersonnel\IoTBay\docs\0_refactoring\..\path\to\DOCUMENT.md
+
+BROKEN LINK: PROJECT_OVERVIEW.md
+  Link: ../5_testing/TEST_DATA.md
+  Resolved: D:\UTS\IoTBayPersonnel\IoTBay\docs\1_getting-started\..\5_testing\TEST_DATA.md
+
+BROKEN LINK: PROJECT_OVERVIEW.md
+  Link: ../7_reports/PROJECT_STATUS.md
+  Resolved: D:\UTS\IoTBayPersonnel\IoTBay\docs\1_getting-started\..\7_reports\PROJECT_STATUS.md
+
+BROKEN LINK: README.md
+  Link: ../7_reports/PROJECT_STATUS.md
+  Resolved: D:\UTS\IoTBayPersonnel\IoTBay\docs\1_getting-started\..\7_reports\PROJECT_STATUS.md
+
+BROKEN LINK: API_REFERENCE.md
+  Link: ./BACKEND_GUIDE.md
+  Resolved: D:\UTS\IoTBayPersonnel\IoTBay\docs\3_requirements\.\BACKEND_GUIDE.md
+
+BROKEN LINK: README_docs.md
+  Link: README.ja.md
+  Resolved: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\README.ja.md
+
+BROKEN LINK: README_docs.md
+  Link: design%20plan/DESIGN_SYSTEM.md
+  Resolved: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\design%20plan\DESIGN_SYSTEM.md
+
+BROKEN LINK: README_docs.md
+  Link: designplan/UI_UXdoc.md
+  Resolved: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\designplan\UI_UXdoc.md
+
+BROKEN LINK: README_docs.md
+  Link: design%20plan/COMPONENT_ARCHITECTURE.md
+  Resolved: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\design%20plan\COMPONENT_ARCHITECTURE.md
+
+BROKEN LINK: README_docs.md
+  Link: design%20plan/FEATURES.md
+  Resolved: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\design%20plan\FEATURES.md
+
+BROKEN LINK: README_docs.md
+  Link: README.en.md
+  Resolved: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\README.en.md
+
+BROKEN LINK: README_docs.md
+  Link: designplan/UI_UXdoc.md
+  Resolved: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\designplan\UI_UXdoc.md
+
+BROKEN LINK: README_docs.md
+  Link: design%20plan/DESIGN_SYSTEM.md
+  Resolved: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\design%20plan\DESIGN_SYSTEM.md
+
+BROKEN LINK: README_docs.md
+  Link: design%20plan/COMPONENT_ARCHITECTURE.md
+  Resolved: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\design%20plan\COMPONENT_ARCHITECTURE.md
+
+BROKEN LINK: README_docs.md
+  Link: design%20plan/DEVELOPER_DOCUMENTATION.md
+  Resolved: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\design%20plan\DEVELOPER_DOCUMENTATION.md
+
+BROKEN LINK: README_docs.md
+  Link: design%20plan/FEATURES.md
+  Resolved: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\design%20plan\FEATURES.md
+
+----------------------------------------
+Verification Complete.
+Files Checked: 128
+Links Checked: 734
+Broken Links:  32

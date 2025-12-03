@@ -21,3 +21,11 @@ We will introduce three GitHub Actions workflows to automate core lifecycle task
 - Trigger: manual `workflow_dispatch` + tag on `release/*`
 - Jobs: reuse CI build â†’ build artifact (WAR) â†’ upload to GitHub Releases or push to server via SCP (placeholder secrets `DEPLOY_HOST`, `DEPLOY_USER`, `DEPLOY_KEY`)
 - Includes environment approvals (production)
+
+---
+
+**Document Version**: 1.0.0
+**Status**: Published
+**Last Updated**: 12¿ù 3, 2025
+**Audience**: Developers, Stakeholders
+**Maintained By**: IoT Bay Documentation Team

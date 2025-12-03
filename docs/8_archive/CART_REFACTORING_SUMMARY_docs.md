@@ -33,3 +33,12 @@ The Shopping Cart page (`cart.jsp`) and its dependencies have been refactored to
 ## Next Steps
 - Refactor `checkout.jsp` to complete the purchase flow.
 - Review `profile.jsp` and `order-list.jsp`.
+
+
+---
+
+**Document Version**: 1.0.0
+**Status**: Published
+**Last Updated**: 12¿ù 3, 2025
+**Audience**: Developers, Stakeholders
+**Maintained By**: IoT Bay Documentation Team

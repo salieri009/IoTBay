@@ -41,3 +41,12 @@ This document details the refactoring of the User Profile section, specifically 
 ## Next Steps
 - Verify the `updateProfile` servlet (or controller) correctly handles the form submissions from these new pages.
 - Ensure the `User` object in the session/request has the expected getters (e.g., `getPaymentMethod`) as assumed by the EL expressions.
+
+
+---
+
+**Document Version**: 1.0.0
+**Status**: Published
+**Last Updated**: 12¿ù 3, 2025
+**Audience**: Developers, Stakeholders
+**Maintained By**: IoT Bay Documentation Team

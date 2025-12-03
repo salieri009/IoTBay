@@ -159,3 +159,12 @@ git config --global commit.template .gitmessage
 
 If you have questions about contributing, please open an issue or contact the maintainers.
 
+
+
+---
+
+**Document Version**: 1.0.0
+**Status**: Published
+**Last Updated**: 12¿ù 3, 2025
+**Audience**: Developers, Stakeholders
+**Maintained By**: IoT Bay Documentation Team

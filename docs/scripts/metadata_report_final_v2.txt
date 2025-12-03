@@ -1,0 +1,6 @@
+﻿Starting metadata audit in: D:\UTS\IoTBayPersonnel\IoTBay\docs
+----------------------------------------
+----------------------------------------
+Audit Complete.
+Files Checked: 126
+Files with Issues: 0

@@ -560,3 +560,12 @@ CREATE INDEX idx_products_fts ON products USING gin(to_tsvector('english', name 
 ```
 
 이 데이터베이스 설계는 확장성, 성능, 보안을 고려하여 IoTBay 플랫폼의 모든 요구사항을 충족할 수 있도록 구성되었습니다.
+
+
+---
+
+**Document Version**: 1.0.0
+**Status**: Published
+**Last Updated**: 12�� 3, 2025
+**Audience**: Developers, Stakeholders
+**Maintained By**: IoT Bay Documentation Team

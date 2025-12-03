@@ -30,3 +30,12 @@ Basic building blocks that cannot be broken down further.
 3. Use design system tokens only
 4. Document all parameters
 
+
+
+---
+
+**Document Version**: 1.0.0
+**Status**: Published
+**Last Updated**: 12¿ù 3, 2025
+**Audience**: Developers, Stakeholders
+**Maintained By**: IoT Bay Documentation Team

@@ -146,3 +146,10 @@ All documentation is part of the IoT Bay project (UTS 41025 ISD Assignment 2).
 **Last Updated**: December 3, 2025  
 **Documentation Version**: 1.0.0  
 **Status**: Active
+
+
+---
+
+**Document Version**: 1.0.0
+**Audience**: Developers, Stakeholders
+**Maintained By**: IoT Bay Documentation Team

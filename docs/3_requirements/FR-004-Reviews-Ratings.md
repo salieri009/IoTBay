@@ -170,3 +170,9 @@ Product Reviews & Ratings features enable customers to share their experiences w
 
 **End of FR-004: Product Reviews & Ratings Features**
 
+
+
+---
+
+**Audience**: Developers, Stakeholders
+**Maintained By**: IoT Bay Documentation Team

@@ -275,3 +275,11 @@ This document reviews the IoTBay webapp against Nielsen's 10 Usability Heuristic
 4. Add recently viewed products feature
 5. Conduct user testing to validate improvements
 
+
+
+---
+
+**Document Version**: 1.0.0
+**Last Updated**: 12¿ù 3, 2025
+**Audience**: Developers, Stakeholders
+**Maintained By**: IoT Bay Documentation Team

@@ -9,3 +9,12 @@
 | **Expected Result** | HTTP 200 with valid JSON schema, correct pagination metadata |
 | **Notes** | Reference `API_DOCUMENTATION.en.md` section 4 and `DATABASE_DESIGN.en.md` entity `Product` |
 
+
+
+---
+
+**Document Version**: 1.0.0
+**Status**: Published
+**Last Updated**: 12¿ù 3, 2025
+**Audience**: Developers, Stakeholders
+**Maintained By**: IoT Bay Documentation Team

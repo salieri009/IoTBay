@@ -37,3 +37,12 @@ This document summarizes the refactoring of the authentication pages (`login.jsp
 - Verify that the `RegisterServlet` correctly handles the new form fields (if any names changed).
 - Ensure `main.js` is compatible with the new form structure.
 - Consider moving the inline JavaScript in `register.jsp` to a dedicated external file or a custom tag.
+
+
+---
+
+**Document Version**: 1.0.0
+**Status**: Published
+**Last Updated**: 12¿ù 3, 2025
+**Audience**: Developers, Stakeholders
+**Maintained By**: IoT Bay Documentation Team

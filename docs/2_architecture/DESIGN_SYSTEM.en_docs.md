@@ -1066,3 +1066,12 @@ IoTBay는 **미래지향적이고 직관적인 IoT 생태계**를 위한 디자�
 ---
 
 이 디자인 시스템은 IoTBay의 브랜드 정체성을 일관되게 유지하면서도 사용자 경험을 최적화하고, 개발자의 생산성을 향상시키는 것을 목표로 합니다. 모든 컴포넌트는 접근성, 반응형 디자인, 성능을 고려하여 설계되었습니다.
+
+
+---
+
+**Document Version**: 1.0.0
+**Status**: Published
+**Last Updated**: 12�� 3, 2025
+**Audience**: Developers, Stakeholders
+**Maintained By**: IoT Bay Documentation Team

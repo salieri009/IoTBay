@@ -375,3 +375,10 @@ webapp/
 - Daily: 2–3 pages full pass + Page Notes update.
 - Twice weekly: cross-page consistency audits.
 - Final week: a11y/perf spot fixes, dark-mode sweep, doc refresh.
+
+---
+
+**Document Version**: 1.0.0
+**Status**: Published
+**Audience**: Developers, Stakeholders
+**Maintained By**: IoT Bay Documentation Team

@@ -312,3 +312,9 @@ Administrative Features provide comprehensive management interfaces for system a
 
 **End of FR-005: Administrative Features**
 
+
+
+---
+
+**Audience**: Developers, Stakeholders
+**Maintained By**: IoT Bay Documentation Team

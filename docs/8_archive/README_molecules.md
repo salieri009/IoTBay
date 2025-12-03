@@ -28,3 +28,12 @@ Simple combinations of atoms that form functional units.
 3. Can depend on atoms only
 4. Document dependencies
 
+
+
+---
+
+**Document Version**: 1.0.0
+**Status**: Published
+**Last Updated**: 12¿ù 3, 2025
+**Audience**: Developers, Stakeholders
+**Maintained By**: IoT Bay Documentation Team

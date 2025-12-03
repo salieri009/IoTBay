@@ -443,3 +443,12 @@ action=add&name=새 센서&description=새로운 IoT 센서&price=50000&category
 API 버전은 URL 경로에 포함됩니다:
 - `v1`: 현재 안정 버전
 - `v2`: 베타 버전 (향후 지원)
+
+
+---
+
+**Document Version**: 1.0.0
+**Status**: Published
+**Last Updated**: 12�� 3, 2025
+**Audience**: Developers, Stakeholders
+**Maintained By**: IoT Bay Documentation Team

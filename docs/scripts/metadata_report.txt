@@ -1,0 +1,442 @@
+﻿Starting metadata audit in: D:\UTS\IoTBayPersonnel\IoTBay\docs
+----------------------------------------
+MISSING METADATA: ARCHITECTURE_GUIDE.md
+  Missing: Version
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\ARCHITECTURE_GUIDE.md
+
+MISSING METADATA: NEW_DEVELOPER_GUIDE.md
+  Missing: Version
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\NEW_DEVELOPER_GUIDE.md
+
+MISSING METADATA: QUICK_REFERENCE.md
+  Missing: Version, Status, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\QUICK_REFERENCE.md
+
+MISSING METADATA: README.en_docs.md
+  Missing: Version, Status, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\README.en_docs.md
+
+MISSING METADATA: README.ja_docs.md
+  Missing: Version, Status, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\README.ja_docs.md
+
+MISSING METADATA: README.ko_docs.md
+  Missing: Version, Status, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\README.ko_docs.md
+
+MISSING METADATA: README.md
+  Missing: Version, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\README.md
+
+MISSING METADATA: REFACTORING_COMPLETION_REPORT.md
+  Missing: Version, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\REFACTORING_COMPLETION_REPORT.md
+
+MISSING METADATA: REFACTORING_PLAN.md
+  Missing: Version, Status, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\REFACTORING_PLAN.md
+
+MISSING METADATA: TESTING_GUIDE.md
+  Missing: Version
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\TESTING_GUIDE.md
+
+MISSING METADATA: PHASE_1_SUMMARY.md
+  Missing: Version, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\0_refactoring\PHASE_1_SUMMARY.md
+
+MISSING METADATA: README.md
+  Missing: Version
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\0_refactoring\README.md
+
+MISSING METADATA: PROJECT_OVERVIEW.md
+  Missing: Version, Status, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\1_getting-started\PROJECT_OVERVIEW.md
+
+MISSING METADATA: QUICKSTART.md
+  Missing: Version, Status, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\1_getting-started\QUICKSTART.md
+
+MISSING METADATA: README.md
+  Missing: Version
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\1_getting-started\README.md
+
+MISSING METADATA: SETUP_GUIDE.md
+  Missing: Version, Status, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\1_getting-started\SETUP_GUIDE.md
+
+MISSING METADATA: TECH_STACK.md
+  Missing: Version, Status, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\1_getting-started\TECH_STACK.md
+
+MISSING METADATA: COMPONENT_ARCHITECTURE.en_docs.md
+  Missing: Version, Status, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\2_architecture\COMPONENT_ARCHITECTURE.en_docs.md
+
+MISSING METADATA: COMPONENT_ARCHITECTURE.md
+  Missing: Version, Status, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\2_architecture\COMPONENT_ARCHITECTURE.md
+
+MISSING METADATA: DATABASE_DESIGN.en_docs.md
+  Missing: Version, Status, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\2_architecture\DATABASE_DESIGN.en_docs.md
+
+MISSING METADATA: DATABASE_DESIGN.md
+  Missing: Version, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\2_architecture\DATABASE_DESIGN.md
+
+MISSING METADATA: DESIGN_SYSTEM.en_docs.md
+  Missing: Version, Status, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\2_architecture\DESIGN_SYSTEM.en_docs.md
+
+MISSING METADATA: MODERN_DESIGN_SYSTEM.en_docs.md
+  Missing: Version, Status, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\2_architecture\MODERN_DESIGN_SYSTEM.en_docs.md
+
+MISSING METADATA: README.md
+  Missing: Version, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\2_architecture\README.md
+
+MISSING METADATA: API_REFERENCE.md
+  Missing: Version, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\3_requirements\API_REFERENCE.md
+
+MISSING METADATA: FEATURES.en_docs.md
+  Missing: Status, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\3_requirements\FEATURES.en_docs.md
+
+MISSING METADATA: FEATURES.md
+  Missing: Version, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\3_requirements\FEATURES.md
+
+MISSING METADATA: FR-001-User-Management.md
+  Missing: Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\3_requirements\FR-001-User-Management.md
+
+MISSING METADATA: FR-002-Product-Catalog.md
+  Missing: Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\3_requirements\FR-002-Product-Catalog.md
+
+MISSING METADATA: FR-003-E-commerce.md
+  Missing: Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\3_requirements\FR-003-E-commerce.md
+
+MISSING METADATA: FR-004-Reviews-Ratings.md
+  Missing: Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\3_requirements\FR-004-Reviews-Ratings.md
+
+MISSING METADATA: FR-005-Administrative-Features.md
+  Missing: Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\3_requirements\FR-005-Administrative-Features.md
+
+MISSING METADATA: FR-006-Data-Management.md
+  Missing: Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\3_requirements\FR-006-Data-Management.md
+
+MISSING METADATA: FR-007-Security-Features.md
+  Missing: Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\3_requirements\FR-007-Security-Features.md
+
+MISSING METADATA: FR-008-UI-UX-Features.md
+  Missing: Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\3_requirements\FR-008-UI-UX-Features.md
+
+MISSING METADATA: README.md
+  Missing: Version
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\3_requirements\README.md
+
+MISSING METADATA: USER_STORIES.md
+  Missing: Version, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\3_requirements\USER_STORIES.md
+
+MISSING METADATA: UX_SCENARIOS_ADMINISTRATIVE.md
+  Missing: Version, Status, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\3_requirements\UX_SCENARIOS_ADMINISTRATIVE.md
+
+MISSING METADATA: UX_SCENARIOS_ECOMMERCE.md
+  Missing: Version, Status, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\3_requirements\UX_SCENARIOS_ECOMMERCE.md
+
+MISSING METADATA: UX_SCENARIOS_PRODUCT_CATALOG.md
+  Missing: Version, Status, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\3_requirements\UX_SCENARIOS_PRODUCT_CATALOG.md
+
+MISSING METADATA: UX_SCENARIOS_REVIEWS_RATINGS.md
+  Missing: Version, Status, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\3_requirements\UX_SCENARIOS_REVIEWS_RATINGS.md
+
+MISSING METADATA: UX_SCENARIOS_USER_MANAGEMENT.md
+  Missing: Version, Status, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\3_requirements\UX_SCENARIOS_USER_MANAGEMENT.md
+
+MISSING METADATA: API_DOCUMENTATION.en_docs.md
+  Missing: Version, Status, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\4_development\API_DOCUMENTATION.en_docs.md
+
+MISSING METADATA: BACKEND_GUIDE.md
+  Missing: Version, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\4_development\BACKEND_GUIDE.md
+
+MISSING METADATA: CODE_STYLE.md
+  Missing: Version, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\4_development\CODE_STYLE.md
+
+MISSING METADATA: COLOR_REFACTORING_GUIDE.en_docs.md
+  Missing: Version, Status, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\4_development\COLOR_REFACTORING_GUIDE.en_docs.md
+
+MISSING METADATA: CONTRIBUTING.md
+  Missing: Version, Status, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\4_development\CONTRIBUTING.md
+
+MISSING METADATA: FRONTEND_GUIDE.md
+  Missing: Version, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\4_development\FRONTEND_GUIDE.md
+
+MISSING METADATA: GIT_WORKFLOW.md
+  Missing: Version, Status, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\4_development\GIT_WORKFLOW.md
+
+MISSING METADATA: JSP_DEVELOPER_DOCUMENTATION.en_docs.md
+  Missing: Version, Status, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\4_development\JSP_DEVELOPER_DOCUMENTATION.en_docs.md
+
+MISSING METADATA: README.md
+  Missing: Version
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\4_development\README.md
+
+MISSING METADATA: TYPESCRIPT_MIGRATION.md
+  Missing: Version, Status, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\4_development\TYPESCRIPT_MIGRATION.md
+
+MISSING METADATA: UI_UX_DOCUMENTATION.en_docs.md
+  Missing: Status
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\4_development\UI_UX_DOCUMENTATION.en_docs.md
+
+MISSING METADATA: 403_404_ERROR_PREVENTION_CHECKLIST.md
+  Missing: Version, Status, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\5_testing\403_404_ERROR_PREVENTION_CHECKLIST.md
+
+MISSING METADATA: 500_ERROR_PREVENTION_CHECKLIST.md
+  Missing: Version, Status, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\5_testing\500_ERROR_PREVENTION_CHECKLIST.md
+
+MISSING METADATA: ACCESSIBILITY_AUDIT_SUMMARY_docs.md
+  Missing: Version, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\5_testing\ACCESSIBILITY_AUDIT_SUMMARY_docs.md
+
+MISSING METADATA: ERROR_PREVENTION.md
+  Missing: Version, Status, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\5_testing\ERROR_PREVENTION.md
+
+MISSING METADATA: NIELSEN_HEURISTICS_IMPROVEMENTS.md
+  Missing: Version, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\5_testing\NIELSEN_HEURISTICS_IMPROVEMENTS.md
+
+MISSING METADATA: NIELSEN_HEURISTICS_REVIEW.md
+  Missing: Version, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\5_testing\NIELSEN_HEURISTICS_REVIEW.md
+
+MISSING METADATA: README.md
+  Missing: Version
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\5_testing\README.md
+
+MISSING METADATA: TEST_STRATEGY.md
+  Missing: Version, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\5_testing\TEST_STRATEGY.md
+
+MISSING METADATA: ATOMIC_DESIGN_IMPLEMENTATION_PLAN.en_docs.md
+  Missing: Version, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\6_planning\ATOMIC_DESIGN_IMPLEMENTATION_PLAN.en_docs.md
+
+MISSING METADATA: ATOMIC_DESIGN_MIGRATION_GUIDE.en_docs.md
+  Missing: Version, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\6_planning\ATOMIC_DESIGN_MIGRATION_GUIDE.en_docs.md
+
+MISSING METADATA: automation-2624465c.plan_docs.md
+  Missing: Version, Status, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\6_planning\automation-2624465c.plan_docs.md
+
+MISSING METADATA: FRONTEND_REFACTORING_PLAN_docs.md
+  Missing: Version, Status, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\6_planning\FRONTEND_REFACTORING_PLAN_docs.md
+
+MISSING METADATA: README.md
+  Missing: Version
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\6_planning\README.md
+
+MISSING METADATA: UX_IMPROVEMENT_PLAN.en_docs.md
+  Missing: Status, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\6_planning\UX_IMPROVEMENT_PLAN.en_docs.md
+
+MISSING METADATA: UX_UI_REVIEW_AND_EXECUTION_PLAN_docs.md
+  Missing: Version, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\6_planning\UX_UI_REVIEW_AND_EXECUTION_PLAN_docs.md
+
+MISSING METADATA: 2025-11-20_issue-summary.md
+  Missing: Version, Status, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\7_reports\2025-11-20_issue-summary.md
+
+MISSING METADATA: ATOMIC_COMPONENTS_CSS_REVIEW.en_docs.md
+  Missing: Version, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\7_reports\ATOMIC_COMPONENTS_CSS_REVIEW.en_docs.md
+
+MISSING METADATA: ATOMIC_DESIGN_REVIEW_docs.md
+  Missing: Version, Status, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\7_reports\ATOMIC_DESIGN_REVIEW_docs.md
+
+MISSING METADATA: CSS_REVIEW_REPORT.en_docs.md
+  Missing: Version, Status, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\7_reports\CSS_REVIEW_REPORT.en_docs.md
+
+MISSING METADATA: FOOTER_EXPERT_REVIEW_docs.md
+  Missing: Version, Status, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\7_reports\FOOTER_EXPERT_REVIEW_docs.md
+
+MISSING METADATA: FRONTEND_REVIEW_REPORT.en_docs.md
+  Missing: Version, Status, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\7_reports\FRONTEND_REVIEW_REPORT.en_docs.md
+
+MISSING METADATA: README.md
+  Missing: Version
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\7_reports\README.md
+
+MISSING METADATA: 41025_ISD_TEST02_architecture_docs.md
+  Missing: Version, Status, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\41025_ISD_TEST02_architecture_docs.md
+
+MISSING METADATA: ATOMIC_DESIGN_ARCHITECTURE.en_docs.md
+  Missing: Version, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\ATOMIC_DESIGN_ARCHITECTURE.en_docs.md
+
+MISSING METADATA: ATOMIC_DESIGN_EXECUTION_SUMMARY.en_docs.md
+  Missing: Version, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\ATOMIC_DESIGN_EXECUTION_SUMMARY.en_docs.md
+
+MISSING METADATA: AUTH_REFACTORING_SUMMARY_docs.md
+  Missing: Version, Status, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\AUTH_REFACTORING_SUMMARY_docs.md
+
+MISSING METADATA: BACKEND_ALIGNMENT_SUMMARY.en_docs.md
+  Missing: Version, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\BACKEND_ALIGNMENT_SUMMARY.en_docs.md
+
+MISSING METADATA: CART_REFACTORING_SUMMARY_docs.md
+  Missing: Version, Status, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\CART_REFACTORING_SUMMARY_docs.md
+
+MISSING METADATA: CHECKOUT_REFACTORING_SUMMARY_docs.md
+  Missing: Version, Status, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\CHECKOUT_REFACTORING_SUMMARY_docs.md
+
+MISSING METADATA: CLEANUP_SUMMARY.en_docs.md
+  Missing: Version, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\CLEANUP_SUMMARY.en_docs.md
+
+MISSING METADATA: CONTRIBUTING_legacy.md
+  Missing: Version, Status, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\CONTRIBUTING_legacy.md
+
+MISSING METADATA: DEDUPLICATION_SUMMARY.en_docs.md
+  Missing: Version, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\DEDUPLICATION_SUMMARY.en_docs.md
+
+MISSING METADATA: DEVELOPER_DOCUMENTATION_legacy.md
+  Missing: Version, Status, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\DEVELOPER_DOCUMENTATION_legacy.md
+
+MISSING METADATA: DIRECTORY_STRUCTURE_REVIEW_docs.md
+  Missing: Version, Status, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\DIRECTORY_STRUCTURE_REVIEW_docs.md
+
+MISSING METADATA: FRONTEND_REFACTORING_COMPLETE.en_docs.md
+  Missing: Version, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\FRONTEND_REFACTORING_COMPLETE.en_docs.md
+
+MISSING METADATA: FRONTEND_REFACTORING_EXECUTION.en_docs.md
+  Missing: Version, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\FRONTEND_REFACTORING_EXECUTION.en_docs.md
+
+MISSING METADATA: FRONTEND_REFACTORING_SESSION_SUMMARY.en_docs.md
+  Missing: Version, Status, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\FRONTEND_REFACTORING_SESSION_SUMMARY.en_docs.md
+
+MISSING METADATA: FRONTEND_REFACTORING_SUMMARY_docs.md
+  Missing: Version, Status, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\FRONTEND_REFACTORING_SUMMARY_docs.md
+
+MISSING METADATA: GIT_WORKFLOW_legacy.md
+  Missing: Version, Status, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\GIT_WORKFLOW_legacy.md
+
+MISSING METADATA: HEADER_FOOTER_FIX_SUMMARY_docs.md
+  Missing: Version, Status, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\HEADER_FOOTER_FIX_SUMMARY_docs.md
+
+MISSING METADATA: MIGRATION_COMPLETE.en_docs.md
+  Missing: Version, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\MIGRATION_COMPLETE.en_docs.md
+
+MISSING METADATA: PROFILE_REFACTORING_SUMMARY_docs.md
+  Missing: Version, Status, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\PROFILE_REFACTORING_SUMMARY_docs.md
+
+MISSING METADATA: progress_docs.md
+  Missing: Version, Status, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\progress_docs.md
+
+MISSING METADATA: README.md
+  Missing: Version
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\README.md
+
+MISSING METADATA: README_atoms.md
+  Missing: Version, Status, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\README_atoms.md
+
+MISSING METADATA: README_category-card.md
+  Missing: Version, Status, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\README_category-card.md
+
+MISSING METADATA: README_design plan_docs.md
+  Missing: Version, Status, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\README_design plan_docs.md
+
+MISSING METADATA: README_docs.md
+  Missing: Version, Status, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\README_docs.md
+
+MISSING METADATA: README_en_docs.md
+  Missing: Version, Status, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\README_en_docs.md
+
+MISSING METADATA: README_molecules.md
+  Missing: Version, Status, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\README_molecules.md
+
+MISSING METADATA: README_old_xml_docs.md
+  Missing: Version, Status, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\README_old_xml_docs.md
+
+MISSING METADATA: README_organisms.md
+  Missing: Version, Status, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\README_organisms.md
+
+MISSING METADATA: README_templates.md
+  Missing: Version, Status, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\README_templates.md
+
+MISSING METADATA: README_workflows_docs.md
+  Missing: Version, Status, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\README_workflows_docs.md
+
+MISSING METADATA: REFACTORING_EXECUTION_SUMMARY.en_3_execution_docs.md
+  Missing: Version, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\REFACTORING_EXECUTION_SUMMARY.en_3_execution_docs.md
+
+MISSING METADATA: REFACTORING_EXECUTION_SUMMARY.en_docs.md
+  Missing: Version, Status, Last Updated, Maintained By
+  Path: D:\UTS\IoTBayPersonnel\IoTBay\docs\8_archive\REFACTORING_EXECUTION_SUMMARY.en_docs.md
+
+----------------------------------------
+Audit Complete.
+Files Checked: 112
+Files with Issues: 109

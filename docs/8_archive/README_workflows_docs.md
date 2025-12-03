@@ -225,3 +225,11 @@ Add to your README.md:
 
 **Last Updated**: 2025
 
+
+
+---
+
+**Document Version**: 1.0.0
+**Status**: Published
+**Audience**: Developers, Stakeholders
+**Maintained By**: IoT Bay Documentation Team

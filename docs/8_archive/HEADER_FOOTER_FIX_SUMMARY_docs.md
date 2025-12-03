@@ -38,3 +38,12 @@ Addressed layout alignment issues in the footer and rendering bugs in the header
 - **Footer**: Should now be centered with a max-width of `80rem` (7xl).
 - **Header**: Should render "Home", "Products", "About" correctly instead of `${text}`.
 - **Layout**: Header and Footer now use consistent Tailwind container patterns.
+
+
+---
+
+**Document Version**: 1.0.0
+**Status**: Published
+**Last Updated**: 12¿ù 3, 2025
+**Audience**: Developers, Stakeholders
+**Maintained By**: IoT Bay Documentation Team

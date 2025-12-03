@@ -19,3 +19,12 @@ en/
 
 **Naming rule**: English files end with `.en.md`. If you add a document, place it in the correct folder and update this table.
 
+
+
+---
+
+**Document Version**: 1.0.0
+**Status**: Published
+**Last Updated**: 12¿ù 3, 2025
+**Audience**: Developers, Stakeholders
+**Maintained By**: IoT Bay Documentation Team

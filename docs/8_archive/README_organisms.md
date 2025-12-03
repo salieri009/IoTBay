@@ -25,3 +25,12 @@ Complex UI sections composed of molecules and atoms.
 3. May include JavaScript
 4. Represent major page sections
 
+
+
+---
+
+**Document Version**: 1.0.0
+**Status**: Published
+**Last Updated**: 12¿ù 3, 2025
+**Audience**: Developers, Stakeholders
+**Maintained By**: IoT Bay Documentation Team

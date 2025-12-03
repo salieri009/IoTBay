@@ -351,3 +351,12 @@ This project is developed for **academic purposes** as part of **UTS 41025 Intro
 [![UTS](https://img.shields.io/badge/UTS-41025-blue)](https://coursehandbook.uts.edu.au/subject/2026/41025)
 
 </div>
+
+
+---
+
+**Document Version**: 1.0.0
+**Status**: Published
+**Last Updated**: 12¿ù 3, 2025
+**Audience**: Developers, Stakeholders
+**Maintained By**: IoT Bay Documentation Team

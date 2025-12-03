@@ -589,3 +589,12 @@ main (production)
 ---
 
 *This documentation serves as the comprehensive guide for developers working on the IoTBay e-commerce platform. It should be updated regularly as the system evolves and new features are added.*
+
+
+---
+
+**Document Version**: 1.0.0
+**Status**: Published
+**Last Updated**: 12¿ù 3, 2025
+**Audience**: Developers, Stakeholders
+**Maintained By**: IoT Bay Documentation Team

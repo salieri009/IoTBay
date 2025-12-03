@@ -210,3 +210,9 @@ UI/UX Features provide a modern, responsive, and accessible user interface with 
 
 **End of FR-008: UI/UX Features**
 
+
+
+---
+
+**Audience**: Developers, Stakeholders
+**Maintained By**: IoT Bay Documentation Team

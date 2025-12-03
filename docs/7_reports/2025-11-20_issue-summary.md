@@ -56,3 +56,12 @@
 - 추가적인 세부 로그, SQL 스크립트 반영 순서, 마이그레이션 플로우 등은 `docs/development/`와 `docs/architecture/` 하위 문서를 참고하세요.  
 - 새로운 이슈가 발견되면 동일한 `문제-해결-결과-도메인` 구조로 레코드를 추가해 지식 자산화할 예정입니다.
 
+
+
+---
+
+**Document Version**: 1.0.0
+**Status**: Published
+**Last Updated**: 12�� 3, 2025
+**Audience**: Developers, Stakeholders
+**Maintained By**: IoT Bay Documentation Team

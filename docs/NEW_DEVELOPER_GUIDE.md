@@ -208,3 +208,8 @@ For more details, see [Documentation Index](./INDEX.md) or [TABLE_OF_CONTENTS](.
 **Status**: Published  
 **Maintained By**: IoT Bay Team  
 **Last Updated**: December 3, 2025
+
+
+---
+
+**Document Version**: 1.0.0
