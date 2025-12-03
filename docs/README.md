@@ -5,7 +5,22 @@
 **Project**: IoT Bay E-commerce Platform  
 **Course**: 41025 Information Systems Development (ISD)  
 **Institution**: University of Technology Sydney (UTS)  
-**Current Version**: 1.0.0
+**Current Version**: 1.0.0  
+**Documentation Version**: 1.0.0  
+**Last Updated**: December 3, 2025
+
+---
+
+## 📍 Start Here
+
+**New to the project?** Choose your role below:
+
+- 👨‍💻 **Developer** → [New Developer Guide](./NEW_DEVELOPER_GUIDE.md) (15 min) ⭐
+- 🏗️ **Architect** → [Architecture Guide](./ARCHITECTURE_GUIDE.md) (complete overview)
+- 🧪 **QA/Tester** → [Testing Guide](./TESTING_GUIDE.md) (test reference)
+- 📋 **Project Manager** → [Project Overview](./1_getting-started/PROJECT_OVERVIEW.md)
+
+**Want the complete index?** → [**Full Documentation Index**](./INDEX.md) ✨
 
 ---
 
