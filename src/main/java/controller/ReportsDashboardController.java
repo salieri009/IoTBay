@@ -28,33 +28,29 @@ public class ReportsDashboardController extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        try {
-            Connection connection = DIContainer.getConnection();
-            this.userDAO = new UserDAOImpl(connection);
-            this.productDAO = new ProductDAOImpl(connection);
-            this.orderDAO = new OrderDAOImpl(connection);
-        } catch (SQLException | ClassNotFoundException e) {
-            throw new ServletException("Failed to initialize database connection", e);
-        }
+        Connection connection = DIContainer.getConnection();
+        this.userDAO = new UserDAOImpl(connection);
+        this.productDAO = new ProductDAOImpl(connection);
+        this.orderDAO = new OrderDAOImpl(connection);
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         // Authorization check
         HttpSession session = request.getSession(false);
         if (session == null) {
             response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
-        
+
         Object userObj = session.getAttribute("user");
         if (!(userObj instanceof User)) {
             response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
-        
+
         User user = (User) userObj;
         if (!"staff".equalsIgnoreCase(user.getRole()) && !"admin".equalsIgnoreCase(user.getRole())) {
             utils.ErrorAction.handleAuthorizationError(request, response, "ReportsDashboardController.doGet");
@@ -66,9 +62,10 @@ public class ReportsDashboardController extends HttpServlet {
             int totalUsers = userDAO.getTotalUserCount();
             int totalProducts = productDAO.getTotalProductCount();
             int totalOrders = orderDAO.getTotalOrderCount();
-            
+
             // Calculate revenue (sum of all order totals)
-            // Note: This is a simplified calculation. In a real system, you'd have a dedicated method
+            // Note: This is a simplified calculation. In a real system, you'd have a
+            // dedicated method
             double totalRevenue = 0.0;
             try {
                 // Get all orders and sum their totals
@@ -82,16 +79,16 @@ public class ReportsDashboardController extends HttpServlet {
                 // If calculation fails, use 0
                 totalRevenue = 0.0;
             }
-            
+
             // Set attributes for JSP
             request.setAttribute("totalUsers", totalUsers);
             request.setAttribute("totalProducts", totalProducts);
             request.setAttribute("totalOrders", totalOrders);
             request.setAttribute("totalRevenue", totalRevenue);
-            
+
             // Forward to JSP
-            request.getRequestDispatcher("/reports-dashboard.jsp").forward(request, response);
-            
+            request.getRequestDispatcher("/WEB-INF/views/reports-dashboard.jsp").forward(request, response);
+
         } catch (SQLException e) {
             utils.ErrorAction.handleDatabaseError(request, response, e, "ReportsDashboardController.doGet");
         } catch (Exception e) {
@@ -99,4 +96,3 @@ public class ReportsDashboardController extends HttpServlet {
         }
     }
 }
-

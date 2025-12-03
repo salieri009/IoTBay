@@ -34,13 +34,9 @@ public class PaymentController extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        try {
-            Connection conn = DIContainer.getConnection();
-            paymentDAO = new PaymentDAO(conn);
-            paymentDetailDAO = new PaymentDetailDAO(conn);
-        } catch (SQLException | ClassNotFoundException e) {
-            throw new ServletException("DB init failed", e);
-        }
+        Connection conn = DIContainer.getConnection();
+        paymentDAO = new PaymentDAO(conn);
+        paymentDetailDAO = new PaymentDetailDAO(conn);
     }
 
     @Override

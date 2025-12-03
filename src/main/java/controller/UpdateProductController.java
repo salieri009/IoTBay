@@ -23,12 +23,8 @@ public class UpdateProductController extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        try {
-            Connection connection = DIContainer.getConnection();
-            productDAO = new ProductDAOImpl(connection);
-        } catch (SQLException | ClassNotFoundException e) {
-            throw new ServletException("Failed to connect to database", e);
-        }
+        Connection connection = DIContainer.getConnection();
+        productDAO = new ProductDAOImpl(connection);
     }
 
     @Override

@@ -24,12 +24,8 @@ public class UpdateUserController extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        try {
-            Connection connection = DIContainer.getConnection();
-            userDAO = new UserDAOImpl(connection);
-        } catch (SQLException | ClassNotFoundException e) {
-            throw new ServletException("Failed to connect to database", e);
-        }
+        Connection connection = DIContainer.getConnection();
+        userDAO = new UserDAOImpl(connection);
     }
 
     @Override

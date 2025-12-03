@@ -25,7 +25,7 @@ public class DIContainer {
     private static Connection connection;
     private static volatile boolean initialized = false;
     private static final Object lock = new Object();
-    
+
     private static void ensureInitialized() {
         if (!initialized) {
             synchronized (lock) {
@@ -33,7 +33,7 @@ public class DIContainer {
                     try {
                         // Initialize database (create tables and seed test data)
                         utils.DatabaseInitializer.initialize();
-                        
+
                         connection = DBConnection.getConnection();
                         initializeDAOs();
                         initialized = true;
@@ -44,7 +44,7 @@ public class DIContainer {
             }
         }
     }
-    
+
     private static void initializeDAOs() throws SQLException {
         // DAO 인스턴스들을 한 번만 생성하여 재사용 (Singleton 패턴)
         register(UserDAO.class, new UserDAOImpl(connection));
@@ -53,19 +53,30 @@ public class DIContainer {
         register(OrderDAO.class, new OrderDAOImpl(connection));
         register(CartItemDAO.class, new CartItemDAOImpl(connection));
     }
-    
+
     @SuppressWarnings("unchecked")
     public static <T> T get(Class<T> clazz) {
         ensureInitialized();
         return (T) instances.get(clazz);
     }
-    
+
     public static <T> void register(Class<T> clazz, T instance) {
         instances.put(clazz, instance);
     }
-    
+
     public static Connection getConnection() {
         ensureInitialized();
+        try {
+            if (connection == null || connection.isClosed()) {
+                synchronized (lock) {
+                    if (connection == null || connection.isClosed()) {
+                        connection = DBConnection.getConnection();
+                    }
+                }
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            throw new RuntimeException("Failed to refresh database connection", e);
+        }
         return connection;
     }
 }

@@ -19,6 +19,7 @@ import config.DIContainer;
 import model.Order;
 import model.User;
 import service.OrderService;
+import config.DIContainer;
 
 // Note: Mapped in web.xml to avoid conflicts
 public class OrderHistoryController extends HttpServlet {
@@ -27,14 +28,10 @@ public class OrderHistoryController extends HttpServlet {
     private final Gson gson = new Gson();
 
     @Override
-    public void init() {
-        try {
-            Connection connection = DBConnection.getConnection();
-            orderDAO = new OrderDAO(connection);
-            orderService = new OrderService(orderDAO);
-        } catch (SQLException | ClassNotFoundException e) {
-            throw new RuntimeException("Failed to initialize database connection", e);
-        }
+    public void init() throws ServletException {
+        Connection connection = DIContainer.getConnection();
+        orderDAO = new OrderDAO(connection);
+        orderService = new OrderService(orderDAO);
     }
 
     @Override

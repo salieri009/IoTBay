@@ -54,9 +54,9 @@ public class DataManagementController extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         String pathInfo = request.getPathInfo();
         if (pathInfo == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -112,24 +112,24 @@ public class DataManagementController extends HttpServlet {
         }
     }
 
-    private void exportUsers(HttpServletRequest request, HttpServletResponse response) 
+    private void exportUsers(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {
         List<User> users = userDAO.getAllUsers();
         String csvContent = CSVUtil.generateUserCSV(users);
-        
+
         response.setContentType("text/csv");
         response.setHeader("Content-Disposition", "attachment; filename=\"users_export.csv\"");
-        
+
         try (PrintWriter out = response.getWriter()) {
             out.write(csvContent);
         }
     }
 
-    private void exportAccessLogs(HttpServletRequest request, HttpServletResponse response) 
+    private void exportAccessLogs(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {
         String startDateStr = request.getParameter("startDate");
         String endDateStr = request.getParameter("endDate");
-        
+
         List<AccessLog> accessLogs;
         if (startDateStr != null && endDateStr != null) {
             try {
@@ -143,54 +143,54 @@ public class DataManagementController extends HttpServlet {
         } else {
             accessLogs = accessLogDAO.getAllAccessLogs();
         }
-        
+
         String csvContent = CSVUtil.generateAccessLogCSV(accessLogs);
-        
+
         response.setContentType("text/csv");
         response.setHeader("Content-Disposition", "attachment; filename=\"access_logs_export.csv\"");
-        
+
         try (PrintWriter out = response.getWriter()) {
             out.write(csvContent);
         }
     }
 
-    private void exportOrders(HttpServletRequest request, HttpServletResponse response) 
+    private void exportOrders(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {
         List<Order> orders = orderDAO.getAllOrders();
         String csvContent = CSVUtil.generateOrderCSV(orders);
-        
+
         response.setContentType("text/csv");
         response.setHeader("Content-Disposition", "attachment; filename=\"orders_export.csv\"");
-        
+
         try (PrintWriter out = response.getWriter()) {
             out.write(csvContent);
         }
     }
 
-    private void exportProducts(HttpServletRequest request, HttpServletResponse response) 
+    private void exportProducts(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {
         List<Product> products = productDAO.getAllProducts();
         String csvContent = CSVUtil.generateProductCSV(products);
-        
+
         response.setContentType("text/csv");
         response.setHeader("Content-Disposition", "attachment; filename=\"products_export.csv\"");
-        
+
         try (PrintWriter out = response.getWriter()) {
             out.write(csvContent);
         }
     }
 
-    private void showDashboard(HttpServletRequest request, HttpServletResponse response) 
+    private void showDashboard(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
         // Get dashboard statistics
         int totalUsers = userDAO.getTotalUserCount();
         int totalOrders = orderDAO.getTotalOrderCount();
         int totalProducts = productDAO.getTotalProductCount();
-        
+
         request.setAttribute("totalUsers", totalUsers);
         request.setAttribute("totalOrders", totalOrders);
         request.setAttribute("totalProducts", totalProducts);
-        
-        request.getRequestDispatcher("/data-management.jsp").forward(request, response);
+
+        request.getRequestDispatcher("/WEB-INF/views/data-management.jsp").forward(request, response);
     }
 }

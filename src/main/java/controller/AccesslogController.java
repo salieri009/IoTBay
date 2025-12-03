@@ -34,13 +34,8 @@ public class AccesslogController extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        try {
-            Connection connection = DBConnection.getConnection();
-            this.accessLogDAO = new AccessLogDAOImpl(connection);
-        } catch (ClassNotFoundException | SQLException e) {
-            logger.log(Level.SEVERE, "Database connection failed in AccesslogController.init()", e);
-            throw new ServletException("Database connection failed.", e);
-        }
+        Connection connection = DIContainer.getConnection();
+        this.accessLogDAO = new AccessLogDAOImpl(connection);
     }
 
     @Override
