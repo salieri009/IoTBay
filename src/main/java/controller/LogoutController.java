@@ -25,9 +25,9 @@ public class LogoutController extends HttpServlet {
     @Override
     public void init() {
         try {
-            Connection connection = DBConnection.getConnection();
+            Connection connection = DIContainer.getConnection();
             accessLogDAO = new AccessLogDAOImpl(connection);
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (Exception e) {
             throw new RuntimeException("Failed to initialize database connection", e);
         }
     }

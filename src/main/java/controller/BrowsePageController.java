@@ -29,7 +29,7 @@ public class BrowsePageController extends HttpServlet {
         try {
             Connection connection = DIContainer.getConnection();
             productDAO = new ProductDAOImpl(connection);
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (Exception e) {
             throw new ServletException("Failed to initialize database connection", e);
         }
     }
@@ -69,7 +69,7 @@ public class BrowsePageController extends HttpServlet {
                 categoryName = categoryParam.trim();
                 // Try to find category by name
                 try {
-                    dao.CategoryDAO categoryDAO = new dao.CategoryDAO(DBConnection.getConnection());
+                    dao.CategoryDAO categoryDAO = new dao.CategoryDAO(DIContainer.getConnection());
                     model.Category category = categoryDAO.getCategoryByName(categoryName);
                     if (category != null) {
                         categoryId = category.getId();

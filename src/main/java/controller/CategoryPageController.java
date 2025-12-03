@@ -37,7 +37,7 @@ public class CategoryPageController extends HttpServlet {
             Connection connection = DIContainer.getConnection();
             categoryDAO = new CategoryDAO(connection);
             this.productDAO = new ProductDAOImpl(connection);
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (Exception e) {
             throw new ServletException("Failed to initialize database connection", e);
         }
     }

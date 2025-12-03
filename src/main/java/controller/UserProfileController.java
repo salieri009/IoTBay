@@ -67,7 +67,6 @@ public class UserProfileController extends HttpServlet {
             request.getRequestDispatcher("/error.jsp").forward(request, response);
         } catch (Exception e) {
             System.err.println("Error loading profile: " + e.getMessage());
-            e.printStackTrace();
             request.setAttribute("errorMessage", "Failed to load profile: " + e.getMessage());
             request.getRequestDispatcher("/error.jsp").forward(request, response);
         }

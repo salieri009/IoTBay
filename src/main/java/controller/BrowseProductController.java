@@ -31,7 +31,7 @@ public class BrowseProductController extends HttpServlet {
             Connection connection = DIContainer.getConnection();
             productDAO = new ProductDAOImpl(connection);
             categoryDAO = new CategoryDAO(connection);
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (Exception e) {
             throw new RuntimeException("Failed to initialize database connection", e);
         }
     }

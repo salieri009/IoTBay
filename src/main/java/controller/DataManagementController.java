@@ -48,8 +48,6 @@ public class DataManagementController extends HttpServlet {
             this.userDAO = new UserDAOImpl(connection);
             this.orderDAO = new OrderDAOImpl(connection);
             this.productDAO = new ProductDAOImpl(connection);
-        } catch (SQLException e) {
-            throw new ServletException("Failed to initialize database connection", e);
         } catch (Exception e) {
             throw new ServletException("Failed to initialize DataManagementController", e);
         }

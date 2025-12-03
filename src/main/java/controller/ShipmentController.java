@@ -1,23 +1,5 @@
 package controller;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-
-import dao.ShipmentDAO;
-import dao.OrderDAOImpl;
-import dao.interfaces.OrderDAO;
-import config.DIContainer;
-import model.Shipment;
-import model.Order;
-import model.User;
-import utils.InputValidator;
-
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -26,6 +8,25 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
+import config.DIContainer;
+import dao.OrderDAOImpl;
+import dao.ShipmentDAO;
+import dao.interfaces.OrderDAO;
+import model.Order;
+import model.Shipment;
+import model.User;
+import utils.InputValidator;
 
 @WebServlet("/shipment/*")
 public class ShipmentController extends HttpServlet {

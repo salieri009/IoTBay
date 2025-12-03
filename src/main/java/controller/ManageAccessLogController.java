@@ -27,7 +27,7 @@ public class ManageAccessLogController extends HttpServlet {
         try {
             Connection connection = DIContainer.getConnection();
             accessLogDAO = new AccessLogDAOImpl(connection);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new ServletException("Failed to initialize database connection", e);
         }
     }

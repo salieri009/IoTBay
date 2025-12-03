@@ -42,7 +42,7 @@ public class AdminDashboardController extends HttpServlet {
             this.productDAO = new ProductDAOImpl(connection);
             this.orderDAO = new OrderDAOImpl(connection);
             this.supplierDAO = new SupplierDAOImpl(connection);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new ServletException("Failed to initialize database connection", e);
         }
     }

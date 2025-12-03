@@ -21,7 +21,7 @@ public class DeleteUserController extends HttpServlet {
         try {
             Connection connection = DIContainer.getConnection();
             userDAO = new UserDAOImpl(connection);
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (Exception e) {
             throw new RuntimeException("Failed to initialize database connection", e);
         }
     }

@@ -349,7 +349,6 @@ public class CartController extends HttpServlet {
                     itemCount = cartItemDAO.getCartItemCount(userId);
                 } catch (Exception e) {
                     System.err.println("Error loading cart: " + e.getMessage());
-                    e.printStackTrace();
                     // Continue with empty cart
                     cartItems = Collections.emptyList();
                     cartTotal = BigDecimal.ZERO;
@@ -363,7 +362,6 @@ public class CartController extends HttpServlet {
             request.getRequestDispatcher("/cart.jsp").forward(request, response);
         } catch (NullPointerException e) {
             System.err.println("Null pointer error in cart page: " + e.getMessage());
-            e.printStackTrace();
             // Set safe defaults and continue
             request.setAttribute("cartItems", Collections.emptyList());
             request.setAttribute("cartTotal", BigDecimal.ZERO);
@@ -371,7 +369,6 @@ public class CartController extends HttpServlet {
             request.getRequestDispatcher("/cart.jsp").forward(request, response);
         } catch (Exception e) {
             System.err.println("Unexpected error in cart page: " + e.getMessage());
-            e.printStackTrace();
             request.setAttribute("errorMessage", "Unable to load cart: " + e.getMessage());
             request.getRequestDispatcher("/error.jsp").forward(request, response);
         }

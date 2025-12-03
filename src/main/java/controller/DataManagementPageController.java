@@ -33,7 +33,7 @@ public class DataManagementPageController extends HttpServlet {
             this.userDAO = new UserDAOImpl(connection);
             this.productDAO = new ProductDAOImpl(connection);
             this.orderDAO = new OrderDAOImpl(connection);
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (Exception e) {
             throw new ServletException("Failed to initialize database connection", e);
         }
     }

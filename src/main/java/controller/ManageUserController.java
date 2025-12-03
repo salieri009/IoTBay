@@ -28,7 +28,7 @@ public class ManageUserController extends HttpServlet {
         try {
             Connection connection = DIContainer.getConnection();
             userDAO = new UserDAOImpl(connection);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new ServletException("Failed to initialize database connection", e);
         }
     }

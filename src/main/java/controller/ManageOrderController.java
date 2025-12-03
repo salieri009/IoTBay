@@ -27,7 +27,7 @@ public class ManageOrderController extends HttpServlet {
         try {
             Connection connection = DIContainer.getConnection();
             orderDAO = new OrderDAOImpl(connection);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             throw new ServletException("Failed to initialize database connection", e);
         }
     }

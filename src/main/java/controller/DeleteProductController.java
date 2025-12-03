@@ -24,7 +24,7 @@ public class DeleteProductController extends HttpServlet {
         try {
             Connection connection = DIContainer.getConnection();
             productDAO = new ProductDAOImpl(connection);
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (Exception e) {
             throw new RuntimeException("Failed to initialize database connection", e);
         }
     }

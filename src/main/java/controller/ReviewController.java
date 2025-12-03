@@ -1,15 +1,9 @@
 package controller;
 
-import dao.ReviewDAO;
-import dao.ProductDAOImpl;
-import dao.interfaces.ProductDAO;
-import config.DIContainer;
-import model.Review;
-import model.Product;
-import model.User;
-import service.ReviewService;
-import utils.InputValidator;
-import utils.ValidationUtil;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,13 +11,19 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.List;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+
+import config.DIContainer;
+import dao.ProductDAOImpl;
+import dao.ReviewDAO;
+import dao.interfaces.ProductDAO;
+import model.Product;
+import model.Review;
+import model.User;
+import service.ReviewService;
+import utils.ValidationUtil;
 
 @WebServlet("/review/*")
 public class ReviewController extends HttpServlet {
