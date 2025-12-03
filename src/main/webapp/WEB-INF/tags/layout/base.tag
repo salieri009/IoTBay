@@ -21,6 +21,36 @@
     <!-- Modern Favicons -->
     <link rel="icon" type="image/svg+xml" href="<c:url value='/images/favicon.svg' />">
     <link rel="icon" type="image/x-icon" href="<c:url value='/favicon.ico' />">
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            primary: '#2563eb',
+                            secondary: '#7c3aed',
+                        },
+                        neutral: {
+                            50: '#f9fafb',
+                            100: '#f3f4f6',
+                            200: '#e5e7eb',
+                            300: '#d1d5db',
+                            400: '#9ca3af',
+                            500: '#6b7280',
+                            600: '#4b5563',
+                            700: '#374151',
+                            800: '#1f2937',
+                            900: '#111827',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
     <link rel="stylesheet" href="<c:url value='/css/style.css?v=20251120' />">
 
     <c:if test="${customCSS != null}">

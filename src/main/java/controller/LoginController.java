@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,7 +19,7 @@ import service.UserService;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
-// Note: Mapped in web.xml to avoid conflicts
+@WebServlet("/api/login")
 public class LoginController extends HttpServlet {
     private AccessLogDAO accessLogDAO;
     private UserService userService;
@@ -29,13 +30,13 @@ public class LoginController extends HttpServlet {
         try {
             // Use DIContainer for dependency injection
             accessLogDAO = DIContainer.get(AccessLogDAO.class);
-            
+
             // Fallback if DIContainer not available
             if (accessLogDAO == null) {
                 java.sql.Connection connection = DIContainer.getConnection();
                 accessLogDAO = new dao.AccessLogDAOImpl(connection);
             }
-            
+
             // Initialize UserService (uses DIContainer internally)
             userService = new UserService();
         } catch (Exception e) {
@@ -47,46 +48,47 @@ public class LoginController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            // Debug: Log all parameters (using getParameter for logging only, before validation)
+            // Debug: Log all parameters (using getParameter for logging only, before
+            // validation)
             String emailParam = request.getParameter("email");
             String passwordParam = request.getParameter("password");
             String csrfTokenParam = request.getParameter("csrfToken");
-            logger.log(Level.FINE, "Login attempt - Parameters: email=" + emailParam + 
+            logger.log(Level.FINE, "Login attempt - Parameters: email=" + emailParam +
                     ", password=" + (passwordParam != null ? "***" : "null") +
                     ", csrfToken=" + csrfTokenParam);
-            
+
             // CSRF protection
             if (!utils.SecurityUtil.validateCSRFToken(request)) {
                 logger.log(Level.WARNING, "CSRF validation failed for login attempt");
                 utils.ErrorAction.handleValidationError(request, response,
-                    "Invalid security token. Please refresh the page and try again.", "LoginController.doPost");
+                        "Invalid security token. Please refresh the page and try again.", "LoginController.doPost");
                 return;
             }
-            
+
             // Validate parameters using SecurityUtil
             String email = utils.SecurityUtil.getValidatedStringParameter(request, "email", 100);
             String password = utils.SecurityUtil.getValidatedStringParameter(request, "password", 255);
-            
+
             if (email == null || password == null) {
                 logger.log(Level.WARNING, "Login attempt with empty credentials");
                 utils.ErrorAction.handleMissingParameterError(request, response,
-                    "Email and password are required", "LoginController.doPost");
+                        "Email and password are required", "LoginController.doPost");
                 return;
             }
-            
+
             // Normalize email casing for comparison
             email = email.toLowerCase();
-            
+
             // Validate email format
             if (!utils.SecurityUtil.isValidEmail(email)) {
                 utils.ErrorAction.handleValidationError(request, response,
-                    "Invalid login credentials", "LoginController.doPost");
+                        "Invalid login credentials", "LoginController.doPost");
                 return;
             }
-            
+
             // Generic error message to prevent user enumeration
             String genericError = "Invalid login credentials";
-            
+
             // Use UserService for authentication (handles password verification)
             User user;
             try {
@@ -104,68 +106,70 @@ public class LoginController extends HttpServlet {
                 return;
             }
 
-
             // =================Check if the user is active ======================
 
             // 2. Account locked (too many failed attempts)
             // if (user.isLocked()) {
-            //     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            //     response.getWriter().write("{\"message\": \"Your account is locked due to too many failed login attempts. Please reset your password or contact support.\"}");
-            //     return;
+            // response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            // response.getWriter().write("{\"message\": \"Your account is locked due to too
+            // many failed login attempts. Please reset your password or contact
+            // support.\"}");
+            // return;
             // }
 
             // // 3. Account inactive or suspended
             // if (!user.isActive()) {
-            //     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            //     response.getWriter().write("{\"message\": \"Your account is inactive or suspended. Please contact support.\"}");
-            //     return;
+            // response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            // response.getWriter().write("{\"message\": \"Your account is inactive or
+            // suspended. Please contact support.\"}");
+            // return;
             // }
 
             // // 4. Email not verified
             // if (!user.isEmailVerified()) {
-            //     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            //     response.getWriter().write("{\"message\": \"Please verify your email before logging in.\"}");
-            //     return;
+            // response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            // response.getWriter().write("{\"message\": \"Please verify your email before
+            // logging in.\"}");
+            // return;
             // }
 
             // // 5. Password expired
             // if (user.isPasswordExpired()) {
-            //     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            //     response.getWriter().write("{\"message\": \"Your password has expired. Please reset your password.\"}");
-            //     return;
+            // response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            // response.getWriter().write("{\"message\": \"Your password has expired. Please
+            // reset your password.\"}");
+            // return;
             // }
 
             // // 6. Password check (use hashed password)
             // if (!PasswordUtil.checkPassword(password, user.getPassword())) {
-            //     // Optionally, increment failed login attempts here
-            //     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            //     response.getWriter().write(genericError);
-            //     return;
+            // // Optionally, increment failed login attempts here
+            // response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            // response.getWriter().write(genericError);
+            // return;
             // }
 
             // // 7. Multi-factor authentication required (stub, expand as needed)
             // if (user.isMfaEnabled() && !user.isMfaVerified()) {
-            //     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            //     response.getWriter().write("{\"message\": \"Multi-factor authentication required.\"}");
-            //     // Optionally, redirect to MFA verification page.
-            //     return;
+            // response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            // response.getWriter().write("{\"message\": \"Multi-factor authentication
+            // required.\"}");
+            // // Optionally, redirect to MFA verification page.
+            // return;
             // }
 
-//=======================================================================
-
-
-
+            // =======================================================================
 
             // Create access log with structured logging
             LocalDateTime now = LocalDateTime.now();
-            String action = String.format("User %s (ID: %d, Role: %s) logged in successfully", 
+            String action = String.format("User %s (ID: %d, Role: %s) logged in successfully",
                     user.getEmail(), user.getId(), user.getRole());
             AccessLog accessLog = new AccessLog(0, user.getId(), action, now);
             try {
                 accessLogDAO.createAccessLog(accessLog);
-                logger.log(Level.INFO, "Login successful: userId={0}, email={1}, role={2}, ip={3}", 
-                        new Object[]{user.getId(), user.getEmail(), user.getRole(), 
-                        utils.SecurityUtil.getClientIP(request)});
+                logger.log(Level.INFO, "Login successful: userId={0}, email={1}, role={2}, ip={3}",
+                        new Object[] { user.getId(), user.getEmail(), user.getRole(),
+                                utils.SecurityUtil.getClientIP(request) });
             } catch (SQLException e) {
                 // Log error but don't fail login
                 logger.log(Level.WARNING, "Failed to create access log for login: " + e.getMessage(), e);
@@ -174,7 +178,6 @@ public class LoginController extends HttpServlet {
             // Successful login: set session
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
-            
 
             // Redirect to home page (with context path!)
             response.sendRedirect(request.getContextPath() + "/");
