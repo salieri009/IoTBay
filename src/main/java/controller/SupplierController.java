@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 import config.DIContainer;
 import dao.SupplierDAOImpl;
 import model.Supplier;
+import model.User;
 
 @WebServlet("/admin/supplier/*")
 public class SupplierController extends HttpServlet {
@@ -184,7 +185,16 @@ public class SupplierController extends HttpServlet {
     private void updateSupplier(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
 
-        Integer supplierId = Integer.parseInt(request.getParameter("supplierId"));
+        // Safe parameter parsing with validation
+        int supplierId;
+        try {
+            supplierId = utils.SecurityUtil.getValidatedIntParameter(request, "supplierId", 1, Integer.MAX_VALUE);
+        } catch (IllegalArgumentException e) {
+            utils.ErrorAction.handleValidationError(request, response,
+                    "Invalid supplier ID", "SupplierController.updateSupplier");
+            return;
+        }
+
         Supplier supplier = supplierDAO.findById(supplierId);
 
         if (supplier == null) {
@@ -278,7 +288,23 @@ public class SupplierController extends HttpServlet {
     private void deleteSupplier(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
 
-        Integer supplierId = Integer.parseInt(request.getParameter("supplierId"));
+        // CSRF protection - SECURITY FIX: Added missing CSRF validation
+        if (!utils.SecurityUtil.validateCSRFToken(request)) {
+            utils.ErrorAction.handleValidationError(request, response,
+                    "CSRF token validation failed", "SupplierController.deleteSupplier");
+            return;
+        }
+
+        // Safe parameter parsing with validation - SECURITY FIX: Added safe parsing
+        int supplierId;
+        try {
+            supplierId = utils.SecurityUtil.getValidatedIntParameter(request, "supplierId", 1, Integer.MAX_VALUE);
+        } catch (IllegalArgumentException e) {
+            utils.ErrorAction.handleValidationError(request, response,
+                    "Invalid supplier ID", "SupplierController.deleteSupplier");
+            return;
+        }
+
         Supplier supplier = supplierDAO.findById(supplierId);
 
         if (supplier == null) {
@@ -295,6 +321,10 @@ public class SupplierController extends HttpServlet {
             return;
         }
 
+        // Log security event before deletion
+        utils.ErrorAction.logSecurityEvent("SUPPLIER_DELETED", request,
+                "Supplier deleted: " + supplier.getCompanyName() + ", ID: " + supplierId);
+
         supplierDAO.delete(supplierId);
 
         HttpSession session = request.getSession();
@@ -305,7 +335,23 @@ public class SupplierController extends HttpServlet {
     private void toggleSupplierStatus(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
 
-        Integer supplierId = Integer.parseInt(request.getParameter("supplierId"));
+        // CSRF protection - SECURITY FIX: Added missing CSRF validation
+        if (!utils.SecurityUtil.validateCSRFToken(request)) {
+            utils.ErrorAction.handleValidationError(request, response,
+                    "CSRF token validation failed", "SupplierController.toggleSupplierStatus");
+            return;
+        }
+
+        // Safe parameter parsing with validation - SECURITY FIX: Added safe parsing
+        int supplierId;
+        try {
+            supplierId = utils.SecurityUtil.getValidatedIntParameter(request, "supplierId", 1, Integer.MAX_VALUE);
+        } catch (IllegalArgumentException e) {
+            utils.ErrorAction.handleValidationError(request, response,
+                    "Invalid supplier ID", "SupplierController.toggleSupplierStatus");
+            return;
+        }
+
         Supplier supplier = supplierDAO.findById(supplierId);
 
         if (supplier == null) {
@@ -318,8 +364,12 @@ public class SupplierController extends HttpServlet {
         supplier.setUpdatedDate(new Timestamp(System.currentTimeMillis()));
         supplierDAO.update(supplier);
 
-        HttpSession session = request.getSession();
+        // Log security event
         String status = supplier.isActive() ? "activated" : "deactivated";
+        utils.ErrorAction.logSecurityEvent("SUPPLIER_STATUS_CHANGED", request,
+                "Supplier " + status + ": " + supplier.getCompanyName() + ", ID: " + supplierId);
+
+        HttpSession session = request.getSession();
         session.setAttribute("successMessage", "Supplier " + status + " successfully");
 
         response.sendRedirect(request.getContextPath() + "/admin/supplier/view/" + supplierId);
@@ -348,7 +398,19 @@ public class SupplierController extends HttpServlet {
             throws ServletException, IOException, SQLException {
 
         String pathInfo = request.getPathInfo();
-        Integer supplierId = Integer.parseInt(pathInfo.substring(6)); // Remove "/view/"
+
+        // Safe parsing with validation - SECURITY FIX
+        int supplierId;
+        try {
+            String idStr = pathInfo.substring(6); // Remove "/view/"
+            supplierId = Integer.parseInt(idStr);
+            if (supplierId < 1) {
+                throw new NumberFormatException("ID must be positive");
+            }
+        } catch (NumberFormatException e) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid supplier ID");
+            return;
+        }
 
         Supplier supplier = supplierDAO.findById(supplierId);
 
@@ -371,7 +433,19 @@ public class SupplierController extends HttpServlet {
             throws ServletException, IOException, SQLException {
 
         String pathInfo = request.getPathInfo();
-        Integer supplierId = Integer.parseInt(pathInfo.substring(6)); // Remove "/edit/"
+
+        // Safe parsing with validation - SECURITY FIX
+        int supplierId;
+        try {
+            String idStr = pathInfo.substring(6); // Remove "/edit/"
+            supplierId = Integer.parseInt(idStr);
+            if (supplierId < 1) {
+                throw new NumberFormatException("ID must be positive");
+            }
+        } catch (NumberFormatException e) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid supplier ID");
+            return;
+        }
 
         Supplier supplier = supplierDAO.findById(supplierId);
 
@@ -436,13 +510,25 @@ public class SupplierController extends HttpServlet {
         request.getRequestDispatcher("/error.jsp").forward(request, response);
     }
 
+    /**
+     * SECURITY FIX: Now properly validates user role instead of just checking
+     * instance type.
+     * Previously any logged-in user could access supplier management pages.
+     * Now only users with 'staff' or 'admin' role can access these features.
+     */
     private boolean isStaff(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (session == null) {
             return false;
         }
-        
+
         Object userObj = session.getAttribute("user");
-        return (userObj instanceof model.User);
+        if (!(userObj instanceof User)) {
+            return false;
+        }
+
+        User user = (User) userObj;
+        String role = user.getRole();
+        return "staff".equalsIgnoreCase(role) || "admin".equalsIgnoreCase(role);
     }
 }

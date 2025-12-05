@@ -108,8 +108,8 @@ public class UpdateUserController extends HttpServlet {
 
             // Validate profile data
             String profileError = utils.ValidationUtil.validateRegisterUserProfile(
-                    firstName, lastName, phone != null ? phone : "", 
-                    postalCode != null ? postalCode : "", 
+                    firstName, lastName, phone != null ? phone : "",
+                    postalCode != null ? postalCode : "",
                     addressLine1 != null ? addressLine1 : "");
             if (profileError != null) {
                 utils.ErrorAction.handleValidationError(request, response, profileError,
@@ -136,7 +136,7 @@ public class UpdateUserController extends HttpServlet {
             }
 
             // Validate role
-            String[] validRoles = {"customer", "staff", "admin"};
+            String[] validRoles = { "customer", "staff", "admin" };
             boolean isValidRole = false;
             for (String validRole : validRoles) {
                 if (validRole.equalsIgnoreCase(role)) {
@@ -172,11 +172,12 @@ public class UpdateUserController extends HttpServlet {
 
             // Parse isActive (checkbox or boolean string)
             boolean isActive = isActiveStr != null &&
-                    (isActiveStr.equalsIgnoreCase("true") || isActiveStr.equalsIgnoreCase("on") || isActiveStr.equals("1"));
+                    (isActiveStr.equalsIgnoreCase("true") || isActiveStr.equalsIgnoreCase("on")
+                            || isActiveStr.equals("1"));
 
             // Use existing password if new password not provided
-            String finalPassword = (password != null && !password.trim().isEmpty()) 
-                    ? password 
+            String finalPassword = (password != null && !password.trim().isEmpty())
+                    ? password
                     : existingUser.getPassword();
 
             // Construct the User object
@@ -188,32 +189,35 @@ public class UpdateUserController extends HttpServlet {
             } else {
                 createdAt = now;
             }
-            
+
             // Use existing values for optional fields if not provided
             String finalPhone = (phone != null && !phone.trim().isEmpty()) ? phone : existingUser.getPhone();
-            String finalPostalCode = (postalCode != null && !postalCode.trim().isEmpty()) ? postalCode : existingUser.getPostalCode();
-            String finalAddressLine1 = (addressLine1 != null && !addressLine1.trim().isEmpty()) ? addressLine1 : existingUser.getAddressLine1();
-            String finalAddressLine2 = (addressLine2 != null && !addressLine2.trim().isEmpty()) ? addressLine2 : existingUser.getAddressLine2();
-            String finalPaymentMethod = (paymentMethod != null && !paymentMethod.trim().isEmpty()) ? paymentMethod : existingUser.getPaymentMethod();
+            String finalPostalCode = (postalCode != null && !postalCode.trim().isEmpty()) ? postalCode
+                    : existingUser.getPostalCode();
+            String finalAddressLine1 = (addressLine1 != null && !addressLine1.trim().isEmpty()) ? addressLine1
+                    : existingUser.getAddressLine1();
+            String finalAddressLine2 = (addressLine2 != null && !addressLine2.trim().isEmpty()) ? addressLine2
+                    : existingUser.getAddressLine2();
+            String finalPaymentMethod = (paymentMethod != null && !paymentMethod.trim().isEmpty()) ? paymentMethod
+                    : existingUser.getPaymentMethod();
             LocalDate finalDateOfBirth = (dateOfBirth != null) ? dateOfBirth : existingUser.getDateOfBirth();
-            
+
             User updatedUser = new User(
-                0, // id (actual id is passed separately)
-                email,
-                finalPassword,
-                firstName,
-                lastName,
-                finalPhone,
-                finalPostalCode,
-                finalAddressLine1,
-                finalAddressLine2,
-                finalDateOfBirth,
-                finalPaymentMethod,
-                createdAt, // Preserve original creation date
-                now, // Update timestamp
-                role.toLowerCase(),
-                isActive
-            );
+                    0, // id (actual id is passed separately)
+                    email,
+                    finalPassword,
+                    firstName,
+                    lastName,
+                    finalPhone,
+                    finalPostalCode,
+                    finalAddressLine1,
+                    finalAddressLine2,
+                    finalDateOfBirth,
+                    finalPaymentMethod,
+                    createdAt, // Preserve original creation date
+                    now, // Update timestamp
+                    role.toLowerCase(),
+                    isActive);
 
             userDAO.updateUser(id, updatedUser);
 
@@ -235,12 +239,14 @@ public class UpdateUserController extends HttpServlet {
 
     private boolean isAdmin(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        if (session == null) return false;
+        if (session == null)
+            return false;
 
         Object userObj = session.getAttribute("user");
-        if (!(userObj instanceof User)) return false;
+        if (!(userObj instanceof User))
+            return false;
 
         User user = (User) userObj;
-        return "staff".equalsIgnoreCase(user.getRole());
+        return "staff".equalsIgnoreCase(user.getRole()) || "admin".equalsIgnoreCase(user.getRole());
     }
 }

@@ -45,4 +45,15 @@
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
     
+    <!-- Session Security Configuration -->
+    <session-config>
+        <session-timeout>30</session-timeout>
+        <cookie-config>
+            <http-only>true</http-only>
+            <secure>false</secure><!-- Set to true in production with HTTPS -->
+            <max-age>1800</max-age>
+        </cookie-config>
+        <tracking-mode>COOKIE</tracking-mode>
+    </session-config>
+    
 </web-app>

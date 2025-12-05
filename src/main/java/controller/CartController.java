@@ -46,37 +46,37 @@ public class CartController extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         String requestURI = request.getRequestURI();
         String contextPath = request.getContextPath();
         String path = requestURI.substring(contextPath.length());
-        
+
         // Check if this is an API request (/api/cart/*)
         if (path.startsWith("/api/cart/")) {
             handleApiRequest(request, response);
             return;
         }
-        
+
         // Handle traditional form submission (/cart)
         handleFormSubmission(request, response);
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         String requestURI = request.getRequestURI();
         String contextPath = request.getContextPath();
         String path = requestURI.substring(contextPath.length());
-        
+
         // Check if this is an API request (/api/cart/*)
         if (path.startsWith("/api/cart/")) {
             handleApiGet(request, response);
             return;
         }
-        
+
         // Handle traditional page request (/cart or /cart.jsp)
         handlePageRequest(request, response);
     }
@@ -89,66 +89,67 @@ public class CartController extends HttpServlet {
 
     private void handleApiRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         HttpSession session = request.getSession(false);
         if (session == null) {
             ResponseUtil.sendJsonError(response, HttpServletResponse.SC_UNAUTHORIZED, "User not authenticated");
             return;
         }
-        
+
         Object userObj = session.getAttribute("user");
         if (!(userObj instanceof User)) {
             ResponseUtil.sendJsonError(response, HttpServletResponse.SC_UNAUTHORIZED, "User not authenticated");
             return;
         }
-        
+
         User user = (User) userObj;
 
         String requestURI = request.getRequestURI();
         String contextPath = request.getContextPath();
         String path = requestURI.substring(contextPath.length());
-        
+
         // Extract the endpoint after /api/cart/
         String endpoint = path.substring("/api/cart".length());
-        
+
         try {
             if (endpoint.equals("/add") || endpoint.equals("/")) {
                 addToCartApi(request, response, user);
             } else if (endpoint.equals("/update")) {
                 updateCartItemApi(request, response, user);
             } else {
-                ResponseUtil.sendJsonError(response, HttpServletResponse.SC_NOT_FOUND, "Endpoint not found: " + endpoint);
+                ResponseUtil.sendJsonError(response, HttpServletResponse.SC_NOT_FOUND,
+                        "Endpoint not found: " + endpoint);
             }
         } catch (Exception e) {
-            ResponseUtil.sendJsonError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, 
-                "Error processing request: " + e.getMessage());
+            ResponseUtil.sendJsonError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                    "Error processing request: " + e.getMessage());
         }
     }
 
     private void handleApiGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         HttpSession session = request.getSession(false);
         if (session == null) {
             ResponseUtil.sendJsonError(response, HttpServletResponse.SC_UNAUTHORIZED, "User not authenticated");
             return;
         }
-        
+
         Object userObj = session.getAttribute("user");
         if (!(userObj instanceof User)) {
             ResponseUtil.sendJsonError(response, HttpServletResponse.SC_UNAUTHORIZED, "User not authenticated");
             return;
         }
-        
+
         User user = (User) userObj;
 
         String requestURI = request.getRequestURI();
         String contextPath = request.getContextPath();
         String path = requestURI.substring(contextPath.length());
-        
+
         // Extract the endpoint after /api/cart/
         String endpoint = path.substring("/api/cart".length());
-        
+
         try {
             if (endpoint.equals("/items") || endpoint.equals("/")) {
                 getCartItemsApi(request, response, user);
@@ -157,61 +158,73 @@ public class CartController extends HttpServlet {
             } else if (endpoint.equals("/total")) {
                 getCartTotalApi(response, user);
             } else {
-                ResponseUtil.sendJsonError(response, HttpServletResponse.SC_NOT_FOUND, "Endpoint not found: " + endpoint);
+                ResponseUtil.sendJsonError(response, HttpServletResponse.SC_NOT_FOUND,
+                        "Endpoint not found: " + endpoint);
             }
         } catch (Exception e) {
-            ResponseUtil.sendJsonError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, 
-                "Error processing request: " + e.getMessage());
+            ResponseUtil.sendJsonError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                    "Error processing request: " + e.getMessage());
         }
     }
 
     private void handleApiDelete(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         HttpSession session = request.getSession(false);
         if (session == null) {
             ResponseUtil.sendJsonError(response, HttpServletResponse.SC_UNAUTHORIZED, "User not authenticated");
             return;
         }
-        
+
         Object userObj = session.getAttribute("user");
         if (!(userObj instanceof User)) {
             ResponseUtil.sendJsonError(response, HttpServletResponse.SC_UNAUTHORIZED, "User not authenticated");
             return;
         }
-        
+
         User user = (User) userObj;
+
+        // CSRF validation for DELETE operations - SECURITY FIX
+        String csrfToken = request.getParameter("csrfToken");
+        String headerToken = request.getHeader("X-CSRF-Token");
+        String token = (headerToken != null && !headerToken.isEmpty()) ? headerToken : csrfToken;
+
+        if (token == null || token.isEmpty() || !utils.SecurityUtil.validateCSRFToken(request)) {
+            ResponseUtil.sendJsonError(response, HttpServletResponse.SC_FORBIDDEN, "CSRF token validation failed");
+            return;
+        }
 
         String requestURI = request.getRequestURI();
         String contextPath = request.getContextPath();
         String path = requestURI.substring(contextPath.length());
-        
+
         // Extract the endpoint after /api/cart/
         String endpoint = path.substring("/api/cart".length());
-        
+
         try {
             if (endpoint.equals("/clear")) {
                 clearCartApi(response, user);
             } else if (endpoint.equals("/remove")) {
                 removeFromCartApi(request, response, user);
             } else {
-                ResponseUtil.sendJsonError(response, HttpServletResponse.SC_NOT_FOUND, "Endpoint not found: " + endpoint);
+                ResponseUtil.sendJsonError(response, HttpServletResponse.SC_NOT_FOUND,
+                        "Endpoint not found: " + endpoint);
             }
         } catch (Exception e) {
-            ResponseUtil.sendJsonError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, 
-                "Error processing request: " + e.getMessage());
+            ResponseUtil.sendJsonError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                    "Error processing request: " + e.getMessage());
         }
     }
 
     private void handleFormSubmission(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         // Rate limiting check
         if (utils.SecurityUtil.isRateLimited(request, 20, 60000)) { // 20 requests per minute
             utils.ErrorAction.handleRateLimitError(request, response, "CartController.handleFormSubmission");
             return;
         }
-        
+
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
 
@@ -230,20 +243,20 @@ public class CartController extends HttpServlet {
         try {
             // Validate action parameter
             if (action != null && !action.matches("^[a-zA-Z]+$")) {
-                utils.ErrorAction.handleValidationError(request, response, 
+                utils.ErrorAction.handleValidationError(request, response,
                         "Invalid action parameter", "CartController.handleFormSubmission");
                 return;
             }
-            
+
             if ("clear".equals(action)) {
                 // CSRF check for destructive operations
                 if (!utils.SecurityUtil.validateCSRFToken(request)) {
-                    utils.ErrorAction.handleValidationError(request, response, 
+                    utils.ErrorAction.handleValidationError(request, response,
                             "CSRF token validation failed", "CartController.clearCart");
                     return;
                 }
                 cartItemDAO.clearCartByUserId(userId);
-                utils.ErrorAction.logSecurityEvent("CART_CLEARED", request, 
+                utils.ErrorAction.logSecurityEvent("CART_CLEARED", request,
                         "Cart cleared for user: " + userId);
                 response.sendRedirect("cart");
                 return;
@@ -253,10 +266,10 @@ public class CartController extends HttpServlet {
             int productId = utils.SecurityUtil.getValidatedIntParameter(request, "productId", 1, Integer.MAX_VALUE);
             int quantity = utils.SecurityUtil.getValidatedIntParameter(request, "quantity", 1, 100);
             double price = utils.SecurityUtil.getValidatedDoubleParameter(request, "productPrice");
-            
+
             // Validate price range
             if (price <= 0 || price > 1000000) {
-                utils.ErrorAction.handleValidationError(request, response, 
+                utils.ErrorAction.handleValidationError(request, response,
                         "Invalid price range", "CartController.handleFormSubmission");
                 return;
             }
@@ -264,13 +277,13 @@ public class CartController extends HttpServlet {
             // Check product availability
             Product product = productDAO.getProductById(productId);
             if (product == null) {
-                utils.ErrorAction.handleValidationError(request, response, 
+                utils.ErrorAction.handleValidationError(request, response,
                         "Product not found", "CartController.handleFormSubmission");
                 return;
             }
-            
+
             if (product.getStockQuantity() < quantity) {
-                utils.ErrorAction.handleValidationError(request, response, 
+                utils.ErrorAction.handleValidationError(request, response,
                         "Insufficient stock available", "CartController.handleFormSubmission");
                 return;
             }
@@ -280,7 +293,7 @@ public class CartController extends HttpServlet {
             if (existingItem != null) {
                 int updatedQuantity = existingItem.getQuantity() + quantity;
                 if (product.getStockQuantity() < updatedQuantity) {
-                    utils.ErrorAction.handleValidationError(request, response, 
+                    utils.ErrorAction.handleValidationError(request, response,
                             "Insufficient stock for updated quantity", "CartController.handleFormSubmission");
                     return;
                 }
@@ -289,16 +302,16 @@ public class CartController extends HttpServlet {
                 CartItem newItem = new CartItem(userId, productId, quantity, price, LocalDateTime.now());
                 cartItemDAO.addCartItem(newItem);
             }
-            
+
             // Log security event
-            utils.ErrorAction.logSecurityEvent("CART_ITEM_ADDED", request, 
+            utils.ErrorAction.logSecurityEvent("CART_ITEM_ADDED", request,
                     "Product ID: " + productId + ", Quantity: " + quantity);
 
             response.setStatus(HttpServletResponse.SC_OK);
             response.sendRedirect("product?productId=" + productId);
 
         } catch (IllegalArgumentException e) {
-            utils.ErrorAction.handleValidationError(request, response, e.getMessage(), 
+            utils.ErrorAction.handleValidationError(request, response, e.getMessage(),
                     "CartController.handleFormSubmission");
         } catch (SQLException e) {
             utils.ErrorAction.handleDatabaseError(request, response, e, "CartController.handleFormSubmission");
@@ -309,20 +322,20 @@ public class CartController extends HttpServlet {
 
     private void handlePageRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         try {
             HttpSession session = request.getSession(false);
             if (session == null) {
                 ResponseUtil.sendJsonError(response, HttpServletResponse.SC_UNAUTHORIZED, "User not authenticated");
                 return;
             }
-            
+
             Object userObj = session.getAttribute("user");
             if (!(userObj instanceof User)) {
                 ResponseUtil.sendJsonError(response, HttpServletResponse.SC_UNAUTHORIZED, "User not authenticated");
                 return;
             }
-            
+
             User user = (User) userObj;
 
             Integer userId;
@@ -377,13 +390,13 @@ public class CartController extends HttpServlet {
     // API Methods
     private void addToCartApi(HttpServletRequest request, HttpServletResponse response, User user)
             throws Exception {
-        
+
         String productIdStr = request.getParameter("productId");
         String quantityStr = request.getParameter("quantity");
 
         if (productIdStr == null || quantityStr == null) {
-            ResponseUtil.sendJsonError(response, HttpServletResponse.SC_BAD_REQUEST, 
-                "Product ID and quantity are required");
+            ResponseUtil.sendJsonError(response, HttpServletResponse.SC_BAD_REQUEST,
+                    "Product ID and quantity are required");
             return;
         }
 
@@ -393,51 +406,52 @@ public class CartController extends HttpServlet {
 
             // Use CartService for business logic and compatibility checking
             CartOperationResult result = cartService.addToCart(user.getId(), productId, quantity);
-            
+
             if (result.isSuccess()) {
                 // Build response with compatibility warnings if any
                 StringBuilder jsonResponse = new StringBuilder();
                 jsonResponse.append("{\"success\": true, \"message\": \"")
-                           .append(result.getMessage().replace("\"", "\\\""))
-                           .append("\"");
-                
+                        .append(result.getMessage().replace("\"", "\\\""))
+                        .append("\"");
+
                 if (result.getCompatibilityIssues() != null && !result.getCompatibilityIssues().isEmpty()) {
                     jsonResponse.append(", \"compatibilityWarnings\": [");
                     for (int i = 0; i < result.getCompatibilityIssues().size(); i++) {
-                        if (i > 0) jsonResponse.append(",");
+                        if (i > 0)
+                            jsonResponse.append(",");
                         service.CompatibilityEngine.CompatibilityIssue issue = result.getCompatibilityIssues().get(i);
                         jsonResponse.append("{\"type\": \"").append(issue.getType().name())
-                                   .append("\", \"message\": \"").append(issue.getMessage().replace("\"", "\\\""))
-                                   .append("\", \"severity\": \"").append(issue.getSeverity()).append("\"}");
+                                .append("\", \"message\": \"").append(issue.getMessage().replace("\"", "\\\""))
+                                .append("\", \"severity\": \"").append(issue.getSeverity()).append("\"}");
                     }
                     jsonResponse.append("]");
                 }
-                
+
                 jsonResponse.append("}");
                 ResponseUtil.sendJsonResponse(response, jsonResponse.toString());
             } else {
-                ResponseUtil.sendJsonError(response, HttpServletResponse.SC_BAD_REQUEST, 
-                    result.getErrorMessage());
+                ResponseUtil.sendJsonError(response, HttpServletResponse.SC_BAD_REQUEST,
+                        result.getErrorMessage());
             }
 
         } catch (NumberFormatException e) {
-            ResponseUtil.sendJsonError(response, HttpServletResponse.SC_BAD_REQUEST, 
-                "Invalid product ID or quantity format");
+            ResponseUtil.sendJsonError(response, HttpServletResponse.SC_BAD_REQUEST,
+                    "Invalid product ID or quantity format");
         } catch (SQLException e) {
-            ResponseUtil.sendJsonError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, 
-                "Database error: " + e.getMessage());
+            ResponseUtil.sendJsonError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                    "Database error: " + e.getMessage());
         }
     }
 
     private void updateCartItemApi(HttpServletRequest request, HttpServletResponse response, User user)
             throws Exception {
-        
+
         String productIdStr = request.getParameter("productId");
         String quantityStr = request.getParameter("quantity");
 
         if (productIdStr == null || quantityStr == null) {
-            ResponseUtil.sendJsonError(response, HttpServletResponse.SC_BAD_REQUEST, 
-                "Product ID and quantity are required");
+            ResponseUtil.sendJsonError(response, HttpServletResponse.SC_BAD_REQUEST,
+                    "Product ID and quantity are required");
             return;
         }
 
@@ -446,14 +460,14 @@ public class CartController extends HttpServlet {
             int quantity = Integer.parseInt(quantityStr);
 
             if (quantity < 0) {
-                ResponseUtil.sendJsonError(response, HttpServletResponse.SC_BAD_REQUEST, 
-                    "Quantity cannot be negative");
+                ResponseUtil.sendJsonError(response, HttpServletResponse.SC_BAD_REQUEST,
+                        "Quantity cannot be negative");
                 return;
             }
 
             if (!cartItemDAO.isProductInCart(user.getId(), productId)) {
-                ResponseUtil.sendJsonError(response, HttpServletResponse.SC_NOT_FOUND, 
-                    "Item not found in cart");
+                ResponseUtil.sendJsonError(response, HttpServletResponse.SC_NOT_FOUND,
+                        "Item not found in cart");
                 return;
             }
 
@@ -462,19 +476,19 @@ public class CartController extends HttpServlet {
             } else {
                 Product product = productDAO.getProductById(productId);
                 if (product != null && product.getStockQuantity() < quantity) {
-                    ResponseUtil.sendJsonError(response, HttpServletResponse.SC_BAD_REQUEST, 
-                        "Insufficient stock available");
+                    ResponseUtil.sendJsonError(response, HttpServletResponse.SC_BAD_REQUEST,
+                            "Insufficient stock available");
                     return;
                 }
-                
+
                 cartItemDAO.updateCartItemQuantity(user.getId(), productId, quantity);
             }
 
             ResponseUtil.sendJsonResponse(response, "{\"success\": true}");
 
         } catch (NumberFormatException e) {
-            ResponseUtil.sendJsonError(response, HttpServletResponse.SC_BAD_REQUEST, 
-                "Invalid product ID or quantity format");
+            ResponseUtil.sendJsonError(response, HttpServletResponse.SC_BAD_REQUEST,
+                    "Invalid product ID or quantity format");
         }
     }
 
@@ -482,44 +496,46 @@ public class CartController extends HttpServlet {
             throws Exception {
         try {
             CartSummary summary = cartService.getCartSummary(user.getId());
-            
+
             // Build comprehensive response with compatibility information
             StringBuilder jsonResponse = new StringBuilder();
             jsonResponse.append("{\"items\": [");
-            
+
             List<CartItem> items = summary.getItems();
             for (int i = 0; i < items.size(); i++) {
-                if (i > 0) jsonResponse.append(",");
+                if (i > 0)
+                    jsonResponse.append(",");
                 CartItem item = items.get(i);
                 jsonResponse.append("{\"id\": ").append(item.getId())
-                           .append(", \"productId\": ").append(item.getProductId())
-                           .append(", \"quantity\": ").append(item.getQuantity())
-                           .append(", \"price\": ").append(item.getPrice())
-                           .append("}");
+                        .append(", \"productId\": ").append(item.getProductId())
+                        .append(", \"quantity\": ").append(item.getQuantity())
+                        .append(", \"price\": ").append(item.getPrice())
+                        .append("}");
             }
-            
+
             jsonResponse.append("], \"total\": ").append(summary.getTotal())
-                       .append(", \"itemCount\": ").append(summary.getItemCount());
-            
+                    .append(", \"itemCount\": ").append(summary.getItemCount());
+
             // Add compatibility warnings if any
             if (summary.getCompatibilityIssues() != null && !summary.getCompatibilityIssues().isEmpty()) {
                 jsonResponse.append(", \"compatibilityWarnings\": [");
                 for (int i = 0; i < summary.getCompatibilityIssues().size(); i++) {
-                    if (i > 0) jsonResponse.append(",");
+                    if (i > 0)
+                        jsonResponse.append(",");
                     service.CompatibilityEngine.CompatibilityIssue issue = summary.getCompatibilityIssues().get(i);
                     jsonResponse.append("{\"type\": \"").append(issue.getType().name())
-                               .append("\", \"message\": \"").append(issue.getMessage().replace("\"", "\\\""))
-                               .append("\", \"severity\": \"").append(issue.getSeverity()).append("\"}");
+                            .append("\", \"message\": \"").append(issue.getMessage().replace("\"", "\\\""))
+                            .append("\", \"severity\": \"").append(issue.getSeverity()).append("\"}");
                 }
                 jsonResponse.append("]");
             }
-            
+
             jsonResponse.append("}");
             ResponseUtil.sendJsonResponse(response, jsonResponse.toString());
-            
+
         } catch (SQLException e) {
-            ResponseUtil.sendJsonError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, 
-                "Database error: " + e.getMessage());
+            ResponseUtil.sendJsonError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                    "Database error: " + e.getMessage());
         }
     }
 
@@ -537,11 +553,11 @@ public class CartController extends HttpServlet {
 
     private void removeFromCartApi(HttpServletRequest request, HttpServletResponse response, User user)
             throws Exception {
-        
+
         // Support both itemId and productId for backward compatibility
         String productIdStr = request.getParameter("productId");
         String itemIdStr = request.getParameter("itemId");
-        
+
         // If itemId is provided, try to get productId from cart item
         if (productIdStr == null && itemIdStr != null) {
             try {
@@ -556,8 +572,8 @@ public class CartController extends HttpServlet {
         }
 
         if (productIdStr == null) {
-            ResponseUtil.sendJsonError(response, HttpServletResponse.SC_BAD_REQUEST, 
-                "Product ID or Item ID is required");
+            ResponseUtil.sendJsonError(response, HttpServletResponse.SC_BAD_REQUEST,
+                    "Product ID or Item ID is required");
             return;
         }
 
@@ -565,37 +581,37 @@ public class CartController extends HttpServlet {
             int productId = Integer.parseInt(productIdStr);
 
             if (!cartItemDAO.isProductInCart(user.getId(), productId)) {
-                ResponseUtil.sendJsonError(response, HttpServletResponse.SC_NOT_FOUND, 
-                    "Item not found in cart");
+                ResponseUtil.sendJsonError(response, HttpServletResponse.SC_NOT_FOUND,
+                        "Item not found in cart");
                 return;
             }
 
             cartItemDAO.deleteCartItem(user.getId(), productId);
-            
+
             // Get updated cart summary
             CartSummary summary = cartService.getCartSummary(user.getId());
-            
+
             // Build response with updated cart info
             StringBuilder jsonResponse = new StringBuilder();
             jsonResponse.append("{\"success\": true, \"message\": \"Item removed from cart\"");
             jsonResponse.append(", \"itemCount\": ").append(summary.getItemCount());
             jsonResponse.append(", \"total\": ").append(summary.getTotal());
             jsonResponse.append("}");
-            
+
             ResponseUtil.sendJsonResponse(response, jsonResponse.toString());
 
         } catch (NumberFormatException e) {
-            ResponseUtil.sendJsonError(response, HttpServletResponse.SC_BAD_REQUEST, 
-                "Invalid product ID format");
+            ResponseUtil.sendJsonError(response, HttpServletResponse.SC_BAD_REQUEST,
+                    "Invalid product ID format");
         } catch (SQLException e) {
-            ResponseUtil.sendJsonError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, 
-                "Database error: " + e.getMessage());
+            ResponseUtil.sendJsonError(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                    "Database error: " + e.getMessage());
         }
     }
 
     private void clearCartApi(HttpServletResponse response, User user)
             throws Exception {
-        
+
         cartItemDAO.clearCartByUserId(user.getId());
         ResponseUtil.sendJsonResponse(response, "{\"success\": true}");
     }

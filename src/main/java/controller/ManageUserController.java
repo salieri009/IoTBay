@@ -48,7 +48,7 @@ public class ManageUserController extends HttpServlet {
             // Validate pathInfo
             if (pathInfo != null && !pathInfo.isEmpty() && !pathInfo.equals("/") && !pathInfo.equals("/form")) {
                 utils.ErrorAction.handleMissingParameterError(request, response,
-                    "Invalid path", "ManageUserController.doGet");
+                        "Invalid path", "ManageUserController.doGet");
                 return;
             }
 
@@ -232,6 +232,6 @@ public class ManageUserController extends HttpServlet {
             return false;
 
         User user = (User) userObj;
-        return "staff".equalsIgnoreCase(user.getRole());
+        return "staff".equalsIgnoreCase(user.getRole()) || "admin".equalsIgnoreCase(user.getRole());
     }
 }
