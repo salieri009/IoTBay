@@ -28,7 +28,9 @@ public class DatabaseInitializer {
         try {
             System.out.println("[DatabaseInitializer] Starting database initialization...");
             Connection connection = DBConnection.getConnection();
-            System.out.println("[DatabaseInitializer] Got connection to: " + connection.getMetaData().getURL());
+            String dbUrl = connection.getMetaData().getURL();
+            System.out.println("[DatabaseInitializer] Got connection to: " + dbUrl);
+            logger.log(Level.INFO, "Connected to database: {0}", dbUrl);
 
             // Create Users table if it doesn't exist
             System.out.println("[DatabaseInitializer] Creating Users table...");
@@ -82,8 +84,11 @@ public class DatabaseInitializer {
 
                 try (Statement createStmt = connection.createStatement()) {
                     createStmt.execute(createTableQuery);
+                    System.out.println("[DatabaseInitializer] Categories table created successfully.");
                     logger.log(Level.INFO, "Categories table created");
                 }
+            } else {
+                System.out.println("[DatabaseInitializer] Categories table already exists.");
             }
         }
     }
@@ -110,8 +115,11 @@ public class DatabaseInitializer {
 
                 try (Statement createStmt = connection.createStatement()) {
                     createStmt.execute(createTableQuery);
+                    System.out.println("[DatabaseInitializer] Products table created successfully.");
                     logger.log(Level.INFO, "Products table created");
                 }
+            } else {
+                System.out.println("[DatabaseInitializer] Products table already exists.");
             }
         }
     }
@@ -228,8 +236,11 @@ public class DatabaseInitializer {
 
                 try (Statement createStmt = connection.createStatement()) {
                     createStmt.execute(createTableQuery);
+                    System.out.println("[DatabaseInitializer] Users table created successfully.");
                     logger.log(Level.INFO, "Users table created");
                 }
+            } else {
+                System.out.println("[DatabaseInitializer] Users table already exists.");
             }
         }
     }
