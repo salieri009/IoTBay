@@ -493,7 +493,7 @@
                                                                 action="${pageContext.request.contextPath}/category-smarthome.jsp"
                                                                 method="get" class="flex">
                                                                 <input type="text" name="search"
-                                                                    value="${param.search != null ? param.search : ''}"
+                                                                    value="${fn:escapeXml(param.search)}"
                                                                     placeholder="Search smart home products..."
                                                                     class="form-input rounded-r-none w-64">
                                                                 <button type="submit"
@@ -681,7 +681,8 @@
                                                                         <c:when
                                                                             test="${param.search != null && !empty param.search}">
                                                                             We couldn't find any smart home products
-                                                                            matching "${param.search}". Try adjusting
+                                                                            matching "${fn:escapeXml(param.search)}".
+                                                                            Try adjusting
                                                                             your search terms.
                                                                         </c:when>
                                                                         <c:otherwise>

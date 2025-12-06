@@ -1,6 +1,5 @@
 package controller;
 
-import dao.UserDAOImpl;
 import dao.interfaces.UserDAO;
 import config.DIContainer;
 import model.User;
@@ -9,7 +8,6 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 
 @WebServlet("/manage/users/delete")
@@ -19,8 +17,7 @@ public class DeleteUserController extends HttpServlet {
     @Override
     public void init() throws ServletException {
         try {
-            Connection connection = DIContainer.getConnection();
-            userDAO = new UserDAOImpl(connection);
+            userDAO = DIContainer.get(UserDAO.class);
         } catch (Exception e) {
             throw new RuntimeException("Failed to initialize database connection", e);
         }
@@ -34,10 +31,11 @@ public class DeleteUserController extends HttpServlet {
             utils.ErrorAction.handleAuthorizationError(request, response, "DeleteUserController.doPost");
             return;
         }
-        
+
         // CSRF protection
         if (!utils.SecurityUtil.validateCSRFToken(request)) {
-            utils.ErrorAction.handleValidationError(request, response, "CSRF token validation failed", "DeleteUserController.doPost");
+            utils.ErrorAction.handleValidationError(request, response, "CSRF token validation failed",
+                    "DeleteUserController.doPost");
             return;
         }
 
@@ -56,10 +54,12 @@ public class DeleteUserController extends HttpServlet {
 
     private boolean isAdmin(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        if (session == null) return false;
+        if (session == null)
+            return false;
 
         Object userObj = session.getAttribute("user");
-        if (!(userObj instanceof User)) return false;
+        if (!(userObj instanceof User))
+            return false;
 
         User user = (User) userObj;
         return "staff".equalsIgnoreCase(user.getRole());

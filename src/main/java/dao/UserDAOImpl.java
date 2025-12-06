@@ -10,18 +10,19 @@ import java.util.List;
 import dao.interfaces.UserDAO;
 import model.User;
 import utils.DateTimeParser;
+import config.DIContainer;
 
 public class UserDAOImpl implements UserDAO {
-    private final Connection connection;
 
-    public UserDAOImpl(Connection connection) {
-        this.connection = connection;
+    public UserDAOImpl() {
+        // No-args constructor
     }
 
     @Override
     public void createUser(User user) throws SQLException {
         String query = "INSERT INTO Users (email, password, firstName, lastName, phoneNumber, postalCode, addressLine1, addressLine2, dateOfBirth, paymentMethod, createdAt, updatedAt, role, isActive) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
             setUserParams(statement, user);
             statement.executeUpdate();
         }
@@ -31,8 +32,9 @@ public class UserDAOImpl implements UserDAO {
     public List<User> getAllUsers() throws SQLException {
         List<User> users = new ArrayList<>();
         String query = "SELECT * FROM Users";
-        try (PreparedStatement statement = connection.prepareStatement(query);
-             ResultSet rs = statement.executeQuery()) {
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query);
+                ResultSet rs = statement.executeQuery()) {
             while (rs.next()) {
                 users.add(mapResultSetToUser(rs));
             }
@@ -43,7 +45,8 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public User getUserById(int id) throws SQLException {
         String query = "SELECT * FROM Users WHERE id = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, id);
             try (ResultSet rs = statement.executeQuery()) {
                 if (rs.next()) {
@@ -58,7 +61,8 @@ public class UserDAOImpl implements UserDAO {
     public List<User> getUsersByEmail(String email) throws SQLException {
         List<User> users = new ArrayList<>();
         String query = "SELECT * FROM Users WHERE email LIKE ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, email);
             try (ResultSet rs = statement.executeQuery()) {
                 while (rs.next()) {
@@ -72,7 +76,8 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public User getUserByEmail(String email) throws SQLException {
         String query = "SELECT * FROM Users WHERE email = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, email);
             try (ResultSet rs = statement.executeQuery()) {
                 if (rs.next()) {
@@ -86,7 +91,8 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public boolean isEmailExists(String email) throws SQLException {
         String query = "SELECT COUNT(*) FROM Users WHERE email = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, email);
             try (ResultSet rs = statement.executeQuery()) {
                 if (rs.next()) {
@@ -100,7 +106,8 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public void updateUser(int id, User user) throws SQLException {
         String query = "UPDATE Users SET email = ?, password = ?, firstName = ?, lastName = ?, phoneNumber = ?, postalCode = ?, addressLine1 = ?, addressLine2 = ?, dateOfBirth = ?, paymentMethod = ?, createdAt = ?, updatedAt = ?, role = ?, isActive = ? WHERE id = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
             setUserParams(statement, user);
             statement.setInt(15, id); // 14개 필드 + id
             statement.executeUpdate();
@@ -110,7 +117,8 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public void deleteUser(int id) throws SQLException {
         String query = "DELETE FROM Users WHERE id = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, id);
             statement.executeUpdate();
         }
@@ -118,6 +126,35 @@ public class UserDAOImpl implements UserDAO {
 
     // ResultSet에서 User 객체로 매핑
     private User mapResultSetToUser(ResultSet rs) throws SQLException {
+        java.time.LocalDate dob = null;
+        try {
+            String dobStr = rs.getString("dateOfBirth");
+            if (dobStr != null && !dobStr.isEmpty()) {
+                dob = java.time.LocalDate.parse(dobStr);
+            }
+        } catch (Exception e) {
+            System.err.println("[UserDAOImpl] Warning: Failed to parse dateOfBirth for user ID " + rs.getInt("id")
+                    + ": " + e.getMessage());
+        }
+
+        java.time.LocalDateTime createdAt = null;
+        try {
+            createdAt = DateTimeParser.parseLocalDateTime(rs.getString("createdAt"));
+        } catch (Exception e) {
+            System.err.println("[UserDAOImpl] Warning: Failed to parse createdAt for user ID " + rs.getInt("id") + ": "
+                    + e.getMessage());
+            createdAt = java.time.LocalDateTime.now(); // Fallback to now
+        }
+
+        java.time.LocalDateTime updatedAt = null;
+        try {
+            updatedAt = DateTimeParser.parseLocalDateTime(rs.getString("updatedAt"));
+        } catch (Exception e) {
+            System.err.println("[UserDAOImpl] Warning: Failed to parse updatedAt for user ID " + rs.getInt("id") + ": "
+                    + e.getMessage());
+            updatedAt = java.time.LocalDateTime.now(); // Fallback to now
+        }
+
         return new User(
                 rs.getInt("id"),
                 rs.getString("email"),
@@ -128,13 +165,12 @@ public class UserDAOImpl implements UserDAO {
                 rs.getString("postalCode"),
                 rs.getString("addressLine1"),
                 rs.getString("addressLine2"),
-                rs.getString("dateOfBirth") != null ? java.time.LocalDate.parse(rs.getString("dateOfBirth")) : null,
+                dob,
                 rs.getString("paymentMethod"),
-                DateTimeParser.parseLocalDateTime(rs.getString("createdAt")),
-                DateTimeParser.parseLocalDateTime(rs.getString("updatedAt")),
+                createdAt,
+                updatedAt,
                 rs.getString("role"),
-                rs.getBoolean("isActive")
-        );
+                rs.getBoolean("isActive"));
     }
 
     // User 객체의 값을 PreparedStatement에 세팅
@@ -154,12 +190,13 @@ public class UserDAOImpl implements UserDAO {
         statement.setString(13, user.getRole());
         statement.setBoolean(14, user.isActive());
     }
-    
+
     @Override
     public int getTotalUserCount() throws SQLException {
         String query = "SELECT COUNT(*) FROM Users";
-        try (PreparedStatement statement = connection.prepareStatement(query);
-             ResultSet rs = statement.executeQuery()) {
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query);
+                ResultSet rs = statement.executeQuery()) {
             if (rs.next()) {
                 return rs.getInt(1);
             }

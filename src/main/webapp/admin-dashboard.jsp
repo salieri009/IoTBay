@@ -1,17 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.*" %>
-<%@ page import="model.User" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+    <%@ page import="java.util.*" %>
+        <%@ page import="model.User" %>
+            <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<%
-    // Admin authorization check
-    User currentUser = (User) session.getAttribute("user");
-    if (currentUser == null || (!"staff".equalsIgnoreCase(currentUser.getRole()) && 
-        !"admin".equalsIgnoreCase(currentUser.getRole()))) {
-        response.sendRedirect(request.getContextPath() + "/login.jsp");
-        return;
-    }
-%>
+                <% // Admin authorization check User currentUser=(User) session.getAttribute("user"); if
+                    (currentUser==null || (!"staff".equalsIgnoreCase(currentUser.getRole()) &&
+                    !"admin".equalsIgnoreCase(currentUser.getRole()))) { response.sendRedirect(request.getContextPath()
+                    + "/login.jsp" ); return; } %>
 
                     <!DOCTYPE html>
                     <html lang="en">
@@ -73,8 +68,9 @@
                                             <p class="admin-subtitle">IoT Bay Management Console</p>
                                         </div>
                                         <div class="admin-user-info">
-                                            <div class="user-name">Welcome, <%= currentUser.getFirstName() %>
-                                                    <%= currentUser.getLastName() %>
+                                            <div class="user-name">Welcome,
+                                                <c:out value="${sessionScope.user.firstName}" />
+                                                <c:out value="${sessionScope.user.lastName}" />
                                             </div>
                                             <div class="user-role">System Administrator</div>
                                         </div>

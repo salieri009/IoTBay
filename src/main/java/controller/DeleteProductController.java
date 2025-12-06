@@ -21,17 +21,12 @@ public class DeleteProductController extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        try {
-            Connection connection = DIContainer.getConnection();
-            productDAO = new ProductDAOImpl(connection);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to initialize database connection", e);
-        }
+        productDAO = new ProductDAOImpl();
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
+            throws ServletException, IOException {
 
         HttpSession session = request.getSession(false);
         if (session == null) {
@@ -50,10 +45,11 @@ public class DeleteProductController extends HttpServlet {
             utils.ErrorAction.handleAuthorizationError(request, response, "DeleteProductController.doPost");
             return;
         }
-        
+
         // CSRF protection
         if (!utils.SecurityUtil.validateCSRFToken(request)) {
-            utils.ErrorAction.handleValidationError(request, response, "CSRF token validation failed", "DeleteProductController.doPost");
+            utils.ErrorAction.handleValidationError(request, response, "CSRF token validation failed",
+                    "DeleteProductController.doPost");
             return;
         }
 
@@ -64,7 +60,8 @@ public class DeleteProductController extends HttpServlet {
         } catch (SQLException e) {
             utils.ErrorAction.handleDatabaseError(request, response, e, "DeleteProductController.doPost");
         } catch (IllegalArgumentException e) {
-            utils.ErrorAction.handleValidationError(request, response, e.getMessage(), "DeleteProductController.doPost");
+            utils.ErrorAction.handleValidationError(request, response, e.getMessage(),
+                    "DeleteProductController.doPost");
         } catch (Exception e) {
             utils.ErrorAction.handleServerError(request, response, e, "DeleteProductController.doPost");
         }

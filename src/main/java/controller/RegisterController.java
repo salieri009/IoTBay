@@ -1,7 +1,6 @@
 package controller;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -11,7 +10,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import dao.UserDAOImpl;
 import dao.interfaces.UserDAO;
 import config.DIContainer;
 import model.User;
@@ -20,31 +18,21 @@ import utils.ValidationUtil;
 
 // Note: Mapped in web.xml to avoid conflicts
 public class RegisterController extends HttpServlet {
-    private UserDAO userDAO;
-
-    @Override
-    public void init() {
-        try {
-            Connection connection = DIContainer.getConnection();
-            userDAO = new UserDAOImpl(connection);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to initialize database connection", e);
-        }
-    }
+    // Stateless controller: No DAO field
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
-        
+
         // CSRF protection
         if (!utils.SecurityUtil.validateCSRFToken(request)) {
-            utils.ErrorAction.handleValidationError(request, response, 
-                    "Invalid security token. Please refresh the page and try again.", 
+            utils.ErrorAction.handleValidationError(request, response,
+                    "Invalid security token. Please refresh the page and try again.",
                     "RegisterController.doPost");
             return;
         }
-        
+
         // Rate limiting check
         if (utils.SecurityUtil.isRateLimited(request, 5, 300000)) { // 5 requests per 5 minutes
             utils.ErrorAction.handleRateLimitError(request, response, "RegisterController.doPost");
@@ -52,6 +40,8 @@ public class RegisterController extends HttpServlet {
         }
 
         try {
+            UserDAO userDAO = DIContainer.get(UserDAO.class);
+
             // Secure parameter extraction with validation
             String firstName = utils.SecurityUtil.getValidatedStringParameter(request, "firstName", 50);
             String lastName = utils.SecurityUtil.getValidatedStringParameter(request, "lastName", 50);
@@ -64,7 +54,7 @@ public class RegisterController extends HttpServlet {
             String addressLine2 = request.getParameter("addressLine2"); // Optional
             String dobString = request.getParameter("dateOfBirth"); // Optional
             String paymentMethod = request.getParameter("paymentMethod"); // Optional
-            
+
             // Sanitize inputs (except passwords)
             firstName = utils.SecurityUtil.sanitizeInput(firstName);
             lastName = utils.SecurityUtil.sanitizeInput(lastName);
@@ -82,17 +72,16 @@ public class RegisterController extends HttpServlet {
             // Validate terms of service acceptance
             String tos = request.getParameter("tos");
             if (tos == null || !tos.equals("on")) {
-                utils.ErrorAction.handleValidationError(request, response, 
+                utils.ErrorAction.handleValidationError(request, response,
                         "Terms of service must be accepted", "RegisterController.doPost");
                 return;
             }
 
             // Validate profile data
             String profileError = ValidationUtil.validateRegisterUserProfile(
-                    firstName, lastName, phone, postalCode, addressLine1
-            );
+                    firstName, lastName, phone, postalCode, addressLine1);
             if (profileError != null) {
-                utils.ErrorAction.handleValidationError(request, response, profileError, 
+                utils.ErrorAction.handleValidationError(request, response, profileError,
                         "RegisterController.doPost");
                 return;
             }
@@ -100,14 +89,14 @@ public class RegisterController extends HttpServlet {
             // Validate email format
             String emailError = ValidationUtil.validateEmail(email);
             if (emailError != null) {
-                utils.ErrorAction.handleValidationError(request, response, emailError, 
+                utils.ErrorAction.handleValidationError(request, response, emailError,
                         "RegisterController.doPost");
                 return;
             }
 
             // Validate password strength
             if (!utils.SecurityUtil.isStrongPassword(password)) {
-                utils.ErrorAction.handleValidationError(request, response, 
+                utils.ErrorAction.handleValidationError(request, response,
                         "Password does not meet security requirements", "RegisterController.doPost");
                 return;
             }
@@ -115,7 +104,7 @@ public class RegisterController extends HttpServlet {
             // Confirm password match
             String passwordError = ValidationUtil.validatePasswordChange(password, confirmPassword);
             if (passwordError != null) {
-                utils.ErrorAction.handleValidationError(request, response, passwordError, 
+                utils.ErrorAction.handleValidationError(request, response, passwordError,
                         "RegisterController.doPost");
                 return;
             }
@@ -124,7 +113,7 @@ public class RegisterController extends HttpServlet {
             try {
                 if (userDAO.getUserByEmail(email) != null) {
                     // Generic error to prevent user enumeration
-                    utils.ErrorAction.handleValidationError(request, response, 
+                    utils.ErrorAction.handleValidationError(request, response,
                             "Registration failed", "RegisterController.doPost");
                     return;
                 }
@@ -138,14 +127,14 @@ public class RegisterController extends HttpServlet {
             if (dobString != null && !dobString.trim().isEmpty()) {
                 String dobError = ValidationUtil.validateBirthDate(dobString);
                 if (dobError != null) {
-                    utils.ErrorAction.handleValidationError(request, response, dobError, 
+                    utils.ErrorAction.handleValidationError(request, response, dobError,
                             "RegisterController.doPost");
                     return;
                 }
                 try {
                     dateOfBirth = LocalDate.parse(dobString);
                 } catch (Exception e) {
-                    utils.ErrorAction.handleValidationError(request, response, 
+                    utils.ErrorAction.handleValidationError(request, response,
                             "Invalid date format", "RegisterController.doPost");
                     return;
                 }
@@ -159,7 +148,7 @@ public class RegisterController extends HttpServlet {
             User newUser = new User(
                     0, // id (auto-increment)
                     email,
-                    hashedPassword,  // Use hashed password instead of plain text
+                    hashedPassword, // Use hashed password instead of plain text
                     firstName,
                     lastName,
                     phone,
@@ -171,19 +160,18 @@ public class RegisterController extends HttpServlet {
                     now,
                     now,
                     "customer", // default role
-                    true    
-            );
+                    true);
 
             userDAO.createUser(newUser);
-            
+
             // Log security event
-            utils.ErrorAction.logSecurityEvent("USER_REGISTERED", request, 
+            utils.ErrorAction.logSecurityEvent("USER_REGISTERED", request,
                     "New user registered: " + email);
 
             response.sendRedirect(request.getContextPath() + "/welcome.jsp");
 
         } catch (IllegalArgumentException e) {
-            utils.ErrorAction.handleValidationError(request, response, e.getMessage(), 
+            utils.ErrorAction.handleValidationError(request, response, e.getMessage(),
                     "RegisterController.doPost");
         } catch (SQLException e) {
             utils.ErrorAction.handleDatabaseError(request, response, e, "RegisterController.doPost");

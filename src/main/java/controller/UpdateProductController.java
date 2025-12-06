@@ -23,8 +23,7 @@ public class UpdateProductController extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        Connection connection = DIContainer.getConnection();
-        productDAO = new ProductDAOImpl(connection);
+        productDAO = new ProductDAOImpl();
     }
 
     @Override
@@ -39,7 +38,7 @@ public class UpdateProductController extends HttpServlet {
         // CSRF protection
         if (!utils.SecurityUtil.validateCSRFToken(request)) {
             utils.ErrorAction.handleValidationError(request, response,
-                "CSRF token validation failed", "UpdateProductController.doPost");
+                    "CSRF token validation failed", "UpdateProductController.doPost");
             return;
         }
 
@@ -52,7 +51,7 @@ public class UpdateProductController extends HttpServlet {
             double price = utils.SecurityUtil.getValidatedDoubleParameter(request, "price");
             int stockQuantity = utils.SecurityUtil.getValidatedIntParameter(request, "stockQuantity", 0, 10000);
             String imageUrl = utils.SecurityUtil.getValidatedStringParameter(request, "imageUrl", 500);
-            
+
             // Validate price range
             if (price <= 0 || price > 1000000) {
                 utils.ErrorAction.handleValidationError(request, response,
@@ -80,15 +79,14 @@ public class UpdateProductController extends HttpServlet {
             }
 
             Product updatedProduct = new Product(
-                id,
-                categoryId,
-                name,
-                description,
-                price,
-                stockQuantity,
-                imageUrl,
-                createdAt
-            );
+                    id,
+                    categoryId,
+                    name,
+                    description,
+                    price,
+                    stockQuantity,
+                    imageUrl,
+                    createdAt);
 
             productDAO.updateProduct(id, updatedProduct);
 
@@ -97,7 +95,8 @@ public class UpdateProductController extends HttpServlet {
         } catch (SQLException e) {
             utils.ErrorAction.handleDatabaseError(request, response, e, "UpdateProductController.doPost");
         } catch (IllegalArgumentException e) {
-            utils.ErrorAction.handleValidationError(request, response, e.getMessage(), "UpdateProductController.doPost");
+            utils.ErrorAction.handleValidationError(request, response, e.getMessage(),
+                    "UpdateProductController.doPost");
         } catch (Exception e) {
             utils.ErrorAction.handleServerError(request, response, e, "UpdateProductController.doPost");
         }
@@ -105,10 +104,12 @@ public class UpdateProductController extends HttpServlet {
 
     private boolean isAdmin(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        if (session == null) return false;
+        if (session == null)
+            return false;
 
         Object userObj = session.getAttribute("user");
-        if (!(userObj instanceof User)) return false;
+        if (!(userObj instanceof User))
+            return false;
 
         User user = (User) userObj;
         return "staff".equalsIgnoreCase(user.getRole());

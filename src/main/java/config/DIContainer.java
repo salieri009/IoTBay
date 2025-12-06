@@ -47,11 +47,15 @@ public class DIContainer {
 
     private static void initializeDAOs() throws SQLException {
         // DAO 인스턴스들을 한 번만 생성하여 재사용 (Singleton 패턴)
-        register(UserDAO.class, new UserDAOImpl(connection));
-        register(ProductDAO.class, new ProductDAOImpl(connection));
-        register(AccessLogDAO.class, new AccessLogDAOImpl(connection));
-        register(OrderDAO.class, new OrderDAOImpl(connection));
-        register(CartItemDAO.class, new CartItemDAOImpl(connection));
+        // DAOs now manage their own connections via DIContainer.getConnection()
+        register(UserDAO.class, new UserDAOImpl());
+        register(ProductDAO.class, new ProductDAOImpl());
+        register(AccessLogDAO.class, new AccessLogDAOImpl());
+        register(OrderDAO.class, new OrderDAOImpl());
+        register(CartItemDAO.class, new CartItemDAOImpl());
+        register(dao.ReviewDAO.class, new dao.ReviewDAO());
+        register(dao.interfaces.SupplierDAO.class, new dao.SupplierDAOImpl());
+        register(dao.ShipmentDAO.class, new dao.ShipmentDAO());
     }
 
     @SuppressWarnings("unchecked")

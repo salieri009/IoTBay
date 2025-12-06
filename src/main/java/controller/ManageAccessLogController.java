@@ -1,7 +1,6 @@
 package controller;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -12,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import dao.AccessLogDAOImpl;
 import dao.interfaces.AccessLogDAO;
 import config.DIContainer;
 import model.AccessLog;
@@ -24,12 +22,7 @@ public class ManageAccessLogController extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        try {
-            Connection connection = DIContainer.getConnection();
-            accessLogDAO = new AccessLogDAOImpl(connection);
-        } catch (Exception e) {
-            throw new ServletException("Failed to initialize database connection", e);
-        }
+        accessLogDAO = DIContainer.get(AccessLogDAO.class);
     }
 
     @Override

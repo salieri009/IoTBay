@@ -21,32 +21,34 @@ import java.util.logging.Level;
 
 @WebServlet("/api/login")
 public class LoginController extends HttpServlet {
-    private AccessLogDAO accessLogDAO;
     private UserService userService;
     private static final Logger logger = Logger.getLogger(LoginController.class.getName());
 
     @Override
     public void init() {
         try {
-            // Use DIContainer for dependency injection
-            accessLogDAO = DIContainer.get(AccessLogDAO.class);
-
-            // Fallback if DIContainer not available
-            if (accessLogDAO == null) {
-                java.sql.Connection connection = DIContainer.getConnection();
-                accessLogDAO = new dao.AccessLogDAOImpl(connection);
-            }
-
             // Initialize UserService (uses DIContainer internally)
             userService = new UserService();
         } catch (Exception e) {
-            throw new RuntimeException("Failed to initialize LoginController", e);
+            // Log error but allow servlet to start - requests might fail gracefully later
+            logger.log(Level.SEVERE, "Failed to initialize LoginController dependencies", e);
         }
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
+        // Ensure userService is initialized if init() failed previously
+        if (userService == null) {
+            try {
+                userService = new UserService();
+            } catch (Exception e) {
+                utils.ErrorAction.handleServerError(request, response, e, "LoginController.doPost_LazyInit");
+                return;
+            }
+        }
+
         try {
             // Debug: Log all parameters (using getParameter for logging only, before
             // validation)
@@ -92,6 +94,9 @@ public class LoginController extends HttpServlet {
             // Use UserService for authentication (handles password verification)
             User user;
             try {
+                // Note: UserService handles its own DB connection lifecycle internally
+                // Ideally UserService should also accept a connection or be stateless,
+                // but we are focusing on Controller layer first.
                 user = userService.authenticateUser(email, password);
             } catch (IllegalArgumentException e) {
                 // Authentication failed - use generic error to prevent enumeration
@@ -106,72 +111,21 @@ public class LoginController extends HttpServlet {
                 return;
             }
 
-            // =================Check if the user is active ======================
-
-            // 2. Account locked (too many failed attempts)
-            // if (user.isLocked()) {
-            // response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            // response.getWriter().write("{\"message\": \"Your account is locked due to too
-            // many failed login attempts. Please reset your password or contact
-            // support.\"}");
-            // return;
-            // }
-
-            // // 3. Account inactive or suspended
-            // if (!user.isActive()) {
-            // response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            // response.getWriter().write("{\"message\": \"Your account is inactive or
-            // suspended. Please contact support.\"}");
-            // return;
-            // }
-
-            // // 4. Email not verified
-            // if (!user.isEmailVerified()) {
-            // response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            // response.getWriter().write("{\"message\": \"Please verify your email before
-            // logging in.\"}");
-            // return;
-            // }
-
-            // // 5. Password expired
-            // if (user.isPasswordExpired()) {
-            // response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            // response.getWriter().write("{\"message\": \"Your password has expired. Please
-            // reset your password.\"}");
-            // return;
-            // }
-
-            // // 6. Password check (use hashed password)
-            // if (!PasswordUtil.checkPassword(password, user.getPassword())) {
-            // // Optionally, increment failed login attempts here
-            // response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            // response.getWriter().write(genericError);
-            // return;
-            // }
-
-            // // 7. Multi-factor authentication required (stub, expand as needed)
-            // if (user.isMfaEnabled() && !user.isMfaVerified()) {
-            // response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            // response.getWriter().write("{\"message\": \"Multi-factor authentication
-            // required.\"}");
-            // // Optionally, redirect to MFA verification page.
-            // return;
-            // }
-
-            // =======================================================================
-
             // Create access log with structured logging
-            LocalDateTime now = LocalDateTime.now();
-            String action = String.format("User %s (ID: %d, Role: %s) logged in successfully",
-                    user.getEmail(), user.getId(), user.getRole());
-            AccessLog accessLog = new AccessLog(0, user.getId(), action, now);
             try {
+                AccessLogDAO accessLogDAO = DIContainer.get(AccessLogDAO.class);
+
+                LocalDateTime now = LocalDateTime.now();
+                String action = String.format("User %s (ID: %d, Role: %s) logged in successfully",
+                        user.getEmail(), user.getId(), user.getRole());
+                AccessLog accessLog = new AccessLog(0, user.getId(), action, now);
+
                 accessLogDAO.createAccessLog(accessLog);
                 logger.log(Level.INFO, "Login successful: userId={0}, email={1}, role={2}, ip={3}",
                         new Object[] { user.getId(), user.getEmail(), user.getRole(),
                                 utils.SecurityUtil.getClientIP(request) });
             } catch (SQLException e) {
-                // Log error but don't fail login
+                // Log error but don't fail login - logging is secondary
                 logger.log(Level.WARNING, "Failed to create access log for login: " + e.getMessage(), e);
             }
 
@@ -182,7 +136,7 @@ public class LoginController extends HttpServlet {
             // Redirect to home page (with context path!)
             response.sendRedirect(request.getContextPath() + "/");
         } catch (Exception e) {
-            // Catch-all for unexpected errors (including SQLException from access log)
+            // Catch-all for unexpected errors (including generic runtime exceptions)
             logger.log(Level.SEVERE, "Error during login: " + e.getMessage(), e);
             request.setAttribute("errorMessage", "An error occurred. Please try again later.");
             request.getRequestDispatcher("/login.jsp").forward(request, response);

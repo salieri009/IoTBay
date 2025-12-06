@@ -28,10 +28,9 @@ public class ReportsDashboardController extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        Connection connection = DIContainer.getConnection();
-        this.userDAO = new UserDAOImpl(connection);
-        this.productDAO = new ProductDAOImpl(connection);
-        this.orderDAO = new OrderDAOImpl(connection);
+        this.userDAO = DIContainer.get(UserDAO.class);
+        this.productDAO = DIContainer.get(ProductDAO.class);
+        this.orderDAO = DIContainer.get(OrderDAO.class);
     }
 
     @Override

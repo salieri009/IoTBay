@@ -34,8 +34,7 @@ public class AccesslogController extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        Connection connection = DIContainer.getConnection();
-        this.accessLogDAO = new AccessLogDAOImpl(connection);
+        this.accessLogDAO = DIContainer.get(AccessLogDAO.class);
     }
 
     @Override
@@ -57,14 +56,14 @@ public class AccesslogController extends HttpServlet {
 
         User user = (User) userObj;
         String pathInfo = request.getPathInfo();
-        
+
         // Validate pathInfo
         if (pathInfo == null) {
             pathInfo = "/";
         }
         String acceptHeader = request.getHeader("Accept");
         boolean isJsonRequest = acceptHeader != null && acceptHeader.contains("application/json");
-        
+
         // Check if this is a specific endpoint
         if (pathInfo != null && !pathInfo.equals("/")) {
             if (pathInfo.startsWith("/user/")) {
@@ -72,8 +71,8 @@ public class AccesslogController extends HttpServlet {
                 String userIdStr = pathInfo.substring(7);
                 try {
                     int userId = Integer.parseInt(userIdStr);
-                    boolean isStaff = "staff".equalsIgnoreCase(user.getRole()) || 
-                                     "admin".equalsIgnoreCase(user.getRole());
+                    boolean isStaff = "staff".equalsIgnoreCase(user.getRole()) ||
+                            "admin".equalsIgnoreCase(user.getRole());
                     if (isStaff || user.getId() == userId) {
                         if (isJsonRequest) {
                             getUserAccessLogsJson(response, userId);
@@ -106,8 +105,7 @@ public class AccesslogController extends HttpServlet {
         LocalDate startDate = null, endDate = null;
         LocalDate today = LocalDate.now();
 
-
-        //date parsing with error handling
+        // date parsing with error handling
         try {
             if (startDateStr != null && !startDateStr.isEmpty()) {
                 startDate = LocalDate.parse(startDateStr);
@@ -116,26 +114,26 @@ public class AccesslogController extends HttpServlet {
                 endDate = LocalDate.parse(endDateStr);
             }
         } catch (DateTimeParseException e) {
-            utils.ErrorAction.handleValidationError(request, response, 
-                "Date format is invalid. Please use YYYY-MM-DD.", "AccesslogController.doPost");
+            utils.ErrorAction.handleValidationError(request, response,
+                    "Date format is invalid. Please use YYYY-MM-DD.", "AccesslogController.doPost");
             return;
         }
 
         // 3. Date validation
         if ((startDate != null && startDate.isAfter(today)) || (endDate != null && endDate.isAfter(today))) {
-            utils.ErrorAction.handleValidationError(request, response, 
-                "You cannot search for access logs in the future.", "AccesslogController.doPost");
+            utils.ErrorAction.handleValidationError(request, response,
+                    "You cannot search for access logs in the future.", "AccesslogController.doPost");
             return;
         }
 
-      //the start date is null and end date is not null
+        // the start date is null and end date is not null
         if (startDate == null && endDate != null) {
-            utils.ErrorAction.handleValidationError(request, response, 
-                "Please select a start date when searching with an end date.", "AccesslogController.doPost");
+            utils.ErrorAction.handleValidationError(request, response,
+                    "Please select a start date when searching with an end date.", "AccesslogController.doPost");
             return;
         }
 
-        //if the start date is null and end date is null
+        // if the start date is null and end date is null
         if (startDate != null && endDate == null) {
             endDate = today;
         }
@@ -172,34 +170,34 @@ public class AccesslogController extends HttpServlet {
         if (isJsonRequest) {
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
-            
+
             JsonObject json = new JsonObject();
             json.addProperty("success", true);
             json.add("accessLogs", gson.toJsonTree(accessLogList != null ? accessLogList : Collections.emptyList()));
             json.addProperty("count", accessLogList != null ? accessLogList.size() : 0);
-            
+
             response.getWriter().write(gson.toJson(json));
         } else {
             request.getRequestDispatcher("/WEB-INF/views/accessLog.jsp").forward(request, response);
         }
     }
-    
+
     // JSON API methods
-    private void getUserAccessLogsJson(HttpServletResponse response, int userId) 
+    private void getUserAccessLogsJson(HttpServletResponse response, int userId)
             throws ServletException, IOException {
-        
+
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        
+
         try {
             List<AccessLog> accessLogs = accessLogDAO.getAccessLogsByUserId(userId);
-            
+
             JsonObject json = new JsonObject();
             json.addProperty("success", true);
             json.add("accessLogs", gson.toJsonTree(accessLogs));
             json.addProperty("count", accessLogs.size());
             json.addProperty("userId", userId);
-            
+
             response.getWriter().write(gson.toJson(json));
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Failed to retrieve access logs for userId " + userId, e);
@@ -210,48 +208,58 @@ public class AccesslogController extends HttpServlet {
             response.getWriter().write(gson.toJson(json));
         }
     }
-    
-    private void searchAccessLogsJson(HttpServletRequest request, HttpServletResponse response, User user) 
+
+    private void searchAccessLogsJson(HttpServletRequest request, HttpServletResponse response, User user)
             throws ServletException, IOException {
-        
+
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        
+
         String userIdStr = request.getParameter("userId");
         String action = request.getParameter("action");
         String dateFrom = request.getParameter("dateFrom");
         String dateTo = request.getParameter("dateTo");
         String ipAddress = request.getParameter("ipAddress");
-        
-        boolean isStaff = "staff".equalsIgnoreCase(user.getRole()) || 
-                         "admin".equalsIgnoreCase(user.getRole());
-        
+
+        boolean isStaff = "staff".equalsIgnoreCase(user.getRole()) ||
+                "admin".equalsIgnoreCase(user.getRole());
+
         try {
             List<AccessLog> accessLogs;
-            
+
             // If staff/admin, can search all logs; otherwise only own logs
             if (isStaff && userIdStr != null && !userIdStr.trim().isEmpty()) {
-                int searchUserId = Integer.parseInt(userIdStr);
+                int searchUserId;
+                try {
+                    searchUserId = Integer.parseInt(userIdStr);
+                } catch (NumberFormatException e) {
+                    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    JsonObject json = new JsonObject();
+                    json.addProperty("success", false);
+                    json.addProperty("error", "Invalid User ID format");
+                    response.getWriter().write(gson.toJson(json));
+                    return;
+                }
                 accessLogs = accessLogDAO.getAccessLogsByUserId(searchUserId);
             } else {
                 accessLogs = accessLogDAO.getAccessLogsByUserId(user.getId());
             }
-            
+
             // Apply additional filters if provided
             if (action != null && !action.trim().isEmpty()) {
                 final String actionFilter = action.trim();
                 accessLogs = accessLogs.stream()
-                    .filter(log -> actionFilter.equalsIgnoreCase(log.getAction()))
-                    .collect(java.util.stream.Collectors.toList());
+                        .filter(log -> actionFilter.equalsIgnoreCase(log.getAction()))
+                        .collect(java.util.stream.Collectors.toList());
             }
-            
+
             if (ipAddress != null && !ipAddress.trim().isEmpty()) {
                 final String ipFilter = ipAddress.trim();
                 accessLogs = accessLogs.stream()
-                    .filter(log -> log.getIpAddress() != null && log.getIpAddress().contains(ipFilter))
-                    .collect(java.util.stream.Collectors.toList());
+                        .filter(log -> log.getIpAddress() != null && log.getIpAddress().contains(ipFilter))
+                        .collect(java.util.stream.Collectors.toList());
             }
-            
+
             // Date range filtering would require additional DAO methods
             // For now, filter in memory if dates provided
             if (dateFrom != null && dateTo != null) {
@@ -261,23 +269,24 @@ public class AccesslogController extends HttpServlet {
                     final LocalDate finalStartDate = startDate;
                     final LocalDate finalEndDate = endDate;
                     accessLogs = accessLogs.stream()
-                        .filter(log -> {
-                            if (log.getTimestamp() == null) return false;
-                            LocalDate logDate = log.getTimestamp().toLocalDate();
-                            return (logDate.isEqual(finalStartDate) || logDate.isAfter(finalStartDate)) && 
-                                   (logDate.isEqual(finalEndDate) || logDate.isBefore(finalEndDate));
-                        })
-                        .collect(java.util.stream.Collectors.toList());
+                            .filter(log -> {
+                                if (log.getTimestamp() == null)
+                                    return false;
+                                LocalDate logDate = log.getTimestamp().toLocalDate();
+                                return (logDate.isEqual(finalStartDate) || logDate.isAfter(finalStartDate)) &&
+                                        (logDate.isEqual(finalEndDate) || logDate.isBefore(finalEndDate));
+                            })
+                            .collect(java.util.stream.Collectors.toList());
                 } catch (DateTimeParseException e) {
                     // Invalid date format, ignore filter
                 }
             }
-            
+
             JsonObject json = new JsonObject();
             json.addProperty("success", true);
             json.add("accessLogs", gson.toJsonTree(accessLogs));
             json.addProperty("count", accessLogs.size());
-            
+
             response.getWriter().write(gson.toJson(json));
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Failed to search access logs", e);
@@ -289,5 +298,6 @@ public class AccesslogController extends HttpServlet {
         }
     }
 
-    // POST, PUT, DELETE are not implemented (users cannot edit/delete their access logs)
+    // POST, PUT, DELETE are not implemented (users cannot edit/delete their access
+    // logs)
 }

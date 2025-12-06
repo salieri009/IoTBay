@@ -2,12 +2,10 @@ package controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
@@ -17,15 +15,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import dao.AccessLogDAOImpl;
-import dao.UserDAOImpl;
-import dao.OrderDAOImpl;
-import dao.ProductDAOImpl;
+import config.DIContainer;
 import dao.interfaces.AccessLogDAO;
-import dao.interfaces.UserDAO;
 import dao.interfaces.OrderDAO;
 import dao.interfaces.ProductDAO;
-import config.DIContainer;
+import dao.interfaces.UserDAO;
 import model.AccessLog;
 import model.User;
 import model.Order;
@@ -43,11 +37,10 @@ public class DataManagementController extends HttpServlet {
     @Override
     public void init() throws ServletException {
         try {
-            Connection connection = DIContainer.getConnection();
-            this.accessLogDAO = new AccessLogDAOImpl(connection);
-            this.userDAO = new UserDAOImpl(connection);
-            this.orderDAO = new OrderDAOImpl(connection);
-            this.productDAO = new ProductDAOImpl(connection);
+            this.accessLogDAO = DIContainer.get(AccessLogDAO.class);
+            this.userDAO = DIContainer.get(UserDAO.class);
+            this.orderDAO = DIContainer.get(OrderDAO.class);
+            this.productDAO = DIContainer.get(ProductDAO.class);
         } catch (Exception e) {
             throw new ServletException("Failed to initialize DataManagementController", e);
         }

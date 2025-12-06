@@ -2,22 +2,23 @@ package dao;
 
 import dao.interfaces.CartItemDAO;
 import model.CartItem;
+import config.DIContainer;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDateTime;
 
 public class CartItemDAOImpl implements CartItemDAO {
-    private final Connection connection;
 
-    public CartItemDAOImpl(Connection connection) {
-        this.connection = connection;
+    public CartItemDAOImpl() {
+        // No-args constructor
     }
 
     @Override
     public void createCartItem(CartItem cartItem) throws SQLException {
         String query = "INSERT INTO cart_items (user_id, product_id, quantity, price, added_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setInt(1, cartItem.getUserId());
             pstmt.setInt(2, cartItem.getProductId());
             pstmt.setInt(3, cartItem.getQuantity());
@@ -31,7 +32,8 @@ public class CartItemDAOImpl implements CartItemDAO {
     @Override
     public CartItem getCartItemById(int id) throws SQLException {
         String query = "SELECT * FROM cart_items WHERE id = ?";
-        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setInt(1, id);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
@@ -46,7 +48,8 @@ public class CartItemDAOImpl implements CartItemDAO {
     public List<CartItem> getCartItemsByUserId(int userId) throws SQLException {
         String query = "SELECT * FROM cart_items WHERE user_id = ?";
         List<CartItem> cartItems = new ArrayList<>();
-        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setInt(1, userId);
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
@@ -60,7 +63,8 @@ public class CartItemDAOImpl implements CartItemDAO {
     @Override
     public void updateCartItem(int id, CartItem cartItem) throws SQLException {
         String query = "UPDATE cart_items SET quantity = ?, price = ?, updated_at = ? WHERE id = ?";
-        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setInt(1, cartItem.getQuantity());
             pstmt.setBigDecimal(2, cartItem.getPrice());
             pstmt.setTimestamp(3, Timestamp.valueOf(LocalDateTime.now()));
@@ -72,7 +76,8 @@ public class CartItemDAOImpl implements CartItemDAO {
     @Override
     public void deleteCartItem(int id) throws SQLException {
         String query = "DELETE FROM cart_items WHERE id = ?";
-        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setInt(1, id);
             pstmt.executeUpdate();
         }
@@ -81,7 +86,8 @@ public class CartItemDAOImpl implements CartItemDAO {
     @Override
     public void deleteCartItemsByUserId(int userId) throws SQLException {
         String query = "DELETE FROM cart_items WHERE user_id = ?";
-        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setInt(1, userId);
             pstmt.executeUpdate();
         }
@@ -91,7 +97,8 @@ public class CartItemDAOImpl implements CartItemDAO {
     public List<CartItem> getAllCartItems() throws SQLException {
         String query = "SELECT * FROM cart_items";
         List<CartItem> cartItems = new ArrayList<>();
-        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement pstmt = connection.prepareStatement(query)) {
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     cartItems.add(createCartItemFromResultSet(rs));

@@ -1,7 +1,6 @@
 package controller;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -14,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import dao.UserDAOImpl;
 import dao.interfaces.UserDAO;
 import config.DIContainer;
 import model.User;
@@ -26,8 +24,7 @@ public class ManageUserController extends HttpServlet {
     @Override
     public void init() throws ServletException {
         try {
-            Connection connection = DIContainer.getConnection();
-            userDAO = new UserDAOImpl(connection);
+            userDAO = DIContainer.get(UserDAO.class);
         } catch (Exception e) {
             throw new ServletException("Failed to initialize database connection", e);
         }

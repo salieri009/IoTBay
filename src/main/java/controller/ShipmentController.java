@@ -1,7 +1,6 @@
 package controller;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -20,7 +19,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import config.DIContainer;
-import dao.OrderDAOImpl;
 import dao.ShipmentDAO;
 import dao.interfaces.OrderDAO;
 import model.Order;
@@ -30,30 +28,25 @@ import utils.InputValidator;
 
 @WebServlet("/shipment/*")
 public class ShipmentController extends HttpServlet {
-    
+
     private ShipmentDAO shipmentDAO;
     private OrderDAO orderDAO;
     private final Gson gson = new Gson();
-    
+
     @Override
     public void init() throws ServletException {
-        try {
-            Connection connection = DIContainer.getConnection();
-            shipmentDAO = new ShipmentDAO(connection);
-            orderDAO = new OrderDAOImpl(connection);
-        } catch (Exception e) {
-            throw new ServletException("Failed to initialize ShipmentController", e);
-        }
+        shipmentDAO = DIContainer.get(ShipmentDAO.class);
+        orderDAO = DIContainer.get(OrderDAO.class);
     }
-    
+
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         String pathInfo = request.getPathInfo();
         String acceptHeader = request.getHeader("Accept");
         boolean isJsonRequest = acceptHeader != null && acceptHeader.contains("application/json");
-        
+
         try {
             if (pathInfo == null || pathInfo.equals("/")) {
                 if (isJsonRequest) {
@@ -63,9 +56,9 @@ public class ShipmentController extends HttpServlet {
                 }
             } else if (pathInfo.startsWith("/view/") || pathInfo.matches("/\\d+")) {
                 // Support both /view/{id} and /{id}
-                String shipmentIdStr = pathInfo.startsWith("/view/") 
-                    ? pathInfo.substring(6) 
-                    : pathInfo.substring(1);
+                String shipmentIdStr = pathInfo.startsWith("/view/")
+                        ? pathInfo.substring(6)
+                        : pathInfo.substring(1);
                 int shipmentId = Integer.parseInt(shipmentIdStr);
                 if (isJsonRequest) {
                     viewShipmentJson(request, response, shipmentId);
@@ -106,13 +99,13 @@ public class ShipmentController extends HttpServlet {
             }
         }
     }
-    
+
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         String pathInfo = request.getPathInfo();
-        
+
         try {
             if (pathInfo == null || pathInfo.equals("/create")) {
                 createShipment(request, response);
@@ -129,24 +122,24 @@ public class ShipmentController extends HttpServlet {
             handleError(request, response, "Error processing shipment", e);
         }
     }
-    
-    private void createShipment(HttpServletRequest request, HttpServletResponse response) 
+
+    private void createShipment(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
-        
+
         HttpSession session = request.getSession(false);
         if (session == null) {
             response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
-        
+
         Object userObj = session.getAttribute("user");
         if (!(userObj instanceof User)) {
             response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
-        
+
         User currentUser = (User) userObj;
-        
+
         // Rate limiting check
         if (utils.SecurityUtil.isRateLimited(request, 10, 60000)) { // 10 requests per minute
             utils.ErrorAction.handleRateLimitError(request, response, "ShipmentController.createShipment");
@@ -169,7 +162,7 @@ public class ShipmentController extends HttpServlet {
         String zipCode = utils.SecurityUtil.getValidatedStringParameter(request, "zipCode", 10);
         String country = utils.SecurityUtil.getValidatedStringParameter(request, "country", 100);
         String shipmentDateStr = request.getParameter("shipmentDate"); // Optional
-        
+
         // Sanitize inputs
         shipmentMethod = utils.SecurityUtil.sanitizeInput(shipmentMethod);
         address = utils.SecurityUtil.sanitizeInput(address);
@@ -177,7 +170,7 @@ public class ShipmentController extends HttpServlet {
         state = utils.SecurityUtil.sanitizeInput(state);
         zipCode = utils.SecurityUtil.sanitizeInput(zipCode);
         country = utils.SecurityUtil.sanitizeInput(country);
-        
+
         // Validate shipment using ValidationUtil
         String validationError = utils.ValidationUtil.validateShipment(shipmentMethod, address, shipmentDateStr);
         if (validationError != null) {
@@ -185,7 +178,7 @@ public class ShipmentController extends HttpServlet {
                     "ShipmentController.createShipment");
             return;
         }
-        
+
         // Verify order exists and belongs to user
         Order order = orderDAO.findById(orderId);
         if (order == null) {
@@ -193,13 +186,13 @@ public class ShipmentController extends HttpServlet {
             request.getRequestDispatcher("/shipment-form.jsp").forward(request, response);
             return;
         }
-        
-        if (order.getUserId() != currentUser.getUserId() && 
-            !"staff".equalsIgnoreCase(currentUser.getRole())) {
+
+        if (order.getUserId() != currentUser.getUserId() &&
+                !"staff".equalsIgnoreCase(currentUser.getRole())) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
-        
+
         // Create shipment record
         Shipment shipment = new Shipment();
         shipment.setOrderId(orderId);
@@ -211,7 +204,7 @@ public class ShipmentController extends HttpServlet {
         shipment.setCountry(country);
         shipment.setStatus("PREPARING");
         shipment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-        
+
         // Parse shipment date if provided
         if (shipmentDateStr != null && !shipmentDateStr.trim().isEmpty()) {
             try {
@@ -224,28 +217,28 @@ public class ShipmentController extends HttpServlet {
         } else {
             shipment.setShipmentDate(new Timestamp(System.currentTimeMillis()));
         }
-        
+
         shipmentDAO.create(shipment);
-        
+
         // Log security event
         utils.ErrorAction.logSecurityEvent("SHIPMENT_CREATED", request,
                 "Shipment created for order: " + orderId);
-        
+
         session.setAttribute("successMessage", "Shipment created successfully");
         response.sendRedirect(request.getContextPath() + "/shipment/list");
     }
-    
-    private void updateShipment(HttpServletRequest request, HttpServletResponse response) 
+
+    private void updateShipment(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
-        
+
         Integer shipmentId = Integer.parseInt(request.getParameter("shipmentId"));
         Shipment shipment = shipmentDAO.findById(shipmentId);
-        
+
         if (shipment == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
-        
+
         // Check if shipment can be updated (not DELIVERED)
         if ("DELIVERED".equals(shipment.getStatus())) {
             request.setAttribute("error", "Cannot update delivered shipment");
@@ -253,43 +246,43 @@ public class ShipmentController extends HttpServlet {
             request.getRequestDispatcher("/shipment-view.jsp").forward(request, response);
             return;
         }
-        
+
         // Verify user access
         HttpSession session = request.getSession(false);
         if (session == null) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
-        
+
         Object userObj = session.getAttribute("user");
         if (!(userObj instanceof User)) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
-        
+
         User currentUser = (User) userObj;
         Order order = orderDAO.findById(shipment.getOrderId());
-        
-        if (order.getUserId() != currentUser.getUserId() && 
-            !"staff".equalsIgnoreCase(currentUser.getRole())) {
+
+        if (order.getUserId() != currentUser.getUserId() &&
+                !"staff".equalsIgnoreCase(currentUser.getRole())) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
-        
+
         // Update shipment details
         String shipmentMethod = InputValidator.validateAndSanitize(
-            request.getParameter("shipmentMethod"), "Shipment method");
+                request.getParameter("shipmentMethod"), "Shipment method");
         String address = InputValidator.validateAndSanitize(
-            request.getParameter("address"), "Address");
+                request.getParameter("address"), "Address");
         String city = InputValidator.validateAndSanitize(
-            request.getParameter("city"), "City");
+                request.getParameter("city"), "City");
         String state = InputValidator.validateAndSanitize(
-            request.getParameter("state"), "State");
+                request.getParameter("state"), "State");
         String zipCode = InputValidator.validateAndSanitize(
-            request.getParameter("zipCode"), "Zip code");
+                request.getParameter("zipCode"), "Zip code");
         String country = InputValidator.validateAndSanitize(
-            request.getParameter("country"), "Country");
-        
+                request.getParameter("country"), "Country");
+
         shipment.setShipmentMethod(shipmentMethod);
         shipment.setAddress(address);
         shipment.setCity(city);
@@ -297,24 +290,24 @@ public class ShipmentController extends HttpServlet {
         shipment.setZipCode(zipCode);
         shipment.setCountry(country);
         shipment.setUpdatedDate(LocalDateTime.now());
-        
+
         shipmentDAO.update(shipment);
-        
+
         session.setAttribute("successMessage", "Shipment updated successfully");
         response.sendRedirect(request.getContextPath() + "/shipment/view/" + shipmentId);
     }
-    
-    private void deleteShipment(HttpServletRequest request, HttpServletResponse response) 
+
+    private void deleteShipment(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
-        
+
         Integer shipmentId = Integer.parseInt(request.getParameter("shipmentId"));
         Shipment shipment = shipmentDAO.findById(shipmentId);
-        
+
         if (shipment == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
-        
+
         // Check if shipment can be deleted (only PREPARING status)
         if (!"PREPARING".equals(shipment.getStatus())) {
             request.setAttribute("error", "Cannot delete shipment that is already in transit");
@@ -322,108 +315,108 @@ public class ShipmentController extends HttpServlet {
             request.getRequestDispatcher("/shipment-view.jsp").forward(request, response);
             return;
         }
-        
+
         // Verify user access
         HttpSession session = request.getSession(false);
         if (session == null) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
-        
+
         Object userObj = session.getAttribute("user");
         if (!(userObj instanceof User)) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
-        
+
         User currentUser = (User) userObj;
         Order order = orderDAO.findById(shipment.getOrderId());
-        
-        if (order.getUserId() != currentUser.getUserId() && 
-            !"staff".equalsIgnoreCase(currentUser.getRole())) {
+
+        if (order.getUserId() != currentUser.getUserId() &&
+                !"staff".equalsIgnoreCase(currentUser.getRole())) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
-        
+
         shipmentDAO.delete(shipmentId);
-        
+
         session.setAttribute("successMessage", "Shipment deleted successfully");
         response.sendRedirect(request.getContextPath() + "/shipment/");
     }
-    
-    private void updateShipmentStatus(HttpServletRequest request, HttpServletResponse response) 
+
+    private void updateShipmentStatus(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
-        
+
         // Only staff can update shipment status
         HttpSession session = request.getSession(false);
         if (session == null) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
-        
+
         Object userObj = session.getAttribute("user");
         if (!(userObj instanceof User)) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
-        
+
         User currentUser = (User) userObj;
-        
+
         if (!"staff".equalsIgnoreCase(currentUser.getRole())) {
             utils.ErrorAction.handleAuthorizationError(request, response, "ShipmentController.methodName");
             return;
         }
-        
+
         Integer shipmentId = Integer.parseInt(request.getParameter("shipmentId"));
         String newStatus = InputValidator.validateAndSanitize(
-            request.getParameter("status"), "Status");
+                request.getParameter("status"), "Status");
         String trackingNumber = request.getParameter("trackingNumber");
-        
+
         Shipment shipment = shipmentDAO.findById(shipmentId);
-        
+
         if (shipment == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
-        
+
         shipment.setStatus(newStatus);
         if (trackingNumber != null && !trackingNumber.trim().isEmpty()) {
             shipment.setTrackingNumber(trackingNumber);
         }
         shipment.setUpdatedDate(LocalDateTime.now());
-        
+
         // If status is SHIPPED or DELIVERED, update the corresponding date
         if ("SHIPPED".equals(newStatus) && shipment.getShipmentDate() == null) {
             shipment.setShipmentDate(new Timestamp(System.currentTimeMillis()));
         } else if ("DELIVERED".equals(newStatus)) {
             shipment.setDeliveryDate(new Timestamp(System.currentTimeMillis()));
         }
-        
+
         shipmentDAO.update(shipment);
-        
+
         session.setAttribute("successMessage", "Shipment status updated successfully");
         response.sendRedirect(request.getContextPath() + "/shipment/view/" + shipmentId);
     }
-    
-    private void listShipments(HttpServletRequest request, HttpServletResponse response) 
+
+    private void listShipments(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
-        
+
         HttpSession session = request.getSession(false);
         if (session == null) {
             response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
-        
+
         Object userObj = session.getAttribute("user");
         if (!(userObj instanceof User)) {
             response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
-        
+
         User currentUser = (User) userObj;
-        
+
         List<Shipment> shipments;
-        
+
         if ("staff".equalsIgnoreCase(currentUser.getRole())) {
             // Staff can see all shipments
             shipments = shipmentDAO.findAll();
@@ -431,86 +424,86 @@ public class ShipmentController extends HttpServlet {
             // Customers can only see their own shipments
             shipments = shipmentDAO.findByUserId(currentUser.getUserId());
         }
-        
+
         request.setAttribute("shipments", shipments);
         request.getRequestDispatcher("/shipment-list.jsp").forward(request, response);
     }
-    
-    private void viewShipment(HttpServletRequest request, HttpServletResponse response) 
+
+    private void viewShipment(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
-        
+
         String pathInfo = request.getPathInfo();
         Integer shipmentId = Integer.parseInt(pathInfo.substring(6)); // Remove "/view/"
-        
+
         Shipment shipment = shipmentDAO.findById(shipmentId);
-        
+
         if (shipment == null) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
-        
+
         // Verify user access
         HttpSession session = request.getSession(false);
         if (session == null) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
-        
+
         Object userObj = session.getAttribute("user");
         if (!(userObj instanceof User)) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
-        
+
         User currentUser = (User) userObj;
         Order order = orderDAO.findById(shipment.getOrderId());
-        
-        if (order.getUserId() != currentUser.getUserId() && 
-            !"staff".equalsIgnoreCase(currentUser.getRole())) {
+
+        if (order.getUserId() != currentUser.getUserId() &&
+                !"staff".equalsIgnoreCase(currentUser.getRole())) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return;
         }
-        
+
         request.setAttribute("shipment", shipment);
         request.setAttribute("order", order);
         request.getRequestDispatcher("/shipment-view.jsp").forward(request, response);
     }
-    
-    private void searchShipments(HttpServletRequest request, HttpServletResponse response) 
+
+    private void searchShipments(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
-        
+
         HttpSession session = request.getSession(false);
         if (session == null) {
             response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
-        
+
         Object userObj = session.getAttribute("user");
         if (!(userObj instanceof User)) {
             response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
-        
+
         User currentUser = (User) userObj;
-        
+
         String shipmentIdStr = request.getParameter("shipmentId");
         String trackingNumber = request.getParameter("trackingNumber");
         String dateFrom = request.getParameter("dateFrom");
         String dateTo = request.getParameter("dateTo");
         String status = request.getParameter("status");
-        
+
         List<Shipment> shipments;
-        
+
         if (shipmentIdStr != null && !shipmentIdStr.trim().isEmpty()) {
             // Search by shipment ID
             Integer shipmentId = Integer.parseInt(shipmentIdStr);
             Shipment shipment = shipmentDAO.findById(shipmentId);
-            
+
             // Check access permission
             if (shipment != null) {
                 Order order = orderDAO.findById(shipment.getOrderId());
-                if (order.getUserId() == currentUser.getUserId() || 
-                    "staff".equalsIgnoreCase(currentUser.getRole())) {
+                if (order.getUserId() == currentUser.getUserId() ||
+                        "staff".equalsIgnoreCase(currentUser.getRole())) {
                     shipments = Collections.singletonList(shipment);
                 } else {
                     shipments = Collections.emptyList();
@@ -521,11 +514,11 @@ public class ShipmentController extends HttpServlet {
         } else if (trackingNumber != null && !trackingNumber.trim().isEmpty()) {
             // Search by tracking number
             Shipment shipment = shipmentDAO.findByTrackingNumber(trackingNumber);
-            
+
             if (shipment != null) {
                 Order order = orderDAO.findById(shipment.getOrderId());
-                if (order.getUserId() == currentUser.getUserId() || 
-                    "staff".equalsIgnoreCase(currentUser.getRole())) {
+                if (order.getUserId() == currentUser.getUserId() ||
+                        "staff".equalsIgnoreCase(currentUser.getRole())) {
                     shipments = Collections.singletonList(shipment);
                 } else {
                     shipments = Collections.emptyList();
@@ -541,58 +534,58 @@ public class ShipmentController extends HttpServlet {
                 shipments = shipmentDAO.searchShipments(currentUser.getUserId(), dateFrom, dateTo, status);
             }
         }
-        
+
         request.setAttribute("shipments", shipments);
         request.setAttribute("searchPerformed", true);
         request.getRequestDispatcher("/shipment-list.jsp").forward(request, response);
     }
-    
-    private void trackShipment(HttpServletRequest request, HttpServletResponse response) 
+
+    private void trackShipment(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
-        
+
         String trackingNumber = request.getParameter("trackingNumber");
-        
+
         if (trackingNumber == null || trackingNumber.trim().isEmpty()) {
             request.setAttribute("error", "Please provide a tracking number");
             request.getRequestDispatcher("/shipment-tracking.jsp").forward(request, response);
             return;
         }
-        
+
         Shipment shipment = shipmentDAO.findByTrackingNumber(trackingNumber);
-        
+
         if (shipment == null) {
             request.setAttribute("error", "Shipment not found for tracking number: " + trackingNumber);
             request.getRequestDispatcher("/shipment-tracking.jsp").forward(request, response);
             return;
         }
-        
+
         // Get order details
         Order order = orderDAO.findById(shipment.getOrderId());
-        
+
         request.setAttribute("shipment", shipment);
         request.setAttribute("order", order);
         request.getRequestDispatcher("/shipment-tracking.jsp").forward(request, response);
     }
-    
-    private void showShipmentForm(HttpServletRequest request, HttpServletResponse response) 
+
+    private void showShipmentForm(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         String orderId = request.getParameter("orderId");
-        
+
         if (orderId != null) {
             request.setAttribute("orderId", orderId);
         }
-        
+
         request.getRequestDispatcher("/shipment-form.jsp").forward(request, response);
     }
-    
+
     // JSON API methods
-    private void listShipmentsJson(HttpServletRequest request, HttpServletResponse response) 
+    private void listShipmentsJson(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
-        
+
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        
+
         HttpSession session = request.getSession(false);
         if (session == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -602,7 +595,7 @@ public class ShipmentController extends HttpServlet {
             response.getWriter().write(gson.toJson(json));
             return;
         }
-        
+
         Object userObj = session.getAttribute("user");
         if (!(userObj instanceof User)) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -612,34 +605,34 @@ public class ShipmentController extends HttpServlet {
             response.getWriter().write(gson.toJson(json));
             return;
         }
-        
+
         User currentUser = (User) userObj;
-        
+
         List<Shipment> shipments;
-        
-        if ("staff".equalsIgnoreCase(currentUser.getRole()) || 
-            "admin".equalsIgnoreCase(currentUser.getRole())) {
+
+        if ("staff".equalsIgnoreCase(currentUser.getRole()) ||
+                "admin".equalsIgnoreCase(currentUser.getRole())) {
             shipments = shipmentDAO.findAll();
         } else {
             shipments = shipmentDAO.findByUserId(currentUser.getUserId());
         }
-        
+
         JsonObject json = new JsonObject();
         json.addProperty("success", true);
         json.add("shipments", gson.toJsonTree(shipments));
         json.addProperty("count", shipments.size());
-        
+
         response.getWriter().write(gson.toJson(json));
     }
-    
-    private void viewShipmentJson(HttpServletRequest request, HttpServletResponse response, int shipmentId) 
+
+    private void viewShipmentJson(HttpServletRequest request, HttpServletResponse response, int shipmentId)
             throws ServletException, IOException, SQLException {
-        
+
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        
+
         Shipment shipment = shipmentDAO.findById(shipmentId);
-        
+
         if (shipment == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             JsonObject json = new JsonObject();
@@ -648,24 +641,24 @@ public class ShipmentController extends HttpServlet {
             response.getWriter().write(gson.toJson(json));
             return;
         }
-        
+
         HttpSession session = request.getSession(false);
         if (session == null) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
-        
+
         Object userObj = session.getAttribute("user");
         if (!(userObj instanceof User)) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
-        
+
         User currentUser = (User) userObj;
         Order order = orderDAO.findById(shipment.getOrderId());
-        
-        if (order.getUserId() != currentUser.getUserId() && 
-            !"staff".equalsIgnoreCase(currentUser.getRole())) {
+
+        if (order.getUserId() != currentUser.getUserId() &&
+                !"staff".equalsIgnoreCase(currentUser.getRole())) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             JsonObject json = new JsonObject();
             json.addProperty("success", false);
@@ -673,21 +666,21 @@ public class ShipmentController extends HttpServlet {
             response.getWriter().write(gson.toJson(json));
             return;
         }
-        
+
         JsonObject json = new JsonObject();
         json.addProperty("success", true);
         json.add("shipment", gson.toJsonTree(shipment));
         json.add("order", gson.toJsonTree(order));
-        
+
         response.getWriter().write(gson.toJson(json));
     }
-    
-    private void trackShipmentJson(HttpServletResponse response, String trackingNumber) 
+
+    private void trackShipmentJson(HttpServletResponse response, String trackingNumber)
             throws ServletException, IOException, SQLException {
-        
+
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        
+
         if (trackingNumber == null || trackingNumber.trim().isEmpty()) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             JsonObject json = new JsonObject();
@@ -696,9 +689,9 @@ public class ShipmentController extends HttpServlet {
             response.getWriter().write(gson.toJson(json));
             return;
         }
-        
+
         Shipment shipment = shipmentDAO.findByTrackingNumber(trackingNumber);
-        
+
         if (shipment == null) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             JsonObject json = new JsonObject();
@@ -707,23 +700,23 @@ public class ShipmentController extends HttpServlet {
             response.getWriter().write(gson.toJson(json));
             return;
         }
-        
+
         Order order = orderDAO.findById(shipment.getOrderId());
-        
+
         JsonObject json = new JsonObject();
         json.addProperty("success", true);
         json.add("shipment", gson.toJsonTree(shipment));
         json.add("order", gson.toJsonTree(order));
-        
+
         response.getWriter().write(gson.toJson(json));
     }
-    
-    private void searchShipmentsJson(HttpServletRequest request, HttpServletResponse response) 
+
+    private void searchShipmentsJson(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
-        
+
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        
+
         HttpSession session = request.getSession(false);
         if (session == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -733,7 +726,7 @@ public class ShipmentController extends HttpServlet {
             response.getWriter().write(gson.toJson(json));
             return;
         }
-        
+
         Object userObj = session.getAttribute("user");
         if (!(userObj instanceof User)) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -743,25 +736,25 @@ public class ShipmentController extends HttpServlet {
             response.getWriter().write(gson.toJson(json));
             return;
         }
-        
+
         User currentUser = (User) userObj;
-        
+
         String shipmentIdStr = request.getParameter("shipmentId");
         String trackingNumber = request.getParameter("trackingNumber");
         String dateFrom = request.getParameter("dateFrom");
         String dateTo = request.getParameter("dateTo");
         String status = request.getParameter("status");
-        
+
         List<Shipment> shipments;
-        
+
         if (shipmentIdStr != null && !shipmentIdStr.trim().isEmpty()) {
             Integer shipmentId = Integer.parseInt(shipmentIdStr);
             Shipment shipment = shipmentDAO.findById(shipmentId);
-            
+
             if (shipment != null) {
                 Order order = orderDAO.findById(shipment.getOrderId());
-                if (order.getUserId() == currentUser.getUserId() || 
-                    "staff".equalsIgnoreCase(currentUser.getRole())) {
+                if (order.getUserId() == currentUser.getUserId() ||
+                        "staff".equalsIgnoreCase(currentUser.getRole())) {
                     shipments = Collections.singletonList(shipment);
                 } else {
                     shipments = Collections.emptyList();
@@ -771,11 +764,11 @@ public class ShipmentController extends HttpServlet {
             }
         } else if (trackingNumber != null && !trackingNumber.trim().isEmpty()) {
             Shipment shipment = shipmentDAO.findByTrackingNumber(trackingNumber);
-            
+
             if (shipment != null) {
                 Order order = orderDAO.findById(shipment.getOrderId());
-                if (order.getUserId() == currentUser.getUserId() || 
-                    "staff".equalsIgnoreCase(currentUser.getRole())) {
+                if (order.getUserId() == currentUser.getUserId() ||
+                        "staff".equalsIgnoreCase(currentUser.getRole())) {
                     shipments = Collections.singletonList(shipment);
                 } else {
                     shipments = Collections.emptyList();
@@ -784,36 +777,36 @@ public class ShipmentController extends HttpServlet {
                 shipments = Collections.emptyList();
             }
         } else {
-            if ("staff".equalsIgnoreCase(currentUser.getRole()) || 
-                "admin".equalsIgnoreCase(currentUser.getRole())) {
+            if ("staff".equalsIgnoreCase(currentUser.getRole()) ||
+                    "admin".equalsIgnoreCase(currentUser.getRole())) {
                 shipments = shipmentDAO.searchShipments(null, dateFrom, dateTo, status);
             } else {
                 shipments = shipmentDAO.searchShipments(currentUser.getUserId(), dateFrom, dateTo, status);
             }
         }
-        
+
         JsonObject json = new JsonObject();
         json.addProperty("success", true);
         json.add("shipments", gson.toJsonTree(shipments));
         json.addProperty("count", shipments.size());
-        
+
         response.getWriter().write(gson.toJson(json));
     }
-    
+
     private void handleJsonError(HttpServletResponse response, String message, Exception e) throws IOException {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        
+
         JsonObject json = new JsonObject();
         json.addProperty("success", false);
         json.addProperty("error", message + ": " + e.getMessage());
-        
+
         response.getWriter().write(gson.toJson(json));
     }
-    
-    private void handleError(HttpServletRequest request, HttpServletResponse response, 
-                           String message, Exception e) throws ServletException, IOException {
+
+    private void handleError(HttpServletRequest request, HttpServletResponse response,
+            String message, Exception e) throws ServletException, IOException {
         request.setAttribute("error", message + ": " + e.getMessage());
         request.getRequestDispatcher("/error.jsp").forward(request, response);
     }

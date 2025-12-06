@@ -20,18 +20,13 @@ import java.util.List;
  * Controller to handle direct access to browse.jsp
  * This ensures browse.jsp always has product data when accessed directly
  */
-@WebServlet({"/browse", "/browse.jsp"})
+@WebServlet({ "/browse", "/browse.jsp" })
 public class BrowsePageController extends HttpServlet {
     private ProductDAO productDAO;
 
     @Override
     public void init() throws ServletException {
-        try {
-            Connection connection = DIContainer.getConnection();
-            productDAO = new ProductDAOImpl(connection);
-        } catch (Exception e) {
-            throw new ServletException("Failed to initialize database connection", e);
-        }
+        productDAO = new ProductDAOImpl();
     }
 
     @Override
@@ -44,11 +39,11 @@ public class BrowsePageController extends HttpServlet {
             String categoryParam = utils.SecurityUtil.getValidatedStringParameter(request, "category", 100);
             String featuredParam = utils.SecurityUtil.getValidatedStringParameter(request, "featured", 10);
             String newParam = utils.SecurityUtil.getValidatedStringParameter(request, "new", 10);
-            
+
             List<Product> products;
             String categoryName = null;
             Integer categoryId = null;
-            
+
             // Handle featured products filter
             if ("true".equalsIgnoreCase(featuredParam)) {
                 products = productDAO.getAllProducts();
@@ -69,7 +64,7 @@ public class BrowsePageController extends HttpServlet {
                 categoryName = categoryParam.trim();
                 // Try to find category by name
                 try {
-                    dao.CategoryDAO categoryDAO = new dao.CategoryDAO(DIContainer.getConnection());
+                    dao.CategoryDAO categoryDAO = new dao.CategoryDAO();
                     model.Category category = categoryDAO.getCategoryByName(categoryName);
                     if (category != null) {
                         categoryId = category.getId();
@@ -105,13 +100,13 @@ public class BrowsePageController extends HttpServlet {
             else {
                 products = productDAO.getAllProducts();
             }
-            
+
             // Set attributes for browse.jsp
             request.setAttribute("results", products);
-            
+
             // Forward to browse.jsp
             request.getRequestDispatcher("/browse.jsp").forward(request, response);
-            
+
         } catch (SQLException e) {
             ErrorAction.handleDatabaseError(request, response, e, "BrowsePageController.doGet");
         } catch (Exception e) {
@@ -119,4 +114,3 @@ public class BrowsePageController extends HttpServlet {
         }
     }
 }
-

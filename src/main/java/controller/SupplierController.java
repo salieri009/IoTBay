@@ -1,7 +1,6 @@
 package controller;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
@@ -25,12 +24,7 @@ public class SupplierController extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        try {
-            Connection connection = DIContainer.getConnection();
-            supplierDAO = new SupplierDAOImpl(connection);
-        } catch (Exception e) {
-            throw new ServletException("Failed to initialize SupplierController", e);
-        }
+        supplierDAO = (SupplierDAOImpl) DIContainer.get(dao.interfaces.SupplierDAO.class);
     }
 
     @Override

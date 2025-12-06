@@ -14,21 +14,23 @@ import java.util.List;
 
 import dao.interfaces.AccessLogDAO;
 import model.AccessLog;
+import config.DIContainer;
 
 public class AccessLogDAOImpl implements AccessLogDAO {
-    private final Connection connection;
+
     // 포맷 상수
     private static final DateTimeFormatter ISO_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME; // yyyy-MM-dd'T'HH:mm:ss
     private static final DateTimeFormatter SPACE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    public AccessLogDAOImpl(Connection connection) {
-        this.connection = connection;
+    public AccessLogDAOImpl() {
+        // No-args constructor
     }
 
     @Override
     public void createAccessLog(AccessLog log) throws SQLException {
         String query = "INSERT INTO access_logs (user_id, action, timestamp) VALUES (?, ?, ?)";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, log.getUserId());
             statement.setString(2, log.getAction());
             // 항상 ISO-8601 포맷으로 저장
@@ -40,7 +42,8 @@ public class AccessLogDAOImpl implements AccessLogDAO {
     @Override
     public AccessLog getAccessLogById(int id) throws SQLException {
         String query = "SELECT id, user_id, action, timestamp FROM access_logs WHERE id = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, id);
             try (ResultSet rs = statement.executeQuery()) {
                 if (rs.next()) {
@@ -55,7 +58,8 @@ public class AccessLogDAOImpl implements AccessLogDAO {
     public List<AccessLog> getAccessLogsByUserId(int userId) throws SQLException {
         String query = "SELECT id, user_id, action, timestamp FROM access_logs WHERE user_id = ? ORDER BY timestamp DESC";
         List<AccessLog> logs = new ArrayList<>();
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, userId);
             try (ResultSet rs = statement.executeQuery()) {
                 while (rs.next()) {
@@ -70,8 +74,9 @@ public class AccessLogDAOImpl implements AccessLogDAO {
     public List<AccessLog> getAllAccessLogs() throws SQLException {
         String query = "SELECT id, user_id, action, timestamp FROM access_logs ORDER BY timestamp DESC";
         List<AccessLog> logs = new ArrayList<>();
-        try (PreparedStatement statement = connection.prepareStatement(query);
-             ResultSet rs = statement.executeQuery()) {
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query);
+                ResultSet rs = statement.executeQuery()) {
             while (rs.next()) {
                 logs.add(mapResultSetToAccessLog(rs));
             }
@@ -82,17 +87,20 @@ public class AccessLogDAOImpl implements AccessLogDAO {
     @Override
     public void deleteAccessLog(int id) throws SQLException {
         String query = "DELETE FROM access_logs WHERE id = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, id);
             statement.executeUpdate();
         }
     }
 
     @Override
-    public List<AccessLog> getAccessLogsByUserIdAndDateRange(int userId, LocalDate startDate, LocalDate endDate) throws SQLException {
+    public List<AccessLog> getAccessLogsByUserIdAndDateRange(int userId, LocalDate startDate, LocalDate endDate)
+            throws SQLException {
         String query = "SELECT id, user_id, action, timestamp FROM access_logs WHERE user_id = ? AND timestamp >= ? AND timestamp < ? ORDER BY timestamp DESC";
         List<AccessLog> logs = new ArrayList<>();
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, userId);
             // ISO-8601 포맷으로 비교
             statement.setString(2, startDate.atStartOfDay().format(ISO_FORMATTER));
@@ -130,42 +138,41 @@ public class AccessLogDAOImpl implements AccessLogDAO {
             }
         }
         return new AccessLog(
-            rs.getInt("id"),
-            rs.getInt("user_id"),
-            rs.getString("action"),
-            timestamp
-        );
+                rs.getInt("id"),
+                rs.getInt("user_id"),
+                rs.getString("action"),
+                timestamp);
     }
-    
+
     @Override
     public List<AccessLog> getAccessLogsByDateRange(LocalDate startDate, LocalDate endDate) throws SQLException {
         String query = "SELECT id, user_id, action, timestamp, ip_address, user_agent " +
-                      "FROM access_logs WHERE DATE(timestamp) BETWEEN ? AND ? ORDER BY timestamp DESC";
-        
+                "FROM access_logs WHERE DATE(timestamp) BETWEEN ? AND ? ORDER BY timestamp DESC";
+
         List<AccessLog> logs = new ArrayList<>();
-        
-        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setString(1, startDate.toString());
             pstmt.setString(2, endDate.toString());
-            
+
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     logs.add(createAccessLogFromResultSet(rs));
                 }
             }
         }
-        
+
         return logs;
     }
 
     private AccessLog createAccessLogFromResultSet(ResultSet rs) throws SQLException {
         return new AccessLog(
-            rs.getInt("id"),
-            rs.getInt("user_id"),
-            rs.getString("action"),
-            rs.getString("ip_address"),
-            rs.getString("user_agent"),
-            rs.getTimestamp("timestamp").toLocalDateTime()
-        );
+                rs.getInt("id"),
+                rs.getInt("user_id"),
+                rs.getString("action"),
+                rs.getString("ip_address"),
+                rs.getString("user_agent"),
+                rs.getTimestamp("timestamp").toLocalDateTime());
     }
 }

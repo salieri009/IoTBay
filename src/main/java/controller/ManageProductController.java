@@ -20,17 +20,8 @@ import model.User;
 
 @WebServlet("/api/manage/products/*")
 public class ManageProductController extends HttpServlet {
-    private ProductDAO productDAO;
 
-    @Override
-    public void init() throws ServletException {
-        try {
-            Connection connection = DIContainer.getConnection();
-            productDAO = new ProductDAOImpl(connection);
-        } catch (Exception e) {
-            throw new ServletException("Failed to initialize database connection", e);
-        }
-    }
+    // Stateless Controller: No instance variables for DAO or Connection
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -41,13 +32,16 @@ public class ManageProductController extends HttpServlet {
             return;
         }
 
+        // Try-with-resources removed as DAOs manage their own connections
         try {
+            ProductDAO productDAO = new ProductDAOImpl();
+
             String pathInfo = request.getPathInfo();
 
             // Validate pathInfo
             if (pathInfo != null && !pathInfo.isEmpty() && !pathInfo.equals("/") && !pathInfo.equals("/form")) {
-                utils.ErrorAction.handleMissingParameterError(request, response,
-                    "Invalid path", "ManageProductController.doGet");
+                // Return 404 for invalid paths instead of 500/400 generic error
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
                 return;
             }
 
@@ -55,11 +49,13 @@ public class ManageProductController extends HttpServlet {
             if (pathInfo != null && pathInfo.equals("/form")) {
                 // Get categories for dropdown
                 try {
-                    dao.CategoryDAO categoryDAO = new dao.CategoryDAO(DIContainer.getConnection());
+                    dao.CategoryDAO categoryDAO = new dao.CategoryDAO();
                     List<model.Category> categories = categoryDAO.getAllCategories();
                     request.setAttribute("categories", categories);
                 } catch (Exception e) {
-                    // If category fetch fails, continue without categories
+                    // Log warning but continue - form can still load, just without categories
+                    System.err
+                            .println("[ManageProductController] Warning: Failed to load categories: " + e.getMessage());
                 }
                 request.getRequestDispatcher("/manage-product-form.jsp").forward(request, response);
                 return;
@@ -103,6 +99,8 @@ public class ManageProductController extends HttpServlet {
         }
 
         try {
+            ProductDAO productDAO = new ProductDAOImpl();
+
             // Secure parameter extraction with validation
             int categoryId = utils.SecurityUtil.getValidatedIntParameter(request, "categoryId", 1, 100);
             String name = utils.SecurityUtil.getValidatedStringParameter(request, "name", 200);

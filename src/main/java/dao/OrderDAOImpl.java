@@ -9,18 +9,19 @@ import java.util.List;
 
 import dao.interfaces.OrderDAO;
 import model.Order;
+import config.DIContainer;
 
 public class OrderDAOImpl implements OrderDAO {
-    private final Connection connection;
 
-    public OrderDAOImpl(Connection connection) {
-        this.connection = connection;
+    public OrderDAOImpl() {
+        // No-args constructor
     }
 
     @Override
     public void createOrder(Order order) throws SQLException {
         String query = "INSERT INTO orders (user_id, total_amount, order_date, status, shipping_address, payment_method) VALUES (?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setInt(1, order.getUserId());
             pstmt.setBigDecimal(2, order.getTotalAmount());
             pstmt.setTimestamp(3, order.getOrderDateAsTimestamp());
@@ -34,7 +35,8 @@ public class OrderDAOImpl implements OrderDAO {
     @Override
     public Order getOrderById(int id) throws SQLException {
         String query = "SELECT id, user_id, total_amount, order_date, status, shipping_address, payment_method FROM orders WHERE id = ?";
-        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setInt(1, id);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
@@ -49,14 +51,15 @@ public class OrderDAOImpl implements OrderDAO {
     public List<Order> getAllOrders() throws SQLException {
         String query = "SELECT id, user_id, total_amount, order_date, status, shipping_address, payment_method FROM orders ORDER BY order_date DESC";
         List<Order> orders = new ArrayList<>();
-        
-        try (PreparedStatement pstmt = connection.prepareStatement(query);
-             ResultSet rs = pstmt.executeQuery()) {
+
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement pstmt = connection.prepareStatement(query);
+                ResultSet rs = pstmt.executeQuery()) {
             while (rs.next()) {
                 orders.add(createOrderFromResultSet(rs));
             }
         }
-        
+
         return orders;
     }
 
@@ -64,8 +67,9 @@ public class OrderDAOImpl implements OrderDAO {
     public List<Order> getOrdersByUserId(int userId) throws SQLException {
         String query = "SELECT id, user_id, total_amount, order_date, status, shipping_address, payment_method FROM orders WHERE user_id = ? ORDER BY order_date DESC";
         List<Order> orders = new ArrayList<>();
-        
-        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setInt(1, userId);
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
@@ -73,14 +77,15 @@ public class OrderDAOImpl implements OrderDAO {
                 }
             }
         }
-        
+
         return orders;
     }
 
     @Override
     public void updateOrder(int id, Order order) throws SQLException {
         String query = "UPDATE orders SET user_id = ?, total_amount = ?, order_date = ?, status = ?, shipping_address = ?, payment_method = ? WHERE id = ?";
-        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setInt(1, order.getUserId());
             pstmt.setBigDecimal(2, order.getTotalAmount());
             pstmt.setTimestamp(3, order.getOrderDateAsTimestamp());
@@ -95,7 +100,8 @@ public class OrderDAOImpl implements OrderDAO {
     @Override
     public void deleteOrder(int id) throws SQLException {
         String query = "DELETE FROM orders WHERE id = ?";
-        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setInt(1, id);
             pstmt.executeUpdate();
         }
@@ -104,8 +110,9 @@ public class OrderDAOImpl implements OrderDAO {
     @Override
     public int getTotalOrderCount() throws SQLException {
         String query = "SELECT COUNT(*) FROM orders";
-        try (PreparedStatement pstmt = connection.prepareStatement(query);
-             ResultSet rs = pstmt.executeQuery()) {
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement pstmt = connection.prepareStatement(query);
+                ResultSet rs = pstmt.executeQuery()) {
             if (rs.next()) {
                 return rs.getInt(1);
             }

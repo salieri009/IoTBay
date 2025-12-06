@@ -27,13 +27,8 @@ public class BrowseProductController extends HttpServlet {
 
     @Override
     public void init() {
-        try {
-            Connection connection = DIContainer.getConnection();
-            productDAO = new ProductDAOImpl(connection);
-            categoryDAO = new CategoryDAO(connection);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to initialize database connection", e);
-        }
+        productDAO = new ProductDAOImpl();
+        categoryDAO = new CategoryDAO();
     }
 
     @Override
@@ -86,7 +81,7 @@ public class BrowseProductController extends HttpServlet {
 
             if (categoryId != null) {
                 products = productDAO.getProductsByCategoryId(categoryId);
-                
+
                 // Ensure category name is set
                 if (categoryName == null) {
                     try {
@@ -119,12 +114,13 @@ public class BrowseProductController extends HttpServlet {
         } catch (SQLException e) {
             utils.ErrorAction.handleDatabaseError(request, response, e, "BrowseProductController.doGet");
         } catch (NumberFormatException e) {
-            utils.ErrorAction.handleValidationError(request, response, "Invalid category ID", "BrowseProductController.doGet");
+            utils.ErrorAction.handleValidationError(request, response, "Invalid category ID",
+                    "BrowseProductController.doGet");
         } catch (Exception e) {
             utils.ErrorAction.handleServerError(request, response, e, "BrowseProductController.doGet");
         }
     }
-    
+
     /**
      * Map category name to category ID
      */
@@ -138,11 +134,11 @@ public class BrowseProductController extends HttpServlet {
         categoryMap.put("warehouse", 4);
         categoryMap.put("healthcare", 5);
         categoryMap.put("transportation", 6);
-        
+
         String lowerName = categoryName.toLowerCase().replace(" ", "-");
         return categoryMap.get(lowerName);
     }
-    
+
     /**
      * Get category name by ID (simplified - should use CategoryDAO)
      */
@@ -154,7 +150,7 @@ public class BrowseProductController extends HttpServlet {
         idMap.put(4, "Warehouse");
         idMap.put(5, "Healthcare");
         idMap.put(6, "Transportation");
-        
+
         return idMap.getOrDefault(categoryId, "Category " + categoryId);
     }
 }

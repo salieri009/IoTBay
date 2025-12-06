@@ -22,12 +22,7 @@ public class HomeController extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        try {
-            Connection connection = DIContainer.getConnection();
-            productDAO = new ProductDAOImpl(connection);
-        } catch (Exception e) {
-            throw new ServletException("Failed to initialize database connection", e);
-        }
+        productDAO = new ProductDAOImpl();
     }
 
     @Override
@@ -40,13 +35,13 @@ public class HomeController extends HttpServlet {
             List<Product> featuredProducts = allProducts.stream()
                     .limit(4)
                     .collect(java.util.stream.Collectors.toList());
-            
+
             // Set as request attribute for index.jsp
             request.setAttribute("featuredProducts", featuredProducts);
-            
+
             // Forward to index.jsp
             request.getRequestDispatcher("/index.jsp").forward(request, response);
-            
+
         } catch (SQLException e) {
             ErrorAction.handleDatabaseError(request, response, e, "HomeController.doGet");
         } catch (Exception e) {
@@ -54,4 +49,3 @@ public class HomeController extends HttpServlet {
         }
     }
 }
-

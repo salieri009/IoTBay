@@ -123,15 +123,13 @@
                                                                                 <c:choose>
                                                                                     <c:when
                                                                                         test="${not empty userItem.firstName && not empty userItem.lastName}">
-                                                                                        ${fn:toUpperCase(fn:substring(userItem.firstName,
-                                                                                        0,
-                                                                                        1))}${fn:toUpperCase(fn:substring(userItem.lastName,
-                                                                                        0, 1))}
+                                                                                        <c:out
+                                                                                            value="${fn:toUpperCase(fn:substring(userItem.firstName, 0, 1))}${fn:toUpperCase(fn:substring(userItem.lastName, 0, 1))}" />
                                                                                     </c:when>
                                                                                     <c:when
                                                                                         test="${not empty userItem.firstName}">
-                                                                                        ${fn:toUpperCase(fn:substring(userItem.firstName,
-                                                                                        0, 1))}
+                                                                                        <c:out
+                                                                                            value="${fn:toUpperCase(fn:substring(userItem.firstName, 0, 1))}" />
                                                                                     </c:when>
                                                                                     <c:otherwise>U</c:otherwise>
                                                                                 </c:choose>

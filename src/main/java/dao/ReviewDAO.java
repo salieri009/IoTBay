@@ -10,18 +10,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import model.Review;
+import config.DIContainer;
 
 public class ReviewDAO {
-    private final Connection connection;
 
-    public ReviewDAO(Connection connection) {
-        this.connection = connection;
+    public ReviewDAO() {
+        // No-args constructor
     }
 
     // Create
     public int createReview(Review review) throws SQLException {
         String query = "INSERT INTO reviews (user_id, product_id, rating, comment, title, reviewed_at, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             statement.setInt(1, review.getUserId());
             statement.setInt(2, review.getProductId());
             statement.setInt(3, review.getRating());
@@ -30,7 +31,7 @@ public class ReviewDAO {
             statement.setObject(6, review.getReviewedAt());
             statement.setObject(7, LocalDateTime.now());
             statement.setObject(8, LocalDateTime.now());
-            
+
             int rowsAffected = statement.executeUpdate();
             if (rowsAffected > 0) {
                 try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
@@ -46,7 +47,8 @@ public class ReviewDAO {
     // Read
     public Review getReviewById(int id) throws SQLException {
         String query = "SELECT * FROM reviews WHERE id = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, id);
             try (ResultSet rs = statement.executeQuery()) {
                 if (rs.next()) {
@@ -70,7 +72,8 @@ public class ReviewDAO {
     public List<Review> getReviewsByProductId(int productId) throws SQLException {
         String query = "SELECT * FROM reviews WHERE product_id = ? ORDER BY reviewed_at DESC";
         List<Review> reviews = new ArrayList<>();
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, productId);
             try (ResultSet rs = statement.executeQuery()) {
                 while (rs.next()) {
@@ -94,7 +97,8 @@ public class ReviewDAO {
     public List<Review> getReviewsByUserId(int userId) throws SQLException {
         String query = "SELECT * FROM reviews WHERE user_id = ? ORDER BY reviewed_at DESC";
         List<Review> reviews = new ArrayList<>();
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, userId);
             try (ResultSet rs = statement.executeQuery()) {
                 while (rs.next()) {
@@ -118,8 +122,9 @@ public class ReviewDAO {
     public List<Review> getAllReviews() throws SQLException {
         String query = "SELECT * FROM reviews ORDER BY reviewed_at DESC";
         List<Review> reviews = new ArrayList<>();
-        try (PreparedStatement statement = connection.prepareStatement(query);
-             ResultSet rs = statement.executeQuery()) {
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query);
+                ResultSet rs = statement.executeQuery()) {
             while (rs.next()) {
                 Review review = new Review();
                 review.setId(rs.getInt("id"));
@@ -140,7 +145,8 @@ public class ReviewDAO {
     // Update
     public void updateReview(Review review) throws SQLException {
         String query = "UPDATE reviews SET rating = ?, comment = ?, title = ?, reviewed_at = ?, updated_at = ? WHERE id = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, review.getRating());
             statement.setString(2, review.getComment());
             statement.setString(3, review.getTitle());
@@ -154,7 +160,8 @@ public class ReviewDAO {
     // Delete
     public void deleteReview(int id) throws SQLException {
         String query = "DELETE FROM reviews WHERE id = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, id);
             statement.executeUpdate();
         }
@@ -163,7 +170,8 @@ public class ReviewDAO {
     // Additional methods
     public double getAverageRatingByProductId(int productId) throws SQLException {
         String query = "SELECT AVG(rating::numeric) as avg_rating FROM reviews WHERE product_id = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, productId);
             try (ResultSet rs = statement.executeQuery()) {
                 if (rs.next()) {
@@ -176,7 +184,8 @@ public class ReviewDAO {
 
     public int getReviewCountByProductId(int productId) throws SQLException {
         String query = "SELECT COUNT(*) as review_count FROM reviews WHERE product_id = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, productId);
             try (ResultSet rs = statement.executeQuery()) {
                 if (rs.next()) {
@@ -190,7 +199,8 @@ public class ReviewDAO {
     public List<Review> getReviewsByRating(int rating) throws SQLException {
         String query = "SELECT * FROM reviews WHERE rating = ? ORDER BY reviewed_at DESC";
         List<Review> reviews = new ArrayList<>();
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, rating);
             try (ResultSet rs = statement.executeQuery()) {
                 while (rs.next()) {
@@ -213,7 +223,8 @@ public class ReviewDAO {
 
     public boolean hasUserReviewedProduct(int userId, int productId) throws SQLException {
         String query = "SELECT COUNT(*) as review_count FROM reviews WHERE user_id = ? AND product_id = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, userId);
             statement.setInt(2, productId);
             try (ResultSet rs = statement.executeQuery()) {
@@ -228,7 +239,8 @@ public class ReviewDAO {
     public List<Review> searchReviews(String searchTerm) throws SQLException {
         String query = "SELECT * FROM reviews WHERE comment ILIKE ? OR title ILIKE ? ORDER BY reviewed_at DESC";
         List<Review> reviews = new ArrayList<>();
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
             String searchPattern = "%" + searchTerm + "%";
             statement.setString(1, searchPattern);
             statement.setString(2, searchPattern);
@@ -286,7 +298,8 @@ public class ReviewDAO {
 
     public double getAverageRating(Integer productId) throws SQLException {
         String query = "SELECT AVG(rating) FROM reviews WHERE product_id = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, productId);
             try (ResultSet rs = statement.executeQuery()) {
                 if (rs.next()) {

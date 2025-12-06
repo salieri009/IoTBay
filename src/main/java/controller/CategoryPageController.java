@@ -30,72 +30,67 @@ import model.Product;
 public class CategoryPageController extends HttpServlet {
     private CategoryDAO categoryDAO;
     private ProductDAO productDAO;
-    
+
     @Override
     public void init() throws ServletException {
-        try {
-            Connection connection = DIContainer.getConnection();
-            categoryDAO = new CategoryDAO(connection);
-            this.productDAO = new ProductDAOImpl(connection);
-        } catch (Exception e) {
-            throw new ServletException("Failed to initialize database connection", e);
-        }
+        categoryDAO = new CategoryDAO();
+        this.productDAO = new ProductDAOImpl();
     }
-    
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         // Extract category name from path
         String pathInfo = request.getPathInfo();
         if (pathInfo == null || pathInfo.equals("/")) {
             response.sendRedirect(request.getContextPath() + "/categories");
             return;
         }
-        
+
         // Remove leading slash and get category name
         String categorySlug = pathInfo.substring(1);
-        
+
         // Map slug to category name
         String categoryName = mapSlugToCategoryName(categorySlug);
-        
+
         try {
             // Get category by name
             Category category = categoryDAO.getCategoryByName(categoryName);
-            
+
             if (category == null) {
                 // Try to find by slug directly
                 category = findCategoryBySlug(categorySlug);
             }
-            
+
             if (category == null) {
                 // If category not found, redirect to browse page with category filter
                 response.sendRedirect(request.getContextPath() + "/browse?category=" + categorySlug);
                 return;
             }
-            
+
             // Get products for this category
             List<Product> products = productDAO.getProductsByCategoryId(category.getId());
-            
+
             // Get product count
             int productCount = categoryDAO.getProductCountByCategoryId(category.getId());
-            
+
             // Set attributes
             request.setAttribute("category", category);
             request.setAttribute("products", products);
             request.setAttribute("productCount", productCount);
-            
+
             // Forward to appropriate JSP based on category
             String jspPath = getJspPathForCategory(categorySlug);
             request.getRequestDispatcher(jspPath).forward(request, response);
-            
+
         } catch (SQLException e) {
             utils.ErrorAction.handleDatabaseError(request, response, e, "CategoryPageController.doGet");
         } catch (Exception e) {
             utils.ErrorAction.handleServerError(request, response, e, "CategoryPageController.doGet");
         }
     }
-    
+
     /**
      * Map URL slug to category name
      */
@@ -108,10 +103,10 @@ public class CategoryPageController extends HttpServlet {
         slugMap.put("warehouse", "Warehouse");
         slugMap.put("healthcare", "Healthcare");
         slugMap.put("transportation", "Transportation");
-        
+
         return slugMap.getOrDefault(slug.toLowerCase(), slug);
     }
-    
+
     /**
      * Find category by slug in database
      */
@@ -119,7 +114,7 @@ public class CategoryPageController extends HttpServlet {
         // Use getCategoryByName which already handles slug matching
         return categoryDAO.getCategoryByName(slug);
     }
-    
+
     /**
      * Get JSP path for category
      */
@@ -132,8 +127,7 @@ public class CategoryPageController extends HttpServlet {
         jspMap.put("warehouse", "/category-warehouse.jsp");
         jspMap.put("healthcare", "/category-healthcare.jsp");
         jspMap.put("transportation", "/category-transportation.jsp");
-        
+
         return jspMap.getOrDefault(slug.toLowerCase(), "/browse.jsp");
     }
 }
-

@@ -30,56 +30,51 @@ import model.Product;
 public class CategoryController extends HttpServlet {
     private CategoryDAO categoryDAO;
     private ProductDAO productDAO;
-    
+
     @Override
     public void init() throws ServletException {
-        try {
-            Connection connection = DIContainer.getConnection();
-            categoryDAO = new CategoryDAO(connection);
-            this.productDAO = new ProductDAOImpl(connection);
-        } catch (Exception e) {
-            throw new ServletException("Failed to initialize database connection", e);
-        }
+        categoryDAO = new CategoryDAO();
+        this.productDAO = new ProductDAOImpl();
     }
-    
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         try {
             // Get all active categories
             List<Category> categories = categoryDAO.getActiveCategories();
-            
+
             // If no categories found, try getting all categories (fallback)
             if (categories.isEmpty()) {
                 categories = categoryDAO.getAllCategories();
             }
-            
+
             // Get product count for each category
             Map<Integer, Integer> categoryProductCounts = new HashMap<>();
             for (Category category : categories) {
                 int count = categoryDAO.getProductCountByCategoryId(category.getId());
                 categoryProductCounts.put(category.getId(), count);
             }
-            
+
             // Get popular products (top 8 products)
             List<Product> popularProducts = getPopularProducts(8);
-            
+
             // Set attributes
             request.setAttribute("categories", categories);
             request.setAttribute("categoryProductCounts", categoryProductCounts);
             request.setAttribute("popularProducts", popularProducts);
-            
+
             // Forward to categories.jsp
             request.getRequestDispatcher("/categories.jsp").forward(request, response);
-            
+
         } catch (SQLException e) {
             utils.ErrorAction.handleDatabaseError(request, response, e, "CategoryController.doGet");
         } catch (Exception e) {
             utils.ErrorAction.handleServerError(request, response, e, "CategoryController.doGet");
         }
     }
-    
+
     /**
      * Get popular products (featured or by sales)
      */
@@ -96,4 +91,3 @@ public class CategoryController extends HttpServlet {
         }
     }
 }
-
