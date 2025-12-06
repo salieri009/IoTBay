@@ -203,7 +203,7 @@
                             <div class="bg-white shadow rounded-lg overflow-hidden">
                                 <div class="px-6 py-5 border-b border-neutral-200 flex items-center justify-between">
                                     <h2 class="text-xl font-semibold text-neutral-900">Recent Operations</h2>
-                                    <button onclick="location.reload()"
+                                    <button id="btn-refresh-logs"
                                         class="text-sm text-brand-primary hover:text-brand-secondary font-medium">
                                         Refresh
                                     </button>
@@ -282,4 +282,7 @@
                         </div>
                     </div>
                 </section>
+                </section>
+
+                <script src="${pageContext.request.contextPath}/assets/js/pages/data-management.js"></script>
             </t:base>

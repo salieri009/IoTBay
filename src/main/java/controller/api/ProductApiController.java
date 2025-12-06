@@ -20,37 +20,21 @@ import utils.ResponseUtil;
  */
 public class ProductApiController extends HttpServlet {
     private ProductDAO productDAO;
-    
+
     @Override
     public void init() throws ServletException {
-        try {
-            // Use DIContainer for dependency injection
-            this.productDAO = DIContainer.get(ProductDAO.class);
-            if (this.productDAO == null) {
-                // Fallback to real implementation if DIContainer fails
-                java.sql.Connection connection = config.DIContainer.getConnection();
-                this.productDAO = new dao.ProductDAOImpl(connection);
-            }
-        } catch (Exception e) {
-            // Fallback to real implementation on any error
-            try {
-                java.sql.Connection connection = config.DIContainer.getConnection();
-                this.productDAO = new dao.ProductDAOImpl(connection);
-            } catch (Exception ex) {
-                throw new ServletException("Failed to initialize ProductApiController", ex);
-            }
-        }
+        this.productDAO = new dao.ProductDAOImpl();
     }
-    
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         String pathInfo = request.getPathInfo();
         String requestURI = request.getRequestURI();
         String contextPath = request.getContextPath();
         String servletPath = request.getServletPath(); // /api/v1/products
-        
+
         try {
             // If pathInfo is null, try to extract from requestURI
             if (pathInfo == null || pathInfo.equals("/")) {
@@ -94,12 +78,12 @@ public class ProductApiController extends HttpServlet {
             utils.ErrorAction.handleServerError(null, response, e, "ProductApiController.doGet");
         }
     }
-    
+
     private void handleGetAllProducts(HttpServletResponse response) throws Exception {
         List<Product> products = productDAO.getAllProducts();
         ResponseUtil.sendJson(response, products);
     }
-    
+
     private void handleGetProductById(int productId, HttpServletResponse response) throws Exception {
         Product product = productDAO.getProductById(productId);
         if (product != null) {

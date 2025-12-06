@@ -158,21 +158,11 @@ public class AccessLogDAOImpl implements AccessLogDAO {
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
-                    logs.add(createAccessLogFromResultSet(rs));
+                    logs.add(mapResultSetToAccessLog(rs));
                 }
             }
         }
 
         return logs;
-    }
-
-    private AccessLog createAccessLogFromResultSet(ResultSet rs) throws SQLException {
-        return new AccessLog(
-                rs.getInt("id"),
-                rs.getInt("user_id"),
-                rs.getString("action"),
-                rs.getString("ip_address"),
-                rs.getString("user_agent"),
-                rs.getTimestamp("timestamp").toLocalDateTime());
     }
 }

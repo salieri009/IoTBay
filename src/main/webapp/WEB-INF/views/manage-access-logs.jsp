@@ -19,12 +19,12 @@
                                         </p>
                                     </div>
                                     <div class="flex items-center gap-3">
-                                        <button onclick="alert('Export feature coming soon')"
+                                        <button id="btn-export"
                                             class="inline-flex items-center px-4 py-2 border border-neutral-300 shadow-sm text-sm font-medium rounded-md text-neutral-700 bg-white hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary">
                                             Export Logs
                                         </button>
 
-                                        <button onclick="location.reload()"
+                                        <button id="btn-refresh"
                                             class="inline-flex items-center px-4 py-2 border border-neutral-300 shadow-sm text-sm font-medium rounded-md text-neutral-700 bg-white hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary">
                                             Refresh
                                         </button>
@@ -134,4 +134,6 @@
                             </div>
                         </div>
                     </section>
+
+                    <script src="${pageContext.request.contextPath}/assets/js/pages/manage-access-logs.js"></script>
                 </t:base>

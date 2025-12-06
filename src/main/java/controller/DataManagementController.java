@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import config.DIContainer;
 import dao.interfaces.AccessLogDAO;
 import dao.interfaces.OrderDAO;
 import dao.interfaces.ProductDAO;
@@ -36,14 +35,16 @@ public class DataManagementController extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        try {
-            this.accessLogDAO = DIContainer.get(AccessLogDAO.class);
-            this.userDAO = DIContainer.get(UserDAO.class);
-            this.orderDAO = DIContainer.get(OrderDAO.class);
-            this.productDAO = DIContainer.get(ProductDAO.class);
-        } catch (Exception e) {
-            throw new ServletException("Failed to initialize DataManagementController", e);
-        }
+        // DAOs are stateless, so we can instantiate them directly or use DI if DI
+        // supports it.
+        // Given previous pattern, we should just new them up or rely on local variable
+        // usage if fields are removed.
+        // However, keeping fields and initializing them with no-arg cons is also fine
+        // if they have no state.
+        this.accessLogDAO = new dao.AccessLogDAOImpl();
+        this.userDAO = new dao.UserDAOImpl();
+        this.orderDAO = new dao.OrderDAOImpl();
+        this.productDAO = new dao.ProductDAOImpl();
     }
 
     @Override

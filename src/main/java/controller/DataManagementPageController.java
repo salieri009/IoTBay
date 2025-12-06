@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import config.DIContainer;
 import dao.interfaces.OrderDAO;
 import dao.interfaces.ProductDAO;
 import dao.interfaces.UserDAO;
@@ -24,13 +23,9 @@ public class DataManagementPageController extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        try {
-            this.userDAO = DIContainer.get(UserDAO.class);
-            this.productDAO = DIContainer.get(ProductDAO.class);
-            this.orderDAO = DIContainer.get(OrderDAO.class);
-        } catch (Exception e) {
-            throw new ServletException("Failed to initialize database connection", e);
-        }
+        this.userDAO = new dao.UserDAOImpl();
+        this.productDAO = new dao.ProductDAOImpl();
+        this.orderDAO = new dao.OrderDAOImpl();
     }
 
     @Override
