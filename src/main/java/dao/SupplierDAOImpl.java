@@ -509,8 +509,8 @@ public class SupplierDAOImpl implements SupplierDAO {
                 rs.getString("website"),
                 rs.getString("supplier_type"),
                 rs.getBoolean("is_active"),
-                rs.getTimestamp("created_at").toLocalDateTime(),
-                rs.getTimestamp("updated_at").toLocalDateTime());
+                rs.getTimestamp("created_at") != null ? rs.getTimestamp("created_at").toLocalDateTime() : null,
+                rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime() : null);
     }
 
     // Compatibility methods for controller

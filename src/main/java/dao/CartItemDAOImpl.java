@@ -115,8 +115,10 @@ public class CartItemDAOImpl implements CartItemDAO {
         cartItem.setProductId(rs.getInt("product_id"));
         cartItem.setQuantity(rs.getInt("quantity"));
         cartItem.setPrice(rs.getBigDecimal("price"));
-        cartItem.setAddedAt(rs.getTimestamp("added_at").toLocalDateTime());
-        cartItem.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
+        java.sql.Timestamp addedAt = rs.getTimestamp("added_at");
+        cartItem.setAddedAt(addedAt != null ? addedAt.toLocalDateTime() : null);
+        java.sql.Timestamp updatedAt = rs.getTimestamp("updated_at");
+        cartItem.setUpdatedAt(updatedAt != null ? updatedAt.toLocalDateTime() : null);
         return cartItem;
     }
 }
