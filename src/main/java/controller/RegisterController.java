@@ -20,6 +20,12 @@ import utils.ValidationUtil;
 public class RegisterController extends HttpServlet {
     // Stateless controller: No DAO field
 
+    private void forwardWithError(HttpServletRequest request, HttpServletResponse response, String error)
+            throws ServletException, IOException {
+        request.setAttribute("error", error);
+        request.getRequestDispatcher("/register.jsp").forward(request, response);
+    }
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -27,9 +33,7 @@ public class RegisterController extends HttpServlet {
 
         // CSRF protection
         if (!utils.SecurityUtil.validateCSRFToken(request)) {
-            utils.ErrorAction.handleValidationError(request, response,
-                    "Invalid security token. Please refresh the page and try again.",
-                    "RegisterController.doPost");
+            forwardWithError(request, response, "Invalid security token. Please refresh the page and try again.");
             return;
         }
 
@@ -72,8 +76,7 @@ public class RegisterController extends HttpServlet {
             // Validate terms of service acceptance
             String tos = request.getParameter("tos");
             if (tos == null || !tos.equals("on")) {
-                utils.ErrorAction.handleValidationError(request, response,
-                        "Terms of service must be accepted", "RegisterController.doPost");
+                forwardWithError(request, response, "You must accept the Terms of Service to register.");
                 return;
             }
 
@@ -81,40 +84,35 @@ public class RegisterController extends HttpServlet {
             String profileError = ValidationUtil.validateRegisterUserProfile(
                     firstName, lastName, phone, postalCode, addressLine1);
             if (profileError != null) {
-                utils.ErrorAction.handleValidationError(request, response, profileError,
-                        "RegisterController.doPost");
+                forwardWithError(request, response, profileError);
                 return;
             }
 
             // Validate email format
             String emailError = ValidationUtil.validateEmail(email);
             if (emailError != null) {
-                utils.ErrorAction.handleValidationError(request, response, emailError,
-                        "RegisterController.doPost");
+                forwardWithError(request, response, emailError);
                 return;
             }
 
             // Validate password strength
             if (!utils.SecurityUtil.isStrongPassword(password)) {
-                utils.ErrorAction.handleValidationError(request, response,
-                        "Password does not meet security requirements", "RegisterController.doPost");
+                forwardWithError(request, response,
+                        "Password must be at least 8 characters and include uppercase, lowercase, digit, and special character.");
                 return;
             }
 
             // Confirm password match
             String passwordError = ValidationUtil.validatePasswordChange(password, confirmPassword);
             if (passwordError != null) {
-                utils.ErrorAction.handleValidationError(request, response, passwordError,
-                        "RegisterController.doPost");
+                forwardWithError(request, response, passwordError);
                 return;
             }
 
             // Check email duplication
             try {
                 if (userDAO.getUserByEmail(email) != null) {
-                    // Generic error to prevent user enumeration
-                    utils.ErrorAction.handleValidationError(request, response,
-                            "Registration failed", "RegisterController.doPost");
+                    forwardWithError(request, response, "An account with this email already exists.");
                     return;
                 }
             } catch (Exception e) {
@@ -127,15 +125,13 @@ public class RegisterController extends HttpServlet {
             if (dobString != null && !dobString.trim().isEmpty()) {
                 String dobError = ValidationUtil.validateBirthDate(dobString);
                 if (dobError != null) {
-                    utils.ErrorAction.handleValidationError(request, response, dobError,
-                            "RegisterController.doPost");
+                    forwardWithError(request, response, dobError);
                     return;
                 }
                 try {
                     dateOfBirth = LocalDate.parse(dobString);
                 } catch (Exception e) {
-                    utils.ErrorAction.handleValidationError(request, response,
-                            "Invalid date format", "RegisterController.doPost");
+                    forwardWithError(request, response, "Invalid date of birth format. Use YYYY-MM-DD.");
                     return;
                 }
             }
@@ -171,8 +167,7 @@ public class RegisterController extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/welcome.jsp");
 
         } catch (IllegalArgumentException e) {
-            utils.ErrorAction.handleValidationError(request, response, e.getMessage(),
-                    "RegisterController.doPost");
+            forwardWithError(request, response, e.getMessage());
         } catch (SQLException e) {
             utils.ErrorAction.handleDatabaseError(request, response, e, "RegisterController.doPost");
         } catch (Exception e) {

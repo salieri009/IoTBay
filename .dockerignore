@@ -1,0 +1,13 @@
+target/
+.git/
+.github/
+docs/
+node_modules/
+src/main/webapp/assets/ts/
+*.log
+*.db
+*.sqlite
+*.sqlite3
+.env
+.env.*
+*.legacy

@@ -38,4 +38,20 @@ public class AppConfig {
             return defaultValue;
         }
     }
+
+    /**
+     * Returns the SQLite JDBC URL.
+     * Priority: IOTBAY_DB_PATH env var > db.path property > fallback.
+     */
+    public static String getDbUrl() {
+        String envPath = System.getenv("IOTBAY_DB_PATH");
+        if (envPath != null && !envPath.trim().isEmpty()) {
+            return "jdbc:sqlite:" + envPath.trim();
+        }
+        String propPath = properties.getProperty("db.path");
+        if (propPath != null && !propPath.trim().isEmpty()) {
+            return "jdbc:sqlite:" + propPath.trim();
+        }
+        return "jdbc:sqlite:./iotbay.db";
+    }
 }

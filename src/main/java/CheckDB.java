@@ -2,7 +2,7 @@ import java.sql.*;
 
 public class CheckDB {
     public static void main(String[] args) {
-        String url = "jdbc:sqlite:D:/UTS/IoTBayPersonnel/IoTBay/iotbay.db";
+        String url = config.AppConfig.getDbUrl();
         System.out.println("Checking DB at: " + url);
 
         try (Connection conn = DriverManager.getConnection(url)) {

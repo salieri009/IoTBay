@@ -253,8 +253,7 @@
                                                 <div class="lg:col-span-2">
                                                     <form id="checkoutForm"
                                                         action="${pageContext.request.contextPath}/checkout"
-                                                        method="post" class="space-y-8"
-                                                        onsubmit="return validateCheckoutForm(event)">
+                                                        method="post" class="space-y-8">
                                                         <input type="hidden" name="csrfToken" value="${csrfToken}" />
                                                         <!-- STEP 2: Shipping Information -->
                                                         <section
@@ -329,12 +328,7 @@
                                                                                     value="true" />
                                                                                 <jsp:param name="helpText"
                                                                                     value="For order confirmation and tracking" />
-                                                                                <jsp:param name="attributes"
-                                                                                    value="onblur='validateBusinessEmail(this)'" />
                                                                             </jsp:include>
-                                                                            <div id="email-error"
-                                                                                class="form-error text-xs text-error mt-1 hidden">
-                                                                            </div>
                                                                         </div>
 
                                                                         <div class="form-group md:col-span-2">
@@ -889,8 +883,6 @@
                                                                         value="<span id='placeOrderText'>Place Order</span><span id='placeOrderLoading' class='hidden'><svg class='animate-spin h-5 w-5 inline ml-2' fill='none' viewBox='0 0 24 24' aria-hidden='true'><circle class='opacity-25' cx='12' cy='12' r='10' stroke='currentColor' stroke-width='4'></circle><path class='opacity-75' fill='currentColor' d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'></path></svg> Processing...</span>" />
                                                                     <jsp:param name="attributes"
                                                                         value="id='placeOrderBtn' form='checkoutForm'" />
-                                                                    <jsp:param name="onclick"
-                                                                        value="confirmPlaceOrder(event)" />
                                                                     <jsp:param name="ariaLabel" value="Place order" />
                                                                 </jsp:include>
 
@@ -1182,40 +1174,6 @@
                                             input.value = value;
                                         }
 
-                                        // Business email validation (Section 4.5)
-                                        function validateBusinessEmail(input) {
-                                            const email = input.value;
-                                            const errorDiv = document.getElementById('email-error');
-
-                                            // Basic email validation
-                                            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                                            if (!emailRegex.test(email)) {
-                                                if (errorDiv) {
-                                                    errorDiv.textContent = 'Please enter a valid email address';
-                                                    errorDiv.classList.remove('hidden');
-                                                }
-                                                input.classList.add('border-error');
-                                                return false;
-                                            }
-
-                                            // Business email check (optional - can be enhanced)
-                                            const freeEmailDomains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com'];
-                                            const domain = email.split('@')[1];
-
-                                            if (freeEmailDomains.includes(domain?.toLowerCase())) {
-                                                if (errorDiv) {
-                                                    errorDiv.textContent = 'Business email recommended for order confirmations';
-                                                    errorDiv.classList.remove('hidden');
-                                                }
-                                                input.classList.add('border-warning');
-                                            } else {
-                                                errorDiv?.classList.add('hidden');
-                                                input.classList.remove('border-error', 'border-warning');
-                                            }
-
-                                            return true;
-                                        }
-
                                         // Load saved address (Section 4.5)
                                         function loadSavedAddress(addressId) {
                                             // This would typically fetch from an API
@@ -1291,47 +1249,6 @@
                                             if (deliveryElement) {
                                                 deliveryElement.textContent = deliveryTexts[method] || '5-7 business days';
                                             }
-                                        }
-
-                                        // Confirm place order (Section 4.5)
-                                        function confirmPlaceOrder(event) {
-                                            const agreeTerms = document.getElementById('agreeTerms');
-                                            const agreePrivacy = document.getElementById('agreePrivacy');
-
-                                            if (!agreeTerms?.checked || !agreePrivacy?.checked) {
-                                                event.preventDefault();
-                                                if (typeof showToast === 'function') {
-                                                    showToast('Please accept the Terms & Conditions and Privacy Policy', 'error');
-                                                } else {
-                                                    alert('Please accept the Terms & Conditions and Privacy Policy');
-                                                }
-                                                return false;
-                                            }
-
-                                            // Show confirmation dialog
-                                            if (!confirm('Are you sure you want to place this order? This action cannot be undone.')) {
-                                                event.preventDefault();
-                                                return false;
-                                            }
-
-                                            // Show loading state
-                                            const btn = document.getElementById('placeOrderBtn');
-                                            const text = document.getElementById('placeOrderText');
-                                            const loading = document.getElementById('placeOrderLoading');
-
-                                            if (btn && text && loading) {
-                                                btn.disabled = true;
-                                                text.classList.add('hidden');
-                                                loading.classList.remove('hidden');
-                                            }
-
-                                            return true;
-                                        }
-
-                                        // Validate checkout form (Section 4.5)
-                                        function validateCheckoutForm(event) {
-                                            // Additional validation can be added here
-                                            return true;
                                         }
 
                                         // Update review sections when form changes (Section 4.5)
@@ -1458,171 +1375,5 @@
                                         // Initial update
                                         updateReviewSection();
 
-                                        // Nielsen Heuristics Improvements for checkout.jsp
-                                        document.addEventListener('DOMContentLoaded', function () {
-                                            // 1. Visibility of System Status - Progress indicator
-                                            const progressSteps = document.querySelectorAll('[data-step]');
-                                            const currentStep = document.querySelector('[data-step].active, [data-step][aria-current="step"]');
-
-                                            if (progressSteps.length > 0) {
-                                                // Update progress indicator
-                                                const stepNumber = currentStep ? parseInt(currentStep.getAttribute('data-step')) : 1;
-                                                const progressPercent = (stepNumber / progressSteps.length) * 100;
-
-                                                // Announce progress to screen readers
-                                                const liveRegion = document.getElementById('aria-live-announcements');
-                                                if (liveRegion) {
-                                                    liveRegion.textContent = `Checkout step ${stepNumber} of ${progressSteps.length}`;
-                                                }
-                                            }
-
-                                            // 5. Error Prevention - Form validation with inline feedback
-                                            const checkoutForm = document.querySelector('form[action*="checkout"], form[action*="order"]');
-                                            if (checkoutForm) {
-                                                checkoutForm.addEventListener('submit', function (e) {
-                                                    const requiredFields = checkoutForm.querySelectorAll('[required]');
-                                                    let isValid = true;
-                                                    let firstInvalid = null;
-
-                                                    requiredFields.forEach(field => {
-                                                        if (!field.value.trim()) {
-                                                            isValid = false;
-                                                            field.classList.add('border-error', 'border-2');
-                                                            field.setAttribute('aria-invalid', 'true');
-
-                                                            // Show error message
-                                                            let errorMsg = field.parentElement.querySelector('.field-error');
-                                                            if (!errorMsg) {
-                                                                errorMsg = document.createElement('div');
-                                                                errorMsg.className = 'field-error text-sm text-error mt-1';
-                                                                errorMsg.setAttribute('role', 'alert');
-                                                                field.parentElement.appendChild(errorMsg);
-                                                            }
-                                                            errorMsg.textContent = 'This field is required';
-
-                                                            if (!firstInvalid) {
-                                                                firstInvalid = field;
-                                                            }
-                                                        } else {
-                                                            field.classList.remove('border-error', 'border-2');
-                                                            field.setAttribute('aria-invalid', 'false');
-                                                            const errorMsg = field.parentElement.querySelector('.field-error');
-                                                            if (errorMsg) {
-                                                                errorMsg.remove();
-                                                            }
-                                                        }
-                                                    });
-
-                                                    if (!isValid) {
-                                                        e.preventDefault();
-                                                        if (firstInvalid) {
-                                                            firstInvalid.focus();
-                                                            firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-                                                            // Announce error
-                                                            const liveRegion = document.getElementById('aria-live-errors');
-                                                            if (liveRegion) {
-                                                                liveRegion.textContent = 'Please fill in all required fields before continuing';
-                                                            }
-                                                        }
-                                                    }
-                                                });
-                                            }
-
-                                            // 3. User Control and Freedom - Save draft functionality
-                                            const saveDraftBtn = document.createElement('button');
-                                            saveDraftBtn.type = 'button';
-                                            saveDraftBtn.className = 'btn btn--outline btn--sm mt-4';
-                                            saveDraftBtn.textContent = 'Save Draft';
-                                            saveDraftBtn.setAttribute('aria-label', 'Save checkout form as draft');
-                                            saveDraftBtn.addEventListener('click', function () {
-                                                const formData = new FormData(checkoutForm);
-                                                const draft = {};
-                                                formData.forEach((value, key) => {
-                                                    draft[key] = value;
-                                                });
-                                                localStorage.setItem('checkoutDraft', JSON.stringify(draft));
-
-                                                // Show feedback
-                                                const toast = document.getElementById('toast-container');
-                                                if (toast) {
-                                                    const toastEl = document.createElement('div');
-                                                    toastEl.className = 'bg-success text-white px-4 py-3 rounded-lg shadow-lg';
-                                                    toastEl.textContent = 'Checkout draft saved';
-                                                    toastEl.setAttribute('role', 'status');
-                                                    toastEl.setAttribute('aria-live', 'polite');
-                                                    toast.appendChild(toastEl);
-                                                    setTimeout(() => toastEl.remove(), 3000);
-                                                }
-                                            });
-
-                                            // Add save draft button if form exists
-                                            if (checkoutForm) {
-                                                const submitBtn = checkoutForm.querySelector('button[type="submit"]');
-                                                if (submitBtn) {
-                                                    submitBtn.parentElement.insertBefore(saveDraftBtn, submitBtn);
-                                                }
-                                            }
-
-                                            // Load draft if exists
-                                            const savedDraft = localStorage.getItem('checkoutDraft');
-                                            if (savedDraft && checkoutForm) {
-                                                try {
-                                                    const draft = JSON.parse(savedDraft);
-                                                    Object.keys(draft).forEach(key => {
-                                                        const field = checkoutForm.querySelector(`[name="${key}"]`);
-                                                        if (field && !field.value) {
-                                                            field.value = draft[key];
-                                                        }
-                                                    });
-                                                } catch (e) {
-                                                    console.error('Error loading draft:', e);
-                                                }
-                                            }
-
-                                            // 6. Recognition Rather Than Recall - Auto-fill from profile
-                                            const useProfileAddressBtn = document.createElement('button');
-                                            useProfileAddressBtn.type = 'button';
-                                            useProfileAddressBtn.className = 'btn btn--outline btn--sm mb-4';
-                                            useProfileAddressBtn.textContent = 'Use Profile Address';
-                                            useProfileAddressBtn.setAttribute('aria-label', 'Fill address from profile');
-                                            useProfileAddressBtn.addEventListener('click', function () {
-                                                // This would typically fetch from user profile
-                                                const profileAddress = {
-                                                    fullName: '${user.firstName} ${user.lastName}',
-                                                    address1: '${user.addressLine1}',
-                                                    address2: '${user.addressLine2}',
-                                                    city: '${user.city}',
-                                                    state: '${user.state}',
-                                                    postalCode: '${user.postalCode}'
-                                                };
-
-                                                Object.keys(profileAddress).forEach(key => {
-                                                    const field = document.getElementById(key);
-                                                    if (field && profileAddress[key]) {
-                                                        field.value = profileAddress[key];
-                                                        field.dispatchEvent(new Event('change'));
-                                                    }
-                                                });
-                                            });
-
-                                            const addressSection = document.querySelector('fieldset legend');
-                                            if (addressSection && addressSection.parentElement) {
-                                                addressSection.parentElement.insertBefore(useProfileAddressBtn, addressSection.parentElement.firstChild);
-                                            }
-
-                                            // 7. Flexibility and Efficiency - Keyboard shortcuts
-                                            document.addEventListener('keydown', function (e) {
-                                                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
-                                                    return;
-                                                }
-
-                                                // 's' key saves draft
-                                                if ((e.key === 's' || e.key === 'S') && !e.ctrlKey && !e.metaKey) {
-                                                    e.preventDefault();
-                                                    saveDraftBtn.click();
-                                                }
-                                            });
-                                        });
                                     </script>
                                 </t:base>

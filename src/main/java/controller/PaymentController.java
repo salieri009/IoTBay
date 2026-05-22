@@ -324,19 +324,35 @@ public class PaymentController extends HttpServlet {
 
     private void searchPayments(HttpServletRequest request, HttpServletResponse response, User user)
             throws Exception {
-        
+
         String paymentIdStr = utils.SecurityUtil.getValidatedStringParameter(request, "paymentId", 10);
         String dateFrom = utils.SecurityUtil.getValidatedStringParameter(request, "dateFrom", 20);
         String dateTo = utils.SecurityUtil.getValidatedStringParameter(request, "dateTo", 20);
 
+        boolean hasPaymentId = paymentIdStr != null && !paymentIdStr.trim().isEmpty();
+        boolean hasDateRange = dateFrom != null && !dateFrom.isEmpty() && dateTo != null && !dateTo.isEmpty();
+
         List<Payment> payments;
 
-        if (paymentIdStr != null && !paymentIdStr.trim().isEmpty()) {
-            int paymentId = Integer.parseInt(paymentIdStr);
+        if (hasPaymentId && hasDateRange) {
+            // AND: filter by both paymentId and date range
+            int paymentId = Integer.parseInt(paymentIdStr.trim());
             Payment payment = paymentDAO.getPaymentById(paymentId);
-            payments = (payment != null && payment.getUserId().equals(user.getId())) 
+            if (payment != null && payment.getUserId().equals(user.getId())) {
+                // Check if payment date falls within the date range
+                List<Payment> byDate = paymentDAO.getPaymentsByUserIdAndDateRange(user.getId(), dateFrom, dateTo);
+                payments = byDate.stream()
+                    .filter(p -> p.getId() == paymentId)
+                    .collect(java.util.stream.Collectors.toList());
+            } else {
+                payments = Collections.emptyList();
+            }
+        } else if (hasPaymentId) {
+            int paymentId = Integer.parseInt(paymentIdStr.trim());
+            Payment payment = paymentDAO.getPaymentById(paymentId);
+            payments = (payment != null && payment.getUserId().equals(user.getId()))
                 ? Collections.singletonList(payment) : Collections.emptyList();
-        } else if (dateFrom != null && dateTo != null) {
+        } else if (hasDateRange) {
             payments = paymentDAO.getPaymentsByUserIdAndDateRange(user.getId(), dateFrom, dateTo);
         } else {
             payments = paymentDAO.getPaymentsByUserId(user.getId());
@@ -419,20 +435,34 @@ public class PaymentController extends HttpServlet {
     private void searchPaymentsJson(HttpServletResponse response, User user, HttpServletRequest request) throws Exception {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        
+
         String paymentIdStr = utils.SecurityUtil.getValidatedStringParameter(request, "paymentId", 10);
         String dateFrom = utils.SecurityUtil.getValidatedStringParameter(request, "dateFrom", 20);
         String dateTo = utils.SecurityUtil.getValidatedStringParameter(request, "dateTo", 20);
         String status = utils.SecurityUtil.getValidatedStringParameter(request, "status", 20);
-        
+
+        boolean hasPaymentId = paymentIdStr != null && !paymentIdStr.trim().isEmpty();
+        boolean hasDateRange = dateFrom != null && !dateFrom.isEmpty() && dateTo != null && !dateTo.isEmpty();
+
         List<Payment> payments;
-        
-        if (paymentIdStr != null && !paymentIdStr.trim().isEmpty()) {
-            int paymentId = Integer.parseInt(paymentIdStr);
+
+        if (hasPaymentId && hasDateRange) {
+            int paymentId = Integer.parseInt(paymentIdStr.trim());
             Payment payment = paymentDAO.getPaymentById(paymentId);
-            payments = (payment != null && payment.getUserId().equals(user.getId())) 
+            if (payment != null && payment.getUserId().equals(user.getId())) {
+                List<Payment> byDate = paymentDAO.getPaymentsByUserIdAndDateRange(user.getId(), dateFrom, dateTo);
+                payments = byDate.stream()
+                    .filter(p -> p.getId() == paymentId)
+                    .collect(java.util.stream.Collectors.toList());
+            } else {
+                payments = Collections.emptyList();
+            }
+        } else if (hasPaymentId) {
+            int paymentId = Integer.parseInt(paymentIdStr.trim());
+            Payment payment = paymentDAO.getPaymentById(paymentId);
+            payments = (payment != null && payment.getUserId().equals(user.getId()))
                 ? Collections.singletonList(payment) : Collections.emptyList();
-        } else if (dateFrom != null && dateTo != null) {
+        } else if (hasDateRange) {
             payments = paymentDAO.getPaymentsByUserIdAndDateRange(user.getId(), dateFrom, dateTo);
         } else {
             payments = paymentDAO.getPaymentsByUserId(user.getId());

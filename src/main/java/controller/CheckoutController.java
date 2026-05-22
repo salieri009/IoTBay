@@ -16,22 +16,28 @@ import javax.servlet.http.HttpSession;
 import config.DIContainer;
 import dao.CartItemDAO;
 import dao.OrderDAO;
+import dao.OrderProductDAO;
+import dao.interfaces.ProductDAO;
 import model.CartItem;
 import model.Order;
+import model.OrderProduct;
 import model.User;
 
 // Note: Mapped in web.xml to avoid conflicts
 public class CheckoutController extends HttpServlet{
     private OrderDAO orderDAO;
-    private CartItemDAO cartItemDao; 
+    private CartItemDAO cartItemDao;
+    private OrderProductDAO orderProductDAO;
+    private ProductDAO productDAO;
 
     @Override
     public void init() throws ServletException {
         try {
-            // Use DIContainer for dependency injection
             Connection connection = DIContainer.getConnection();
             orderDAO = new OrderDAO(connection);
             cartItemDao = new CartItemDAO(connection);
+            orderProductDAO = new OrderProductDAO(connection);
+            productDAO = DIContainer.get(ProductDAO.class);
         } catch (Exception e) {
             throw new ServletException("Failed to initialize CheckoutController", e);
         }
@@ -195,9 +201,30 @@ public class CheckoutController extends HttpServlet{
                 return;
             }
 
+            // Validate stock availability before creating order
+            for (CartItem item : cartItems) {
+                if (item == null || item.getProductId() == 0) continue;
+                model.Product product = productDAO.getProductById(item.getProductId());
+                if (product == null || product.getStockQuantity() < item.getQuantity()) {
+                    String productName = product != null ? product.getName() : "Product #" + item.getProductId();
+                    utils.ErrorAction.handleValidationError(request, response,
+                            "Insufficient stock for: " + productName, "CheckoutController.doPost");
+                    return;
+                }
+            }
+
             // Create order
             Order order = new Order(0, userId, LocalDateTime.now(), "Pending", totalAmount);
-            orderDAO.createOrder(order); 
+            int orderId = orderDAO.createOrder(order);
+
+            // Save order products and decrease stock
+            for (CartItem item : cartItems) {
+                if (item == null || item.getProductId() == 0) continue;
+                OrderProduct op = new OrderProduct(orderId, item.getProductId(),
+                        item.getQuantity(), item.getPrice() != null ? item.getPrice().doubleValue() : 0.0);
+                orderProductDAO.addOrderProduct(op);
+                productDAO.decreaseStock(item.getProductId(), item.getQuantity());
+            }
 
             // Log security event
             utils.ErrorAction.logSecurityEvent("ORDER_CREATED", request,
@@ -206,7 +233,7 @@ public class CheckoutController extends HttpServlet{
             // Clear cart after checkout
             cartItemDao.clearCartByUserId(userId);
 
-            response.sendRedirect(request.getContextPath() + "/");
+            response.sendRedirect(request.getContextPath() + "/orderhistory");
 
         } catch (IllegalArgumentException e) {
             utils.ErrorAction.handleValidationError(request, response, e.getMessage(),

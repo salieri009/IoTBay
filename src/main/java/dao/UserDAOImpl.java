@@ -116,11 +116,54 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public void deleteUser(int id) throws SQLException {
-        String query = "DELETE FROM Users WHERE id = ?";
-        try (Connection connection = DIContainer.getConnection();
-                PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, id);
-            statement.executeUpdate();
+        Connection connection = DIContainer.getConnection();
+        boolean autoCommit = connection.getAutoCommit();
+        connection.setAutoCommit(false);
+        try {
+            // Step 1: Restore stock for all active (non-cancelled) orders
+            String findActiveOrdersSql = "SELECT order_id FROM \"order\" WHERE user_id = ? AND status != 'cancelled'";
+            try (PreparedStatement findOrdersStmt = connection.prepareStatement(findActiveOrdersSql)) {
+                findOrdersStmt.setInt(1, id);
+                try (ResultSet orderRs = findOrdersStmt.executeQuery()) {
+                    while (orderRs.next()) {
+                        int orderId = orderRs.getInt("order_id");
+                        String findItemsSql = "SELECT productID, quantity FROM order_product WHERE orderID = ?";
+                        try (PreparedStatement findItemsStmt = connection.prepareStatement(findItemsSql)) {
+                            findItemsStmt.setInt(1, orderId);
+                            try (ResultSet itemRs = findItemsStmt.executeQuery()) {
+                                while (itemRs.next()) {
+                                    int productId = itemRs.getInt("productID");
+                                    int quantity = itemRs.getInt("quantity");
+                                    String restoreStockSql = "UPDATE products SET stock_quantity = stock_quantity + ? WHERE id = ?";
+                                    try (PreparedStatement restoreStmt = connection.prepareStatement(restoreStockSql)) {
+                                        restoreStmt.setInt(1, quantity);
+                                        restoreStmt.setInt(2, productId);
+                                        restoreStmt.executeUpdate();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            // Step 2: Cancel all user's orders
+            String cancelOrdersSql = "UPDATE \"order\" SET status = 'cancelled' WHERE user_id = ?";
+            try (PreparedStatement cancelStmt = connection.prepareStatement(cancelOrdersSql)) {
+                cancelStmt.setInt(1, id);
+                cancelStmt.executeUpdate();
+            }
+            // Step 3: Delete the user
+            String deleteUserSql = "DELETE FROM Users WHERE id = ?";
+            try (PreparedStatement deleteStmt = connection.prepareStatement(deleteUserSql)) {
+                deleteStmt.setInt(1, id);
+                deleteStmt.executeUpdate();
+            }
+            connection.commit();
+        } catch (SQLException e) {
+            connection.rollback();
+            throw e;
+        } finally {
+            connection.setAutoCommit(autoCommit);
         }
     }
 

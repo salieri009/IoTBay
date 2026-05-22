@@ -8,7 +8,7 @@ import config.AppConfig;
 
 public class DBConnection {
     public static Connection getConnection() throws SQLException, ClassNotFoundException {
-        String url = AppConfig.getProperty("db.url", "jdbc:sqlite:iotbay.db");
+        String url = AppConfig.getDbUrl();
         String driver = AppConfig.getProperty("db.driver", "org.sqlite.JDBC");
 
         System.out.println("[DBConnection] Connecting to URL: " + url);
