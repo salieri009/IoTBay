@@ -3,10 +3,16 @@
         <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
             <%@ page import="model.User" %>
 
-                <% // Admin access check User currentUser=(User) session.getAttribute("user"); if (currentUser==null ||
-                    (!"staff".equalsIgnoreCase(currentUser.getRole()) &&
-                    !"admin".equalsIgnoreCase(currentUser.getRole()))) { response.sendRedirect(request.getContextPath()
-                    + "/login.jsp?error=unauthorized" ); return; } %>
+                <%
+                    // Admin access check
+                    User currentUser = (User) session.getAttribute("user");
+                    if (currentUser == null ||
+                        (!"staff".equalsIgnoreCase(currentUser.getRole()) &&
+                         !"admin".equalsIgnoreCase(currentUser.getRole()))) {
+                        response.sendRedirect(request.getContextPath() + "/login.jsp?error=unauthorized");
+                        return;
+                    }
+                %>
 
                     <t:base title="Statistics & Analytics" customCSS="modern-theme.css">
 

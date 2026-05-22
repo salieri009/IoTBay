@@ -7,9 +7,11 @@
                     <c:redirect url="login.jsp" />
                 </c:if>
 
-                <% // Generate CSRF token for form submissions String
-                    csrfToken=utils.SecurityUtil.generateCSRFToken(request); pageContext.setAttribute("csrfToken",
-                    csrfToken); %>
+                <%
+                    // Generate CSRF token for form submissions
+                    String csrfToken = utils.SecurityUtil.generateCSRFToken(request);
+                    pageContext.setAttribute("csrfToken", csrfToken);
+                %>
 
                     <t:base title="My Account - IoT Bay"
                         description="Manage your IoT Bay profile settings and account information">

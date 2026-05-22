@@ -8,9 +8,11 @@
                             <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
                                 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-                                    <% // Generate CSRF token for cart API calls String
-                                        csrfToken=utils.SecurityUtil.generateCSRFToken(request);
-                                        pageContext.setAttribute("csrfToken", csrfToken); %>
+                                    <%
+                                        // Generate CSRF token for cart API calls
+                                        String csrfToken = utils.SecurityUtil.generateCSRFToken(request);
+                                        pageContext.setAttribute("csrfToken", csrfToken);
+                                    %>
 
                                         <%-- Logic refactored to JSTL/EL --%>
                                             <c:set var="cartItems" value="${requestScope.cartItems}" />

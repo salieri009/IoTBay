@@ -3,9 +3,13 @@
         <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
             <%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
 
-                <% // Ensure session is created before generating CSRF token request.getSession(true); // Generate CSRF
-                    token for form submission String csrfToken=utils.SecurityUtil.generateCSRFToken(request);
-                    pageContext.setAttribute("csrfToken", csrfToken); %>
+                <%
+                    // Ensure session is created before generating CSRF token
+                    request.getSession(true);
+                    // Generate CSRF token for form submission
+                    String csrfToken = utils.SecurityUtil.generateCSRFToken(request);
+                    pageContext.setAttribute("csrfToken", csrfToken);
+                %>
 
                     <t:base title="Sign In - IoT Bay" description="Sign in to your IoT Bay account">
                         <main class="min-h-screen flex items-center justify-center bg-neutral-50 py-12 px-4">

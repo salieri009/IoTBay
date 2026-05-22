@@ -5,26 +5,26 @@
                 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
                     <%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
 
-                        <% // Defensive coding: Initialize empty collections instead of redirecting to prevent infinite
-                            loop List<Product> products = (List<Product>) request.getAttribute("products");
-                                model.Category category = (model.Category) request.getAttribute("category");
+                        <%
+                            // Defensive coding: Initialize empty collections instead of redirecting to prevent infinite loop
+                            List<Product> products = (List<Product>) request.getAttribute("products");
+                            model.Category category = (model.Category) request.getAttribute("category");
 
-                                // If products/category is null, initialize with empty/default values instead of
-                                redirecting
-                                // This prevents infinite redirect loop when category doesn't exist in database
-                                if (products == null) {
+                            // If products/category is null, initialize with empty/default values instead of redirecting
+                            // This prevents infinite redirect loop when category doesn't exist in database
+                            if (products == null) {
                                 products = new ArrayList<>();
-                                    }
-                                    if (category == null) {
-                                    // Create a fallback category for display purposes
-                                    category = new model.Category(0, "Warehouse", "Warehouse Management Solutions");
-                                    }
+                            }
+                            if (category == null) {
+                                // Create a fallback category for display purposes
+                                category = new model.Category(0, "Warehouse", "Warehouse Management Solutions");
+                            }
 
-                                    String searchKeyword = (String) request.getParameter("search");
-                                    // Expose to EL
-                                    request.setAttribute("products", products);
-                                    request.setAttribute("category", category);
-                                    %>
+                            String searchKeyword = (String) request.getParameter("search");
+                            // Expose to EL
+                            request.setAttribute("products", products);
+                            request.setAttribute("category", category);
+                        %>
 
                                     <t:base title="Warehouse Management Solutions - IoT Bay"
                                         description="Optimize your warehouse operations with IoT solutions for inventory, automation, logistics.">

@@ -4,9 +4,11 @@
             <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
                 <%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
 
-                    <% // Generate CSRF token for form submission String
-                        csrfToken=utils.SecurityUtil.generateCSRFToken(request); pageContext.setAttribute("csrfToken",
-                        csrfToken); %>
+                    <%
+                        // Generate CSRF token for form submission
+                        String csrfToken = utils.SecurityUtil.generateCSRFToken(request);
+                        pageContext.setAttribute("csrfToken", csrfToken);
+                    %>
 
                         <c:if test="${empty sessionScope.user}">
                             <c:redirect url="login.jsp" />

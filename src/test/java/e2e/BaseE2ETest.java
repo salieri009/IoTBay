@@ -84,10 +84,13 @@ public abstract class BaseE2ETest {
      */
     protected void loginAs(String email, String password) {
         navigateTo("/login.jsp");
+        // Wait for form to be visible before interacting
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.name("email")));
         fillField(By.name("email"), email);
         fillField(By.name("password"), password);
-        clickByName("loginBtn");
-        // Wait until the URL is no longer login.jsp (redirect to home or wherever)
+        // Submit button has id="submitBtn" (not name="loginBtn")
+        driver.findElement(By.id("submitBtn")).click();
+        // Wait until redirected away from login page
         wait.until(ExpectedConditions.not(
                 ExpectedConditions.urlContains("login.jsp")));
     }
