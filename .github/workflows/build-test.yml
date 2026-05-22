@@ -1,10 +1,8 @@
 name: Build and Test
+# DISABLED — superseded by ci.yml which includes Jetty startup for E2E tests
+# and uses up-to-date action versions (v4). This file is kept for reference only.
 
-on:
-  push:
-    branches: [ main, develop ]
-  pull_request:
-    branches: [ main, develop ]
+on: []
 
 jobs:
   build:
