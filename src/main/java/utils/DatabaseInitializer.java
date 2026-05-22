@@ -64,6 +64,24 @@ public class DatabaseInitializer {
             System.out.println("[DatabaseInitializer] Seeding access logs...");
             seedAccessLogs(connection);
 
+            // Create additional tables required by newer DAO implementations
+            System.out.println("[DatabaseInitializer] Creating orders table (plural)...");
+            createOrdersTable(connection);
+            System.out.println("[DatabaseInitializer] Creating suppliers table...");
+            createSuppliersTable(connection);
+            System.out.println("[DatabaseInitializer] Creating access_logs table (plural)...");
+            createAccessLogsTable(connection);
+            System.out.println("[DatabaseInitializer] Creating shipment table...");
+            createShipmentTable(connection);
+
+            // Seed additional tables
+            System.out.println("[DatabaseInitializer] Seeding orders (plural table)...");
+            seedOrdersTable(connection);
+            System.out.println("[DatabaseInitializer] Seeding suppliers...");
+            seedSuppliersTable(connection);
+            System.out.println("[DatabaseInitializer] Seeding access_logs (plural table)...");
+            seedAccessLogsTable(connection);
+
             initialized = true;
             System.out.println("[DatabaseInitializer] Database initialized successfully!");
             logger.log(Level.INFO, "Database initialized successfully");
@@ -531,6 +549,160 @@ public class DatabaseInitializer {
                 logger.log(Level.INFO, "Test user seeded: " + email);
             }
         }
+    }
+
+    // ─── New table creation methods (plural names used by newer DAOs) ───────────
+
+    /** Creates 'orders' table (plural) used by OrderDAOImpl. */
+    private static void createOrdersTable(Connection connection) throws SQLException {
+        String sql = "CREATE TABLE IF NOT EXISTS orders (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "user_id INTEGER NOT NULL, " +
+                "total_amount REAL NOT NULL DEFAULT 0, " +
+                "order_date TEXT DEFAULT (datetime('now')), " +
+                "status TEXT NOT NULL DEFAULT 'pending', " +
+                "shipping_address TEXT, " +
+                "payment_method TEXT, " +
+                "created_at TEXT DEFAULT (datetime('now')), " +
+                "updated_at TEXT DEFAULT (datetime('now'))" +
+                ")";
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute(sql);
+            logger.log(Level.INFO, "orders table created/verified");
+        }
+    }
+
+    /** Creates 'suppliers' table used by SupplierDAOImpl. */
+    private static void createSuppliersTable(Connection connection) throws SQLException {
+        String sql = "CREATE TABLE IF NOT EXISTS suppliers (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "contact_name TEXT, " +
+                "company_name TEXT NOT NULL, " +
+                "email TEXT, " +
+                "phone_number TEXT, " +
+                "address_line1 TEXT, " +
+                "address_line2 TEXT, " +
+                "city TEXT, " +
+                "state TEXT, " +
+                "postal_code TEXT, " +
+                "country TEXT, " +
+                "website TEXT, " +
+                "supplier_type TEXT DEFAULT 'general', " +
+                "is_active INTEGER DEFAULT 1, " +
+                "created_at TEXT DEFAULT (datetime('now')), " +
+                "updated_at TEXT DEFAULT (datetime('now'))" +
+                ")";
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute(sql);
+            logger.log(Level.INFO, "suppliers table created/verified");
+        }
+    }
+
+    /** Creates 'access_logs' table (plural) used by AccessLogDAOImpl. */
+    private static void createAccessLogsTable(Connection connection) throws SQLException {
+        String sql = "CREATE TABLE IF NOT EXISTS access_logs (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "user_id INTEGER, " +
+                "action TEXT, " +
+                "timestamp TEXT DEFAULT (datetime('now'))" +
+                ")";
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute(sql);
+            logger.log(Level.INFO, "access_logs table created/verified");
+        }
+    }
+
+    /** Seeds sample rows into the 'orders' (plural) table. */
+    private static void seedOrdersTable(Connection connection) throws SQLException {
+        String checkQuery = "SELECT COUNT(*) FROM orders";
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(checkQuery)) {
+            if (rs.next() && rs.getInt(1) > 0) return; // already seeded
+        }
+        String[][] rows = {
+            {"1","2025-01-10 09:00:00","pending","299.99","123 Main St","Credit Card"},
+            {"1","2025-02-01 14:00:00","shipped","529.98","123 Main St","Credit Card"},
+            {"1","2025-03-01 08:00:00","cancelled","499.99","123 Main St","PayPal"},
+            {"1","2025-04-20 09:30:00","delivered","399.99","123 Main St","Debit Card"},
+            {"1","2025-05-01 15:00:00","pending","249.99","123 Main St","Credit Card"},
+            {"2","2025-01-20 09:00:00","delivered","99.99","456 King St","PayPal"},
+            {"2","2025-02-05 11:00:00","pending","179.99","456 King St","Credit Card"},
+            {"2","2025-04-05 10:00:00","delivered","899.99","456 King St","Credit Card"},
+        };
+        String insertSql = "INSERT INTO orders (user_id, order_date, status, total_amount, shipping_address, payment_method) VALUES (?, ?, ?, ?, ?, ?)";
+        for (String[] r : rows) {
+            try (PreparedStatement ps = connection.prepareStatement(insertSql)) {
+                ps.setInt(1, Integer.parseInt(r[0]));
+                ps.setString(2, r[1]);
+                ps.setString(3, r[2]);
+                ps.setDouble(4, Double.parseDouble(r[3]));
+                ps.setString(5, r[4]);
+                ps.setString(6, r[5]);
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                logger.log(Level.WARNING, "Could not seed orders row: " + e.getMessage());
+            }
+        }
+        logger.log(Level.INFO, "Sample orders seeded into 'orders' table");
+    }
+
+    /** Seeds sample rows into the 'suppliers' table. */
+    private static void seedSuppliersTable(Connection connection) throws SQLException {
+        String checkQuery = "SELECT COUNT(*) FROM suppliers";
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(checkQuery)) {
+            if (rs.next() && rs.getInt(1) > 0) return;
+        }
+        String[][] rows = {
+            {"Tech Supplies Co","John Smith","john@techsupplies.com","+61 2 9000 1111","manufacturer"},
+            {"IoT Components Ltd","Jane Doe","jane@iotcomponents.com","+61 2 9000 2222","distributor"},
+            {"Smart Systems Pty","Bob Lee","bob@smartsystems.com","+61 2 9000 3333","wholesaler"},
+        };
+        String insertSql = "INSERT INTO suppliers (company_name, contact_name, email, phone_number, supplier_type) VALUES (?, ?, ?, ?, ?)";
+        for (String[] r : rows) {
+            try (PreparedStatement ps = connection.prepareStatement(insertSql)) {
+                ps.setString(1, r[0]);
+                ps.setString(2, r[1]);
+                ps.setString(3, r[2]);
+                ps.setString(4, r[3]);
+                ps.setString(5, r[4]);
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                logger.log(Level.WARNING, "Could not seed supplier row: " + e.getMessage());
+            }
+        }
+        logger.log(Level.INFO, "Sample suppliers seeded");
+    }
+
+    /** Seeds sample rows into the 'access_logs' (plural) table. */
+    private static void seedAccessLogsTable(Connection connection) throws SQLException {
+        String checkQuery = "SELECT COUNT(*) FROM access_logs";
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(checkQuery)) {
+            if (rs.next() && rs.getInt(1) > 0) return;
+        }
+        String[][] rows = {
+            {"1","LOGIN","2025-05-01 09:00:00"},
+            {"1","LOGOUT","2025-05-01 09:45:00"},
+            {"1","LOGIN","2025-05-10 10:00:00"},
+            {"1","LOGOUT","2025-05-10 10:30:00"},
+            {"2","LOGIN","2025-05-01 08:00:00"},
+            {"2","LOGOUT","2025-05-01 08:50:00"},
+            {"2","LOGIN","2025-05-15 14:00:00"},
+            {"2","LOGOUT","2025-05-15 14:30:00"},
+        };
+        String insertSql = "INSERT INTO access_logs (user_id, action, timestamp) VALUES (?, ?, ?)";
+        for (String[] r : rows) {
+            try (PreparedStatement ps = connection.prepareStatement(insertSql)) {
+                ps.setInt(1, Integer.parseInt(r[0]));
+                ps.setString(2, r[1]);
+                ps.setString(3, r[2]);
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                logger.log(Level.WARNING, "Could not seed access_logs row: " + e.getMessage());
+            }
+        }
+        logger.log(Level.INFO, "Sample access_logs seeded");
     }
 
     public static void main(String[] args) {
