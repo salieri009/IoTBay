@@ -27,6 +27,33 @@ public class UpdateProductController extends HttpServlet {
     }
 
     @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        if (!isAdmin(request)) {
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            return;
+        }
+
+        try {
+            int productId = utils.SecurityUtil.getValidatedIntParameter(request, "id", 1, Integer.MAX_VALUE);
+            model.Product product = productDAO.getProductById(productId);
+
+            if (product == null) {
+                utils.ErrorAction.handleValidationError(request, response,
+                        "Product not found", "UpdateProductController.doGet");
+                return;
+            }
+
+            request.setAttribute("product", product);
+            request.getRequestDispatcher("/manage-product-form.jsp").forward(request, response);
+
+        } catch (Exception e) {
+            utils.ErrorAction.handleServerError(request, response, e, "UpdateProductController.doGet");
+        }
+    }
+
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -90,7 +117,7 @@ public class UpdateProductController extends HttpServlet {
 
             productDAO.updateProduct(id, updatedProduct);
 
-            response.sendRedirect(request.getContextPath() + "/manage/products");
+            response.sendRedirect(request.getContextPath() + "/api/manage/products");
 
         } catch (SQLException e) {
             utils.ErrorAction.handleDatabaseError(request, response, e, "UpdateProductController.doPost");

@@ -148,6 +148,8 @@ public class PaymentController extends HttpServlet {
                 createPayment(request, response, user);
             } else if (pathInfo.equals("/update")) {
                 updatePayment(request, response, user);
+            } else if (pathInfo.equals("/delete")) {
+                deletePaymentPost(request, response, user);
             } else {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
             }
@@ -213,6 +215,25 @@ public class PaymentController extends HttpServlet {
         List<Payment> payments = paymentDAO.getPaymentsByUserId(user.getId());
         request.setAttribute("payments", payments);
         request.getRequestDispatcher("/payment-list.jsp").forward(request, response);
+    }
+
+    private void deletePaymentPost(HttpServletRequest request, HttpServletResponse response, User user)
+            throws Exception {
+        int paymentId = utils.SecurityUtil.getValidatedIntParameter(request, "paymentId", 1, Integer.MAX_VALUE);
+        Payment payment = paymentDAO.getPaymentById(paymentId);
+
+        if (payment == null || !payment.getUserId().equals(user.getId())) {
+            utils.ErrorAction.handleAuthorizationError(request, response, "PaymentController.deletePaymentPost");
+            return;
+        }
+        if (!"PENDING".equals(payment.getStatus())) {
+            request.setAttribute("error", "Only PENDING payments can be deleted.");
+            searchPayments(request, response, user);
+            return;
+        }
+        paymentDetailDAO.deleteByPaymentId(paymentId);
+        paymentDAO.deletePayment(paymentId);
+        response.sendRedirect(request.getContextPath() + "/api/payment/?success=Payment+deleted");
     }
 
     private void viewPayment(HttpServletRequest request, HttpServletResponse response, User user, int paymentId)
