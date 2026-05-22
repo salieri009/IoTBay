@@ -1,0 +1,219 @@
+package e2e;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.time.Duration;
+import java.util.List;
+
+import static org.junit.Assert.*;
+
+/**
+ * Base class for all E2E tests.
+ * Sets up a shared headless ChromeDriver instance and provides helper methods.
+ *
+ * Prerequisites: Jetty server must be running on localhost:8080 before tests run.
+ *   mvn jetty:run (separate terminal)
+ */
+public abstract class BaseE2ETest {
+
+    protected static WebDriver driver;
+    protected static WebDriverWait wait;
+
+    protected static final String BASE_URL       = "http://localhost:8080";
+    protected static final String CUSTOMER_EMAIL = "customer@iotbay.com";
+    protected static final String CUSTOMER_PASS  = "password123";
+    protected static final String STAFF_EMAIL    = "staff@iotbay.com";
+    protected static final String STAFF_PASS     = "staff123";
+
+    // ── Driver lifecycle ────────────────────────────────────────────────────
+
+    @BeforeClass
+    public static void setUpDriver() {
+        WebDriverManager.chromedriver().setup();
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments(
+                "--headless=new",
+                "--no-sandbox",
+                "--disable-dev-shm-usage",
+                "--disable-gpu",
+                "--window-size=1280,900",
+                "--remote-allow-origins=*"
+        );
+        driver = new ChromeDriver(options);
+        wait = new WebDriverWait(driver, Duration.ofSeconds(8));
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+    }
+
+    @AfterClass
+    public static void tearDownDriver() {
+        if (driver != null) {
+            driver.quit();
+            driver = null;
+        }
+    }
+
+    // ── Navigation helpers ───────────────────────────────────────────────────
+
+    protected void navigateTo(String path) {
+        driver.get(BASE_URL + path);
+    }
+
+    protected String currentUrl() {
+        return driver.getCurrentUrl();
+    }
+
+    protected String pageSource() {
+        return driver.getPageSource();
+    }
+
+    // ── Auth helpers ─────────────────────────────────────────────────────────
+
+    /**
+     * Log in using the standard login form at /login.jsp.
+     */
+    protected void loginAs(String email, String password) {
+        navigateTo("/login.jsp");
+        fillField(By.name("email"), email);
+        fillField(By.name("password"), password);
+        clickByName("loginBtn");
+        // Wait until the URL is no longer login.jsp (redirect to home or wherever)
+        wait.until(ExpectedConditions.not(
+                ExpectedConditions.urlContains("login.jsp")));
+    }
+
+    protected void loginAsCustomer() {
+        loginAs(CUSTOMER_EMAIL, CUSTOMER_PASS);
+    }
+
+    protected void loginAsStaff() {
+        loginAs(STAFF_EMAIL, STAFF_PASS);
+    }
+
+    /**
+     * Log out by navigating to the logout endpoint.
+     */
+    protected void logout() {
+        navigateTo("/api/logout");
+    }
+
+    // ── Form helpers ─────────────────────────────────────────────────────────
+
+    protected void fillField(By locator, String value) {
+        WebElement el = driver.findElement(locator);
+        el.clear();
+        el.sendKeys(value);
+    }
+
+    protected void fillField(String name, String value) {
+        fillField(By.name(name), value);
+    }
+
+    protected void selectOption(By locator, String visibleText) {
+        new Select(driver.findElement(locator)).selectByVisibleText(visibleText);
+    }
+
+    protected void selectOption(String name, String visibleText) {
+        selectOption(By.name(name), visibleText);
+    }
+
+    protected void clickByText(String text) {
+        wait.until(ExpectedConditions.elementToBeClickable(
+                By.xpath("//*[normalize-space(text())='" + text + "']"))).click();
+    }
+
+    protected void clickByName(String name) {
+        driver.findElement(By.name(name)).click();
+    }
+
+    protected void clickSubmit() {
+        driver.findElement(By.cssSelector("[type='submit']")).click();
+    }
+
+    // ── Upload helper ────────────────────────────────────────────────────────
+
+    /**
+     * Creates a temp CSV file and sends its path to a file input element.
+     */
+    protected void uploadCSV(String inputName, String content) throws IOException {
+        File tmp = File.createTempFile("e2e_", ".csv");
+        tmp.deleteOnExit();
+        Files.write(tmp.toPath(), content.getBytes("UTF-8"));
+        driver.findElement(By.name(inputName)).sendKeys(tmp.getAbsolutePath());
+    }
+
+    // ── Assertion helpers ────────────────────────────────────────────────────
+
+    protected void assertPageContains(String text) {
+        assertTrue("Page should contain: " + text, pageSource().contains(text));
+    }
+
+    protected void assertPageNotContains(String text) {
+        assertFalse("Page should NOT contain: " + text, pageSource().contains(text));
+    }
+
+    protected void assertCurrentUrlContains(String fragment) {
+        assertTrue("URL should contain '" + fragment + "' but was: " + currentUrl(),
+                currentUrl().contains(fragment));
+    }
+
+    protected boolean isElementPresent(By locator) {
+        return !driver.findElements(locator).isEmpty();
+    }
+
+    protected void assertElementPresent(By locator, String message) {
+        assertTrue(message, isElementPresent(locator));
+    }
+
+    protected void assertElementAbsent(By locator, String message) {
+        assertFalse(message, isElementPresent(locator));
+    }
+
+    /**
+     * Returns text of a success or info alert/message div on the page.
+     */
+    protected boolean hasSuccessMessage() {
+        List<WebElement> elements = driver.findElements(
+                By.xpath("//*[contains(@class,'success') or contains(@class,'alert-success') or contains(@class,'bg-green')]"));
+        return !elements.isEmpty();
+    }
+
+    protected boolean hasErrorMessage() {
+        List<WebElement> elements = driver.findElements(
+                By.xpath("//*[contains(@class,'error') or contains(@class,'alert-danger') or contains(@class,'bg-red')]"));
+        return !elements.isEmpty();
+    }
+
+    /**
+     * Waits for an element containing the given text to appear.
+     */
+    protected WebElement waitForText(String text) {
+        return wait.until(ExpectedConditions.presenceOfElementLocated(
+                By.xpath("//*[contains(text(),'" + text + "')]")));
+    }
+
+    /**
+     * Waits for URL to change to contain the given fragment.
+     */
+    protected void waitForUrlContaining(String fragment) {
+        wait.until(ExpectedConditions.urlContains(fragment));
+    }
+
+    /**
+     * Returns count of table rows (excluding header row) in the first <table>.
+     */
+    protected int countTableRows() {
+        List<WebElement> rows = driver.findElements(By.cssSelector("table tbody tr"));
+        return rows.size();
+    }
+}

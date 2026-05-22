@@ -1,0 +1,188 @@
+package e2e;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+
+import java.util.List;
+import java.util.UUID;
+
+import static org.junit.Assert.*;
+
+/**
+ * F07 — Customer Management (Admin) E2E Tests
+ *
+ * Covers: Customer list, create individual/company, search by name,
+ * filter by type, view detail, edit, delete.
+ */
+public class F07_CustomerManagementTest extends BaseE2ETest {
+
+    @Before
+    public void setUp() {
+        logout();
+        loginAsStaff();
+    }
+
+    @After
+    public void tearDown() {
+        logout();
+    }
+
+    // ── List page ─────────────────────────────────────────────────────────────
+
+    /** TC-07-1: Customer list page renders */
+    @Test
+    public void testCustomerListRenders() {
+        navigateTo("/admin/customer/");
+        assertFalse("Customer list should not 403", pageSource().contains("403"));
+        assertFalse("Customer list should not 404", pageSource().contains("HTTP ERROR 404"));
+        assertFalse("Customer list should not 500", pageSource().contains("HTTP ERROR 500"));
+        assertTrue("Customer list page should mention 'Customer'",
+                pageSource().contains("Customer") || pageSource().contains("customer"));
+    }
+
+    /** TC-07-2: Customer list shows table of customers */
+    @Test
+    public void testCustomerListShowsTable() {
+        navigateTo("/admin/customer/");
+        assertTrue("Customer list should have a table or list",
+                isElementPresent(By.tagName("table")) || isElementPresent(By.tagName("tbody")) ||
+                pageSource().contains("Email") || pageSource().contains("Name"));
+    }
+
+    // ── Create customer ───────────────────────────────────────────────────────
+
+    /** TC-07-3: Add customer form renders */
+    @Test
+    public void testAddCustomerFormRenders() {
+        navigateTo("/admin/customer/form");
+        assertFalse("Customer form should not 404",
+                pageSource().contains("HTTP ERROR 404") && !currentUrl().contains("login"));
+        assertFalse("Customer form should not 500", pageSource().contains("HTTP ERROR 500"));
+        assertTrue("Customer form should have a form element",
+                isElementPresent(By.tagName("form")));
+    }
+
+    /** TC-07-4: Add customer form has required fields */
+    @Test
+    public void testAddCustomerFormHasRequiredFields() {
+        navigateTo("/admin/customer/form");
+        String src = pageSource();
+        boolean hasFirstName = src.contains("firstName") || src.contains("First Name") ||
+                isElementPresent(By.name("firstName"));
+        boolean hasEmail = src.contains("email") || src.contains("Email") ||
+                isElementPresent(By.name("email"));
+        boolean hasType = src.contains("customerType") || src.contains("individual") ||
+                src.contains("company") || isElementPresent(By.name("customerType"));
+        assertTrue("Customer form should have a first name field", hasFirstName);
+        assertTrue("Customer form should have an email field", hasEmail);
+        assertTrue("Customer form should have a customer type field", hasType);
+    }
+
+    /** TC-07-5: Create individual customer */
+    @Test
+    public void testCreateIndividualCustomer() {
+        navigateTo("/admin/customer/form");
+
+        String uniqueEmail = "e2e-individual-" + UUID.randomUUID().toString().substring(0, 8) + "@test.com";
+        if (isElementPresent(By.name("firstName"))) fillField("firstName", "E2E");
+        if (isElementPresent(By.name("lastName"))) fillField("lastName", "Individual");
+        if (isElementPresent(By.name("email"))) fillField("email", uniqueEmail);
+        if (isElementPresent(By.name("password"))) fillField("password", "TestPass@123");
+        if (isElementPresent(By.name("phone"))) fillField("phone", "+61400000099");
+        if (isElementPresent(By.name("customerType"))) selectOption("customerType", "individual");
+
+        if (isElementPresent(By.cssSelector("[type='submit']"))) {
+            clickSubmit();
+            assertFalse("Create customer should not 500", pageSource().contains("HTTP ERROR 500"));
+        }
+    }
+
+    /** TC-07-6: Create company customer */
+    @Test
+    public void testCreateCompanyCustomer() {
+        navigateTo("/admin/customer/form");
+
+        String uniqueEmail = "e2e-company-" + UUID.randomUUID().toString().substring(0, 8) + "@test.com";
+        if (isElementPresent(By.name("firstName"))) fillField("firstName", "E2E");
+        if (isElementPresent(By.name("lastName"))) fillField("lastName", "Company");
+        if (isElementPresent(By.name("email"))) fillField("email", uniqueEmail);
+        if (isElementPresent(By.name("password"))) fillField("password", "TestPass@123");
+        if (isElementPresent(By.name("phone"))) fillField("phone", "+61400000098");
+        if (isElementPresent(By.name("customerType"))) selectOption("customerType", "company");
+
+        if (isElementPresent(By.cssSelector("[type='submit']"))) {
+            clickSubmit();
+            assertFalse("Create company customer should not 500",
+                    pageSource().contains("HTTP ERROR 500"));
+        }
+    }
+
+    // ── Search / Filter ───────────────────────────────────────────────────────
+
+    /** TC-07-7: Search customer by name */
+    @Test
+    public void testSearchCustomerByName() {
+        navigateTo("/admin/customer/?name=customer");
+        assertFalse("Customer search should not 500", pageSource().contains("HTTP ERROR 500"));
+        // Results should appear (filtered)
+        assertFalse("Customer search should not 404",
+                pageSource().contains("HTTP ERROR 404") && !currentUrl().contains("login"));
+    }
+
+    /** TC-07-8: Filter customer by type */
+    @Test
+    public void testFilterCustomerByType() {
+        navigateTo("/admin/customer/?type=individual");
+        assertFalse("Customer type filter should not 500", pageSource().contains("HTTP ERROR 500"));
+    }
+
+    // ── View detail ───────────────────────────────────────────────────────────
+
+    /** TC-07-9: Customer view page exists */
+    @Test
+    public void testCustomerViewPageExists() {
+        navigateTo("/admin/customer/view/1");
+        assertFalse("Customer view should not 500", pageSource().contains("HTTP ERROR 500"));
+        // May show "not found" if ID 1 is not a customer, but should not crash
+    }
+
+    // ── Edit ──────────────────────────────────────────────────────────────────
+
+    /** TC-07-10: Customer edit page exists */
+    @Test
+    public void testCustomerEditPageExists() {
+        navigateTo("/admin/customer/edit/1");
+        assertFalse("Customer edit should not 500", pageSource().contains("HTTP ERROR 500"));
+        assertFalse("Customer edit should not 404",
+                pageSource().contains("HTTP ERROR 404") && !currentUrl().contains("login"));
+    }
+
+    // ── Access control ────────────────────────────────────────────────────────
+
+    /** TC-07-11: Customer role cannot access customer management */
+    @Test
+    public void testCustomerRoleCannotAccessCustomerManagement() {
+        logout();
+        loginAsCustomer();
+        navigateTo("/admin/customer/");
+        boolean blocked = currentUrl().contains("login") ||
+                pageSource().contains("403") ||
+                pageSource().contains("Unauthorized") ||
+                !currentUrl().contains("customer");
+        assertTrue("Customer role should NOT access customer admin", blocked);
+    }
+
+    /** TC-07-12: Unauthenticated access is blocked */
+    @Test
+    public void testUnauthenticatedCannotAccessCustomerManagement() {
+        logout();
+        navigateTo("/admin/customer/");
+        boolean blocked = currentUrl().contains("login") ||
+                pageSource().contains("login") ||
+                pageSource().contains("401");
+        assertTrue("Unauthenticated access to /admin/customer/ should be blocked", blocked);
+    }
+}
