@@ -9,8 +9,10 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
+import javax.servlet.http.Part;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -25,7 +27,13 @@ import model.Order;
 import model.Product;
 import utils.CSVUtil;
 
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @WebServlet("/api/dataManagement/*")
+@MultipartConfig(maxFileSize = 10 * 1024 * 1024) // 10MB
 public class DataManagementController extends HttpServlet {
     private AccessLogDAO accessLogDAO;
     private UserDAO userDAO;
@@ -186,5 +194,244 @@ public class DataManagementController extends HttpServlet {
         request.setAttribute("totalProducts", totalProducts);
 
         request.getRequestDispatcher("/WEB-INF/views/data-management.jsp").forward(request, response);
+    }
+
+    // ─── POST ───────────────────────────────────────────────────────────────────
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String pathInfo = request.getPathInfo();
+        if (pathInfo == null) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Please log in");
+            return;
+        }
+
+        Object userObj = session.getAttribute("user");
+        if (!(userObj instanceof User)) {
+            utils.ErrorAction.handleAuthenticationError(request, response, "DataManagementController.doPost");
+            return;
+        }
+
+        User user = (User) userObj;
+        String role = user.getRole();
+        if (role == null || (!"admin".equalsIgnoreCase(role) && !"staff".equalsIgnoreCase(role))) {
+            utils.ErrorAction.handleAuthorizationError(request, response, "DataManagementController.doPost");
+            return;
+        }
+
+        try {
+            switch (pathInfo) {
+                case "/import":
+                    handleImport(request, response);
+                    break;
+                case "/confirmImport":
+                    handleConfirmImport(request, response, session);
+                    break;
+                case "/bulkDelete":
+                    handleBulkDelete(request, response);
+                    break;
+                default:
+                    response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            }
+        } catch (SQLException e) {
+            utils.ErrorAction.handleDatabaseError(request, response, e, "DataManagementController.doPost");
+        } catch (Exception e) {
+            utils.ErrorAction.handleServerError(request, response, e, "DataManagementController.doPost");
+        }
+    }
+
+    private void handleImport(HttpServletRequest request, HttpServletResponse response)
+            throws Exception {
+
+        Part filePart = request.getPart("csvFile");
+        String entityType = request.getParameter("entityType");
+
+        if (filePart == null || filePart.getSize() == 0) {
+            request.setAttribute("errorMessage", "Please select a CSV file to upload.");
+            request.getRequestDispatcher("/WEB-INF/views/data-management.jsp").forward(request, response);
+            return;
+        }
+
+        String submittedFileName = filePart.getSubmittedFileName();
+        if (submittedFileName == null || !submittedFileName.toLowerCase().endsWith(".csv")) {
+            request.setAttribute("errorMessage", "Only CSV files are accepted.");
+            request.getRequestDispatcher("/WEB-INF/views/data-management.jsp").forward(request, response);
+            return;
+        }
+
+        if (entityType == null || entityType.trim().isEmpty()) {
+            request.setAttribute("errorMessage", "Please select an entity type.");
+            request.getRequestDispatcher("/WEB-INF/views/data-management.jsp").forward(request, response);
+            return;
+        }
+
+        String csvContent;
+        try (InputStream inputStream = filePart.getInputStream()) {
+            csvContent = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+        }
+
+        java.util.List<String[]> rows = CSVUtil.parseCSV(csvContent);
+        if (rows.isEmpty()) {
+            request.setAttribute("errorMessage", "The CSV file is empty.");
+            request.getRequestDispatcher("/WEB-INF/views/data-management.jsp").forward(request, response);
+            return;
+        }
+
+        // Validate headers
+        String[] headers = rows.get(0);
+        String[] expectedHeaders = getExpectedHeaders(entityType);
+        if (expectedHeaders == null) {
+            request.setAttribute("errorMessage", "Import not supported for entity type: " + entityType);
+            request.getRequestDispatcher("/WEB-INF/views/data-management.jsp").forward(request, response);
+            return;
+        }
+
+        if (!CSVUtil.validateCSVHeaders(headers, expectedHeaders)) {
+            request.setAttribute("errorMessage",
+                    "Invalid CSV headers. Expected: " + String.join(", ", expectedHeaders));
+            request.getRequestDispatcher("/WEB-INF/views/data-management.jsp").forward(request, response);
+            return;
+        }
+
+        // Store parsed data in session for confirmImport
+        java.util.List<String[]> dataRows = rows.subList(1, rows.size());
+        request.getSession(true).setAttribute("importRows", dataRows);
+        request.getSession(true).setAttribute("importEntityType", entityType);
+        request.getSession(true).setAttribute("importHeaders", headers);
+
+        request.setAttribute("importHeaders", headers);
+        request.setAttribute("importRows", dataRows);
+        request.setAttribute("importEntityType", entityType);
+
+        request.getRequestDispatcher("/WEB-INF/views/import-preview.jsp").forward(request, response);
+    }
+
+    private void handleConfirmImport(HttpServletRequest request, HttpServletResponse response,
+            HttpSession session) throws SQLException, ServletException, IOException {
+
+        @SuppressWarnings("unchecked")
+        java.util.List<String[]> rows = (java.util.List<String[]>) session.getAttribute("importRows");
+        String entityType = (String) session.getAttribute("importEntityType");
+
+        if (rows == null || entityType == null) {
+            request.setAttribute("errorMessage", "No pending import found. Please upload a CSV first.");
+            request.getRequestDispatcher("/WEB-INF/views/data-management.jsp").forward(request, response);
+            return;
+        }
+
+        int successCount = 0;
+        int failCount = 0;
+
+        if ("users".equalsIgnoreCase(entityType)) {
+            for (String[] row : rows) {
+                try {
+                    if (row.length < 4) { failCount++; continue; }
+                    String email = row[0].trim();
+                    String firstName = row[1].trim();
+                    String lastName = row[2].trim();
+                    String phone = row.length > 3 ? row[3].trim() : null;
+                    boolean isActive = row.length > 4 && "true".equalsIgnoreCase(row[4].trim());
+
+                    if (email.isEmpty() || firstName.isEmpty() || lastName.isEmpty()) { failCount++; continue; }
+                    if (userDAO.getUserByEmail(email) != null) { failCount++; continue; }
+
+                    String tempPassword = utils.PasswordUtil.hashPassword("IoTBay@" + email.split("@")[0]);
+                    model.User newUser = new model.User(0, email, tempPassword, firstName, lastName,
+                            phone, null, null, null, null, null,
+                            LocalDateTime.now(), LocalDateTime.now(), "customer", isActive);
+                    userDAO.createUser(newUser);
+                    successCount++;
+                } catch (Exception e) {
+                    failCount++;
+                }
+            }
+        } else if ("products".equalsIgnoreCase(entityType)) {
+            for (String[] row : rows) {
+                try {
+                    if (row.length < 3) { failCount++; continue; }
+                    String name = row[0].trim();
+                    String category = row[1].trim();
+                    double price = Double.parseDouble(row[2].trim());
+                    int stock = row.length > 3 ? Integer.parseInt(row[3].trim()) : 0;
+                    String description = row.length > 4 ? row[4].trim() : "";
+
+                    if (name.isEmpty()) { failCount++; continue; }
+
+                    model.Product prod = new model.Product();
+                    prod.setName(name);
+                    prod.setCategory(category);
+                    prod.setPrice(price);
+                    prod.setStockQuantity(stock);
+                    prod.setDescription(description);
+                    productDAO.createProduct(prod);
+                    successCount++;
+                } catch (Exception e) {
+                    failCount++;
+                }
+            }
+        }
+
+        // Clear session import data
+        session.removeAttribute("importRows");
+        session.removeAttribute("importEntityType");
+        session.removeAttribute("importHeaders");
+
+        request.setAttribute("successMessage",
+                "Import complete: " + successCount + " record(s) imported, " + failCount + " failed.");
+        showDashboard(request, response);
+    }
+
+    private void handleBulkDelete(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, ServletException, IOException {
+
+        String deleteType = request.getParameter("deleteType");
+        String[] ids = request.getParameterValues("ids");
+
+        if (ids == null || ids.length == 0) {
+            request.setAttribute("errorMessage", "No IDs provided for bulk delete.");
+            showDashboard(request, response);
+            return;
+        }
+
+        int successCount = 0;
+        int failCount = 0;
+
+        for (String idStr : ids) {
+            try {
+                int id = Integer.parseInt(idStr.trim());
+                if ("users".equalsIgnoreCase(deleteType)) {
+                    userDAO.deleteUser(id);
+                    successCount++;
+                } else if ("products".equalsIgnoreCase(deleteType)) {
+                    productDAO.deleteProduct(id);
+                    successCount++;
+                }
+            } catch (Exception e) {
+                failCount++;
+            }
+        }
+
+        request.setAttribute("successMessage",
+                "Bulk delete complete: " + successCount + " record(s) deleted, " + failCount + " failed.");
+        showDashboard(request, response);
+    }
+
+    private String[] getExpectedHeaders(String entityType) {
+        switch (entityType.toLowerCase()) {
+            case "users":
+                return new String[]{"Email", "First Name", "Last Name", "Phone", "Is Active"};
+            case "products":
+                return new String[]{"Name", "Category", "Price", "Stock Quantity", "Description"};
+            default:
+                return null;
+        }
     }
 }

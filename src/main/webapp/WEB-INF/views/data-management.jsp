@@ -165,6 +165,37 @@
                                 </form>
                             </div>
 
+                            <!-- Bulk Delete Section -->
+                            <div class="bg-white shadow rounded-lg p-6">
+                                <h2 class="text-xl font-semibold text-neutral-900 mb-2">Bulk Delete</h2>
+                                <p class="text-neutral-600 mb-6">Enter comma-separated IDs to permanently delete multiple records at once.</p>
+                                <form method="POST"
+                                    action="${pageContext.request.contextPath}/api/dataManagement/bulkDelete"
+                                    onsubmit="return confirm('This will permanently delete the selected records. Are you sure?');"
+                                    class="space-y-4 max-w-lg" id="bulkDeleteForm">
+                                    <div>
+                                        <label class="block text-sm font-medium text-neutral-700 mb-1">Entity Type</label>
+                                        <select name="deleteType" required
+                                            class="block w-full pl-3 pr-10 py-2 text-base border border-neutral-300 focus:outline-none focus:ring-brand-primary focus:border-brand-primary sm:text-sm rounded-md">
+                                            <option value="">Select type...</option>
+                                            <option value="users">Users</option>
+                                            <option value="products">Products</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-neutral-700 mb-1">IDs (comma-separated)</label>
+                                        <input type="text" id="bulkIdsInput" placeholder="e.g. 1,2,3,4"
+                                            class="block w-full px-3 py-2 border border-neutral-300 rounded-md text-sm focus:outline-none focus:ring-brand-primary focus:border-brand-primary">
+                                        <p class="mt-1 text-xs text-neutral-500">These will be sent as individual IDs.</p>
+                                    </div>
+                                    <div id="hiddenIdsContainer"></div>
+                                    <button type="submit" onclick="prepareBulkIds()"
+                                        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                        Delete Records
+                                    </button>
+                                </form>
+                            </div>
+
                             <!-- Backup Section -->
                             <div class="bg-white shadow rounded-lg p-6">
                                 <h2 class="text-xl font-semibold text-neutral-900 mb-6">Backup & Restore</h2>
@@ -285,4 +316,19 @@
                 </section>
 
                 <script src="${pageContext.request.contextPath}/assets/js/pages/data-management.js"></script>
+                <script>
+                    function prepareBulkIds() {
+                        var container = document.getElementById('hiddenIdsContainer');
+                        container.innerHTML = '';
+                        var raw = document.getElementById('bulkIdsInput').value;
+                        var ids = raw.split(',').map(function(s){ return s.trim(); }).filter(function(s){ return s !== ''; });
+                        ids.forEach(function(id) {
+                            var inp = document.createElement('input');
+                            inp.type = 'hidden';
+                            inp.name = 'ids';
+                            inp.value = id;
+                            container.appendChild(inp);
+                        });
+                    }
+                </script>
             </t:base>
