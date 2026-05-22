@@ -183,8 +183,8 @@
                                                                     </td>
                                                                     <td class="px-6 py-4 whitespace-nowrap">
                                                                         <span
-                                                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${userItem.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
-                                                                            ${userItem.isActive ? 'Active' : 'Inactive'}
+                                                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${userItem.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
+                                                                            ${userItem.active ? 'Active' : 'Inactive'}
                                                                         </span>
                                                                     </td>
                                                                     <td
