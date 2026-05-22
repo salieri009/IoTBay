@@ -6,6 +6,7 @@ import org.junit.BeforeClass;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.pageloadstrategy.PageLoadStrategy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -51,7 +52,12 @@ public abstract class BaseE2ETest {
                 "--window-size=1280,900",
                 "--remote-allow-origins=*"
         );
+        // EAGER strategy: fire pageLoad as soon as DOM is interactive,
+        // without waiting for sub-resources (images, CDN scripts, etc.).
+        // This prevents 300s hang when external CDN resources stall.
+        options.setPageLoadStrategy(PageLoadStrategy.EAGER);
         driver = new ChromeDriver(options);
+        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(30));
         wait = new WebDriverWait(driver, Duration.ofSeconds(8));
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
     }

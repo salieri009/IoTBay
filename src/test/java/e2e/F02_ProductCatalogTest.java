@@ -31,7 +31,8 @@ public class F02_ProductCatalogTest extends BaseE2ETest {
     /** TC-02-1: Browse page loads and shows products */
     @Test
     public void testBrowseAllProducts() {
-        navigateTo("/browse.jsp");
+        // Use /browse (controller), NOT /browse.jsp (direct JSP would lack product data)
+        navigateTo("/browse");
         // Products page should show product cards or a list
         assertTrue("Browse page should contain products or a product listing",
                 pageSource().contains("product") || pageSource().contains("Product") ||
@@ -41,7 +42,7 @@ public class F02_ProductCatalogTest extends BaseE2ETest {
     /** TC-02-2: Search for product by keyword returns filtered results */
     @Test
     public void testSearchProductByKeyword() {
-        navigateTo("/browse.jsp");
+        navigateTo("/browse");
         // Find search input and type keyword
         if (isElementPresent(By.name("search")) || isElementPresent(By.name("keyword")) ||
             isElementPresent(By.name("q"))) {
@@ -52,8 +53,8 @@ public class F02_ProductCatalogTest extends BaseE2ETest {
             assertTrue("Search results should mention 'Sensor'",
                     pageSource().contains("Sensor") || pageSource().contains("sensor"));
         } else {
-            // Try URL-based search
-            navigateTo("/browse.jsp?search=Sensor");
+            // Try URL-based search via controller
+            navigateTo("/browse?q=Sensor");
             assertTrue("Browse page should load", !pageSource().contains("HTTP ERROR 500"));
         }
     }
