@@ -28,6 +28,31 @@ public class UpdateUserController extends HttpServlet {
     }
 
     @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        if (!isAdmin(request)) {
+            utils.ErrorAction.handleAuthorizationError(request, response, "UpdateUserController.doGet");
+            return;
+        }
+
+        try {
+            int id = utils.SecurityUtil.getValidatedIntParameter(request, "id", 1, Integer.MAX_VALUE);
+            model.User editUser = userDAO.getUserById(id);
+            if (editUser == null) {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND, "User not found");
+                return;
+            }
+            request.setAttribute("editUser", editUser);
+            request.getRequestDispatcher("/manage-user-form.jsp").forward(request, response);
+        } catch (java.sql.SQLException e) {
+            utils.ErrorAction.handleDatabaseError(request, response, e, "UpdateUserController.doGet");
+        } catch (Exception e) {
+            utils.ErrorAction.handleServerError(request, response, e, "UpdateUserController.doGet");
+        }
+    }
+
+    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
@@ -224,7 +249,7 @@ public class UpdateUserController extends HttpServlet {
             utils.ErrorAction.logSecurityEvent("USER_UPDATED_BY_ADMIN", request,
                     "User updated: " + email + ", ID: " + id);
 
-            response.sendRedirect(request.getContextPath() + "/manage/users");
+            response.sendRedirect(request.getContextPath() + "/api/manage/users");
 
         } catch (IllegalArgumentException e) {
             utils.ErrorAction.handleValidationError(request, response, e.getMessage(),

@@ -550,6 +550,24 @@ public class ProductDAO implements dao.interfaces.ProductDAO {
         return getProductById(id);
     }
 
+    @Override
+    public java.util.List<Product> searchByNameAndCategory(String name, Integer categoryId) throws SQLException {
+        StringBuilder query = new StringBuilder("SELECT * FROM products WHERE 1=1");
+        if (name != null && !name.trim().isEmpty()) query.append(" AND name LIKE ?");
+        if (categoryId != null) query.append(" AND category_id = ?");
+        try (java.sql.Connection connection = config.DIContainer.getConnection();
+             java.sql.PreparedStatement stmt = connection.prepareStatement(query.toString())) {
+            int idx = 1;
+            if (name != null && !name.trim().isEmpty()) stmt.setString(idx++, "%" + name + "%");
+            if (categoryId != null) stmt.setInt(idx, categoryId);
+            java.util.List<Product> results = new java.util.ArrayList<>();
+            try (java.sql.ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) results.add(mapResultSetToProduct(rs));
+            }
+            return results;
+        }
+    }
+
     private Product mapResultSetToProduct(ResultSet rs) throws SQLException {
         Product product = new Product();
         product.setId(rs.getInt("id"));

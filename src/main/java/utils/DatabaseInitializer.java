@@ -244,8 +244,10 @@ public class DatabaseInitializer {
                         "paymentMethod TEXT, " +
                         "createdAt TEXT NOT NULL, " +
                         "updatedAt TEXT NOT NULL, " +
-                        "role TEXT NOT NULL CHECK(role IN ('customer', 'staff')) DEFAULT 'customer', " +
-                        "isActive BOOLEAN NOT NULL DEFAULT 1" +
+                        "role TEXT NOT NULL DEFAULT 'customer', " +
+                        "isActive BOOLEAN NOT NULL DEFAULT 1, " +
+                        "customerType TEXT DEFAULT 'individual', " +
+                        "position TEXT DEFAULT NULL" +
                         ")";
 
                 try (Statement createStmt = connection.createStatement()) {
@@ -255,6 +257,58 @@ public class DatabaseInitializer {
                 }
             } else {
                 System.out.println("[DatabaseInitializer] Users table already exists.");
+                // Add new columns if they don't exist (safe ALTER TABLE for SQLite)
+                addColumnIfNotExists(connection, "Users", "customerType", "TEXT DEFAULT 'individual'");
+                addColumnIfNotExists(connection, "Users", "position", "TEXT DEFAULT NULL");
+            }
+        }
+        // Create shipment table if it doesn't exist
+        createShipmentTable(connection);
+    }
+
+    private static void addColumnIfNotExists(Connection connection, String table, String column, String definition) {
+        try {
+            String checkCol = "SELECT " + column + " FROM " + table + " LIMIT 1";
+            try (Statement s = connection.createStatement()) {
+                s.execute(checkCol); // If this succeeds, column already exists
+            }
+        } catch (SQLException e) {
+            // Column doesn't exist, add it
+            try (Statement s = connection.createStatement()) {
+                s.execute("ALTER TABLE " + table + " ADD COLUMN " + column + " " + definition);
+                System.out.println("[DatabaseInitializer] Added column " + column + " to " + table);
+            } catch (SQLException ex) {
+                System.err.println("[DatabaseInitializer] Warning: Could not add column " + column + ": " + ex.getMessage());
+            }
+        }
+    }
+
+    private static void createShipmentTable(Connection connection) throws SQLException {
+        String checkTableQuery = "SELECT name FROM sqlite_master WHERE type='table' AND name='shipment'";
+        try (Statement stmt = connection.createStatement();
+                ResultSet rs = stmt.executeQuery(checkTableQuery)) {
+            if (!rs.next()) {
+                String createSql = "CREATE TABLE IF NOT EXISTS shipment (" +
+                        "shipment_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                        "order_id INTEGER NOT NULL, " +
+                        "address_id INTEGER, " +
+                        "shipping_date TEXT, " +
+                        "delivery_date TEXT, " +
+                        "shipping_status TEXT DEFAULT 'PENDING', " +
+                        "tracking_number TEXT, " +
+                        "carrier TEXT, " +
+                        "notes TEXT, " +
+                        "created_at TEXT, " +
+                        "updated_at TEXT, " +
+                        "FOREIGN KEY (order_id) REFERENCES \"order\"(order_id)" +
+                        ")";
+                try (Statement createStmt = connection.createStatement()) {
+                    createStmt.execute(createSql);
+                    System.out.println("[DatabaseInitializer] Shipment table created successfully.");
+                    logger.log(Level.INFO, "Shipment table created");
+                }
+            } else {
+                System.out.println("[DatabaseInitializer] Shipment table already exists.");
             }
         }
     }

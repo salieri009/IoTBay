@@ -124,7 +124,7 @@ public class ShipmentDAO {
     }
 
     public List<Shipment> findByUserId(int userId) throws SQLException {
-        String query = "SELECT s.* FROM shipment s JOIN orders o ON s.order_id = o.order_id WHERE o.user_id = ?";
+        String query = "SELECT s.* FROM shipment s JOIN \"order\" o ON s.order_id = o.order_id WHERE o.user_id = ?";
         List<Shipment> shipments = new ArrayList<>();
         try (Connection connection = config.DIContainer.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
@@ -152,7 +152,7 @@ public class ShipmentDAO {
             throws SQLException {
         StringBuilder query = new StringBuilder("SELECT s.* FROM shipment s");
         if (userId != null) {
-            query.append(" JOIN orders o ON s.order_id = o.order_id WHERE o.user_id = ?");
+            query.append(" JOIN \"order\" o ON s.order_id = o.order_id WHERE o.user_id = ?");
         } else {
             query.append(" WHERE 1=1");
         }

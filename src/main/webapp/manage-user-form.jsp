@@ -3,12 +3,15 @@
         <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
             <%@ page import="model.User" %>
 
-                <% User user=(User) session.getAttribute("user"); if (user==null ||
-                    (!"staff".equalsIgnoreCase(user.getRole()) && !"admin".equalsIgnoreCase(user.getRole()))) {
-                    response.sendRedirect(request.getContextPath() + "/login.jsp" ); return; } String
-                    csrfToken=utils.SecurityUtil.generateCSRFToken(request); %>
+                <% User sessionUser=(User) session.getAttribute("user"); if (sessionUser==null ||
+                    (!"staff".equalsIgnoreCase(sessionUser.getRole()) && !"admin".equalsIgnoreCase(sessionUser.getRole()))) {
+                    response.sendRedirect(request.getContextPath() + "/login.jsp" ); return; }
+                    String csrfToken=utils.SecurityUtil.generateCSRFToken(request);
+                    User editUser = (User) request.getAttribute("editUser");
+                    boolean isEdit = editUser != null;
+                %>
 
-                    <t:base title="Add User | IoT Bay">
+                    <t:base title="${isEdit ? 'Edit' : 'Add'} User | IoT Bay">
                         <main class="flex-1">
                             <section class="py-12 bg-gradient-to-br from-blue-50 via-white to-purple-50">
                                 <div class="container">
@@ -19,8 +22,11 @@
                                                 &larr; Back to Users
                                             </a>
                                             <h1 class="text-display-md text-neutral-900">
-                                                Add New <span
-                                                    class="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-brand-secondary">User</span>
+                                                <% if (isEdit) { %>
+                                                    Edit <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-brand-secondary">User</span>
+                                                <% } else { %>
+                                                    Add New <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-brand-secondary">User</span>
+                                                <% } %>
                                             </h1>
                                         </div>
 
@@ -30,71 +36,87 @@
                                                     <strong>Error:</strong> <%= request.getAttribute("error") %>
                                                 </div>
                                             <% } %>
-                                            <form action="${pageContext.request.contextPath}/api/manage/users"
+                                            <form action="${pageContext.request.contextPath}<% if(isEdit){%>/manage/users/update<%}else{%>/api/manage/users<%}%>"
                                                 method="post">
                                                 <input type="hidden" name="csrfToken" value="<%= csrfToken %>">
+                                                <% if (isEdit) { %>
+                                                    <input type="hidden" name="user_id" value="<%= editUser.getId() %>">
+                                                <% } %>
 
                                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                                                     <div>
-                                                        <label
-                                                            class="block text-sm font-medium text-neutral-700 mb-1">First
-                                                            Name *</label>
+                                                        <label class="block text-sm font-medium text-neutral-700 mb-1">First Name *</label>
                                                         <input type="text" name="firstName" required
-                                                            class="form-input w-full" placeholder="John">
+                                                            class="form-input w-full" placeholder="John"
+                                                            value="<%= isEdit ? editUser.getFirstName() : "" %>">
                                                     </div>
 
                                                     <div>
-                                                        <label
-                                                            class="block text-sm font-medium text-neutral-700 mb-1">Last
-                                                            Name *</label>
+                                                        <label class="block text-sm font-medium text-neutral-700 mb-1">Last Name *</label>
                                                         <input type="text" name="lastName" required
-                                                            class="form-input w-full" placeholder="Doe">
+                                                            class="form-input w-full" placeholder="Doe"
+                                                            value="<%= isEdit ? editUser.getLastName() : "" %>">
                                                     </div>
 
                                                     <div class="col-span-2">
-                                                        <label
-                                                            class="block text-sm font-medium text-neutral-700 mb-1">Email
-                                                            *</label>
+                                                        <label class="block text-sm font-medium text-neutral-700 mb-1">Email *</label>
                                                         <input type="email" name="email" required
                                                             class="form-input w-full"
-                                                            placeholder="john.doe@example.com">
+                                                            placeholder="john.doe@example.com"
+                                                            value="<%= isEdit ? editUser.getEmail() : "" %>">
                                                     </div>
 
                                                     <div>
-                                                        <label
-                                                            class="block text-sm font-medium text-neutral-700 mb-1">Password
-                                                            *</label>
-                                                        <input type="password" name="password" required
+                                                        <label class="block text-sm font-medium text-neutral-700 mb-1">Password <% if(isEdit){%>(leave blank to keep current)<%}else{%>*<%}%></label>
+                                                        <input type="password" name="password" <%= isEdit ? "" : "required" %>
                                                             class="form-input w-full" placeholder="••••••••">
                                                     </div>
 
                                                     <div>
-                                                        <label
-                                                            class="block text-sm font-medium text-neutral-700 mb-1">Phone
-                                                            Number</label>
-                                                        <input type="tel" name="phoneNumber" class="form-input w-full"
-                                                            placeholder="+1-555-0123">
+                                                        <label class="block text-sm font-medium text-neutral-700 mb-1">Phone Number</label>
+                                                        <input type="tel" name="phone" class="form-input w-full"
+                                                            placeholder="+61 400 000 000"
+                                                            value="<%= isEdit && editUser.getPhone() != null ? editUser.getPhone() : "" %>">
                                                     </div>
 
                                                     <div>
-                                                        <label
-                                                            class="block text-sm font-medium text-neutral-700 mb-1">Role
-                                                            *</label>
+                                                        <label class="block text-sm font-medium text-neutral-700 mb-1">Date of Birth</label>
+                                                        <input type="date" name="dateOfBirth" class="form-input w-full"
+                                                            value="<%= isEdit && editUser.getDateOfBirth() != null ? editUser.getDateOfBirth().toString() : "" %>">
+                                                    </div>
+
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-neutral-700 mb-1">Role *</label>
                                                         <select name="role" required class="form-input w-full">
-                                                            <option value="customer">Customer</option>
-                                                            <option value="staff">Staff</option>
-                                                            <option value="admin">Admin</option>
+                                                            <option value="customer" <%= isEdit && "customer".equals(editUser.getRole()) ? "selected" : "" %>>Customer</option>
+                                                            <option value="staff" <%= isEdit && "staff".equals(editUser.getRole()) ? "selected" : "" %>>Staff</option>
                                                         </select>
                                                     </div>
 
                                                     <div>
-                                                        <label
-                                                            class="block text-sm font-medium text-neutral-700 mb-1">Active
-                                                            Status</label>
+                                                        <label class="block text-sm font-medium text-neutral-700 mb-1">Active Status</label>
                                                         <select name="isActive" class="form-input w-full">
-                                                            <option value="true" selected>Active</option>
-                                                            <option value="false">Inactive</option>
+                                                            <option value="true" <%= !isEdit || editUser.isActive() ? "selected" : "" %>>Active</option>
+                                                            <option value="false" <%= isEdit && !editUser.isActive() ? "selected" : "" %>>Inactive</option>
                                                         </select>
+                                                    </div>
+
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-neutral-700 mb-1">Postal Code</label>
+                                                        <input type="text" name="postalCode" class="form-input w-full"
+                                                            value="<%= isEdit && editUser.getPostalCode() != null ? editUser.getPostalCode() : "" %>">
+                                                    </div>
+
+                                                    <div>
+                                                        <label class="block text-sm font-medium text-neutral-700 mb-1">Address Line 1</label>
+                                                        <input type="text" name="addressLine1" class="form-input w-full"
+                                                            value="<%= isEdit && editUser.getAddressLine1() != null ? editUser.getAddressLine1() : "" %>">
+                                                    </div>
+
+                                                    <div class="col-span-2">
+                                                        <label class="block text-sm font-medium text-neutral-700 mb-1">Address Line 2</label>
+                                                        <input type="text" name="addressLine2" class="form-input w-full"
+                                                            value="<%= isEdit && editUser.getAddressLine2() != null ? editUser.getAddressLine2() : "" %>">
                                                     </div>
                                                 </div>
 
@@ -102,7 +124,7 @@
                                                     <a href="${pageContext.request.contextPath}/api/manage/users"
                                                         class="btn btn--outline">Cancel</a>
                                                     <button type="submit" class="btn btn--primary">
-                                                        Create User
+                                                        <%= isEdit ? "Update User" : "Create User" %>
                                                     </button>
                                                 </div>
                                             </form>

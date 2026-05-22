@@ -55,8 +55,39 @@ public class ManageUserController extends HttpServlet {
                 return;
             }
 
-            List<User> users = userDAO.getAllUsers();
+            // Search parameters
+            String searchQuery = request.getParameter("search");
+            String phoneQuery = request.getParameter("phone");
+            String roleFilter = request.getParameter("role");
+            String statusFilter = request.getParameter("status");
+
+            List<User> users;
+            if ((searchQuery != null && !searchQuery.trim().isEmpty()) ||
+                (phoneQuery != null && !phoneQuery.trim().isEmpty())) {
+                users = userDAO.searchUsers(searchQuery, phoneQuery);
+            } else {
+                users = userDAO.getAllUsers();
+            }
+
+            // Apply role filter
+            if (roleFilter != null && !roleFilter.trim().isEmpty() && !roleFilter.equals("all")) {
+                users = users.stream()
+                    .filter(u -> roleFilter.equalsIgnoreCase(u.getRole()))
+                    .collect(java.util.stream.Collectors.toList());
+            }
+            // Apply status filter
+            if (statusFilter != null && !statusFilter.trim().isEmpty() && !statusFilter.equals("all")) {
+                boolean wantActive = "active".equalsIgnoreCase(statusFilter);
+                users = users.stream()
+                    .filter(u -> u.isActive() == wantActive)
+                    .collect(java.util.stream.Collectors.toList());
+            }
+
             request.setAttribute("users", users);
+            request.setAttribute("searchQuery", searchQuery);
+            request.setAttribute("phoneQuery", phoneQuery);
+            request.setAttribute("roleFilter", roleFilter);
+            request.setAttribute("statusFilter", statusFilter);
 
             request.getRequestDispatcher("/WEB-INF/views/manage-users.jsp").forward(request, response);
 
@@ -207,7 +238,7 @@ public class ManageUserController extends HttpServlet {
             utils.ErrorAction.logSecurityEvent("USER_CREATED_BY_ADMIN", request,
                     "User created: " + email + ", Role: " + role);
 
-            response.sendRedirect(request.getContextPath() + "/manage/users");
+            response.sendRedirect(request.getContextPath() + "/api/manage/users");
 
         } catch (IllegalArgumentException e) {
             utils.ErrorAction.handleValidationError(request, response, e.getMessage(),
