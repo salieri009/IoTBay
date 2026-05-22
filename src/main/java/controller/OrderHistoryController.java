@@ -54,6 +54,7 @@ public class OrderHistoryController extends HttpServlet {
             String statusFilter = request.getParameter("status");
             String dateRangeStr = request.getParameter("dateRange");
             String orderNumber = request.getParameter("orderNumber");
+            String exactDate = request.getParameter("date"); // YYYY-MM-DD exact date filter
 
             Integer dateRange = null;
             if (dateRangeStr != null && !dateRangeStr.isEmpty()) {
@@ -64,9 +65,9 @@ public class OrderHistoryController extends HttpServlet {
                 }
             }
 
-            // Use OrderService for filtering
+            // Use OrderService for filtering (supports combined AND filters)
             List<Order> orders = orderService.getUserOrders(
-                    user.getId(), statusFilter, dateRange, orderNumber);
+                    user.getId(), statusFilter, dateRange, orderNumber, exactDate);
 
             if (isJsonRequest) {
                 // Return JSON response
@@ -89,6 +90,7 @@ public class OrderHistoryController extends HttpServlet {
                 request.setAttribute("statusFilter", statusFilter);
                 request.setAttribute("dateRange", dateRangeStr);
                 request.setAttribute("orderNumber", orderNumber);
+                request.setAttribute("exactDate", exactDate);
 
                 request.getRequestDispatcher("orderList.jsp").forward(request, response);
             }
@@ -124,22 +126,17 @@ public class OrderHistoryController extends HttpServlet {
             return;
         }
 
+        String action = utils.SecurityUtil.getValidatedStringParameter(request, "action", 20);
+        String orderIdStr = utils.SecurityUtil.getValidatedStringParameter(request, "orderId", 10);
+
+        if (orderIdStr == null) {
+            utils.ErrorAction.handleMissingParameterError(request, response,
+                    "Order ID is required", "OrderHistoryController.doPost");
+            return;
+        }
+
         boolean isStaff = "staff".equalsIgnoreCase(user.getRole()) ||
                 "admin".equalsIgnoreCase(user.getRole());
-
-        if (!isStaff) {
-            utils.ErrorAction.handleAuthorizationError(request, response, "OrderHistoryController.doPost");
-            return;
-        }
-
-        String orderIdStr = utils.SecurityUtil.getValidatedStringParameter(request, "orderId", 10);
-        String newStatus = utils.SecurityUtil.getValidatedStringParameter(request, "status", 50);
-
-        if (orderIdStr == null || newStatus == null) {
-            utils.ErrorAction.handleMissingParameterError(request, response,
-                    "Order ID and status are required", "OrderHistoryController.doPost");
-            return;
-        }
 
         // Try-with-resources: Create connection per request
         try (Connection connection = DIContainer.getConnection()) {
@@ -147,8 +144,20 @@ public class OrderHistoryController extends HttpServlet {
             OrderService orderService = new OrderService(orderDAO);
 
             Integer orderId = Integer.parseInt(orderIdStr);
-            OrderService.OrderOperationResult result = orderService.updateOrderStatus(
-                    orderId, newStatus, user.getId(), true);
+            OrderService.OrderOperationResult result;
+
+            if ("cancel".equalsIgnoreCase(action)) {
+                // Customer cancels their own order
+                result = orderService.cancelOrder(orderId, user.getId());
+            } else {
+                // Staff/admin updates order status
+                String newStatus = utils.SecurityUtil.getValidatedStringParameter(request, "status", 50);
+                if (!isStaff || newStatus == null) {
+                    utils.ErrorAction.handleAuthorizationError(request, response, "OrderHistoryController.doPost");
+                    return;
+                }
+                result = orderService.updateOrderStatus(orderId, newStatus, user.getId(), true);
+            }
 
             String acceptHeader = request.getHeader("Accept");
             boolean isJsonRequest = acceptHeader != null && acceptHeader.contains("application/json");

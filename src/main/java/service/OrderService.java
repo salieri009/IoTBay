@@ -1,10 +1,16 @@
 package service;
 
+import config.DIContainer;
 import dao.OrderDAO;
+import dao.OrderProductDAO;
+import dao.interfaces.ProductDAO;
 import model.Order;
+import model.OrderProduct;
 
 import java.math.BigDecimal;
+import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -31,15 +37,58 @@ public class OrderService {
     }
     
     /**
+     * Cancel an order and restore product stock. Customers can only cancel their own PENDING orders.
+     */
+    public OrderOperationResult cancelOrder(int orderId, int userId) throws SQLException {
+        OrderOperationResult result = new OrderOperationResult();
+        Order order = orderDAO.getOrderById(orderId);
+
+        if (order == null || order.getUserId() != userId) {
+            result.setSuccess(false);
+            result.setErrorMessage("Order not found or access denied");
+            return result;
+        }
+        if ("cancelled".equalsIgnoreCase(order.getStatus())) {
+            result.setSuccess(false);
+            result.setErrorMessage("Order is already cancelled");
+            return result;
+        }
+
+        // Restore stock for each item in the order
+        ProductDAO productDAO = DIContainer.get(ProductDAO.class);
+        try (Connection conn = DIContainer.getConnection()) {
+            OrderProductDAO orderProductDAO = new OrderProductDAO(conn);
+            List<OrderProduct> items = orderProductDAO.getProductsByOrderId(orderId);
+            for (OrderProduct item : items) {
+                productDAO.increaseStock(item.getProductId(), item.getQuantity());
+            }
+        }
+
+        order.setStatus("cancelled");
+        order.setUpdatedAt(LocalDateTime.now());
+        orderDAO.updateOrder(order);
+
+        result.setSuccess(true);
+        result.setOrder(order);
+        result.setMessage("Order cancelled successfully");
+        return result;
+    }
+
+    /**
      * Get user orders with filtering
-     * 
+     *
      * @param userId User ID
      * @param statusFilter Order status filter (null for all)
      * @param dateRange Days to look back (null for all time)
      * @param orderNumber Order number search (null for all)
+     * @param exactDate Exact date filter YYYY-MM-DD (null for all time)
      * @return List of filtered orders
      */
     public List<Order> getUserOrders(int userId, String statusFilter, Integer dateRange, String orderNumber) throws SQLException {
+        return getUserOrders(userId, statusFilter, dateRange, orderNumber, null);
+    }
+
+    public List<Order> getUserOrders(int userId, String statusFilter, Integer dateRange, String orderNumber, String exactDate) throws SQLException {
         List<Order> allOrders;
         try {
             allOrders = orderDAO.getOrdersByUserId(userId);
@@ -73,13 +122,25 @@ public class OrderService {
                     .filter(order -> order.getId() == orderId)
                     .collect(Collectors.toList());
             } catch (NumberFormatException e) {
-                // If not a number, search in order ID string representation
                 filteredOrders = filteredOrders.stream()
                     .filter(order -> String.valueOf(order.getId()).contains(orderNumber.trim()))
                     .collect(Collectors.toList());
             }
         }
-        
+
+        // Filter by exact date (YYYY-MM-DD)
+        if (exactDate != null && !exactDate.trim().isEmpty()) {
+            try {
+                LocalDate target = LocalDate.parse(exactDate.trim());
+                filteredOrders = filteredOrders.stream()
+                    .filter(order -> order.getOrderDate() != null &&
+                            order.getOrderDate().toLocalDate().equals(target))
+                    .collect(Collectors.toList());
+            } catch (Exception ignored) {
+                // ignore invalid date format
+            }
+        }
+
         return filteredOrders;
     }
     

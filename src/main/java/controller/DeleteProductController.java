@@ -56,7 +56,7 @@ public class DeleteProductController extends HttpServlet {
         try {
             int id = utils.SecurityUtil.getValidatedIntParameter(request, "id", 1, Integer.MAX_VALUE);
             productDAO.deleteProduct(id);
-            response.sendRedirect(request.getContextPath() + "/manage/products");
+            response.sendRedirect(request.getContextPath() + "/api/manage/products");
         } catch (SQLException e) {
             utils.ErrorAction.handleDatabaseError(request, response, e, "DeleteProductController.doPost");
         } catch (IllegalArgumentException e) {

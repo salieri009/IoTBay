@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  app:
+    image: ghcr.io/salieri009/iotbay:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - iotbay-data:/opt/iotbay/data
+    environment:
+      - IOTBAY_DB_PATH=/opt/iotbay/data/iotbay.db
+      - APP_ENV=production
+      - IOTBAY_JWT_SECRET=${IOTBAY_JWT_SECRET:-changeme-in-production}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+volumes:
+  iotbay-data:
+    driver: local

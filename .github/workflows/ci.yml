@@ -17,20 +17,16 @@ on:
     # {Run on pushes to feature branches, but not main}
 
 env:
-  JAVA_VERSION: '17'
-  MAVEN_VERSION: '3.9.5'
+  JAVA_VERSION: '11'
 
 jobs:
-  # {CI Job: Build and Test}
   ci:
     name: CI - Build and Test
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        # {Test on multiple Java versions if needed}
-        java-version: ['17']
-        # {Add more versions like '11', '21' if you need to test compatibility}
+        java-version: ['11']
 
     steps:
       - name: Checkout code

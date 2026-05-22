@@ -23,4 +23,11 @@ public interface ProductDAO {
     // Additional methods for controller compatibility
     Product findById(int id) throws SQLException;
     Product findById(Integer id) throws SQLException;
+
+    // Stock management
+    void decreaseStock(int productId, int quantity) throws SQLException;
+    void increaseStock(int productId, int quantity) throws SQLException;
+
+    // Combined search by name and category
+    List<Product> searchByNameAndCategory(String name, Integer categoryId) throws SQLException;
 }

@@ -91,9 +91,24 @@ public class BrowsePageController extends HttpServlet {
                     products = productDAO.getAllProducts();
                 }
             }
-            // Handle keyword search
+            // Handle combined keyword + category search
             else if (keyword != null && !keyword.trim().isEmpty()) {
-                products = productDAO.getProductsByName(keyword.trim());
+                if (categoryId != null) {
+                    products = productDAO.searchByNameAndCategory(keyword.trim(), categoryId);
+                    request.setAttribute("categoryId", categoryId);
+                } else if (categoryParam != null && !categoryParam.trim().isEmpty()) {
+                    try {
+                        dao.CategoryDAO catDAO = new dao.CategoryDAO();
+                        model.Category cat = catDAO.getCategoryByName(categoryParam.trim());
+                        Integer cid = cat != null ? cat.getId() : null;
+                        products = productDAO.searchByNameAndCategory(keyword.trim(), cid);
+                        request.setAttribute("category", categoryParam.trim());
+                    } catch (SQLException e) {
+                        products = productDAO.getProductsByName(keyword.trim());
+                    }
+                } else {
+                    products = productDAO.searchByNameAndCategory(keyword.trim(), null);
+                }
                 request.setAttribute("keyword", keyword);
             }
             // Default: get all products

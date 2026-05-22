@@ -273,4 +273,60 @@ public class ProductDAOImpl implements ProductDAO {
     public Product findById(Integer id) throws SQLException {
         return id != null ? getProductById(id) : null;
     }
+
+    @Override
+    public void decreaseStock(int productId, int quantity) throws SQLException {
+        String query = "UPDATE products SET stock_quantity = stock_quantity - ? WHERE id = ? AND stock_quantity >= ?";
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, quantity);
+            statement.setInt(2, productId);
+            statement.setInt(3, quantity);
+            int rowsAffected = statement.executeUpdate();
+            if (rowsAffected == 0) {
+                throw new SQLException("Insufficient stock for product ID: " + productId);
+            }
+        }
+    }
+
+    @Override
+    public void increaseStock(int productId, int quantity) throws SQLException {
+        String query = "UPDATE products SET stock_quantity = stock_quantity + ? WHERE id = ?";
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, quantity);
+            statement.setInt(2, productId);
+            statement.executeUpdate();
+        }
+    }
+
+    @Override
+    public java.util.List<Product> searchByNameAndCategory(String name, Integer categoryId) throws SQLException {
+        StringBuilder query = new StringBuilder("SELECT * FROM products WHERE 1=1");
+        java.util.List<Object> params = new java.util.ArrayList<>();
+
+        if (name != null && !name.trim().isEmpty()) {
+            query.append(" AND name LIKE ?");
+            params.add("%" + name.trim() + "%");
+        }
+        if (categoryId != null) {
+            query.append(" AND category_id = ?");
+            params.add(categoryId);
+        }
+        query.append(" ORDER BY name");
+
+        ArrayList<Product> products = new ArrayList<>();
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                statement.setObject(i + 1, params.get(i));
+            }
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    products.add(mapResultSetToProduct(rs));
+                }
+            }
+        }
+        return products;
+    }
 }

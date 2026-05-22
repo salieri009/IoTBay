@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,22 +17,36 @@ import javax.servlet.http.HttpSession;
 import config.DIContainer;
 import dao.CartItemDAO;
 import dao.OrderDAO;
+import dao.OrderProductDAO;
+import dao.PaymentDAO;
+import dao.PaymentDetailDAO;
+import dao.interfaces.ProductDAO;
 import model.CartItem;
 import model.Order;
+import model.OrderProduct;
+import model.Payment;
+import model.PaymentDetail;
 import model.User;
 
-// Note: Mapped in web.xml to avoid conflicts
-public class CheckoutController extends HttpServlet{
+@WebServlet("/checkout")
+public class CheckoutController extends HttpServlet {
     private OrderDAO orderDAO;
-    private CartItemDAO cartItemDao; 
+    private CartItemDAO cartItemDao;
+    private OrderProductDAO orderProductDAO;
+    private ProductDAO productDAO;
+    private PaymentDAO paymentDAO;
+    private PaymentDetailDAO paymentDetailDAO;
 
     @Override
     public void init() throws ServletException {
         try {
-            // Use DIContainer for dependency injection
             Connection connection = DIContainer.getConnection();
             orderDAO = new OrderDAO(connection);
             cartItemDao = new CartItemDAO(connection);
+            orderProductDAO = new OrderProductDAO(connection);
+            productDAO = DIContainer.get(ProductDAO.class);
+            paymentDAO = new PaymentDAO(connection);
+            paymentDetailDAO = new PaymentDetailDAO(connection);
         } catch (Exception e) {
             throw new ServletException("Failed to initialize CheckoutController", e);
         }
@@ -195,18 +210,74 @@ public class CheckoutController extends HttpServlet{
                 return;
             }
 
+            // Validate stock availability before creating order
+            for (CartItem item : cartItems) {
+                if (item == null || item.getProductId() == 0) continue;
+                model.Product product = productDAO.getProductById(item.getProductId());
+                if (product == null || product.getStockQuantity() < item.getQuantity()) {
+                    String productName = product != null ? product.getName() : "Product #" + item.getProductId();
+                    utils.ErrorAction.handleValidationError(request, response,
+                            "Insufficient stock for: " + productName, "CheckoutController.doPost");
+                    return;
+                }
+            }
+
             // Create order
             Order order = new Order(0, userId, LocalDateTime.now(), "Pending", totalAmount);
-            orderDAO.createOrder(order); 
+            int orderId = orderDAO.createOrder(order);
+
+            // Save order products and decrease stock
+            for (CartItem item : cartItems) {
+                if (item == null || item.getProductId() == 0) continue;
+                OrderProduct op = new OrderProduct(orderId, item.getProductId(),
+                        item.getQuantity(), item.getPrice() != null ? item.getPrice().doubleValue() : 0.0);
+                orderProductDAO.addOrderProduct(op);
+                productDAO.decreaseStock(item.getProductId(), item.getQuantity());
+            }
 
             // Log security event
             utils.ErrorAction.logSecurityEvent("ORDER_CREATED", request,
                     "Order created for user: " + userId + ", Total: " + totalAmount);
 
+            // Create payment record
+            BigDecimal shipping = BigDecimal.valueOf(9.95);
+            BigDecimal tax = totalAmount.multiply(BigDecimal.valueOf(0.10));
+            BigDecimal grandTotal = totalAmount.add(shipping).add(tax);
+
+            String paymentMethod = utils.SecurityUtil.getValidatedStringParameter(request, "paymentMethod", 50);
+            if (paymentMethod == null || paymentMethod.trim().isEmpty()) {
+                paymentMethod = "Credit Card";
+            }
+
+            Payment payment = new Payment();
+            payment.setOrderId(orderId);
+            payment.setUserId(user != null ? user.getId() : userId);
+            payment.setAmount(grandTotal);
+            payment.setPaymentMethod(paymentMethod);
+            payment.setPaymentDate(LocalDateTime.now());
+            payment.setStatus("PENDING");
+
+            int paymentId = paymentDAO.createPayment(payment);
+
+            // Store card details if provided (masked)
+            String cardNumber = utils.SecurityUtil.getValidatedStringParameter(request, "cardNumber", 20);
+            String expiryDate = utils.SecurityUtil.getValidatedStringParameter(request, "expiryDate", 10);
+            String cardHolderName = utils.SecurityUtil.getValidatedStringParameter(request, "cardHolderName", 100);
+            if (cardNumber != null && !cardNumber.trim().isEmpty()) {
+                PaymentDetail detail = new PaymentDetail();
+                detail.setPaymentId(paymentId);
+                detail.setUserId(user != null ? user.getId() : userId);
+                detail.setCardNumber(maskCardNumber(cardNumber));
+                detail.setExpiryDate(expiryDate);
+                detail.setCardHolderName(cardHolderName);
+                detail.setCardType(detectCardType(cardNumber));
+                paymentDetailDAO.createPaymentDetail(detail);
+            }
+
             // Clear cart after checkout
             cartItemDao.clearCartByUserId(userId);
 
-            response.sendRedirect(request.getContextPath() + "/");
+            response.sendRedirect(request.getContextPath() + "/orderhistory");
 
         } catch (IllegalArgumentException e) {
             utils.ErrorAction.handleValidationError(request, response, e.getMessage(),
@@ -216,5 +287,19 @@ public class CheckoutController extends HttpServlet{
         } catch (Exception e) {
             utils.ErrorAction.handleServerError(request, response, e, "CheckoutController.doPost");
         }
+    }
+
+    private String maskCardNumber(String cardNumber) {
+        if (cardNumber == null || cardNumber.length() < 4) return cardNumber;
+        return "**** **** **** " + cardNumber.substring(cardNumber.length() - 4);
+    }
+
+    private String detectCardType(String cardNumber) {
+        if (cardNumber == null || cardNumber.isEmpty()) return "UNKNOWN";
+        String cleaned = cardNumber.replaceAll("[\\s-]", "");
+        if (cleaned.matches("^4[0-9]{12}(?:[0-9]{3})?$")) return "VISA";
+        if (cleaned.matches("^5[1-5][0-9]{14}$")) return "MASTERCARD";
+        if (cleaned.matches("^3[47][0-9]{13}$")) return "AMEX";
+        return "OTHER";
     }
 }

@@ -143,7 +143,7 @@ public class ManageProductController extends HttpServlet {
             utils.ErrorAction.logSecurityEvent("PRODUCT_CREATED", request,
                     "Product created: " + name);
 
-            response.sendRedirect(request.getContextPath() + "/manage/products");
+            response.sendRedirect(request.getContextPath() + "/api/manage/products");
 
         } catch (IllegalArgumentException e) {
             utils.ErrorAction.handleValidationError(request, response, e.getMessage(),
