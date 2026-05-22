@@ -206,6 +206,27 @@
                                             <jsp:param name="text" value="View Details" />
                                             <jsp:param name="href" value="${pageContext.request.contextPath}/order-details.jsp?orderId=${order.id}" />
                                         </jsp:include>
+                                        <!-- Edit Order Button (Pending orders only) -->
+                                        <c:if test="${order.status == 'PENDING' || order.status == 'Pending'}">
+                                            <jsp:include page="/components/atoms/button/button.jsp">
+                                                <jsp:param name="type" value="outline" />
+                                                <jsp:param name="text" value="Edit Order" />
+                                                <jsp:param name="href" value="${pageContext.request.contextPath}/order/edit?orderId=${order.id}" />
+                                            </jsp:include>
+                                            <!-- Cancel Order -->
+                                            <form action="${pageContext.request.contextPath}/orderhistory" method="post" style="display:inline;">
+                                                <input type="hidden" name="csrfToken" value="<%= utils.SecurityUtil.generateCSRFToken(request) %>">
+                                                <input type="hidden" name="action" value="cancel">
+                                                <input type="hidden" name="orderId" value="${order.id}">
+                                                <button type="submit" class="btn btn--error"
+                                                    onclick="return confirm('Cancel this order?')">Cancel Order</button>
+                                            </form>
+                                        </c:if>
+                                        <!-- Add Shipment Button (Pending orders only) -->
+                                        <c:if test="${order.status == 'PENDING' || order.status == 'Pending'}">
+                                            <a href="${pageContext.request.contextPath}/shipment/form?orderId=${order.id}"
+                                               class="btn btn--secondary btn--sm">Add Shipment</a>
+                                        </c:if>
                                         <!-- Reorder Button (if delivered or cancelled) -->
                                         <c:choose>
                                             <c:when test="${order.status == 'DELIVERED' || order.status == 'CANCELLED'}">
