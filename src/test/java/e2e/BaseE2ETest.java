@@ -9,6 +9,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.JavascriptExecutor;
 
 import java.io.File;
 import java.io.IOException;
@@ -81,16 +82,26 @@ public abstract class BaseE2ETest {
 
     /**
      * Log in using the standard login form at /login.jsp.
+     * Uses JavaScript to set values and submit to bypass HTML5 validation quirks
+     * in headless Chrome and any JS event handler that disables the button.
      */
     protected void loginAs(String email, String password) {
         navigateTo("/login.jsp");
-        // Wait for form to be visible before interacting
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.name("email")));
-        fillField(By.name("email"), email);
-        fillField(By.name("password"), password);
-        // Submit button has id="submitBtn" (not name="loginBtn")
-        driver.findElement(By.id("submitBtn")).click();
-        // Wait until redirected away from login page
+        // Wait for the form to be present and rendered
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("loginForm")));
+
+        // Use JavaScript to fill fields and submit — avoids HTML5 email validation
+        // and button-disabled race conditions in headless Chrome
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript(
+            "var frm = document.getElementById('loginForm');" +
+            "frm.querySelector('[name=\"email\"]').value = arguments[0];" +
+            "frm.querySelector('[name=\"password\"]').value = arguments[1];" +
+            "frm.submit();",
+            email, password
+        );
+
+        // Wait until redirected away from login page (successful auth → home)
         wait.until(ExpectedConditions.not(
                 ExpectedConditions.urlContains("login.jsp")));
     }
@@ -105,9 +116,10 @@ public abstract class BaseE2ETest {
 
     /**
      * Log out by navigating to the logout endpoint.
+     * The logout servlet is mapped to /logout (NOT /api/logout).
      */
     protected void logout() {
-        navigateTo("/api/logout");
+        navigateTo("/logout");
     }
 
     // ── Form helpers ─────────────────────────────────────────────────────────
