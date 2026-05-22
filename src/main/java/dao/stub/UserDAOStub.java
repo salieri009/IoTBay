@@ -147,4 +147,44 @@ public class UserDAOStub implements UserDAO {
     public int getTotalUserCount() throws SQLException {
         return users.size();
     }
+
+    @Override
+    public List<User> searchUsers(String nameQuery, String phoneQuery) throws SQLException {
+        return users.stream()
+                .filter(u -> (nameQuery == null || (u.getFirstName() + " " + u.getLastName()).toLowerCase().contains(nameQuery.toLowerCase()))
+                        && (phoneQuery == null || (u.getPhone() != null && u.getPhone().contains(phoneQuery))))
+                .collect(java.util.stream.Collectors.toList());
+    }
+
+    @Override
+    public List<User> getCustomers() throws SQLException {
+        return users.stream().filter(u -> "customer".equalsIgnoreCase(u.getRole())).collect(java.util.stream.Collectors.toList());
+    }
+
+    @Override
+    public List<User> searchCustomers(String name, String type) throws SQLException {
+        return users.stream()
+                .filter(u -> "customer".equalsIgnoreCase(u.getRole()))
+                .filter(u -> name == null || (u.getFirstName() + " " + u.getLastName()).toLowerCase().contains(name.toLowerCase()))
+                .collect(java.util.stream.Collectors.toList());
+    }
+
+    @Override
+    public List<User> getStaff() throws SQLException {
+        return users.stream().filter(u -> "staff".equalsIgnoreCase(u.getRole())).collect(java.util.stream.Collectors.toList());
+    }
+
+    @Override
+    public List<User> searchStaff(String name, String position) throws SQLException {
+        return users.stream()
+                .filter(u -> "staff".equalsIgnoreCase(u.getRole()))
+                .filter(u -> name == null || (u.getFirstName() + " " + u.getLastName()).toLowerCase().contains(name.toLowerCase()))
+                .collect(java.util.stream.Collectors.toList());
+    }
+
+    @Override
+    public int bulkCreateUsers(List<User> newUsers) throws SQLException {
+        users.addAll(newUsers);
+        return newUsers.size();
+    }
 }

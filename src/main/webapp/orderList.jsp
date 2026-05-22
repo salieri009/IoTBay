@@ -222,6 +222,11 @@
                                                     onclick="return confirm('Cancel this order?')">Cancel Order</button>
                                             </form>
                                         </c:if>
+                                        <!-- Add Shipment Button (Pending orders only) -->
+                                        <c:if test="${order.status == 'PENDING' || order.status == 'Pending'}">
+                                            <a href="${pageContext.request.contextPath}/shipment/form?orderId=${order.id}"
+                                               class="btn btn--secondary btn--sm">Add Shipment</a>
+                                        </c:if>
                                         <!-- Reorder Button (if delivered or cancelled) -->
                                         <c:choose>
                                             <c:when test="${order.status == 'DELIVERED' || order.status == 'CANCELLED'}">

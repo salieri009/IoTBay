@@ -3,9 +3,9 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 public class Shipment implements Serializable {
-    private final int id;
-    private final int orderId;
-    private final int addressId;
+    private int id;
+    private int orderId;
+    private int addressId;
     private LocalDateTime shippingDate;
     private LocalDateTime deliveryDate;
     private LocalDateTime updatedDate;
@@ -66,10 +66,17 @@ public class Shipment implements Serializable {
     }
 
     public void setOrderId(Integer orderId) {
-        // Cannot change final field, but provide compatibility method
-        if (orderId != null && this.orderId == 0) {
-            // Only allow setting if not already set
+        if (orderId != null) {
+            this.orderId = orderId;
         }
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setAddressId(int addressId) {
+        this.addressId = addressId;
     }
 
     public int getAddressId() {

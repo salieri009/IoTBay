@@ -194,4 +194,24 @@ public class ProductDAOStub implements ProductDAO {
     public Product findById(Integer id) throws SQLException {
         return id != null ? getProductById(id) : null;
     }
+
+    @Override
+    public java.util.List<Product> searchByNameAndCategory(String name, Integer categoryId) throws SQLException {
+        return products.stream()
+                .filter(p -> (name == null || p.getName().toLowerCase().contains(name.toLowerCase()))
+                        && (categoryId == null || p.getCategoryId() == categoryId))
+                .collect(java.util.stream.Collectors.toList());
+    }
+
+    @Override
+    public void decreaseStock(int productId, int quantity) throws SQLException {
+        products.stream().filter(p -> p.getId() == productId).findFirst()
+                .ifPresent(p -> p.setStockQuantity(p.getStockQuantity() - quantity));
+    }
+
+    @Override
+    public void increaseStock(int productId, int quantity) throws SQLException {
+        products.stream().filter(p -> p.getId() == productId).findFirst()
+                .ifPresent(p -> p.setStockQuantity(p.getStockQuantity() + quantity));
+    }
 }

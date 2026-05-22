@@ -198,7 +198,7 @@ public class UserDAOImpl implements UserDAO {
             updatedAt = java.time.LocalDateTime.now(); // Fallback to now
         }
 
-        return new User(
+        User u = new User(
                 rs.getInt("id"),
                 rs.getString("email"),
                 rs.getString("password"),
@@ -214,6 +214,10 @@ public class UserDAOImpl implements UserDAO {
                 updatedAt,
                 rs.getString("role"),
                 rs.getBoolean("isActive"));
+        // Safely read new optional columns (backwards compatible)
+        try { u.setCustomerType(rs.getString("customerType")); } catch (SQLException ignored) {}
+        try { u.setPosition(rs.getString("position")); } catch (SQLException ignored) {}
+        return u;
     }
 
     // User 객체의 값을 PreparedStatement에 세팅
@@ -245,5 +249,147 @@ public class UserDAOImpl implements UserDAO {
             }
             return 0;
         }
+    }
+
+    @Override
+    public List<User> searchUsers(String nameQuery, String phoneQuery) throws SQLException {
+        List<User> users = new ArrayList<>();
+        StringBuilder query = new StringBuilder("SELECT * FROM Users WHERE 1=1");
+        if (nameQuery != null && !nameQuery.trim().isEmpty()) {
+            query.append(" AND (firstName LIKE ? OR lastName LIKE ? OR (firstName || ' ' || lastName) LIKE ?)");
+        }
+        if (phoneQuery != null && !phoneQuery.trim().isEmpty()) {
+            query.append(" AND phoneNumber LIKE ?");
+        }
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement stmt = connection.prepareStatement(query.toString())) {
+            int idx = 1;
+            if (nameQuery != null && !nameQuery.trim().isEmpty()) {
+                String like = "%" + nameQuery.trim() + "%";
+                stmt.setString(idx++, like);
+                stmt.setString(idx++, like);
+                stmt.setString(idx++, like);
+            }
+            if (phoneQuery != null && !phoneQuery.trim().isEmpty()) {
+                stmt.setString(idx++, "%" + phoneQuery.trim() + "%");
+            }
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    users.add(mapResultSetToUser(rs));
+                }
+            }
+        }
+        return users;
+    }
+
+    @Override
+    public List<User> getCustomers() throws SQLException {
+        List<User> users = new ArrayList<>();
+        String query = "SELECT * FROM Users WHERE role = 'customer' ORDER BY firstName, lastName";
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement stmt = connection.prepareStatement(query);
+                ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                users.add(mapResultSetToUser(rs));
+            }
+        }
+        return users;
+    }
+
+    @Override
+    public List<User> searchCustomers(String name, String type) throws SQLException {
+        List<User> users = new ArrayList<>();
+        StringBuilder query = new StringBuilder("SELECT * FROM Users WHERE role = 'customer'");
+        if (name != null && !name.trim().isEmpty()) {
+            query.append(" AND (firstName LIKE ? OR lastName LIKE ? OR (firstName || ' ' || lastName) LIKE ?)");
+        }
+        if (type != null && !type.trim().isEmpty() && !type.equals("all")) {
+            query.append(" AND customerType = ?");
+        }
+        query.append(" ORDER BY firstName, lastName");
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement stmt = connection.prepareStatement(query.toString())) {
+            int idx = 1;
+            if (name != null && !name.trim().isEmpty()) {
+                String like = "%" + name.trim() + "%";
+                stmt.setString(idx++, like);
+                stmt.setString(idx++, like);
+                stmt.setString(idx++, like);
+            }
+            if (type != null && !type.trim().isEmpty() && !type.equals("all")) {
+                stmt.setString(idx++, type.trim());
+            }
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    users.add(mapResultSetToUser(rs));
+                }
+            }
+        }
+        return users;
+    }
+
+    @Override
+    public List<User> getStaff() throws SQLException {
+        List<User> users = new ArrayList<>();
+        String query = "SELECT * FROM Users WHERE role = 'staff' ORDER BY firstName, lastName";
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement stmt = connection.prepareStatement(query);
+                ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                users.add(mapResultSetToUser(rs));
+            }
+        }
+        return users;
+    }
+
+    @Override
+    public List<User> searchStaff(String name, String position) throws SQLException {
+        List<User> users = new ArrayList<>();
+        StringBuilder query = new StringBuilder("SELECT * FROM Users WHERE role = 'staff'");
+        if (name != null && !name.trim().isEmpty()) {
+            query.append(" AND (firstName LIKE ? OR lastName LIKE ? OR (firstName || ' ' || lastName) LIKE ?)");
+        }
+        if (position != null && !position.trim().isEmpty() && !position.equals("all")) {
+            query.append(" AND position = ?");
+        }
+        query.append(" ORDER BY firstName, lastName");
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement stmt = connection.prepareStatement(query.toString())) {
+            int idx = 1;
+            if (name != null && !name.trim().isEmpty()) {
+                String like = "%" + name.trim() + "%";
+                stmt.setString(idx++, like);
+                stmt.setString(idx++, like);
+                stmt.setString(idx++, like);
+            }
+            if (position != null && !position.trim().isEmpty() && !position.equals("all")) {
+                stmt.setString(idx++, position.trim());
+            }
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    users.add(mapResultSetToUser(rs));
+                }
+            }
+        }
+        return users;
+    }
+
+    @Override
+    public int bulkCreateUsers(List<User> users) throws SQLException {
+        int successCount = 0;
+        String query = "INSERT INTO Users (email, password, firstName, lastName, phoneNumber, postalCode, addressLine1, addressLine2, dateOfBirth, paymentMethod, createdAt, updatedAt, role, isActive) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try (Connection connection = DIContainer.getConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
+            for (User user : users) {
+                try {
+                    setUserParams(statement, user);
+                    statement.executeUpdate();
+                    successCount++;
+                } catch (SQLException e) {
+                    System.err.println("[UserDAOImpl] Bulk insert failed for user " + user.getEmail() + ": " + e.getMessage());
+                }
+            }
+        }
+        return successCount;
     }
 }
