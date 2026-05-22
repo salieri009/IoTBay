@@ -92,11 +92,26 @@
         <version>3.11.0</version>
         <configuration>
           <encoding>UTF-8</encoding>
-          <release>11</release>
           <compilerArgs>
             <arg>-Xlint:-options</arg>
           </compilerArgs>
         </configuration>
+        <executions>
+          <!-- Main code: Java 8 bytecode so Jetty 9.4 ASM can scan it -->
+          <execution>
+            <id>default-compile</id>
+            <configuration>
+              <release>8</release>
+            </configuration>
+          </execution>
+          <!-- Test code: Java 11 so Selenium 4 compiles -->
+          <execution>
+            <id>default-testCompile</id>
+            <configuration>
+              <release>11</release>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
