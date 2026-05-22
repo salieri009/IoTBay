@@ -24,6 +24,8 @@ public class User implements Serializable {
     private LocalDateTime updatedAt;
     private String role;
     private boolean isActive;
+    private String customerType;  // 'individual' or 'company' (for customers)
+    private String position;      // 'salesperson', 'manager', etc. (for staff)
 
     // Default constructor
     public User() {
@@ -265,5 +267,21 @@ public class User implements Serializable {
 
     public String getPaymentMethod() {
         return paymentMethod;
+    }
+
+    public String getCustomerType() {
+        return customerType;
+    }
+
+    public void setCustomerType(String customerType) {
+        this.customerType = customerType;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
     }
 }

@@ -41,11 +41,14 @@
                             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
                                 <div class="max-w-6xl mx-auto">
                                     <!-- Filters and Search -->
-                                    <div class="bg-white shadow rounded-lg p-6 mb-8">
-                                        <div class="flex flex-col md:flex-row gap-4 items-center">
-                                            <div class="flex-1 w-full">
+                                    <form action="${pageContext.request.contextPath}/api/manage/users/" method="get"
+                                          class="bg-white shadow rounded-lg p-6 mb-8">
+                                        <div class="flex flex-col md:flex-row gap-4 items-end">
+                                            <div class="flex-1">
+                                                <label class="block text-xs font-medium text-neutral-600 mb-1">Search by Name</label>
                                                 <div class="relative">
-                                                    <input type="text" placeholder="Search users..."
+                                                    <input type="text" name="search" placeholder="Search by name..."
+                                                        value="${searchQuery}"
                                                         class="shadow-sm focus:ring-brand-primary focus:border-brand-primary block w-full sm:text-sm border-neutral-300 rounded-md pr-10">
                                                     <svg class="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-neutral-500"
                                                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -55,26 +58,42 @@
                                                     </svg>
                                                 </div>
                                             </div>
-                                            <div class="flex items-center gap-3 w-full md:w-auto">
-                                                <select
+                                            <div>
+                                                <label class="block text-xs font-medium text-neutral-600 mb-1">Phone</label>
+                                                <input type="text" name="phone" placeholder="Phone number..."
+                                                    value="${phoneQuery}"
                                                     class="shadow-sm focus:ring-brand-primary focus:border-brand-primary block w-full sm:text-sm border-neutral-300 rounded-md">
-                                                    <option>All Roles</option>
-                                                    <option>Customer</option>
-                                                    <option>Staff</option>
-                                                </select>
-                                                <select
-                                                    class="shadow-sm focus:ring-brand-primary focus:border-brand-primary block w-full sm:text-sm border-neutral-300 rounded-md">
-                                                    <option>All Status</option>
-                                                    <option>Active</option>
-                                                    <option>Inactive</option>
-                                                </select>
-                                                <button
+                                            </div>
+                                            <div class="flex items-end gap-3">
+                                                <div>
+                                                    <label class="block text-xs font-medium text-neutral-600 mb-1">Role</label>
+                                                    <select name="role"
+                                                        class="shadow-sm focus:ring-brand-primary focus:border-brand-primary block w-full sm:text-sm border-neutral-300 rounded-md">
+                                                        <option value="all" ${roleFilter=='all'||empty roleFilter?'selected':''}>All Roles</option>
+                                                        <option value="customer" ${roleFilter=='customer'?'selected':''}>Customer</option>
+                                                        <option value="staff" ${roleFilter=='staff'?'selected':''}>Staff</option>
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <label class="block text-xs font-medium text-neutral-600 mb-1">Status</label>
+                                                    <select name="status"
+                                                        class="shadow-sm focus:ring-brand-primary focus:border-brand-primary block w-full sm:text-sm border-neutral-300 rounded-md">
+                                                        <option value="all" ${statusFilter=='all'||empty statusFilter?'selected':''}>All Status</option>
+                                                        <option value="active" ${statusFilter=='active'?'selected':''}>Active</option>
+                                                        <option value="inactive" ${statusFilter=='inactive'?'selected':''}>Inactive</option>
+                                                    </select>
+                                                </div>
+                                                <button type="submit"
                                                     class="inline-flex items-center px-4 py-2 border border-neutral-300 shadow-sm text-sm font-medium rounded-md text-neutral-700 bg-white hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary">
-                                                    Filter
+                                                    Search
                                                 </button>
+                                                <a href="${pageContext.request.contextPath}/api/manage/users/"
+                                                    class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-neutral-600 bg-neutral-100 hover:bg-neutral-200">
+                                                    Reset
+                                                </a>
                                             </div>
                                         </div>
-                                    </div>
+                                    </form>
 
                                     <!-- Users Table -->
                                     <div class="bg-white shadow overflow-hidden sm:rounded-lg">
@@ -182,7 +201,7 @@
                                                                         class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                                                         <div class="flex items-center gap-2">
                                                                             <a href="${pageContext.request.contextPath}/manage/users/update?id=${userItem.id}"
-                                                                                class="text-brand-primary hover:text-brand-secondary">Edit</a>
+                                                                                class="text-brand-primary hover:text-brand-secondary" title="Edit user">Edit</a>
                                                                             <a href="${pageContext.request.contextPath}/profile.jsp?id=${userItem.id}"
                                                                                 class="text-brand-primary hover:text-brand-secondary">View</a>
                                                                             <a href="${pageContext.request.contextPath}/manage/users/delete?id=${userItem.id}"

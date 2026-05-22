@@ -42,7 +42,7 @@ public class DeleteUserController extends HttpServlet {
         try {
             int userId = utils.SecurityUtil.getValidatedIntParameter(request, "id", 1, Integer.MAX_VALUE);
             userDAO.deleteUser(userId);
-            response.sendRedirect(request.getContextPath() + "/manage/users");
+            response.sendRedirect(request.getContextPath() + "/api/manage/users");
         } catch (SQLException e) {
             utils.ErrorAction.handleDatabaseError(request, response, e, "DeleteUserController.doPost");
         } catch (IllegalArgumentException e) {
