@@ -73,6 +73,19 @@ public class ShipmentController extends HttpServlet {
                 } else {
                     trackShipment(request, response);
                 }
+            } else if (pathInfo.equals("/list")) {
+                boolean hasSearchParams = request.getParameter("shipmentId") != null
+                        || request.getParameter("trackingNumber") != null
+                        || request.getParameter("dateFrom") != null
+                        || request.getParameter("dateTo") != null
+                        || request.getParameter("status") != null;
+                if (hasSearchParams) {
+                    if (isJsonRequest) searchShipmentsJson(request, response);
+                    else searchShipments(request, response);
+                } else {
+                    if (isJsonRequest) listShipmentsJson(request, response);
+                    else listShipments(request, response);
+                }
             } else if (pathInfo.equals("/search")) {
                 if (isJsonRequest) {
                     searchShipmentsJson(request, response);
@@ -529,9 +542,9 @@ public class ShipmentController extends HttpServlet {
         } else {
             // Search by criteria
             if ("staff".equalsIgnoreCase(currentUser.getRole())) {
-                shipments = shipmentDAO.searchShipments(null, dateFrom, dateTo, status);
+                shipments = shipmentDAO.searchShipments(null, status, dateFrom, dateTo);
             } else {
-                shipments = shipmentDAO.searchShipments(currentUser.getUserId(), dateFrom, dateTo, status);
+                shipments = shipmentDAO.searchShipments(currentUser.getUserId(), status, dateFrom, dateTo);
             }
         }
 
@@ -779,9 +792,9 @@ public class ShipmentController extends HttpServlet {
         } else {
             if ("staff".equalsIgnoreCase(currentUser.getRole()) ||
                     "admin".equalsIgnoreCase(currentUser.getRole())) {
-                shipments = shipmentDAO.searchShipments(null, dateFrom, dateTo, status);
+                shipments = shipmentDAO.searchShipments(null, status, dateFrom, dateTo);
             } else {
-                shipments = shipmentDAO.searchShipments(currentUser.getUserId(), dateFrom, dateTo, status);
+                shipments = shipmentDAO.searchShipments(currentUser.getUserId(), status, dateFrom, dateTo);
             }
         }
 

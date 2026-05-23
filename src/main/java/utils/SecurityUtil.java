@@ -22,8 +22,11 @@ import java.util.UUID;
  * @version 3.0
  */
 public final class SecurityUtil {
-    
+
     private static final Logger logger = Logger.getLogger(SecurityUtil.class.getName());
+
+    private static final java.util.concurrent.ConcurrentHashMap<String, long[]> RATE_LIMIT_STORE
+            = new java.util.concurrent.ConcurrentHashMap<>();
     
     // XSS prevention patterns
     private static final Pattern SCRIPT_PATTERN = Pattern.compile("<script[^>]*>.*?</script>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
@@ -320,19 +323,19 @@ public final class SecurityUtil {
      * Simple in-memory implementation (for production, use Redis or similar)
      */
     public static boolean isRateLimited(HttpServletRequest request, int maxRequests, long timeWindowMs) {
-        // This is a simplified implementation
-        // For production, use a proper rate limiting library (e.g., Bucket4j, Redis)
-        // String clientId = getClientIP(request); // Reserved for future implementation
-        
-        // TODO: Implement proper rate limiting with cache/Redis
-        // For now, return false (not rate limited)
-        // In production, check request count for clientId within timeWindowMs
-        // Example implementation would use:
-        // - ConcurrentHashMap or Redis to track request counts per IP
-        // - Time-based sliding window or token bucket algorithm
-        // - Thread-safe increment and expiration logic
-        
-        return false;
+        String clientId = getClientIP(request);
+        long now = System.currentTimeMillis();
+
+        RATE_LIMIT_STORE.merge(clientId, new long[]{now, 1}, (existing, ignored) -> {
+            if (now - existing[0] > timeWindowMs) {
+                return new long[]{now, 1};
+            }
+            existing[1]++;
+            return existing;
+        });
+
+        long[] state = RATE_LIMIT_STORE.get(clientId);
+        return state != null && state[1] > maxRequests;
     }
     
     /**
