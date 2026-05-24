@@ -67,7 +67,7 @@ public class DataManagementController extends HttpServlet {
 
         HttpSession session = request.getSession(false);
         if (session == null) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Please log in");
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
 
@@ -210,7 +210,7 @@ public class DataManagementController extends HttpServlet {
 
         HttpSession session = request.getSession(false);
         if (session == null) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Please log in");
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
 

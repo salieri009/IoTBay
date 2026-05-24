@@ -69,8 +69,18 @@
     boolean isLocal = "localhost".equalsIgnoreCase(serverName) || "127.0.0.1".equals(serverName);
 %>
     <div class="container">
+<%
+    String _errMsg = (String) request.getAttribute("errorMessage");
+    boolean _isUnauth = (_errMsg != null && _errMsg.toLowerCase().contains("unauthorized"));
+%>
+<% if (_isUnauth) { %>
+        <h1>403 Unauthorized</h1>
+        <p>You do not have permission to access this resource.</p>
+        <p><a href="<%= request.getContextPath() %>/" class="btn">Go Home</a></p>
+<% } else { %>
         <h1>Oops! Something went wrong</h1>
         <p>We're experiencing some technical difficulties. Please try again later.</p>
+<% } %>
 
         <% 
             // Only show detailed error information in development/localhost

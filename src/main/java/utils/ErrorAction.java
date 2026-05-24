@@ -85,25 +85,35 @@ public final class ErrorAction {
     }
     
     /**
-     * Handle authorization errors (403 Forbidden)
+     * Handle authorization errors.
+     * - No session (unauthenticated): redirect to login page.
+     * - Session exists but insufficient role (403 Forbidden): forward to error page.
      */
     public static void handleAuthorizationError(
             HttpServletRequest request,
             HttpServletResponse response,
             String logContext) throws IOException {
-        
+
         logger.warning(String.format("[AUTHORIZATION_ERROR] Context: %s, IP: %s, User: %s",
                 logContext,
                 getClientIP(request),
                 getCurrentUser(request)));
-        
-        request.setAttribute("errorMessage", "You do not have permission to access this resource.");
+
+        // Unauthenticated — redirect to login instead of showing 403
+        javax.servlet.http.HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("user") == null) {
+            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            return;
+        }
+
+        // Authenticated but wrong role — 403 Forbidden
+        request.setAttribute("errorMessage", "Unauthorized: You do not have permission to access this resource.");
         try {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             request.getRequestDispatcher("/error.jsp").forward(request, response);
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error forwarding to error page", e);
-            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Access denied.");
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Unauthorized: Access denied.");
         }
     }
     

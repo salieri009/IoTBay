@@ -26,7 +26,7 @@ import config.DIContainer;
 import model.AccessLog;
 import model.User;
 
-@WebServlet("/api/accessLog/*")
+@WebServlet({"/api/accessLog", "/api/accessLog/*"})
 public class AccesslogController extends HttpServlet {
     private AccessLogDAO accessLogDAO;
     private static final Logger logger = Logger.getLogger(AccesslogController.class.getName());
