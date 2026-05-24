@@ -20,7 +20,7 @@ import java.util.List;
  * Controller to handle direct access to browse.jsp
  * This ensures browse.jsp always has product data when accessed directly
  */
-@WebServlet({ "/browse", "/browse.jsp" })
+@WebServlet("/browse")
 public class BrowsePageController extends HttpServlet {
     private ProductDAO productDAO;
 
