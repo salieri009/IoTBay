@@ -87,7 +87,8 @@ public class F08_StaffManagementTest extends BaseE2ETest {
         if (isElementPresent(By.name("email"))) fillField("email", uniqueEmail);
         if (isElementPresent(By.name("password"))) fillField("password", "TestPass@123");
         if (isElementPresent(By.name("phone"))) fillField("phone", "+61400000097");
-        if (isElementPresent(By.name("position"))) selectOption("position", "salesperson");
+        // Option text is Title Case in the JSP: "Salesperson" not "salesperson"
+        if (isElementPresent(By.name("position"))) selectOption("position", "Salesperson");
 
         if (isElementPresent(By.cssSelector("[type='submit']"))) {
             clickSubmit();
@@ -106,7 +107,8 @@ public class F08_StaffManagementTest extends BaseE2ETest {
         if (isElementPresent(By.name("email"))) fillField("email", uniqueEmail);
         if (isElementPresent(By.name("password"))) fillField("password", "TestPass@123");
         if (isElementPresent(By.name("phone"))) fillField("phone", "+61400000096");
-        if (isElementPresent(By.name("position"))) selectOption("position", "manager");
+        // Option text is Title Case: "Manager" not "manager"
+        if (isElementPresent(By.name("position"))) selectOption("position", "Manager");
 
         if (isElementPresent(By.cssSelector("[type='submit']"))) {
             clickSubmit();

@@ -92,7 +92,8 @@ public class F07_CustomerManagementTest extends BaseE2ETest {
         if (isElementPresent(By.name("email"))) fillField("email", uniqueEmail);
         if (isElementPresent(By.name("password"))) fillField("password", "TestPass@123");
         if (isElementPresent(By.name("phone"))) fillField("phone", "+61400000099");
-        if (isElementPresent(By.name("customerType"))) selectOption("customerType", "individual");
+        // Option text is Title Case in the JSP: "Individual" not "individual"
+        if (isElementPresent(By.name("customerType"))) selectOption("customerType", "Individual");
 
         if (isElementPresent(By.cssSelector("[type='submit']"))) {
             clickSubmit();
@@ -111,7 +112,8 @@ public class F07_CustomerManagementTest extends BaseE2ETest {
         if (isElementPresent(By.name("email"))) fillField("email", uniqueEmail);
         if (isElementPresent(By.name("password"))) fillField("password", "TestPass@123");
         if (isElementPresent(By.name("phone"))) fillField("phone", "+61400000098");
-        if (isElementPresent(By.name("customerType"))) selectOption("customerType", "company");
+        // Option text is Title Case: "Company" not "company"
+        if (isElementPresent(By.name("customerType"))) selectOption("customerType", "Company");
 
         if (isElementPresent(By.cssSelector("[type='submit']"))) {
             clickSubmit();
