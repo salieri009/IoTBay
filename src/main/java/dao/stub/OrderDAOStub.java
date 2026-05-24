@@ -70,9 +70,10 @@ public class OrderDAOStub implements OrderDAO {
     }
 
     @Override
-    public void createOrder(Order order) throws SQLException {
+    public int createOrder(Order order) throws SQLException {
+        int newId = getNextId();
         Order newOrder = new Order(
-            getNextId(),
+            newId,
             order.getUserId(),
             order.getOrderDateTime(),
             order.getStatus(),
@@ -81,6 +82,7 @@ public class OrderDAOStub implements OrderDAO {
             order.getPaymentMethod()
         );
         orders.add(newOrder);
+        return newId;
     }
 
     @Override
