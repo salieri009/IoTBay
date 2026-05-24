@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,7 +16,7 @@ import dao.interfaces.UserDAO;
 import model.User;
 import utils.ValidationUtil;
 
-// Note: Mapped in web.xml to avoid conflicts
+@WebServlet("/api/profile")
 public class UserProfileController extends HttpServlet {
     private UserDAO userDAO;
 

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,7 +13,7 @@ import config.DIContainer;
 import dao.interfaces.ProductDAO;
 import model.Product;
 
-// Note: Mapped in web.xml to avoid conflicts
+@WebServlet("/product")
 public class ProductDetailsController extends HttpServlet {
     private ProductDAO productDAO;
 

@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Random;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,7 +27,7 @@ import service.CartService.CartOperationResult;
 import service.CartService.CartSummary;
 import utils.ResponseUtil;
 
-// Note: Mapped in web.xml to avoid conflicts
+@WebServlet({"/cart", "/cart/*"})
 public class CartController extends HttpServlet {
     private CartItemDAO cartItemDAO;
     private ProductDAO productDAO;
