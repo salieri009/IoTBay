@@ -6,7 +6,7 @@ import java.util.List;
 import model.Order;
 
 public interface OrderDAO {
-    void createOrder(Order order) throws SQLException;
+    int createOrder(Order order) throws SQLException;
     Order getOrderById(int id) throws SQLException;
     List<Order> getAllOrders() throws SQLException;
     List<Order> getOrdersByUserId(int userId) throws SQLException;

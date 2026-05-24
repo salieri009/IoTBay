@@ -18,10 +18,10 @@ public class OrderDAOImpl implements OrderDAO {
     }
 
     @Override
-    public void createOrder(Order order) throws SQLException {
+    public int createOrder(Order order) throws SQLException {
         String query = "INSERT INTO orders (user_id, total_amount, order_date, status, shipping_address, payment_method) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection connection = DIContainer.getConnection();
-                PreparedStatement pstmt = connection.prepareStatement(query)) {
+                PreparedStatement pstmt = connection.prepareStatement(query, java.sql.Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setInt(1, order.getUserId());
             pstmt.setBigDecimal(2, order.getTotalAmount());
             pstmt.setTimestamp(3, order.getOrderDateAsTimestamp());
@@ -29,7 +29,15 @@ public class OrderDAOImpl implements OrderDAO {
             pstmt.setString(5, order.getShippingAddress());
             pstmt.setString(6, order.getPaymentMethod());
             pstmt.executeUpdate();
+            try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    int id = generatedKeys.getInt(1);
+                    order.setId(id);
+                    return id;
+                }
+            }
         }
+        return -1;
     }
 
     @Override

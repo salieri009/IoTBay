@@ -66,7 +66,7 @@ public class OrderService {
 
         order.setStatus("cancelled");
         order.setUpdatedAt(LocalDateTime.now());
-        orderDAO.updateOrder(order);
+        orderDAO.updateOrder(order.getId(), order);
 
         result.setSuccess(true);
         result.setOrder(order);
@@ -203,7 +203,7 @@ public class OrderService {
         order.setStatus(newStatus);
         order.setUpdatedAt(LocalDateTime.now());
         // OrderDAO.updateOrder takes order as parameter
-        orderDAO.updateOrder(order);
+        orderDAO.updateOrder(order.getId(), order);
         
         result.setSuccess(true);
         result.setOrder(order);

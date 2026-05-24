@@ -81,6 +81,8 @@ public class DatabaseInitializer {
             seedSuppliersTable(connection);
             System.out.println("[DatabaseInitializer] Seeding access_logs (plural table)...");
             seedAccessLogsTable(connection);
+            System.out.println("[DatabaseInitializer] Seeding shipments...");
+            seedShipments(connection);
 
             initialized = true;
             System.out.println("[DatabaseInitializer] Database initialized successfully!");
@@ -703,6 +705,60 @@ public class DatabaseInitializer {
             }
         }
         logger.log(Level.INFO, "Sample access_logs seeded");
+    }
+
+    /** Seeds 20 sample shipment records into the shipment table. */
+    private static void seedShipments(Connection connection) throws SQLException {
+        String checkTable = "SELECT name FROM sqlite_master WHERE type='table' AND name='shipment'";
+        try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(checkTable)) {
+            if (!rs.next()) return;
+        }
+        String checkCount = "SELECT COUNT(*) FROM shipment";
+        try (Statement stmt = connection.createStatement(); ResultSet rs = stmt.executeQuery(checkCount)) {
+            if (rs.next() && rs.getInt(1) > 0) return; // already seeded
+        }
+        // order_id, tracking_number, carrier, shipping_status, shipping_date, delivery_date, notes
+        String[][] shipments = {
+            {"1", "TRK-AUS-001", "Australia Post", "DELIVERED",  "2025-01-12", "2025-01-15", "Delivered on time"},
+            {"2", "TRK-AUS-002", "FedEx",          "DELIVERED",  "2025-01-13", "2025-01-16", "Standard delivery"},
+            {"3", "TRK-AUS-003", "DHL",             "SHIPPED",    "2025-01-20", null,          "In transit"},
+            {"4", "TRK-AUS-004", "Australia Post",  "SHIPPED",    "2025-01-21", null,          "Express post"},
+            {"5", "TRK-AUS-005", "StarTrack",       "PREPARING",  "2025-01-25", null,          "Packing in progress"},
+            {"6", "TRK-AUS-006", "FedEx",           "DELIVERED",  "2025-02-01", "2025-02-04", "Left at door"},
+            {"7", "TRK-AUS-007", "DHL",             "DELIVERED",  "2025-02-03", "2025-02-06", "Signature required"},
+            {"8", "TRK-AUS-008", "Australia Post",  "SHIPPED",    "2025-02-10", null,          "On the way"},
+            {"9", "TRK-AUS-009", "FedEx",           "PREPARING",  "2025-02-15", null,          "Processing order"},
+            {"10","TRK-AUS-010", "StarTrack",        "DELIVERED",  "2025-02-18", "2025-02-21", "Delivered to reception"},
+            {"11","TRK-AUS-011", "DHL",              "DELIVERED",  "2025-03-01", "2025-03-04", "Next day delivery"},
+            {"12","TRK-AUS-012", "Australia Post",   "SHIPPED",    "2025-03-05", null,          "Estimated 3 days"},
+            {"13","TRK-AUS-013", "FedEx",            "DELIVERED",  "2025-03-10", "2025-03-13", "Priority mail"},
+            {"14","TRK-AUS-014", "StarTrack",        "PREPARING",  "2025-03-15", null,          "Awaiting dispatch"},
+            {"15","TRK-AUS-015", "DHL",              "SHIPPED",    "2025-03-20", null,          "International transit"},
+            {"16","TRK-AUS-016", "Australia Post",   "DELIVERED",  "2025-04-01", "2025-04-03", "Collected by customer"},
+            {"17","TRK-AUS-017", "FedEx",            "DELIVERED",  "2025-04-05", "2025-04-07", "Weekend delivery"},
+            {"18","TRK-AUS-018", "StarTrack",        "SHIPPED",    "2025-04-10", null,          "Regional delivery"},
+            {"19","TRK-AUS-019", "DHL",              "PREPARING",  "2025-04-15", null,          "Fragile items - handle carefully"},
+            {"20","TRK-AUS-020", "Australia Post",   "DELIVERED",  "2025-04-20", "2025-04-22", "Last mile completed"},
+        };
+        String sql = "INSERT INTO shipment (order_id, tracking_number, carrier, shipping_status, shipping_date, delivery_date, notes, created_at, updated_at) "
+                   + "VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            for (String[] s : shipments) {
+                try {
+                    ps.setInt(1, Integer.parseInt(s[0]));
+                    ps.setString(2, s[1]);
+                    ps.setString(3, s[2]);
+                    ps.setString(4, s[3]);
+                    ps.setString(5, s[4]);
+                    ps.setString(6, s[5]); // may be null
+                    ps.setString(7, s[6]);
+                    ps.executeUpdate();
+                } catch (SQLException e) {
+                    logger.log(Level.WARNING, "Could not seed shipment row: " + e.getMessage());
+                }
+            }
+        }
+        logger.log(Level.INFO, "Sample shipments seeded: 20 records");
     }
 
     public static void main(String[] args) {
