@@ -194,4 +194,6 @@ flowchart TD
 <div align="center">
 Java Servlets · JSP · SQLite · Tailwind CSS · Selenium WebDriver<br/>
 297 commits · 8 contributors · 111 source files · 118 E2E tests
+
+<sub>UTS 41025 Internet Software Development — Autumn 2025 (Semester 1, 2025)</sub>
 </div>
