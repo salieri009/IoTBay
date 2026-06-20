@@ -33,12 +33,14 @@ public class BrowsePageController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            // Get query parameters using SecurityUtil for validation
-            String keyword = utils.SecurityUtil.getValidatedStringParameter(request, "q", 200);
-            String categoryIdParam = utils.SecurityUtil.getValidatedStringParameter(request, "categoryId", 10);
-            String categoryParam = utils.SecurityUtil.getValidatedStringParameter(request, "category", 100);
-            String featuredParam = utils.SecurityUtil.getValidatedStringParameter(request, "featured", 10);
-            String newParam = utils.SecurityUtil.getValidatedStringParameter(request, "new", 10);
+            // All browse filters are OPTIONAL — listing the full catalogue with no
+            // filter is valid (F02). Use the optional overload (returns null when absent)
+            // instead of the required one, which would 500 on a plain /browse request.
+            String keyword = utils.SecurityUtil.getOptionalStringParameter(request, "q", 200, null);
+            String categoryIdParam = utils.SecurityUtil.getOptionalStringParameter(request, "categoryId", 10, null);
+            String categoryParam = utils.SecurityUtil.getOptionalStringParameter(request, "category", 100, null);
+            String featuredParam = utils.SecurityUtil.getOptionalStringParameter(request, "featured", 10, null);
+            String newParam = utils.SecurityUtil.getOptionalStringParameter(request, "new", 10, null);
 
             List<Product> products;
             String categoryName = null;

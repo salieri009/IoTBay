@@ -39,7 +39,10 @@
             <li><c:out value="${fn:trim(item)}" /></li>
         </c:forTokens>
     </ul>
-    <span class="text-brand-primary font-medium group-hover:underline inline-flex items-center">
-        Explore ??
+    <span class="text-brand-primary font-medium group-hover:underline inline-flex items-center gap-1">
+        Explore
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+        </svg>
     </span>
 </a>

@@ -10,7 +10,7 @@
 <t:base title="About Us" description="About IoT Bay - Leading provider of innovative IoT solutions for smart homes, industry, and beyond">
     <!-- Hero Section -->
     <section class="py-16 md:py-24 bg-neutral-900 text-white">
-        <div class="container">
+        <div class="l-container">
             <!-- Optimized for 1920x1080 -->
             <div class="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,480px)] xl:grid-cols-[minmax(0,1fr)_minmax(0,560px)] items-center">
                 <div class="space-y-6 text-center lg:text-left">
@@ -45,7 +45,7 @@
 
     <!-- Our Story Section -->
     <section id="our-story" class="py-16 md:py-24">
-        <div class="container">
+        <div class="l-container">
             <!-- Optimized for 1920x1080 -->
             <div class="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,480px)] xl:grid-cols-[minmax(0,1fr)_minmax(0,560px)] items-center">
                 <div class="space-y-6">
@@ -92,7 +92,7 @@
 
     <!-- Mission & Vision Section -->
     <section class="py-16 md:py-24 bg-neutral-900 text-white">
-        <div class="container">
+        <div class="l-container">
             <header class="text-center mb-12 space-y-4">
                 <h2 class="text-display-l font-bold text-white">
                     Mission & Vision
@@ -147,7 +147,7 @@
 
     <!-- Values Section -->
     <section class="py-16 md:py-24">
-        <div class="container">
+        <div class="l-container">
             <header class="text-center mb-12 space-y-4">
                 <h2 class="text-display-l font-bold text-neutral-900">
                     Our Core Values
@@ -205,7 +205,7 @@
 
     <!-- Team Section -->
     <section id="our-team" class="py-16 md:py-24 bg-neutral-900 text-white">
-        <div class="container">
+        <div class="l-container">
             <header class="text-center mb-12 space-y-4">
                 <h2 class="text-display-l font-bold text-white">
                     Meet Our Team
@@ -323,7 +323,7 @@
 
     <!-- CTA Section -->
     <section class="py-16 md:py-24 bg-gradient-to-r from-brand-primary to-brand-secondary text-white">
-        <div class="container">
+        <div class="l-container">
             <div class="max-w-3xl mx-auto text-center space-y-8">
                 <h2 class="text-display-l font-bold text-white">
                     Ready to transform your world with IoT?

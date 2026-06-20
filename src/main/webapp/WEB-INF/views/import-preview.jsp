@@ -10,8 +10,8 @@
 %>
 
 <t:base title="Import Preview | IoT Bay">
-    <section class="py-12 bg-gradient-to-br from-blue-50 via-white to-purple-50">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <section class="py-8 bg-white border-b-2 border-brand-primary">
+        <div class="l-container">
             <div class="max-w-6xl mx-auto">
                 <h1 class="text-3xl font-bold text-neutral-900 mb-2">
                     Import <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-brand-secondary">Preview</span>
@@ -25,7 +25,7 @@
     </section>
 
     <section class="py-8">
-        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="l-container">
             <div class="max-w-6xl mx-auto space-y-6">
 
                 <div class="bg-white shadow rounded-lg overflow-hidden">

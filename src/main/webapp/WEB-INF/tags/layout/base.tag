@@ -30,8 +30,8 @@
                 extend: {
                     colors: {
                         brand: {
-                            primary: '#2563eb',
-                            secondary: '#7c3aed',
+                            primary: '#0a95ff',
+                            secondary: '#64748b',
                         },
                         neutral: {
                             50: '#f9fafb',
@@ -44,6 +44,7 @@
                             700: '#374151',
                             800: '#1f2937',
                             900: '#111827',
+                            950: '#030712',
                         }
                     }
                 }
@@ -66,7 +67,7 @@
     <link rel="preload" href="<c:url value='/css/style.css?v=20251120' />" as="style">
     <link rel="preload" href="<c:url value='/js/main.js' />" as="script">
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
 
     <script>
         (function() {

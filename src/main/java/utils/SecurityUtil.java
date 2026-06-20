@@ -116,10 +116,41 @@ public final class SecurityUtil {
         
         // Basic XSS prevention - remove potentially dangerous characters
         value = value.replaceAll("[<>\"'&]", "");
-        
+
         return value;
     }
-    
+
+    /**
+     * Safely extracts an OPTIONAL string parameter. Unlike the required variant,
+     * a missing/blank value returns {@code defaultValue} instead of throwing.
+     * Used for optional filters (e.g. search keyword, category) where listing
+     * without a filter is valid behaviour.
+     *
+     * @param request HTTP servlet request
+     * @param paramName Parameter name
+     * @param maxLength Maximum allowed length
+     * @param defaultValue Value returned when the parameter is missing or blank
+     * @return Validated and sanitized string, or {@code defaultValue} if absent
+     */
+    public static String getOptionalStringParameter(HttpServletRequest request, String paramName,
+            int maxLength, String defaultValue) {
+        String value = request.getParameter(paramName);
+        if (value == null || value.trim().isEmpty()) {
+            return defaultValue;
+        }
+
+        value = value.trim();
+        if (value.length() > maxLength) {
+            logger.warning("Parameter too long: " + paramName + " (length: " + value.length() + ")");
+            throw new IllegalArgumentException("Parameter '" + paramName + "' exceeds maximum length of " + maxLength);
+        }
+
+        // Basic XSS prevention - remove potentially dangerous characters
+        value = value.replaceAll("[<>\"'&]", "");
+
+        return value;
+    }
+
     /**
      * Safely extracts optional integer parameter from request
      * 

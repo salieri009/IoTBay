@@ -26,10 +26,10 @@
                                 <a href="${pageContext.request.contextPath}/product?productId=${param.productId}"
                                     class="block aspect-square w-24 h-24 sm:w-32 sm:h-32 rounded-lg overflow-hidden bg-neutral-100 border border-neutral-200"
                                     aria-label="View ${fn:escapeXml(param.productName)} details">
-                                    <img src="${not empty param.productImageUrl ? fn:escapeXml(param.productImageUrl) : 'images/default-product.png'}"
+                                    <img src="${not empty param.productImageUrl ? fn:escapeXml(param.productImageUrl) : 'images/default-product.svg'}"
                                         alt="${fn:escapeXml(param.productName)}" class="w-full h-full object-cover"
                                         loading="lazy"
-                                        onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/default-product.png';">
+                                        onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/default-product.svg';">
                                 </a>
                             </div>
 

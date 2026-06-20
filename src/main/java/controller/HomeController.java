@@ -16,7 +16,10 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-@WebServlet("/")
+// Map to the context root ONLY (exact-match empty pattern). Using "/" here would
+// replace Tomcat's DefaultServlet and break ALL static resources (css, images, js),
+// causing them to be forwarded to index.jsp and served as text/html.
+@WebServlet("")
 public class HomeController extends HttpServlet {
     private ProductDAO productDAO;
 

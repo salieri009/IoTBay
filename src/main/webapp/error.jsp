@@ -68,7 +68,7 @@
     String serverName = request.getServerName();
     boolean isLocal = "localhost".equalsIgnoreCase(serverName) || "127.0.0.1".equals(serverName);
 %>
-    <div class="container">
+    <div class="l-container">
 <%
     String _errMsg = (String) request.getAttribute("errorMessage");
     boolean _isUnauth = (_errMsg != null && _errMsg.toLowerCase().contains("unauthorized"));

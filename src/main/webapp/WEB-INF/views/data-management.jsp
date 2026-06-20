@@ -2,10 +2,10 @@
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
         <%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
 
-            <t:base title="Data Management" description="Import, export, and manage system data">
+            <t:admin-base title="Data Management" activeNav="data">
                 <!-- Page Header -->
-                <section class="py-12 bg-gradient-to-br from-blue-50 via-white to-purple-50">
-                    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <section class="py-8 bg-white border-b-2 border-brand-primary">
+                    <div class="l-container">
                         <div class="max-w-6xl mx-auto">
                             <h1 class="text-3xl font-bold text-neutral-900 mb-2">
                                 Data <span
@@ -19,7 +19,7 @@
                 </section>
 
                 <section class="py-12">
-                    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="l-container">
                         <div class="max-w-6xl mx-auto space-y-8">
 
                             <!-- Success/Error Messages -->
@@ -313,7 +313,6 @@
                         </div>
                     </div>
                 </section>
-                </section>
 
                 <script src="${pageContext.request.contextPath}/assets/js/pages/data-management.js"></script>
                 <script>
@@ -331,4 +330,4 @@
                         });
                     }
                 </script>
-            </t:base>
+            </t:admin-base>

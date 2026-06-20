@@ -11,7 +11,7 @@
 /* Container */
 .l-container {
   width: 100%;
-  max-width: 1400px;
+  max-width: 1280px; /* canonical content width (matches max-w-7xl) */
   margin-left: auto;
   margin-right: auto;
   padding-left: 16px; /* 2 * 8px */

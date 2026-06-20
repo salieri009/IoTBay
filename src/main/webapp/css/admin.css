@@ -9,7 +9,7 @@
 .admin-sidebar {
     width: 256px;
     min-height: 100vh;
-    background: #1F2937;
+    background: var(--neutral-800);
     position: fixed;
     left: 0;
     top: 0;
@@ -20,7 +20,7 @@
 }
 
 .sidebar-header {
-    color: #FFFFFF;
+    color: var(--neutral-0);
     margin-bottom: 24px;
 }
 
@@ -54,11 +54,11 @@
 
 .admin-nav-link:hover {
     background: rgba(255,255,255,0.05);
-    color: #FFFFFF;
+    color: var(--neutral-0);
 }
 
 .admin-nav-link.active {
-    color: #FFFFFF;
+    color: var(--neutral-0);
     background: rgba(255,255,255,0.1);
     font-weight: 500;
 }
@@ -343,8 +343,8 @@
     top: 16px;
     left: 16px;
     z-index: 301;
-    background: #1F2937;
-    color: #FFFFFF;
+    background: var(--neutral-800);
+    color: var(--neutral-0);
     border: none;
     padding: 12px;
     border-radius: 8px;
@@ -385,4 +385,31 @@
     .admin-sidebar-toggle {
         display: block;
     }
+}
+
+/* =====================================
+   Data Table Baseline (scoped to overflow-x-auto wrappers)
+   =====================================
+   Guarantees consistent header treatment, sensible min column width, and
+   horizontal scroll on mobile across all admin/data tables, without
+   overriding the per-table Tailwind utilities already in the markup. */
+.overflow-x-auto > table {
+    min-width: 640px;          /* forces horizontal scroll instead of squashing on mobile */
+    border-collapse: collapse;
+}
+
+.overflow-x-auto > table thead th {
+    white-space: nowrap;       /* keep headers on one line */
+    border-bottom: 1px solid var(--neutral-200);
+}
+
+.overflow-x-auto > table tbody tr:last-child td {
+    border-bottom: none;       /* tidy last row */
+}
+
+/* Group action buttons consistently (View / Edit / Delete) */
+.overflow-x-auto > table td .flex.items-center.gap-2,
+.overflow-x-auto > table td .flex.items-center.gap-3 {
+    flex-wrap: nowrap;
+    white-space: nowrap;
 }

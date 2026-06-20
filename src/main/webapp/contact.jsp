@@ -7,7 +7,7 @@
     description="Contact IoT Bay for support, sales inquiries, and technical assistance. Get help from our expert team.">
     <!-- Hero Section -->
     <section class="py-16 md:py-24 bg-neutral-900 text-white">
-        <div class="container">
+        <div class="l-container">
                 <div class="max-w-3xl mx-auto text-center space-y-6">
                     <p class="inline-flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-wide text-white/80">
                         <span class="inline-flex h-2 w-2 rounded-full bg-brand-secondary"></span>
@@ -26,7 +26,7 @@
     
     <!-- Contact Section -->
     <section class="py-16">
-        <div class="container">
+        <div class="l-container">
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
                     
                     <!-- Contact Form -->
@@ -77,7 +77,7 @@
                                            autocomplete="tel"
                                            placeholder="+1 (555) 123-4567"
                                            aria-describedby="phone-help">
-                                    <div id="phone-help" class="form-help text-xs text-neutral-500 mt-1">Optional ??helpful for urgent inquiries</div>
+                                    <div id="phone-help" class="form-help text-xs text-neutral-500 mt-1">Optional — helpful for urgent inquiries</div>
                                 </div>
                                 
                                 <div class="form-group">
@@ -273,7 +273,7 @@
     
     <!-- FAQ Section -->
     <section class="py-16 bg-neutral-100">
-        <div class="container">
+        <div class="l-container">
                 <div class="max-w-4xl mx-auto">
                     <div class="text-center mb-12">
                         <h2 class="text-3xl font-bold text-neutral-900 mb-4">Frequently Asked Questions</h2>

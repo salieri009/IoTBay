@@ -17,7 +17,7 @@
                         description="Manage your IoT Bay profile settings and account information">
 
                         <main class="py-12 bg-neutral-50 min-h-screen">
-                            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div class="l-container">
                                 <!-- Profile Header -->
                                 <div
                                     class="bg-white rounded-2xl shadow-sm border border-neutral-200 p-6 mb-8 flex flex-col md:flex-row items-center gap-6">
@@ -168,7 +168,7 @@
                                                 </div>
 
                                                 <div class="p-6">
-                                                    <form action="updateProfile" method="post"
+                                                    <form action="${pageContext.request.contextPath}/api/profile" method="post"
                                                         class="profile-form space-y-6">
                                                         <input type="hidden" name="csrfToken" value="${csrfToken}" />
                                                         <div class="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-2">
@@ -382,7 +382,7 @@
                                                     <p class="mt-1 text-sm text-neutral-500">When you place your first
                                                         order, it will appear here.</p>
                                                     <div class="mt-6">
-                                                        <a href="${pageContext.request.contextPath}/browse.jsp"
+                                                        <a href="${pageContext.request.contextPath}/browse"
                                                             class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-brand-primary hover:bg-brand-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary">
                                                             Start Shopping
                                                         </a>
@@ -402,7 +402,7 @@
                                                         regularly for better security</p>
                                                 </div>
                                                 <div class="p-6">
-                                                    <form action="changePassword" method="post"
+                                                    <form action="${pageContext.request.contextPath}/api/profile" method="post"
                                                         class="space-y-4 max-w-md">
                                                         <input type="hidden" name="csrfToken" value="${csrfToken}" />
                                                         <jsp:include
@@ -468,7 +468,7 @@
                                                     </div>
                                                     <div class="p-6">
                                                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                                            <a href="${pageContext.request.contextPath}/reports-dashboard.jsp"
+                                                            <a href="${pageContext.request.contextPath}/reports-dashboard"
                                                                 class="block p-4 border border-neutral-200 rounded-lg hover:border-brand-primary hover:bg-brand-primary-50 transition-colors group">
                                                                 <div class="flex items-center">
                                                                     <div
@@ -575,11 +575,7 @@
                             }
 
                             function confirmDeleteAccount() {
-                                if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-                                    if (confirm('This will permanently delete all your data. Are you absolutely sure?')) {
-                                        window.location.href = 'deleteaccount.jsp';
-                                    }
-                                }
+                                window.location.href = '${pageContext.request.contextPath}/deleteaccount.jsp';
                             }
 
                             // Handle hash in URL for direct linking to sections

@@ -56,7 +56,7 @@
 <t:base title="Browse Products" description="Browse IoT products across categories and keywords">
     <!-- Page Header -->
     <section class="pt-12 pb-8 bg-white border-b border-neutral-200">
-        <div class="container space-y-8">
+        <div class="l-container space-y-8">
             <!-- Breadcrumb -->
             <nav class="breadcrumb" aria-label="Breadcrumb">
                 <ol class="flex flex-wrap items-center gap-2 text-sm text-neutral-600">
@@ -194,7 +194,7 @@
 
     <!-- Main Content Area - Two Column Layout (Section 4.2) -->
     <section class="py-12 bg-neutral-50">
-        <div class="container mx-auto px-4">
+        <div class="l-container">
             <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
                 <!-- Filters Sidebar (Desktop) / Bottom Sheet (Mobile) -->
                 <div class="lg:col-span-1">
@@ -229,7 +229,7 @@
                     <jsp:param name="trigger" value="#filter-trigger-mobile" />
                 </jsp:include>
                 <%-- Include facet-search in temp container, then move to bottom-sheet body --%>
-                <div id="facet-search-mobile-temp" style="display: none;">
+                <div id="facet-search-mobile-temp" class="hidden">
                     <jsp:include page="/components/molecules/facet-search/facet-search.jsp">
                         <jsp:param name="id" value="facet-search-mobile" />
                         <jsp:param name="onFilterChange" value="handleFilterChange" />

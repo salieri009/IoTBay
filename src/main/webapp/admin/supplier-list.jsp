@@ -7,8 +7,8 @@
                     (!"staff".equalsIgnoreCase(user.getRole()) && !"admin".equalsIgnoreCase(user.getRole()))) {
                     response.sendRedirect(request.getContextPath() + "/login.jsp" ); return; } %>
 
-                    <t:base title="Manage Suppliers" customCSS="modern-theme.css">
-                        <section class="py-12 bg-gradient-to-br from-blue-50 via-white to-purple-50">
+                    <t:admin-base title="Manage Suppliers" activeNav="suppliers">
+                        <section class="py-8 bg-white border-b-2 border-brand-primary">
                             <div class="l-container">
                                 <div class="max-w-6xl mx-auto">
                                     <!-- Header -->
@@ -105,4 +105,4 @@
                                 </div>
                             </div>
                         </section>
-                    </t:base>
+                    </t:admin-base>

@@ -27,7 +27,7 @@
              alt="${param.productName}" 
              class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
              id="mainProductImage"
-             onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/default-product.png';" />
+             onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/default-product.svg';" />
         <div class="absolute inset-0 pointer-events-none ring-1 ring-inset ring-black/5 rounded-2xl"></div>
     </figure>
     <div class="grid grid-cols-4 gap-4">
@@ -36,7 +36,7 @@
                 <img src="${param.mainImageUrl}" 
                      alt="${param.productName} gallery image" 
                      class="w-full h-full object-cover object-center"
-                     onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/default-product.png';">
+                     onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/default-product.svg';">
             </div>
         </div>
         <!-- Hardcoded samples for now as per original design -->
@@ -45,7 +45,7 @@
                 <img src="${pageContext.request.contextPath}/images/sample2.png" 
                      alt="${param.productName} alternate view" 
                      class="w-full h-full object-cover object-center"
-                     onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/default-product.png';">
+                     onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/default-product.svg';">
             </div>
         </div>
         <div class="col-span-1 cursor-pointer opacity-70 hover:opacity-100 transition-opacity">
@@ -53,7 +53,7 @@
                 <img src="${pageContext.request.contextPath}/images/sample3.png" 
                      alt="${param.productName} component detail" 
                      class="w-full h-full object-cover object-center"
-                     onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/default-product.png';">
+                     onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/default-product.svg';">
             </div>
         </div>
         <div class="col-span-1 cursor-pointer opacity-70 hover:opacity-100 transition-opacity">

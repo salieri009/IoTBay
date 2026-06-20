@@ -3,10 +3,10 @@
         <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
             <%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
 
-                <t:base title="Access Logs" description="Monitor system access and user activities">
+                <t:admin-base title="Access Logs" activeNav="logs">
                     <!-- Page Header -->
-                    <section class="py-12 bg-gradient-to-br from-blue-50 via-white to-purple-50">
-                        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <section class="py-8 bg-white border-b-2 border-brand-primary">
+                        <div class="l-container">
                             <div class="max-w-6xl mx-auto">
                                 <div class="flex items-center justify-between mb-8">
                                     <div>
@@ -36,7 +36,7 @@
 
                     <!-- Logs Table -->
                     <section class="py-12">
-                        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="l-container">
                             <div class="max-w-6xl mx-auto">
                                 <div class="bg-white shadow overflow-hidden sm:rounded-lg">
                                     <div class="overflow-x-auto">
@@ -136,4 +136,4 @@
                     </section>
 
                     <script src="${pageContext.request.contextPath}/assets/js/pages/manage-access-logs.js"></script>
-                </t:base>
+                </t:admin-base>

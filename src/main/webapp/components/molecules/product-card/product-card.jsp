@@ -44,11 +44,12 @@
     <%-- Product Image --%>
     <div class="relative aspect-square bg-neutral-100 overflow-hidden">
       <a href="${pageContext.request.contextPath}/product?id=${product.id}" class="block w-full h-full">
-        <img src="${pageContext.request.contextPath}/images/products/${product.id}.png" 
+        <img src="${pageContext.request.contextPath}/images/products/${product.id}.png"
              alt="${product.name}"
+             width="400" height="400"
              class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
              loading="lazy"
-             onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/default-product.png';" />
+             onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/default-product.svg';this.classList.remove('object-cover');this.classList.add('object-contain');" />
       </a>
       
       <%-- Stock Badge (Atom) --%>

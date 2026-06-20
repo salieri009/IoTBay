@@ -2,10 +2,10 @@
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
         <%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
 
-            <t:base title="Manage Orders" description="View and manage customer orders">
+            <t:admin-base title="Manage Orders" activeNav="orders">
                 <!-- Page Header -->
-                <section class="py-12 bg-gradient-to-br from-blue-50 via-white to-purple-50">
-                    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <section class="py-8 bg-white border-b-2 border-brand-primary">
+                    <div class="l-container">
                         <div class="max-w-6xl mx-auto">
                             <div class="flex items-center justify-between">
                                 <div>
@@ -28,7 +28,7 @@
 
                 <!-- Orders Table -->
                 <section class="py-8">
-                    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="l-container">
                         <div class="max-w-6xl mx-auto">
                             <div class="bg-white rounded-xl shadow-sm border border-neutral-200 overflow-hidden">
                                 <div class="overflow-x-auto">
@@ -74,19 +74,9 @@
                                                                 <c:out value="${order.orderDate}" />
                                                             </td>
                                                             <td class="px-6 py-4 whitespace-nowrap">
-                                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                                                        <c:choose>
-                                                            <c:when test=" ${order.status=='delivered' }">bg-green-100
-                                                                    text-green-800
-                                                </c:when>
-                                                <c:when test="${order.status == 'pending'}">bg-yellow-100
-                                                    text-yellow-800</c:when>
-                                                <c:when test="${order.status == 'cancelled'}">bg-red-100 text-red-800
-                                                </c:when>
-                                                <c:otherwise>bg-gray-100 text-gray-800</c:otherwise>
-                                            </c:choose>">
-                                            <c:out value="${order.status}" />
-                                            </span>
+                                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${order.status == 'delivered' ? 'bg-green-100 text-green-800' : order.status == 'shipped' ? 'bg-blue-100 text-blue-800' : order.status == 'cancelled' ? 'bg-red-100 text-red-800' : order.status == 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800'}">
+                                                                    <c:out value="${order.status}" />
+                                                                </span>
                                             </td>
                                             <td
                                                 class="px-6 py-4 whitespace-nowrap text-sm font-medium text-neutral-900">
@@ -120,4 +110,4 @@
                         </div>
                     </div>
                 </section>
-            </t:base>
+            </t:admin-base>
