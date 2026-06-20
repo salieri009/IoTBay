@@ -113,9 +113,9 @@
                     <ul class="space-y-3 text-sm text-neutral-600">
                         <li>Use filters to focus by category, protocol, voltage, or stock availability.</li>
                         <li>Switch between grid and list views to compare product metadata efficiently.</li>
-                        <li>Sorting updates the catalogue instantly?�screen readers announce each change.</li>
+                        <li>Sorting updates the catalogue instantly &mdash; screen readers announce each change.</li>
                     </ul>
-                    <p class="text-xs text-neutral-500">Need help selecting hardware? <a href="${pageContext.request.contextPath}/contact.jsp" class="text-brand-primary hover:underline">Contact a specialist</a>.</p>
+                    <p class="text-sm text-neutral-600">Need help selecting hardware? <a href="${pageContext.request.contextPath}/contact.jsp" class="text-brand-primary font-medium hover:underline">Contact a specialist</a>.</p>
                 </aside>
             </div>
 
@@ -179,7 +179,7 @@
                 </div>
             </div>
 
-            <p id="search-hint" class="text-sm text-neutral-500">
+            <p id="search-hint" class="text-sm text-neutral-600">
                 Tip: combine keyword search with filters for precise results. Results update instantly and are announced for assistive technologies.
             </p>
 

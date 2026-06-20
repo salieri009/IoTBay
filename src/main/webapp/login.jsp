@@ -43,7 +43,7 @@
                                                 aria-invalid="${not empty errorMessage ? 'true' : 'false'}"
                                                 class="input w-full px-4 py-2 border ${not empty errorMessage ? 'border-red-300' : 'border-neutral-300'} rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent transition-colors"
                                                 value="${fn:escapeXml(param.email)}" />
-                                            <p id="email-help" class="mt-1 text-sm text-neutral-500">Enter the email
+                                            <p id="email-help" class="mt-1 text-sm text-neutral-600">Enter the email
                                                 address associated with your account</p>
                                         </div>
 
@@ -75,7 +75,7 @@
                                                 </button>
                                             </div>
                                             <div class="flex justify-between items-center mt-1">
-                                                <p id="password-help" class="text-sm text-neutral-500">Enter your
+                                                <p id="password-help" class="text-sm text-neutral-600">Enter your
                                                     account password</p>
                                                 <a href="forgot-password.jsp"
                                                     class="text-sm font-medium text-brand-primary hover:text-brand-primary-700 transition-colors">
@@ -126,7 +126,7 @@
                                     </div>
                                 </div>
 
-                                <div class="mt-8 text-center text-sm text-neutral-500">
+                                <div class="mt-8 text-center text-sm text-neutral-400">
                                     <p>&copy; 2024 IoT Bay. All rights reserved.</p>
                                     <div class="mt-2 space-x-4">
                                         <a href="#" class="hover:text-neutral-900 transition-colors">Privacy Policy</a>

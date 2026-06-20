@@ -96,7 +96,7 @@
          aria-live="polite">
       <div class="search-form__suggestions-header">
         <span class="search-form__suggestions-title">Suggestions</span>
-        <kbd class="search-form__keyboard-hint" aria-label="Use arrow keys to navigate">?�↓</kbd>
+        <kbd class="search-form__keyboard-hint" aria-label="Use arrow keys to navigate">&#8593;&#8595;</kbd>
       </div>
       <ul class="search-form__suggestions-list" role="list">
         <%-- Populated via JavaScript --%>

@@ -148,7 +148,7 @@
                                                             class="progress-step__label text-sm font-medium text-success">
                                                             Cart</div>
                                                         <div
-                                                            class="progress-step__status text-xs text-neutral-500 mt-1">
+                                                            class="progress-step__status text-xs text-neutral-600 mt-1">
                                                             Complete</div>
                                                     </div>
 
@@ -167,7 +167,7 @@
                                                             class="progress-step__label text-sm font-semibold text-brand-primary">
                                                             Shipping</div>
                                                         <div
-                                                            class="progress-step__status text-xs text-neutral-500 mt-1">
+                                                            class="progress-step__status text-xs text-neutral-600 mt-1">
                                                             Current</div>
                                                     </div>
 
@@ -291,7 +291,7 @@
                                                                             <option value="2">Work Address</option>
                                                                         </select>
                                                                         <div id="savedAddress-help"
-                                                                            class="form-help text-xs text-neutral-500 mt-1">
+                                                                            class="form-help text-xs text-neutral-600 mt-1">
                                                                             Quickly load a previously saved address
                                                                         </div>
                                                                     </div>
@@ -624,7 +624,7 @@
                                                                                     class="font-medium text-neutral-900">Bank
                                                                                     Transfer</span>
                                                                                 <span
-                                                                                    class="text-xs text-neutral-500">For
+                                                                                    class="text-xs text-neutral-600">For
                                                                                     orders $1000+</span>
                                                                             </label>
                                                                         </div>
@@ -653,7 +653,7 @@
                                                                                 </div>
                                                                             </div>
                                                                             <div id="cardNumber-help"
-                                                                                class="form-help text-xs text-neutral-500 mt-1">
+                                                                                class="form-help text-xs text-neutral-600 mt-1">
                                                                                 Enter your 16-digit card number
                                                                             </div>
                                                                             <div id="cardNumber-error"
@@ -674,7 +674,7 @@
                                                                                     oninput="formatExpiryDate(this)"
                                                                                     autocomplete="cc-exp">
                                                                                 <div id="expiryDate-help"
-                                                                                    class="form-help text-xs text-neutral-500 mt-1">
+                                                                                    class="form-help text-xs text-neutral-600 mt-1">
                                                                                     MM/YY format
                                                                                 </div>
                                                                             </div>
@@ -705,7 +705,7 @@
                                                                                     aria-describedby="cvv-help"
                                                                                     autocomplete="cc-csc">
                                                                                 <div id="cvv-help"
-                                                                                    class="form-help text-xs text-neutral-500 mt-1">
+                                                                                    class="form-help text-xs text-neutral-600 mt-1">
                                                                                     3-4 digits on the back of your card
                                                                                 </div>
                                                                             </div>
@@ -732,7 +732,7 @@
                                                                                     card for future purchases</span>
                                                                             </label>
                                                                             <div
-                                                                                class="form-help text-xs text-neutral-500 mt-1">
+                                                                                class="form-help text-xs text-neutral-600 mt-1">
                                                                                 Your card information will be encrypted
                                                                                 and stored securely
                                                                             </div>
@@ -772,7 +772,7 @@
                                                                                 <p>Bank: Example Bank</p>
                                                                                 <p>SWIFT: EXMPUS33</p>
                                                                             </div>
-                                                                            <p class="text-xs text-neutral-500 mt-4">
+                                                                            <p class="text-xs text-neutral-600 mt-4">
                                                                                 Please include your order number in the
                                                                                 transfer reference. Orders will be
                                                                                 processed after payment confirmation
@@ -976,7 +976,7 @@
                                                                             </div>
                                                                             <c:if test="${subtotal < 50}">
                                                                                 <div
-                                                                                    class="text-xs text-neutral-500 italic">
+                                                                                    class="text-xs text-neutral-600 italic">
                                                                                     Add &#36;
                                                                                     <fmt:formatNumber
                                                                                         value="${50 - subtotal}"

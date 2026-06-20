@@ -102,27 +102,27 @@
                                                 <thead class="bg-neutral-50">
                                                     <tr>
                                                         <th scope="col"
-                                                            class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                                            class="px-6 py-3 text-left text-xs font-semibold text-neutral-600 uppercase tracking-wider">
                                                             <input type="checkbox"
                                                                 class="rounded border-neutral-300 text-brand-primary focus:ring-brand-primary">
                                                         </th>
                                                         <th scope="col"
-                                                            class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                                            class="px-6 py-3 text-left text-xs font-semibold text-neutral-600 uppercase tracking-wider">
                                                             User</th>
                                                         <th scope="col"
-                                                            class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                                            class="px-6 py-3 text-left text-xs font-semibold text-neutral-600 uppercase tracking-wider">
                                                             Email</th>
                                                         <th scope="col"
-                                                            class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                                            class="px-6 py-3 text-left text-xs font-semibold text-neutral-600 uppercase tracking-wider">
                                                             Role</th>
                                                         <th scope="col"
-                                                            class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                                            class="px-6 py-3 text-left text-xs font-semibold text-neutral-600 uppercase tracking-wider">
                                                             Status</th>
                                                         <th scope="col"
-                                                            class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                                            class="px-6 py-3 text-left text-xs font-semibold text-neutral-600 uppercase tracking-wider">
                                                             Joined</th>
                                                         <th scope="col"
-                                                            class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                                            class="px-6 py-3 text-left text-xs font-semibold text-neutral-600 uppercase tracking-wider">
                                                             Actions</th>
                                                     </tr>
                                                 </thead>
@@ -159,7 +159,7 @@
                                                                                     <c:out
                                                                                         value="${userItem.firstName} ${userItem.lastName}" />
                                                                                 </div>
-                                                                                <div class="text-sm text-neutral-500">
+                                                                                <div class="text-sm text-neutral-600">
                                                                                     ID:
                                                                                     <c:out value="${userItem.id}" />
                                                                                 </div>
@@ -170,14 +170,14 @@
                                                                         <div class="text-sm text-neutral-900">
                                                                             <c:out value="${userItem.email}" />
                                                                         </div>
-                                                                        <div class="text-sm text-neutral-500">
+                                                                        <div class="text-sm text-neutral-600">
                                                                             <c:out
                                                                                 value="${userItem.phoneNumber != null ? userItem.phoneNumber : 'N/A'}" />
                                                                         </div>
                                                                     </td>
                                                                     <td class="px-6 py-4 whitespace-nowrap">
                                                                         <span
-                                                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${userItem.role eq 'staff' || userItem.role eq 'admin' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'}">
+                                                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${userItem.role eq 'staff' || userItem.role eq 'admin' ? 'bg-blue-100 text-blue-800' : 'bg-neutral-100 text-neutral-700'}">
                                                                             <c:out value="${userItem.role}" />
                                                                         </span>
                                                                     </td>
@@ -188,7 +188,7 @@
                                                                         </span>
                                                                     </td>
                                                                     <td
-                                                                        class="px-6 py-4 whitespace-nowrap text-sm text-neutral-500">
+                                                                        class="px-6 py-4 whitespace-nowrap text-sm text-neutral-600">
                                                                         <c:choose>
                                                                             <c:when
                                                                                 test="${userItem.createdAt != null}">

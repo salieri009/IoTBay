@@ -18,7 +18,7 @@
         <div class="l-container">
             <div class="max-w-2xl mx-auto">
                 <a href="${pageContext.request.contextPath}/api/payment/"
-                   class="text-neutral-500 hover:text-neutral-900 flex items-center gap-2 mb-4 text-sm">
+                   class="text-neutral-600 hover:text-brand-primary font-medium flex items-center gap-2 mb-4 text-sm transition-colors">
                     &larr; Back to Payment History
                 </a>
                 <h1 class="text-display-md text-neutral-900">
@@ -46,8 +46,8 @@
                 <c:choose>
                     <c:when test="${empty payment}">
                         <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-12 text-center">
-                            <h3 class="text-lg font-semibold text-neutral-700 mb-2">Payment Not Found</h3>
-                            <p class="text-neutral-500 text-sm mb-4">This payment record does not exist or you do not have access.</p>
+                            <h3 class="text-lg font-semibold text-neutral-800 mb-2">Payment Not Found</h3>
+                            <p class="text-neutral-600 text-sm mb-4">This payment record does not exist or you do not have access.</p>
                             <a href="${pageContext.request.contextPath}/api/payment/" class="btn btn--primary">Back to Payments</a>
                         </div>
                     </c:when>
@@ -57,7 +57,7 @@
                             <div class="flex items-start justify-between mb-4">
                                 <div>
                                     <h2 class="text-xl font-bold text-neutral-900">Payment #${payment.id}</h2>
-                                    <p class="text-neutral-500 text-sm">Linked to Order #${payment.orderId}</p>
+                                    <p class="text-neutral-600 text-sm">Linked to Order #${payment.orderId}</p>
                                 </div>
                                 <c:choose>
                                     <c:when test="${payment.status == 'PENDING'}">
@@ -65,6 +65,12 @@
                                     </c:when>
                                     <c:when test="${payment.status == 'COMPLETED' || payment.status == 'SUCCESS'}">
                                         <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">Completed</span>
+                                    </c:when>
+                                    <c:when test="${payment.status == 'FAILED'}">
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">Failed</span>
+                                    </c:when>
+                                    <c:when test="${payment.status == 'CANCELLED'}">
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">Cancelled</span>
                                     </c:when>
                                     <c:otherwise>
                                         <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-neutral-100 text-neutral-700">${payment.status}</span>
@@ -74,29 +80,29 @@
 
                             <div class="grid grid-cols-2 gap-4 text-sm">
                                 <div>
-                                    <span class="text-neutral-500">Amount</span>
+                                    <span class="block text-xs font-medium uppercase tracking-wide text-neutral-600 mb-0.5">Amount</span>
                                     <p class="font-semibold text-neutral-900 text-lg">
                                         $<fmt:formatNumber value="${payment.amount}" minFractionDigits="2" maxFractionDigits="2"/>
                                     </p>
                                 </div>
                                 <div>
-                                    <span class="text-neutral-500">Payment Method</span>
+                                    <span class="block text-xs font-medium uppercase tracking-wide text-neutral-600 mb-0.5">Payment Method</span>
                                     <p class="font-medium text-neutral-900">${payment.paymentMethod}</p>
                                 </div>
                                 <div>
-                                    <span class="text-neutral-500">Date</span>
+                                    <span class="block text-xs font-medium uppercase tracking-wide text-neutral-600 mb-0.5">Date</span>
                                     <p class="font-medium text-neutral-900">${payment.paymentDate}</p>
                                 </div>
                                 <c:if test="${not empty paymentDetail}">
                                     <div>
-                                        <span class="text-neutral-500">Card</span>
+                                        <span class="block text-xs font-medium uppercase tracking-wide text-neutral-600 mb-0.5">Card</span>
                                         <p class="font-medium text-neutral-900">
                                             ${paymentDetail.cardType} ${paymentDetail.cardNumber}
                                         </p>
                                     </div>
                                     <c:if test="${not empty paymentDetail.expiryDate}">
                                         <div>
-                                            <span class="text-neutral-500">Expiry</span>
+                                            <span class="block text-xs font-medium uppercase tracking-wide text-neutral-600 mb-0.5">Expiry</span>
                                             <p class="font-medium text-neutral-900">${paymentDetail.expiryDate}</p>
                                         </div>
                                     </c:if>

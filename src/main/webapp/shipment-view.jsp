@@ -25,7 +25,7 @@
         <div class="l-container">
             <div class="max-w-3xl mx-auto">
                 <a href="${pageContext.request.contextPath}/shipment/"
-                   class="text-neutral-500 hover:text-neutral-900 flex items-center gap-2 mb-4 text-sm">
+                   class="text-neutral-600 hover:text-brand-primary font-medium flex items-center gap-2 mb-4 text-sm transition-colors">
                     &larr; Back to Shipments
                 </a>
                 <div class="flex items-center justify-between">
@@ -56,11 +56,11 @@
                     <h2 class="text-lg font-semibold text-neutral-900 mb-4">Shipment Details</h2>
                     <dl class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <dt class="text-sm text-neutral-500">Shipment ID</dt>
+                            <dt class="text-xs font-medium uppercase tracking-wide text-neutral-600 mb-0.5">Shipment ID</dt>
                             <dd class="text-sm font-medium text-neutral-900">#<%= shipment.getId() %></dd>
                         </div>
                         <div>
-                            <dt class="text-sm text-neutral-500">Order</dt>
+                            <dt class="text-xs font-medium uppercase tracking-wide text-neutral-600 mb-0.5">Order</dt>
                             <dd class="text-sm font-medium text-neutral-900">
                                 <a href="${pageContext.request.contextPath}/orderList.jsp" class="text-brand-primary hover:underline">
                                     Order #<%= shipment.getOrderId() %>
@@ -68,7 +68,7 @@
                             </dd>
                         </div>
                         <div>
-                            <dt class="text-sm text-neutral-500">Status</dt>
+                            <dt class="text-xs font-medium uppercase tracking-wide text-neutral-600 mb-0.5">Status</dt>
                             <dd>
                                 <% String status = shipment.getShippingStatus(); if (status == null) status = "PENDING"; %>
                                 <% if ("PENDING".equals(status)) { %>
@@ -85,23 +85,23 @@
                             </dd>
                         </div>
                         <div>
-                            <dt class="text-sm text-neutral-500">Carrier</dt>
+                            <dt class="text-xs font-medium uppercase tracking-wide text-neutral-600 mb-0.5">Carrier</dt>
                             <dd class="text-sm font-medium text-neutral-900"><%= shipment.getCarrier() != null ? shipment.getCarrier() : "—" %></dd>
                         </div>
                         <div>
-                            <dt class="text-sm text-neutral-500">Shipping Date</dt>
+                            <dt class="text-xs font-medium uppercase tracking-wide text-neutral-600 mb-0.5">Shipping Date</dt>
                             <dd class="text-sm font-medium text-neutral-900"><%= shipment.getShippingDate() != null ? shipment.getShippingDate().toLocalDate() : "—" %></dd>
                         </div>
                         <div>
-                            <dt class="text-sm text-neutral-500">Delivery Date</dt>
+                            <dt class="text-xs font-medium uppercase tracking-wide text-neutral-600 mb-0.5">Delivery Date</dt>
                             <dd class="text-sm font-medium text-neutral-900"><%= shipment.getDeliveryDate() != null ? shipment.getDeliveryDate().toLocalDate() : "—" %></dd>
                         </div>
                         <div>
-                            <dt class="text-sm text-neutral-500">Tracking Number</dt>
+                            <dt class="text-xs font-medium uppercase tracking-wide text-neutral-600 mb-0.5">Tracking Number</dt>
                             <dd class="text-sm font-medium text-neutral-900"><%= shipment.getTrackingNumber() != null ? shipment.getTrackingNumber() : "—" %></dd>
                         </div>
                         <div>
-                            <dt class="text-sm text-neutral-500">Notes / Address</dt>
+                            <dt class="text-xs font-medium uppercase tracking-wide text-neutral-600 mb-0.5">Notes / Address</dt>
                             <dd class="text-sm font-medium text-neutral-900"><%= shipment.getNotes() != null ? shipment.getNotes() : "—" %></dd>
                         </div>
                     </dl>

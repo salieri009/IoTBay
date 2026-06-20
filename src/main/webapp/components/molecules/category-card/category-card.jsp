@@ -24,8 +24,8 @@
 <c:set var="iconTextClass" value="${param.iconTextClass}" />
 <c:set var="iconSvgPath" value="${param.iconSvgPath}" />
 
-<a href="${href}" 
-   class="category-card group bg-white rounded-lg shadow-sm hover:shadow-lg transition-all duration-300 p-6 border border-neutral-200 hover:border-brand-primary">
+<a href="${href}"
+   class="category-card group bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 p-6 border border-neutral-200 hover:border-brand-primary">
     <div class="category-card__icon mb-4">
         <div class="w-16 h-16 ${iconColorClass} rounded-lg flex items-center justify-center group-hover:bg-brand-primary group-hover:scale-110 transition-all duration-300">
             <svg class="w-8 h-8 ${iconTextClass} group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -34,7 +34,7 @@
         </div>
     </div>
     <h3 class="text-xl font-semibold text-neutral-900 mb-2"><c:out value="${title}" /></h3>
-    <ul class="text-sm text-neutral-600 space-y-1 mb-4">
+    <ul class="text-sm text-neutral-700 space-y-1 mb-4 leading-relaxed">
         <c:forTokens items="${param.subItems}" delims="," var="item">
             <li><c:out value="${fn:trim(item)}" /></li>
         </c:forTokens>

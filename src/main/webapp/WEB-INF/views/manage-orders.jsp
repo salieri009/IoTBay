@@ -36,22 +36,22 @@
                                         <thead class="bg-neutral-50">
                                             <tr>
                                                 <th scope="col"
-                                                    class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                                    class="px-6 py-3 text-left text-xs font-semibold text-neutral-600 uppercase tracking-wider">
                                                     Order ID</th>
                                                 <th scope="col"
-                                                    class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                                    class="px-6 py-3 text-left text-xs font-semibold text-neutral-600 uppercase tracking-wider">
                                                     User ID</th>
                                                 <th scope="col"
-                                                    class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                                    class="px-6 py-3 text-left text-xs font-semibold text-neutral-600 uppercase tracking-wider">
                                                     Date</th>
                                                 <th scope="col"
-                                                    class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                                    class="px-6 py-3 text-left text-xs font-semibold text-neutral-600 uppercase tracking-wider">
                                                     Status</th>
                                                 <th scope="col"
-                                                    class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                                    class="px-6 py-3 text-right text-xs font-semibold text-neutral-600 uppercase tracking-wider">
                                                     Total</th>
                                                 <th scope="col"
-                                                    class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                                    class="px-6 py-3 text-left text-xs font-semibold text-neutral-600 uppercase tracking-wider">
                                                     Actions</th>
                                             </tr>
                                         </thead>
@@ -66,22 +66,21 @@
                                                                 <c:out value="${order.id}" />
                                                             </td>
                                                             <td
-                                                                class="px-6 py-4 whitespace-nowrap text-sm text-neutral-500">
+                                                                class="px-6 py-4 whitespace-nowrap text-sm text-neutral-600">
                                                                 <c:out value="${order.userId}" />
                                                             </td>
                                                             <td
-                                                                class="px-6 py-4 whitespace-nowrap text-sm text-neutral-500">
+                                                                class="px-6 py-4 whitespace-nowrap text-sm text-neutral-600">
                                                                 <c:out value="${order.orderDate}" />
                                                             </td>
                                                             <td class="px-6 py-4 whitespace-nowrap">
-                                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${order.status == 'delivered' ? 'bg-green-100 text-green-800' : order.status == 'shipped' ? 'bg-blue-100 text-blue-800' : order.status == 'cancelled' ? 'bg-red-100 text-red-800' : order.status == 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800'}">
+                                                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${order.status == 'delivered' ? 'bg-green-100 text-green-800' : order.status == 'shipped' ? 'bg-blue-100 text-blue-800' : order.status == 'cancelled' ? 'bg-red-100 text-red-800' : order.status == 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-neutral-100 text-neutral-700'}">
                                                                     <c:out value="${order.status}" />
                                                                 </span>
                                             </td>
                                             <td
-                                                class="px-6 py-4 whitespace-nowrap text-sm font-medium text-neutral-900">
-                                                $
-                                                <c:out value="${order.totalAmount}" />
+                                                class="px-6 py-4 whitespace-nowrap text-right text-sm font-semibold text-neutral-900 tabular-nums">
+                                                $<c:out value="${order.totalAmount}" />
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                                                 <div class="flex items-center gap-2">

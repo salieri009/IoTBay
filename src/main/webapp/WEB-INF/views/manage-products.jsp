@@ -111,11 +111,11 @@
 
                                                     <div class="flex gap-2 mt-auto">
                                                         <a href="${pageContext.request.contextPath}/manage/products/update?id=${product.id}"
-                                                            class="flex-1 inline-flex justify-center items-center px-4 py-2 border border-neutral-300 shadow-sm text-sm font-medium rounded-md text-neutral-700 bg-white hover:bg-neutral-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary">
+                                                            class="btn btn--secondary btn--sm flex-1 justify-center">
                                                             Edit
                                                         </a>
                                                         <a href="${pageContext.request.contextPath}/product?id=${product.id}"
-                                                            class="inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-brand-700 bg-brand-100 hover:bg-brand-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500">
+                                                            class="btn btn--primary btn--sm justify-center">
                                                             View
                                                         </a>
                                                     </div>

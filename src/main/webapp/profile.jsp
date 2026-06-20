@@ -163,7 +163,7 @@
                                                 <div class="p-6 border-b border-neutral-200">
                                                     <h2 class="text-lg font-medium text-neutral-900">Personal
                                                         Information</h2>
-                                                    <p class="mt-1 text-sm text-neutral-500">Manage your personal
+                                                    <p class="mt-1 text-sm text-neutral-600">Manage your personal
                                                         details and contact information</p>
                                                 </div>
 
@@ -288,7 +288,7 @@
                                                 class="bg-white rounded-2xl shadow-sm border border-neutral-200 overflow-hidden mb-6">
                                                 <div class="p-6 border-b border-neutral-200">
                                                     <h2 class="text-lg font-medium text-neutral-900">Payment Method</h2>
-                                                    <p class="mt-1 text-sm text-neutral-500">Manage your preferred
+                                                    <p class="mt-1 text-sm text-neutral-600">Manage your preferred
                                                         payment method</p>
                                                 </div>
                                                 <div class="p-6">
@@ -326,7 +326,7 @@
                                                 class="bg-white rounded-2xl shadow-sm border border-neutral-200 overflow-hidden">
                                                 <div class="p-6 border-b border-neutral-200">
                                                     <h2 class="text-lg font-medium text-neutral-900">Preferences</h2>
-                                                    <p class="mt-1 text-sm text-neutral-500">Manage your notification
+                                                    <p class="mt-1 text-sm text-neutral-600">Manage your notification
                                                         and privacy settings</p>
                                                 </div>
                                                 <div class="p-6 space-y-6">
@@ -366,7 +366,7 @@
                                                 class="bg-white rounded-2xl shadow-sm border border-neutral-200 overflow-hidden">
                                                 <div class="p-6 border-b border-neutral-200">
                                                     <h2 class="text-lg font-medium text-neutral-900">Order History</h2>
-                                                    <p class="mt-1 text-sm text-neutral-500">View your past orders and
+                                                    <p class="mt-1 text-sm text-neutral-600">View your past orders and
                                                         their status</p>
                                                 </div>
                                                 <div class="p-12 text-center">
@@ -379,11 +379,11 @@
                                                     </div>
                                                     <h3 class="mt-2 text-sm font-medium text-neutral-900">No orders yet
                                                     </h3>
-                                                    <p class="mt-1 text-sm text-neutral-500">When you place your first
+                                                    <p class="mt-1 text-sm text-neutral-600">When you place your first
                                                         order, it will appear here.</p>
                                                     <div class="mt-6">
                                                         <a href="${pageContext.request.contextPath}/browse"
-                                                            class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-brand-primary hover:bg-brand-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary">
+                                                            class="btn btn--primary btn--sm">
                                                             Start Shopping
                                                         </a>
                                                     </div>
@@ -398,7 +398,7 @@
                                                 <div class="p-6 border-b border-neutral-200">
                                                     <h2 class="text-lg font-medium text-neutral-900">Change Password
                                                     </h2>
-                                                    <p class="mt-1 text-sm text-neutral-500">Update your password
+                                                    <p class="mt-1 text-sm text-neutral-600">Update your password
                                                         regularly for better security</p>
                                                 </div>
                                                 <div class="p-6">
@@ -448,7 +448,7 @@
                                                     <p class="text-sm text-red-600 mb-4">This action cannot be undone.
                                                         All your data will be permanently deleted.</p>
                                                     <button type="button" onclick="confirmDeleteAccount()"
-                                                        class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                                        class="btn btn--danger btn--sm">
                                                         Delete Account
                                                     </button>
                                                 </div>
@@ -463,7 +463,7 @@
                                                     <div class="p-6 border-b border-neutral-200">
                                                         <h2 class="text-lg font-medium text-neutral-900">Staff Tools
                                                         </h2>
-                                                        <p class="mt-1 text-sm text-neutral-500">Quick access to
+                                                        <p class="mt-1 text-sm text-neutral-600">Quick access to
                                                             management functions</p>
                                                     </div>
                                                     <div class="p-6">
@@ -485,7 +485,7 @@
                                                                         <h3
                                                                             class="text-lg font-medium text-neutral-900 group-hover:text-brand-primary">
                                                                             Reports</h3>
-                                                                        <p class="mt-1 text-sm text-neutral-500">View
+                                                                        <p class="mt-1 text-sm text-neutral-600">View
                                                                             sales and inventory reports</p>
                                                                     </div>
                                                                 </div>
@@ -508,7 +508,7 @@
                                                                         <h3
                                                                             class="text-lg font-medium text-neutral-900 group-hover:text-brand-primary">
                                                                             Orders</h3>
-                                                                        <p class="mt-1 text-sm text-neutral-500">Manage
+                                                                        <p class="mt-1 text-sm text-neutral-600">Manage
                                                                             customer orders</p>
                                                                     </div>
                                                                 </div>

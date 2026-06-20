@@ -21,7 +21,7 @@
         <div class="l-container">
             <div class="max-w-4xl mx-auto">
                 <a href="${pageContext.request.contextPath}/profile.jsp"
-                    class="text-neutral-500 hover:text-neutral-900 flex items-center gap-2 mb-4 text-sm">
+                    class="text-neutral-600 hover:text-brand-primary font-medium flex items-center gap-2 mb-4 text-sm transition-colors">
                     &larr; Back to Profile
                 </a>
                 <h1 class="text-display-lg text-neutral-900 mb-2">
@@ -82,7 +82,7 @@
                         <h2 class="text-lg font-semibold text-neutral-900">
                             Your Payments
                             <c:if test="${not empty payments}">
-                                <span class="ml-2 text-sm font-normal text-neutral-500">(${fn:length(payments)} records)</span>
+                                <span class="ml-2 text-sm font-normal text-neutral-600">(${fn:length(payments)} records)</span>
                             </c:if>
                         </h2>
                     </div>
@@ -94,8 +94,8 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                           d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
                                 </svg>
-                                <h3 class="text-lg font-semibold text-neutral-700 mb-2">No payments found</h3>
-                                <p class="text-neutral-500 text-sm">No payment records match your search criteria.</p>
+                                <h3 class="text-lg font-semibold text-neutral-800 mb-2">No payments found</h3>
+                                <p class="text-neutral-600 text-sm">No payment records match your search criteria.</p>
                             </div>
                         </c:when>
                         <c:otherwise>
@@ -112,6 +112,9 @@
                                                         </c:when>
                                                         <c:when test="${payment.status == 'COMPLETED' || payment.status == 'SUCCESS'}">
                                                             <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">Completed</span>
+                                                        </c:when>
+                                                        <c:when test="${payment.status == 'FAILED' || payment.status == 'CANCELLED'}">
+                                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">${fn:toLowerCase(payment.status) == 'failed' ? 'Failed' : 'Cancelled'}</span>
                                                         </c:when>
                                                         <c:otherwise>
                                                             <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-neutral-100 text-neutral-700">${payment.status}</span>
