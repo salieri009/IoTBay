@@ -18,7 +18,7 @@
         <div class="l-container">
             <div class="max-w-3xl mx-auto">
                 <a href="${pageContext.request.contextPath}/orderhistory"
-                   class="text-neutral-500 hover:text-neutral-900 flex items-center gap-2 mb-4 text-sm">
+                   class="text-neutral-600 hover:text-brand-primary font-medium flex items-center gap-2 mb-4 text-sm transition-colors">
                     &larr; Back to Order History
                 </a>
                 <h1 class="text-display-md text-neutral-900">
@@ -44,8 +44,8 @@
                 <c:choose>
                     <c:when test="${empty order}">
                         <div class="bg-white rounded-xl shadow-sm border border-neutral-200 p-12 text-center">
-                            <h3 class="text-lg font-semibold text-neutral-700 mb-2">Order Not Found</h3>
-                            <p class="text-neutral-500 text-sm mb-4">This order does not exist or cannot be edited.</p>
+                            <h3 class="text-lg font-semibold text-neutral-800 mb-2">Order Not Found</h3>
+                            <p class="text-neutral-600 text-sm mb-4">This order does not exist or cannot be edited.</p>
                             <a href="${pageContext.request.contextPath}/orderhistory" class="btn btn--primary">Back to Orders</a>
                         </div>
                     </c:when>
@@ -53,7 +53,7 @@
                         <div class="bg-white rounded-xl shadow-sm border border-neutral-200 overflow-hidden">
                             <div class="p-6 border-b border-neutral-200">
                                 <h2 class="text-lg font-semibold text-neutral-900">Order Items</h2>
-                                <p class="text-sm text-neutral-500 mt-1">
+                                <p class="text-sm text-neutral-600 mt-1">
                                     Adjust quantities or remove items. Set quantity to 0 to remove an item.
                                 </p>
                             </div>
@@ -65,7 +65,7 @@
                                 <div class="divide-y divide-neutral-100">
                                     <c:choose>
                                         <c:when test="${empty orderItems}">
-                                            <div class="p-8 text-center text-neutral-500 text-sm">
+                                            <div class="p-8 text-center text-neutral-600 text-sm">
                                                 No items found in this order.
                                             </div>
                                         </c:when>
@@ -83,7 +83,7 @@
                                                                 </c:otherwise>
                                                             </c:choose>
                                                         </p>
-                                                        <p class="text-sm text-neutral-500">
+                                                        <p class="text-sm text-neutral-600">
                                                             Unit price: $<fmt:formatNumber value="${item.priceAtOrderTime}" minFractionDigits="2" maxFractionDigits="2"/>
                                                         </p>
                                                     </div>

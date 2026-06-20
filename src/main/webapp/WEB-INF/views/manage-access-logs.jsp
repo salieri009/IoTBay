@@ -44,22 +44,22 @@
                                             <thead class="bg-neutral-50">
                                                 <tr>
                                                     <th scope="col"
-                                                        class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                                        class="px-6 py-3 text-left text-xs font-semibold text-neutral-600 uppercase tracking-wider">
                                                         ID</th>
                                                     <th scope="col"
-                                                        class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                                        class="px-6 py-3 text-left text-xs font-semibold text-neutral-600 uppercase tracking-wider">
                                                         User ID</th>
                                                     <th scope="col"
-                                                        class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                                        class="px-6 py-3 text-left text-xs font-semibold text-neutral-600 uppercase tracking-wider">
                                                         Action</th>
                                                     <th scope="col"
-                                                        class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                                        class="px-6 py-3 text-left text-xs font-semibold text-neutral-600 uppercase tracking-wider">
                                                         IP Address</th>
                                                     <th scope="col"
-                                                        class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                                        class="px-6 py-3 text-left text-xs font-semibold text-neutral-600 uppercase tracking-wider">
                                                         User Agent</th>
                                                     <th scope="col"
-                                                        class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                                        class="px-6 py-3 text-left text-xs font-semibold text-neutral-600 uppercase tracking-wider">
                                                         Timestamp</th>
                                                 </tr>
                                             </thead>
@@ -79,7 +79,7 @@
                                                                 </td>
                                                                 <td class="px-6 py-4 whitespace-nowrap">
                                                                     <span
-                                                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                                                        class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                                                         <c:out
                                                                             value="${log.action != null ? log.action : 'N/A'}" />
                                                                     </span>

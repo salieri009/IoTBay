@@ -38,19 +38,19 @@
                     <h2 class="text-lg font-semibold text-neutral-900 mb-4">Staff Details</h2>
                     <dl class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <dt class="text-sm text-neutral-500">Full Name</dt>
+                            <dt class="text-xs font-medium uppercase tracking-wide text-neutral-500 mb-0.5">Full Name</dt>
                             <dd class="text-sm font-medium text-neutral-900"><%= staffMember.getFirstName() %> <%= staffMember.getLastName() %></dd>
                         </div>
                         <div>
-                            <dt class="text-sm text-neutral-500">Email</dt>
+                            <dt class="text-xs font-medium uppercase tracking-wide text-neutral-500 mb-0.5">Email</dt>
                             <dd class="text-sm font-medium text-neutral-900"><%= staffMember.getEmail() %></dd>
                         </div>
                         <div>
-                            <dt class="text-sm text-neutral-500">Phone</dt>
+                            <dt class="text-xs font-medium uppercase tracking-wide text-neutral-500 mb-0.5">Phone</dt>
                             <dd class="text-sm font-medium text-neutral-900"><%= staffMember.getPhone() != null ? staffMember.getPhone() : "—" %></dd>
                         </div>
                         <div>
-                            <dt class="text-sm text-neutral-500">Position</dt>
+                            <dt class="text-xs font-medium uppercase tracking-wide text-neutral-500 mb-0.5">Position</dt>
                             <dd>
                                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
                                     <%= staffMember.getPosition() != null ? staffMember.getPosition() : "staff" %>
@@ -58,7 +58,7 @@
                             </dd>
                         </div>
                         <div>
-                            <dt class="text-sm text-neutral-500">Status</dt>
+                            <dt class="text-xs font-medium uppercase tracking-wide text-neutral-500 mb-0.5">Status</dt>
                             <dd>
                                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium <%= staffMember.isActive() ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800" %>">
                                     <%= staffMember.isActive() ? "Active" : "Inactive" %>
@@ -66,18 +66,18 @@
                             </dd>
                         </div>
                         <div>
-                            <dt class="text-sm text-neutral-500">Date of Birth</dt>
+                            <dt class="text-xs font-medium uppercase tracking-wide text-neutral-500 mb-0.5">Date of Birth</dt>
                             <dd class="text-sm font-medium text-neutral-900"><%= staffMember.getDateOfBirth() != null ? staffMember.getDateOfBirth().toString() : "—" %></dd>
                         </div>
                         <div>
-                            <dt class="text-sm text-neutral-500">Address</dt>
+                            <dt class="text-xs font-medium uppercase tracking-wide text-neutral-500 mb-0.5">Address</dt>
                             <dd class="text-sm font-medium text-neutral-900">
                                 <%= staffMember.getAddressLine1() != null ? staffMember.getAddressLine1() : "" %>
                                 <%= staffMember.getAddressLine2() != null ? " " + staffMember.getAddressLine2() : "" %>
                             </dd>
                         </div>
                         <div>
-                            <dt class="text-sm text-neutral-500">Joined</dt>
+                            <dt class="text-xs font-medium uppercase tracking-wide text-neutral-500 mb-0.5">Joined</dt>
                             <dd class="text-sm font-medium text-neutral-900"><%= staffMember.getCreatedAt() != null ? staffMember.getCreatedAt() : "—" %></dd>
                         </div>
                     </dl>

@@ -95,7 +95,7 @@
                             Confirm Import
                         </button>
                     </form>
-                    <a href="${pageContext.request.contextPath}/WEB-INF/views/data-management.jsp"
+                    <a href="${pageContext.request.contextPath}/data-management"
                         class="inline-flex items-center px-6 py-2 border border-neutral-300 text-sm font-medium rounded-md text-neutral-700 bg-white hover:bg-neutral-50">
                         Cancel
                     </a>

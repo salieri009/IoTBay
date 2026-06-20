@@ -57,7 +57,7 @@
             </div>
         </div>
         <div class="col-span-1 cursor-pointer opacity-70 hover:opacity-100 transition-opacity">
-            <div class="aspect-square rounded-lg border border-neutral-200 bg-neutral-50 flex items-center justify-center text-xs text-neutral-500 font-medium">
+            <div class="aspect-square rounded-lg border border-neutral-200 bg-neutral-50 flex items-center justify-center text-xs text-neutral-600 font-semibold">
                 +2 more
             </div>
         </div>

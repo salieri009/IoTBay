@@ -44,20 +44,9 @@
                                                 ${fn:escapeXml(param.productName)}
                                             </a>
                                         </h3>
-                                        <p class="cart-item-description text-sm text-neutral-600 line-clamp-2 mb-2">
+                                        <p class="cart-item-description text-sm text-neutral-600 line-clamp-2 mb-3 leading-relaxed">
                                             ${fn:escapeXml(param.productDescription)}
                                         </p>
-                                        <!-- Key Spec Badge (Placeholder/Optional) -->
-                                        <div class="flex flex-wrap gap-2 mb-3">
-                                            <span
-                                                class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-brand-primary/10 text-brand-primary">
-                                                LoRaWAN
-                                            </span>
-                                            <span
-                                                class="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-neutral-100 text-neutral-700">
-                                                12V DC
-                                            </span>
-                                        </div>
                                         <div class="cart-item-price text-lg font-bold text-brand-primary">
                                             $
                                             <fmt:formatNumber value="${param.price}" pattern="#,##0.00" />
@@ -107,7 +96,7 @@
                                     </div>
 
                                     <div class="text-right">
-                                        <span class="block text-xs text-neutral-500 mb-1">Subtotal</span>
+                                        <span class="block text-xs text-neutral-600 mb-1">Subtotal</span>
                                         <span class="block text-lg font-bold text-neutral-900">
                                             $
                                             <fmt:formatNumber value="${param.price * param.quantity}"

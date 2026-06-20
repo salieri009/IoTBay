@@ -105,7 +105,7 @@
                                                         Price</dt>
                                                     <dd class="text-3xl font-bold text-neutral-900">
                                                         &#36;${pd_priceFormatted}</dd>
-                                                    <dd class="mt-1 text-xs text-neutral-500">All prices include GST.
+                                                    <dd class="mt-1 text-xs text-neutral-600">All prices include GST.
                                                     </dd>
                                                 </div>
                                                 <div
@@ -123,7 +123,7 @@
                                                                 aria-live="polite">${pd_stockLabel}</dd>
                                                         </c:otherwise>
                                                     </c:choose>
-                                                    <dd class="mt-1 text-xs text-neutral-500">Ships within 2-3 business
+                                                    <dd class="mt-1 text-xs text-neutral-600">Ships within 2-3 business
                                                         days.</dd>
                                                 </div>
                                 </div>
@@ -131,7 +131,7 @@
                                     <dt class="text-xs font-semibold uppercase tracking-wide text-neutral-500 mb-2">
                                         Support</dt>
                                     <dd class="text-sm font-semibold text-neutral-900">24/7 specialist assistance</dd>
-                                    <dd class="mt-1 text-xs text-neutral-500">Includes onboarding & integration
+                                    <dd class="mt-1 text-xs text-neutral-600">Includes onboarding & integration
                                         guidance.</dd>
                                 </div>
                                 </dl>
@@ -411,15 +411,15 @@
                                                 Specifications</h3>
                                             <dl class="divide-y divide-neutral-200 text-sm">
                                                 <div class="flex justify-between py-3">
-                                                    <dt class="text-neutral-500">Type</dt>
+                                                    <dt class="text-neutral-600">Type</dt>
                                                     <dd class="font-medium text-neutral-900">${pd_type}</dd>
                                                 </div>
                                                 <div class="flex justify-between py-3">
-                                                    <dt class="text-neutral-500">Warranty</dt>
+                                                    <dt class="text-neutral-600">Warranty</dt>
                                                     <dd class="font-medium text-neutral-900">1 Year</dd>
                                                 </div>
                                                 <div class="flex justify-between py-3">
-                                                    <dt class="text-neutral-500">Manufacturer</dt>
+                                                    <dt class="text-neutral-600">Manufacturer</dt>
                                                     <dd class="font-medium text-neutral-900">IoT Bay Inc.</dd>
                                                 </div>
                                             </dl>

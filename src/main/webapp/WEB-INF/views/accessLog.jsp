@@ -72,16 +72,16 @@
                                     <thead class="bg-neutral-50">
                                         <tr>
                                             <th scope="col"
-                                                class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                                class="px-6 py-3 text-left text-xs font-semibold text-neutral-600 uppercase tracking-wider">
                                                 No.</th>
                                             <th scope="col"
-                                                class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                                class="px-6 py-3 text-left text-xs font-semibold text-neutral-600 uppercase tracking-wider">
                                                 Action</th>
                                             <th scope="col"
-                                                class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                                class="px-6 py-3 text-left text-xs font-semibold text-neutral-600 uppercase tracking-wider">
                                                 Timestamp</th>
                                             <th scope="col"
-                                                class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                                class="px-6 py-3 text-left text-xs font-semibold text-neutral-600 uppercase tracking-wider">
                                                 IP Address</th>
                                         </tr>
                                     </thead>
@@ -99,11 +99,11 @@
                                                             <c:out value="${log.action}" />
                                                         </td>
                                                         <td
-                                                            class="px-6 py-4 whitespace-nowrap text-sm text-neutral-500">
+                                                            class="px-6 py-4 whitespace-nowrap text-sm text-neutral-600">
                                                             <c:out value="${log.formattedTimestamp}" />
                                                         </td>
                                                         <td
-                                                            class="px-6 py-4 whitespace-nowrap text-sm text-neutral-500">
+                                                            class="px-6 py-4 whitespace-nowrap text-sm text-neutral-600">
                                                             <c:out
                                                                 value="${log.ipAddress != null ? log.ipAddress : '-'}" />
                                                         </td>

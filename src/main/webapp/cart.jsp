@@ -233,7 +233,7 @@
                                                                                         </span>
                                                                                     </div>
                                                                                     <c:if test="${subtotal < 50}">
-                                                                                        <div class="text-sm text-neutral-500 italic bg-neutral-50 p-2 rounded"
+                                                                                        <div class="text-sm text-neutral-600 bg-neutral-50 p-2 rounded"
                                                                                             data-cart-summary="shipping-note">
                                                                                             Add &#36;
                                                                                             <fmt:formatNumber
@@ -299,7 +299,7 @@
                                                                                 <div
                                                                                     class="mt-8 pt-6 border-t border-neutral-200">
                                                                                     <div
-                                                                                        class="space-y-3 text-xs text-neutral-500">
+                                                                                        class="space-y-3 text-xs text-neutral-600">
                                                                                         <div
                                                                                             class="flex items-center gap-2">
                                                                                             <svg class="w-4 h-4 text-green-600 flex-shrink-0"
@@ -609,8 +609,3 @@
                                                             }
                                                         }
                                                     </script>
-                                                    </body>
-
-                                                    </html>
-
-                                                    </html>

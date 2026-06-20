@@ -77,7 +77,7 @@
                                         </div>
                                         <div class="ml-5 w-0 flex-1">
                                             <dl>
-                                                <dt class="text-sm font-medium text-neutral-500 truncate">Total Users
+                                                <dt class="text-sm font-medium text-neutral-600 truncate">Total Users
                                                 </dt>
                                                 <dd class="text-3xl font-semibold text-neutral-900">
                                                     <c:out value="${totalUsers}" />
@@ -105,7 +105,7 @@
                                         </div>
                                         <div class="ml-5 w-0 flex-1">
                                             <dl>
-                                                <dt class="text-sm font-medium text-neutral-500 truncate">Total Products
+                                                <dt class="text-sm font-medium text-neutral-600 truncate">Total Products
                                                 </dt>
                                                 <dd class="text-3xl font-semibold text-neutral-900">
                                                     <c:out value="${totalProducts}" />
@@ -132,7 +132,7 @@
                                         </div>
                                         <div class="ml-5 w-0 flex-1">
                                             <dl>
-                                                <dt class="text-sm font-medium text-neutral-500 truncate">Total Orders
+                                                <dt class="text-sm font-medium text-neutral-600 truncate">Total Orders
                                                 </dt>
                                                 <dd class="text-3xl font-semibold text-neutral-900">
                                                     <c:out value="${totalOrders}" />
@@ -160,7 +160,7 @@
                                         </div>
                                         <div class="ml-5 w-0 flex-1">
                                             <dl>
-                                                <dt class="text-sm font-medium text-neutral-500 truncate">Total Revenue
+                                                <dt class="text-sm font-medium text-neutral-600 truncate">Total Revenue
                                                 </dt>
                                                 <dd class="text-3xl font-semibold text-neutral-900">
                                                     $
@@ -190,7 +190,7 @@
                                         <h3
                                             class="text-lg font-medium text-neutral-900 group-hover:text-brand-primary transition-colors duration-200">
                                             Manage Users</h3>
-                                        <p class="mt-1 text-sm text-neutral-500">User administration</p>
+                                        <p class="mt-1 text-sm text-neutral-600">User administration</p>
                                     </div>
                                 </div>
                             </a>
@@ -210,7 +210,7 @@
                                         <h3
                                             class="text-lg font-medium text-neutral-900 group-hover:text-brand-primary transition-colors duration-200">
                                             Manage Products</h3>
-                                        <p class="mt-1 text-sm text-neutral-500">Product catalog</p>
+                                        <p class="mt-1 text-sm text-neutral-600">Product catalog</p>
                                     </div>
                                 </div>
                             </a>
@@ -229,7 +229,7 @@
                                         <h3
                                             class="text-lg font-medium text-neutral-900 group-hover:text-brand-primary transition-colors duration-200">
                                             Manage Orders</h3>
-                                        <p class="mt-1 text-sm text-neutral-500">Order processing</p>
+                                        <p class="mt-1 text-sm text-neutral-600">Order processing</p>
                                     </div>
                                 </div>
                             </a>
@@ -249,7 +249,7 @@
                                         <h3
                                             class="text-lg font-medium text-neutral-900 group-hover:text-brand-primary transition-colors duration-200">
                                             Manage Suppliers</h3>
-                                        <p class="mt-1 text-sm text-neutral-500">Supplier network</p>
+                                        <p class="mt-1 text-sm text-neutral-600">Supplier network</p>
                                     </div>
                                 </div>
                             </a>
@@ -269,7 +269,7 @@
                                         <h3
                                             class="text-lg font-medium text-neutral-900 group-hover:text-brand-primary transition-colors duration-200">
                                             Data Management</h3>
-                                        <p class="mt-1 text-sm text-neutral-500">Import/Export data</p>
+                                        <p class="mt-1 text-sm text-neutral-600">Import/Export data</p>
                                     </div>
                                 </div>
                             </a>

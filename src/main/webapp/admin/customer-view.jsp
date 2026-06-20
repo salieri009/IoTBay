@@ -38,19 +38,19 @@
                     <h2 class="text-lg font-semibold text-neutral-900 mb-4">Customer Details</h2>
                     <dl class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <dt class="text-sm text-neutral-500">Full Name</dt>
+                            <dt class="text-xs font-medium uppercase tracking-wide text-neutral-500 mb-0.5">Full Name</dt>
                             <dd class="text-sm font-medium text-neutral-900"><%= customer.getFirstName() %> <%= customer.getLastName() %></dd>
                         </div>
                         <div>
-                            <dt class="text-sm text-neutral-500">Email</dt>
+                            <dt class="text-xs font-medium uppercase tracking-wide text-neutral-500 mb-0.5">Email</dt>
                             <dd class="text-sm font-medium text-neutral-900"><%= customer.getEmail() %></dd>
                         </div>
                         <div>
-                            <dt class="text-sm text-neutral-500">Phone</dt>
+                            <dt class="text-xs font-medium uppercase tracking-wide text-neutral-500 mb-0.5">Phone</dt>
                             <dd class="text-sm font-medium text-neutral-900"><%= customer.getPhone() != null ? customer.getPhone() : "—" %></dd>
                         </div>
                         <div>
-                            <dt class="text-sm text-neutral-500">Customer Type</dt>
+                            <dt class="text-xs font-medium uppercase tracking-wide text-neutral-500 mb-0.5">Customer Type</dt>
                             <dd>
                                 <% String ctype = customer.getCustomerType() != null ? customer.getCustomerType() : "individual"; %>
                                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium <%= "company".equals(ctype) ? "bg-blue-100 text-blue-800" : "bg-neutral-100 text-neutral-700" %>">
@@ -59,7 +59,7 @@
                             </dd>
                         </div>
                         <div>
-                            <dt class="text-sm text-neutral-500">Status</dt>
+                            <dt class="text-xs font-medium uppercase tracking-wide text-neutral-500 mb-0.5">Status</dt>
                             <dd>
                                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium <%= customer.isActive() ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800" %>">
                                     <%= customer.isActive() ? "Active" : "Inactive" %>
@@ -67,22 +67,22 @@
                             </dd>
                         </div>
                         <div>
-                            <dt class="text-sm text-neutral-500">Date of Birth</dt>
+                            <dt class="text-xs font-medium uppercase tracking-wide text-neutral-500 mb-0.5">Date of Birth</dt>
                             <dd class="text-sm font-medium text-neutral-900"><%= customer.getDateOfBirth() != null ? customer.getDateOfBirth().toString() : "—" %></dd>
                         </div>
                         <div>
-                            <dt class="text-sm text-neutral-500">Postal Code</dt>
+                            <dt class="text-xs font-medium uppercase tracking-wide text-neutral-500 mb-0.5">Postal Code</dt>
                             <dd class="text-sm font-medium text-neutral-900"><%= customer.getPostalCode() != null ? customer.getPostalCode() : "—" %></dd>
                         </div>
                         <div>
-                            <dt class="text-sm text-neutral-500">Address</dt>
+                            <dt class="text-xs font-medium uppercase tracking-wide text-neutral-500 mb-0.5">Address</dt>
                             <dd class="text-sm font-medium text-neutral-900">
                                 <%= customer.getAddressLine1() != null ? customer.getAddressLine1() : "" %>
                                 <%= customer.getAddressLine2() != null ? " " + customer.getAddressLine2() : "" %>
                             </dd>
                         </div>
                         <div>
-                            <dt class="text-sm text-neutral-500">Joined</dt>
+                            <dt class="text-xs font-medium uppercase tracking-wide text-neutral-500 mb-0.5">Joined</dt>
                             <dd class="text-sm font-medium text-neutral-900"><%= customer.getCreatedAt() != null ? customer.getCreatedAt() : "—" %></dd>
                         </div>
                     </dl>

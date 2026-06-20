@@ -17,7 +17,7 @@
         <div class="l-container">
             <div class="max-w-3xl mx-auto">
                 <a href="${pageContext.request.contextPath}/shipment/list"
-                   class="text-neutral-500 hover:text-neutral-900 flex items-center gap-2 mb-4 text-sm">
+                   class="text-neutral-600 hover:text-brand-primary font-medium flex items-center gap-2 mb-4 text-sm transition-colors">
                     &larr; Back to Shipments
                 </a>
                 <h1 class="text-display-lg text-neutral-900 mb-2">
@@ -43,14 +43,14 @@
                                    value="${param.trackingNumber}"
                                    class="form-input flex-1"
                                    required />
-                            <button type="submit" class="btn btn-primary">Track</button>
+                            <button type="submit" class="btn btn--primary">Track</button>
                         </form>
                     </div>
                 </div>
 
                 <!-- Error Message -->
                 <% if (errorMsg != null) { %>
-                <div class="alert alert-error mb-6" role="alert">
+                <div class="alert alert--error mb-6" role="alert">
                     <c:out value="<%= errorMsg %>" />
                 </div>
                 <% } %>
@@ -63,11 +63,11 @@
                             <h2 class="text-heading-md text-neutral-900">
                                 Shipment #<c:out value="<%= shipment.getId() %>" />
                             </h2>
-                            <span class="badge
-                                <% if ("DELIVERED".equals(shipment.getShippingStatus())) { %>badge-success<% }
-                                   else if ("SHIPPED".equals(shipment.getShippingStatus())) { %>badge-info<% }
-                                   else if ("CANCELLED".equals(shipment.getShippingStatus())) { %>badge-error<% }
-                                   else { %>badge-warning<% } %>">
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
+                                <% if ("DELIVERED".equals(shipment.getShippingStatus())) { %>bg-green-100 text-green-800<% }
+                                   else if ("SHIPPED".equals(shipment.getShippingStatus())) { %>bg-purple-100 text-purple-800<% }
+                                   else if ("CANCELLED".equals(shipment.getShippingStatus())) { %>bg-red-100 text-red-800<% }
+                                   else { %>bg-yellow-100 text-yellow-800<% } %>">
                                 <c:out value="<%= shipment.getShippingStatus() %>" />
                             </span>
                         </div>
@@ -76,25 +76,25 @@
                     <div class="card-body p-6">
                         <dl class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div>
-                                <dt class="text-sm font-medium text-neutral-500 mb-1">Tracking Number</dt>
+                                <dt class="text-xs font-medium uppercase tracking-wide text-neutral-600 mb-1">Tracking Number</dt>
                                 <dd class="text-neutral-900 font-mono">
                                     <c:out value="<%= shipment.getTrackingNumber() != null ? shipment.getTrackingNumber() : param.trackingNumber %>" />
                                 </dd>
                             </div>
                             <% if (order != null) { %>
                             <div>
-                                <dt class="text-sm font-medium text-neutral-500 mb-1">Order ID</dt>
+                                <dt class="text-xs font-medium uppercase tracking-wide text-neutral-600 mb-1">Order ID</dt>
                                 <dd class="text-neutral-900">#<c:out value="<%= order.getOrderId() %>" /></dd>
                             </div>
                             <% } %>
                             <div>
-                                <dt class="text-sm font-medium text-neutral-500 mb-1">Carrier</dt>
+                                <dt class="text-xs font-medium uppercase tracking-wide text-neutral-600 mb-1">Carrier</dt>
                                 <dd class="text-neutral-900">
                                     <c:out value="<%= shipment.getCarrier() != null ? shipment.getCarrier() : 'N/A' %>" />
                                 </dd>
                             </div>
                             <div>
-                                <dt class="text-sm font-medium text-neutral-500 mb-1">Ship Date</dt>
+                                <dt class="text-xs font-medium uppercase tracking-wide text-neutral-600 mb-1">Ship Date</dt>
                                 <dd class="text-neutral-900">
                                     <% if (shipment.getShippingDate() != null) { %>
                                         <c:out value="<%= shipment.getShippingDate().toLocalDate() %>" />
@@ -105,7 +105,7 @@
                             </div>
                             <% if (shipment.getDeliveryDate() != null) { %>
                             <div>
-                                <dt class="text-sm font-medium text-neutral-500 mb-1">Delivered</dt>
+                                <dt class="text-xs font-medium uppercase tracking-wide text-neutral-600 mb-1">Delivered</dt>
                                 <dd class="text-neutral-900 text-green-600 font-medium">
                                     <c:out value="<%= shipment.getDeliveryDate().toLocalDate() %>" />
                                 </dd>
@@ -113,7 +113,7 @@
                             <% } %>
                             <% if (shipment.getNotes() != null && !shipment.getNotes().isEmpty()) { %>
                             <div class="md:col-span-2">
-                                <dt class="text-sm font-medium text-neutral-500 mb-1">Delivery Address</dt>
+                                <dt class="text-xs font-medium uppercase tracking-wide text-neutral-600 mb-1">Delivery Address</dt>
                                 <dd class="text-neutral-900"><c:out value="<%= shipment.getNotes() %>" /></dd>
                             </div>
                             <% } %>
@@ -126,8 +126,8 @@
                 <div class="card">
                     <div class="card-body p-8 text-center">
                         <div class="text-neutral-400 text-4xl mb-4">&#128269;</div>
-                        <h3 class="text-heading-md text-neutral-700 mb-2">No shipment found</h3>
-                        <p class="text-neutral-500">
+                        <h3 class="text-heading-md text-neutral-800 mb-2">No shipment found</h3>
+                        <p class="text-neutral-600">
                             No shipment was found for tracking number
                             <strong class="font-mono"><c:out value="${param.trackingNumber}" /></strong>.
                             Please check the number and try again.

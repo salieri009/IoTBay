@@ -21,7 +21,7 @@
         <div class="l-container">
             <div class="max-w-2xl mx-auto">
                 <a href="${pageContext.request.contextPath}/shipment/"
-                   class="text-neutral-500 hover:text-neutral-900 flex items-center gap-2 mb-4 text-sm">
+                   class="text-neutral-600 hover:text-brand-primary font-medium flex items-center gap-2 mb-4 text-sm transition-colors">
                     &larr; Back to Shipments
                 </a>
                 <h1 class="text-display-md text-neutral-900 mb-2">

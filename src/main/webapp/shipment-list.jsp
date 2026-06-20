@@ -21,7 +21,7 @@
         <div class="l-container">
             <div class="max-w-5xl mx-auto">
                 <a href="${pageContext.request.contextPath}/orderList.jsp"
-                    class="text-neutral-500 hover:text-neutral-900 flex items-center gap-2 mb-4 text-sm">
+                    class="text-neutral-600 hover:text-brand-primary font-medium flex items-center gap-2 mb-4 text-sm transition-colors">
                     &larr; Back to Orders
                 </a>
                 <h1 class="text-display-lg text-neutral-900 mb-2">
@@ -92,7 +92,7 @@
                         <h2 class="text-lg font-semibold text-neutral-900">
                             Shipments
                             <c:if test="${not empty shipments}">
-                                <span class="ml-2 text-sm font-normal text-neutral-500">(${fn:length(shipments)} records)</span>
+                                <span class="ml-2 text-sm font-normal text-neutral-600">(${fn:length(shipments)} records)</span>
                             </c:if>
                         </h2>
                     </div>
@@ -104,8 +104,8 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                           d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
                                 </svg>
-                                <h3 class="text-lg font-semibold text-neutral-700 mb-2">No shipments found</h3>
-                                <p class="text-neutral-500 text-sm">No shipment records match your criteria.</p>
+                                <h3 class="text-lg font-semibold text-neutral-800 mb-2">No shipments found</h3>
+                                <p class="text-neutral-600 text-sm">No shipment records match your criteria.</p>
                             </div>
                         </c:when>
                         <c:otherwise>
@@ -113,13 +113,13 @@
                                 <table class="w-full text-left">
                                     <thead class="bg-neutral-50 border-b border-neutral-200">
                                         <tr>
-                                            <th class="px-6 py-3 text-xs font-medium text-neutral-500 uppercase">ID</th>
-                                            <th class="px-6 py-3 text-xs font-medium text-neutral-500 uppercase">Order</th>
-                                            <th class="px-6 py-3 text-xs font-medium text-neutral-500 uppercase">Carrier</th>
-                                            <th class="px-6 py-3 text-xs font-medium text-neutral-500 uppercase">Status</th>
-                                            <th class="px-6 py-3 text-xs font-medium text-neutral-500 uppercase">Ship Date</th>
-                                            <th class="px-6 py-3 text-xs font-medium text-neutral-500 uppercase">Tracking #</th>
-                                            <th class="px-6 py-3 text-xs font-medium text-neutral-500 uppercase">Actions</th>
+                                            <th class="px-6 py-3 text-xs font-semibold text-neutral-600 uppercase tracking-wide">ID</th>
+                                            <th class="px-6 py-3 text-xs font-semibold text-neutral-600 uppercase tracking-wide">Order</th>
+                                            <th class="px-6 py-3 text-xs font-semibold text-neutral-600 uppercase tracking-wide">Carrier</th>
+                                            <th class="px-6 py-3 text-xs font-semibold text-neutral-600 uppercase tracking-wide">Status</th>
+                                            <th class="px-6 py-3 text-xs font-semibold text-neutral-600 uppercase tracking-wide">Ship Date</th>
+                                            <th class="px-6 py-3 text-xs font-semibold text-neutral-600 uppercase tracking-wide">Tracking #</th>
+                                            <th class="px-6 py-3 text-xs font-semibold text-neutral-600 uppercase tracking-wide">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody class="divide-y divide-neutral-100">

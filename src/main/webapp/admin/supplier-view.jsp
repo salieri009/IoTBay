@@ -72,23 +72,23 @@
                                             <h2 class="text-lg font-semibold text-neutral-900 mb-4">Address</h2>
                                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                                 <div class="col-span-2">
-                                                    <p class="text-sm text-neutral-500 mb-1">Street Address</p>
+                                                    <p class="text-xs font-medium uppercase tracking-wide text-neutral-500 mb-1">Street Address</p>
                                                     <p class="font-medium">${supplier.addressLine1}</p>
                                                 </div>
                                                 <div>
-                                                    <p class="text-sm text-neutral-500 mb-1">City</p>
+                                                    <p class="text-xs font-medium uppercase tracking-wide text-neutral-500 mb-1">City</p>
                                                     <p class="font-medium">${supplier.city}</p>
                                                 </div>
                                                 <div>
-                                                    <p class="text-sm text-neutral-500 mb-1">State/Province</p>
+                                                    <p class="text-xs font-medium uppercase tracking-wide text-neutral-500 mb-1">State/Province</p>
                                                     <p class="font-medium">${supplier.state}</p>
                                                 </div>
                                                 <div>
-                                                    <p class="text-sm text-neutral-500 mb-1">Zip/Postal Code</p>
+                                                    <p class="text-xs font-medium uppercase tracking-wide text-neutral-500 mb-1">Zip/Postal Code</p>
                                                     <p class="font-medium">${supplier.postalCode}</p>
                                                 </div>
                                                 <div>
-                                                    <p class="text-sm text-neutral-500 mb-1">Country</p>
+                                                    <p class="text-xs font-medium uppercase tracking-wide text-neutral-500 mb-1">Country</p>
                                                     <p class="font-medium">${supplier.country}</p>
                                                 </div>
                                             </div>
@@ -100,14 +100,14 @@
                                             </h2>
                                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                                 <div>
-                                                    <p class="text-sm text-neutral-500 mb-1">Status</p>
+                                                    <p class="text-xs font-medium uppercase tracking-wide text-neutral-500 mb-1">Status</p>
                                                     <span
                                                         class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${supplier.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
                                                         ${supplier.active ? 'Active' : 'Inactive'}
                                                     </span>
                                                 </div>
                                                 <div>
-                                                    <p class="text-sm text-neutral-500 mb-1">Supplier ID</p>
+                                                    <p class="text-xs font-medium uppercase tracking-wide text-neutral-500 mb-1">Supplier ID</p>
                                                     <p class="font-medium">#${supplier.id}</p>
                                                 </div>
                                             </div>

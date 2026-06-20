@@ -65,10 +65,10 @@
                                                     <div class="category-card__content">
                                                         <h3 class="category-card__title">${category.name}</h3>
                                                         <p class="category-card__description">
-                                                            ${category.description != null && !empty
-                                                            category.description ? category.description : 'Explore our
-                                                            collection of ' += category.name += ' IoT solutions and
-                                                            devices.'}
+                                                            <c:choose>
+                                                                <c:when test="${category.description != null && !empty category.description}">${category.description}</c:when>
+                                                                <c:otherwise>Explore our collection of ${category.name} IoT solutions and devices.</c:otherwise>
+                                                            </c:choose>
                                                         </p>
                                                         <div class="category-card__actions">
                                                             <a href="${pageContext.request.contextPath}/browse.jsp?category=${categorySlug}&categoryId=${category.id}"

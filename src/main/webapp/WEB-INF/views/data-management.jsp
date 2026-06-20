@@ -244,22 +244,22 @@
                                         <thead class="bg-neutral-50">
                                             <tr>
                                                 <th scope="col"
-                                                    class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                                    class="px-6 py-3 text-left text-xs font-semibold text-neutral-600 uppercase tracking-wider">
                                                     Operation</th>
                                                 <th scope="col"
-                                                    class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                                    class="px-6 py-3 text-left text-xs font-semibold text-neutral-600 uppercase tracking-wider">
                                                     Entity Type</th>
                                                 <th scope="col"
-                                                    class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                                    class="px-6 py-3 text-left text-xs font-semibold text-neutral-600 uppercase tracking-wider">
                                                     Records</th>
                                                 <th scope="col"
-                                                    class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                                    class="px-6 py-3 text-left text-xs font-semibold text-neutral-600 uppercase tracking-wider">
                                                     Status</th>
                                                 <th scope="col"
-                                                    class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                                    class="px-6 py-3 text-left text-xs font-semibold text-neutral-600 uppercase tracking-wider">
                                                     User</th>
                                                 <th scope="col"
-                                                    class="px-6 py-3 text-left text-xs font-medium text-neutral-500 uppercase tracking-wider">
+                                                    class="px-6 py-3 text-left text-xs font-semibold text-neutral-600 uppercase tracking-wider">
                                                     Timestamp</th>
                                             </tr>
                                         </thead>
@@ -273,11 +273,11 @@
                                                                 <c:out value="${log.operation}" />
                                                             </td>
                                                             <td
-                                                                class="px-6 py-4 whitespace-nowrap text-sm text-neutral-500">
+                                                                class="px-6 py-4 whitespace-nowrap text-sm text-neutral-600">
                                                                 <c:out value="${log.entityType}" />
                                                             </td>
                                                             <td
-                                                                class="px-6 py-4 whitespace-nowrap text-sm text-neutral-500">
+                                                                class="px-6 py-4 whitespace-nowrap text-sm text-neutral-600">
                                                                 <c:out value="${log.recordCount}" />
                                                             </td>
                                                             <td class="px-6 py-4 whitespace-nowrap">
@@ -287,11 +287,11 @@
                                                                 </span>
                                                             </td>
                                                             <td
-                                                                class="px-6 py-4 whitespace-nowrap text-sm text-neutral-500">
+                                                                class="px-6 py-4 whitespace-nowrap text-sm text-neutral-600">
                                                                 <c:out value="${log.userName}" />
                                                             </td>
                                                             <td
-                                                                class="px-6 py-4 whitespace-nowrap text-sm text-neutral-500">
+                                                                class="px-6 py-4 whitespace-nowrap text-sm text-neutral-600">
                                                                 <c:out value="${log.timestamp}" />
                                                             </td>
                                                         </tr>

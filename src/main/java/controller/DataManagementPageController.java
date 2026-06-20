@@ -15,7 +15,9 @@ import dao.interfaces.ProductDAO;
 import dao.interfaces.UserDAO;
 import model.User;
 
-@WebServlet("/data-management.jsp")
+// Mapped to "/data-management" to match the admin nav links. Must NOT be mapped to
+// "/data-management.jsp" — that path forwarded to itself, causing infinite recursion.
+@WebServlet("/data-management")
 public class DataManagementPageController extends HttpServlet {
     private UserDAO userDAO;
     private ProductDAO productDAO;
@@ -62,8 +64,9 @@ public class DataManagementPageController extends HttpServlet {
             request.setAttribute("totalProducts", totalProducts);
             request.setAttribute("totalOrders", totalOrders);
 
-            // Forward to JSP
-            request.getRequestDispatcher("/data-management.jsp").forward(request, response);
+            // Forward to the actual view under WEB-INF (NOT "/data-management.jsp",
+            // which maps back to this servlet and recurses).
+            request.getRequestDispatcher("/WEB-INF/views/data-management.jsp").forward(request, response);
 
         } catch (SQLException e) {
             utils.ErrorAction.handleDatabaseError(request, response, e, "DataManagementPageController.doGet");
