@@ -19,8 +19,8 @@
 
 <t:base title="<%= pageTitle %> | IoT Bay">
     <main class="flex-1">
-        <section class="py-12 bg-gradient-to-br from-blue-50 via-white to-purple-50">
-            <div class="container">
+        <section class="py-8 bg-white border-b-2 border-brand-primary">
+            <div class="l-container">
                 <div class="max-w-3xl mx-auto">
                     <div class="mb-8">
                         <a href="${pageContext.request.contextPath}/api/manage/products"

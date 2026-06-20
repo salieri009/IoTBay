@@ -38,17 +38,17 @@
                             </c:if>
 
                             <!-- Headline -->
-                            <h1 class="hero-card__headline text-display-xl fade-in-left" style="animation-delay: 0.1s;">
+                            <h1 class="hero-card__headline text-display-xl fade-in-left animation-delay-1">
                                 ${fn:escapeXml(param.title)}
                             </h1>
 
                             <!-- Sub-headline -->
-                            <p class="hero-card__subheadline text-body-lg fade-in-left" style="animation-delay: 0.2s;">
+                            <p class="hero-card__subheadline text-body-lg fade-in-left animation-delay-2">
                                 ${fn:escapeXml(param.description)}
                             </p>
 
                             <!-- CTA Group -->
-                            <div class="hero-card__cta-group fade-in-left" style="animation-delay: 0.3s;">
+                            <div class="hero-card__cta-group fade-in-left animation-delay-3">
                                 <a href="${fn:escapeXml(param.primaryCtaHref)}"
                                     class="btn btn--primary btn--lg hero-card__cta hero-card__cta--primary"
                                     aria-label="${fn:escapeXml(param.primaryCtaText)}">
@@ -77,11 +77,11 @@
                             </div>
                         </div>
 
-                        <!-- Visual Wrapper: 3D Floating Image -->
-                        <div
-                            class="hero-card__visual absolute right-0 bottom-0 w-1/2 h-full hidden lg:block pointer-events-none z-10">
+                        <!-- Visual Wrapper: 3D Floating Image (positioning handled in hero-card.css) -->
+                        <div class="hero-card__visual hidden lg:flex">
                             <img src="${fn:escapeXml(param.imageUrl)}" alt="${fn:escapeXml(imageAlt)}"
-                                class="w-full h-full object-contain object-right-bottom transform translate-y-10 translate-x-10"
+                                class="hero-card__image"
+                                loading="lazy"
                                 onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/hero.png';">
                         </div>
                     </div>

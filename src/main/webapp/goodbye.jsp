@@ -4,7 +4,7 @@
 
 <t:base title="Thank you for visiting IoTBay!" description="Goodbye page after logout or account deletion">
     <main class="goodbye-page flex items-center justify-center py-20 min-h-screen">
-        <div class="container">
+        <div class="l-container">
             <div class="max-w-2xl mx-auto text-center">
                 <!-- Goodbye Icon -->
                 <div class="w-20 h-20 bg-brand-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">

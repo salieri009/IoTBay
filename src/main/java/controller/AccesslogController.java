@@ -99,9 +99,12 @@ public class AccesslogController extends HttpServlet {
             }
         }
 
-        // 2. Date parameter check and validation
-        String startDateStr = utils.SecurityUtil.getValidatedStringParameter(request, "startDate", 20);
-        String endDateStr = utils.SecurityUtil.getValidatedStringParameter(request, "endDate", 20);
+        // 2. Date parameter check and validation.
+        // Dates are OPTIONAL — viewing the full access-log list with no date filter is
+        // valid (F01). Use the optional overload (null when absent) so a plain page load
+        // does not 500; the null/empty handling below already covers the no-filter case.
+        String startDateStr = utils.SecurityUtil.getOptionalStringParameter(request, "startDate", 20, null);
+        String endDateStr = utils.SecurityUtil.getOptionalStringParameter(request, "endDate", 20, null);
         LocalDate startDate = null, endDate = null;
         LocalDate today = LocalDate.now();
 

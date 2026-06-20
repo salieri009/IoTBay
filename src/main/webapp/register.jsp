@@ -9,7 +9,7 @@
 %>
 
 <t:base title="Create Account - IoT Bay" description="Create your IoT Bay account to access exclusive IoT products and services">
-    <main class="min-h-screen flex items-center justify-center bg-neutral-50 py-12 px-4">
+    <main class="min-h-screen flex items-center justify-center bg-gradient-to-br from-neutral-950 to-neutral-800 py-12 px-4">
         <!-- Auth Card Container -->
         <div class="w-full max-w-5xl">
             <div class="bg-white rounded-2xl shadow-sm border border-neutral-200 overflow-hidden">
@@ -65,7 +65,7 @@
                             <input type="hidden" name="csrfToken" value="${csrfToken}" />
 
                             <c:if test="${not empty error}">
-                                <div class="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800" role="alert">
+                                <div class="alert alert--error" role="alert">
                                     <strong>Error:</strong> <c:out value="${error}" escapeXml="true" />
                                 </div>
                             </c:if>

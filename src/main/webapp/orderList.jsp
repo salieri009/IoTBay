@@ -30,8 +30,8 @@
     title="Order History" 
     description="View your order history and track order status">
     <!-- Page Header -->
-    <section class="py-12 bg-gradient-to-br from-blue-50 via-white to-purple-50">
-        <div class="container">
+    <section class="py-8 bg-white border-b-2 border-brand-primary">
+        <div class="l-container">
             <div class="max-w-4xl mx-auto text-center">
                 <h1 class="text-display-lg text-neutral-900 mb-4">
                     Order <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-brand-secondary">History</span>
@@ -45,7 +45,7 @@
 
     <!-- Orders Section -->
     <section class="py-12">
-        <div class="container">
+        <div class="l-container">
             <div class="max-w-6xl mx-auto">
                 <!-- Filter and Search -->
                 <div class="mb-8">
@@ -165,10 +165,10 @@
                                         <div class="flex -space-x-2 overflow-hidden mb-2">
                                             <c:forEach var="item" items="${order.orderItems}" end="4">
                                                 <img class="inline-block h-10 w-10 rounded-full ring-2 ring-white object-cover" 
-                                                     src="${not empty item.product.imageUrl ? item.product.imageUrl : 'images/default-product.png'}" 
+                                                     src="${not empty item.product.imageUrl ? item.product.imageUrl : 'images/default-product.svg'}" 
                                                      alt="${item.product.name}"
                                                      title="${item.product.name} (x${item.quantity})"
-                                                     onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/default-product.png';">
+                                                     onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/default-product.svg';">
                                             </c:forEach>
                                             <c:if test="${fn:length(order.orderItems) > 5}">
                                                 <div class="flex items-center justify-center h-10 w-10 rounded-full ring-2 ring-white bg-neutral-100 text-xs font-medium text-neutral-600">
@@ -214,7 +214,7 @@
                                                 <jsp:param name="href" value="${pageContext.request.contextPath}/order/edit?orderId=${order.id}" />
                                             </jsp:include>
                                             <!-- Cancel Order -->
-                                            <form action="${pageContext.request.contextPath}/orderhistory" method="post" style="display:inline;">
+                                            <form action="${pageContext.request.contextPath}/orderhistory" method="post" class="inline">
                                                 <input type="hidden" name="csrfToken" value="<%= utils.SecurityUtil.generateCSRFToken(request) %>">
                                                 <input type="hidden" name="action" value="cancel">
                                                 <input type="hidden" name="orderId" value="${order.id}">

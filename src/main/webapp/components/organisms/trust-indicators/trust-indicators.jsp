@@ -13,7 +13,7 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<section class="py-16 bg-neutral-50 border-t border-neutral-200">
+<section class="section bg-neutral-50 border-t border-neutral-200">
     <div class="l-container">
         <div class="text-center max-w-2xl mx-auto mb-12">
             <h2 class="text-display-sm font-bold text-neutral-900 mb-4">Why Choose IoTBay?</h2>

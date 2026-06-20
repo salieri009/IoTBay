@@ -16,51 +16,10 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<style>
-    /* Critical Fix: Force Footer Grid Layout */
-    .o-footer__grid {
-        display: grid !important;
-        grid-template-columns: 1fr !important;
-        gap: 2rem !important;
-        width: 100% !important;
-    }
-    
-    @media (min-width: 768px) {
-        .o-footer__grid {
-            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-        }
-    }
-    
-    @media (min-width: 1024px) {
-        .o-footer__grid {
-            grid-template-columns: repeat(12, minmax(0, 1fr)) !important;
-            gap: 3rem !important;
-        }
-        
-        /* Brand Column */
-        .o-footer__grid > div:nth-child(1) {
-            grid-column: span 4 / span 4 !important;
-        }
-        
-        /* Shop Column */
-        .o-footer__grid > div:nth-child(2) {
-            grid-column: span 2 / span 2 !important;
-        }
-        
-        /* Support Column */
-        .o-footer__grid > div:nth-child(3) {
-            grid-column: span 2 / span 2 !important;
-        }
-        
-        /* Contact Column */
-        .o-footer__grid > div:nth-child(4) {
-            grid-column: span 4 / span 4 !important;
-        }
-    }
-</style>
+<%-- Footer grid layout is defined in css/style.css (.o-footer__grid) — no inline overrides needed. --%>
 
 <footer class="bg-neutral-900 text-white pt-16 pb-8 border-t border-neutral-800" role="contentinfo">
-  <div class="o-footer__container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div class="o-footer__container l-container">
     <%-- Main Footer Content --%>
     <div class="o-footer__grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-12 mb-12 w-full">
         <%-- Brand Column (4/12 cols) --%>

@@ -4,7 +4,7 @@
 
 <t:base title="Returns & Refunds - IoT Bay" description="Return policy and refund information for IoT Bay products">
     <main class="py-12">
-        <div class="container space-y-12">
+        <div class="l-container space-y-12">
             <!-- Hero Section -->
             <section class="text-center space-y-6">
                 <p class="inline-flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-wide text-neutral-500">
@@ -32,15 +32,15 @@
                         </p>
                         <ul class="space-y-2 text-sm text-neutral-600">
                             <li class="flex items-start gap-2">
-                                <span class="text-brand-primary mt-1">??/span>
+                                <span class="text-brand-primary mt-1">&#10003;</span>
                                 <span>Original packaging required</span>
                             </li>
                             <li class="flex items-start gap-2">
-                                <span class="text-brand-primary mt-1">??/span>
+                                <span class="text-brand-primary mt-1">&#10003;</span>
                                 <span>All accessories must be included</span>
                             </li>
                             <li class="flex items-start gap-2">
-                                <span class="text-brand-primary mt-1">??/span>
+                                <span class="text-brand-primary mt-1">&#10003;</span>
                                 <span>Item must be unused and in original condition</span>
                             </li>
                         </ul>
@@ -89,19 +89,19 @@
                         </p>
                         <ul class="space-y-2 text-sm text-neutral-600">
                             <li class="flex items-start gap-2">
-                                <span class="text-brand-primary mt-1">??/span>
+                                <span class="text-brand-primary mt-1">&#10003;</span>
                                 <span>Opened software or digital products</span>
                             </li>
                             <li class="flex items-start gap-2">
-                                <span class="text-brand-primary mt-1">??/span>
+                                <span class="text-brand-primary mt-1">&#10003;</span>
                                 <span>Custom or personalized items</span>
                             </li>
                             <li class="flex items-start gap-2">
-                                <span class="text-brand-primary mt-1">??/span>
+                                <span class="text-brand-primary mt-1">&#10003;</span>
                                 <span>Items damaged by misuse</span>
                             </li>
                             <li class="flex items-start gap-2">
-                                <span class="text-brand-primary mt-1">??/span>
+                                <span class="text-brand-primary mt-1">&#10003;</span>
                                 <span>Items returned after 30 days</span>
                             </li>
                         </ul>

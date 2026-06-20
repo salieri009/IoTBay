@@ -13,7 +13,7 @@
 <%@ page contentType="text/html; charset=UTF-8" language="java" isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<section class="py-16 bg-white">
+<section class="section bg-white">
     <div class="l-container">
         <div class="flex flex-col md:flex-row justify-between items-end mb-8 gap-4">
             <div>

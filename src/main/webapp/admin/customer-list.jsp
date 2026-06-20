@@ -10,8 +10,8 @@
    }
 %>
 
-<t:base title="Manage Customers" customCSS="modern-theme.css">
-    <section class="py-12 bg-gradient-to-br from-blue-50 via-white to-purple-50">
+<t:admin-base title="Manage Customers" activeNav="users">
+    <section class="py-8 bg-white border-b-2 border-brand-primary">
         <div class="l-container">
             <div class="max-w-6xl mx-auto">
                 <div class="flex items-center justify-between mb-8">
@@ -116,4 +116,4 @@
             </div>
         </div>
     </section>
-</t:base>
+</t:admin-base>

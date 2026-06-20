@@ -2,40 +2,56 @@
     <%@ page contentType="text/html; charset=UTF-8" language="java" isELIgnored="false" %>
         <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
             <%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
-                <% Product product=(Product) request.getAttribute("product"); User currentUser=(User)
-                    session.getAttribute("user"); // 기본�??�정 String productName="Sample IoT Device" ; String
-                    productDescription="A high-quality IoT device for smart automation and monitoring. Features advanced connectivity, robust build quality, and seamless integration with popular IoT platforms."
-                    ; double productPrice=199.99; int productStock=10; int productId=0; String
-                    productImage="images/sample1.png" ; // product 객체가 ?�으�??�제 값을 ?�용 if (product !=null) { try {
-                    productName=product.getName() !=null ? product.getName() : productName;
-                    productDescription=product.getDescription() !=null ? product.getDescription() : productDescription;
-                    productPrice=product.getPrice(); productStock=product.getStockQuantity(); productId=product.getId();
-                    productImage=product.getImageUrl() !=null && !product.getImageUrl().isEmpty() ?
-                    product.getImageUrl() : productImage; } catch (Exception e) { // 메소???�출 ?�패 ??기본�??�용 } } boolean
-                    inStock=productStock> 0;
-                    String stockLabel = inStock ? "In stock (" + productStock + " available)" : "Out of stock";
-                    String stockBadgeTone = inStock ? "success" : "error";
-                    String formattedPrice = String.format("%1$,.2f", productPrice);
+<%
+    Product product = (Product) request.getAttribute("product");
+    User currentUser = (User) session.getAttribute("user");
 
-                    // Expose for EL
-                    pageContext.setAttribute("pd_name", productName);
-                    pageContext.setAttribute("pd_desc", productDescription);
-                    pageContext.setAttribute("pd_price", productPrice);
-                    pageContext.setAttribute("pd_priceFormatted", formattedPrice);
-                    pageContext.setAttribute("pd_stock", productStock);
-                    pageContext.setAttribute("pd_inStock", inStock);
-                    pageContext.setAttribute("pd_stockLabel", stockLabel);
-                    pageContext.setAttribute("pd_stockBadgeTone", stockBadgeTone);
-                    pageContext.setAttribute("pd_id", productId);
-                    pageContext.setAttribute("pd_image", productImage);
+    // Defaults (used when no product is supplied)
+    String productName = "Sample IoT Device";
+    String productDescription = "A high-quality IoT device for smart automation and monitoring. Features advanced connectivity, robust build quality, and seamless integration with popular IoT platforms.";
+    double productPrice = 199.99;
+    int productStock = 10;
+    int productId = 0;
+    String productImage = "images/sample1.png";
 
-                    // Generate CSRF token for cart form
-                    String csrfToken = utils.SecurityUtil.generateCSRFToken(request);
-                    pageContext.setAttribute("csrfToken", csrfToken);
-                    %>
+    // Use real values when a product is present
+    if (product != null) {
+        try {
+            productName = product.getName() != null ? product.getName() : productName;
+            productDescription = product.getDescription() != null ? product.getDescription() : productDescription;
+            productPrice = product.getPrice();
+            productStock = product.getStockQuantity();
+            productId = product.getId();
+            productImage = (product.getImageUrl() != null && !product.getImageUrl().isEmpty()) ? product.getImageUrl() : productImage;
+        } catch (Exception e) {
+            // fall back to defaults on any accessor failure
+        }
+    }
+
+    boolean inStock = productStock > 0;
+    String stockLabel = inStock ? "In stock (" + productStock + " available)" : "Out of stock";
+    String stockBadgeTone = inStock ? "success" : "error";
+    String formattedPrice = String.format("%1$,.2f", productPrice);
+
+    // Expose for EL
+    pageContext.setAttribute("pd_name", productName);
+    pageContext.setAttribute("pd_desc", productDescription);
+    pageContext.setAttribute("pd_price", productPrice);
+    pageContext.setAttribute("pd_priceFormatted", formattedPrice);
+    pageContext.setAttribute("pd_stock", productStock);
+    pageContext.setAttribute("pd_inStock", inStock);
+    pageContext.setAttribute("pd_stockLabel", stockLabel);
+    pageContext.setAttribute("pd_stockBadgeTone", stockBadgeTone);
+    pageContext.setAttribute("pd_id", productId);
+    pageContext.setAttribute("pd_image", productImage);
+
+    // Generate CSRF token for cart form
+    String csrfToken = utils.SecurityUtil.generateCSRFToken(request);
+    pageContext.setAttribute("csrfToken", csrfToken);
+%>
                     <t:base title="${pd_name} - IoT Bay" description="Product details">
                         <main class="py-12 bg-neutral-50">
-                            <div class="container mx-auto px-4">
+                            <div class="l-container">
                                 <!-- Breadcrumb Navigation -->
                                 <nav aria-label="Breadcrumb" class="mb-8">
                                     <ol class="flex flex-wrap items-center gap-2 text-sm text-neutral-600">
@@ -852,7 +868,7 @@
                                         this.classList.add('loaded');
                                     });
                                     img.addEventListener('error', function () {
-                                        this.src = '${pageContext.request.contextPath}/images/default-product.png';
+                                        this.src = '${pageContext.request.contextPath}/images/default-product.svg';
                                         this.alt = 'Product image not available';
                                     });
                                 });

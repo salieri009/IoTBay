@@ -11,7 +11,7 @@
                                 <!-- Hero Section -->
                                 <section
                                     class="hero-section bg-gradient-to-br from-brand-primary to-brand-secondary text-white py-16">
-                                    <div class="container">
+                                    <div class="l-container">
                                         <div class="max-w-3xl mx-auto text-center">
                                             <h1 class="text-4xl md:text-5xl font-bold mb-6">
                                                 Explore IoT Categories
@@ -33,7 +33,7 @@
 
                                 <!-- Categories Grid -->
                                 <section class="categories-section py-16">
-                                    <div class="container">
+                                    <div class="l-container">
 
                                         <!-- Section Header -->
                                         <div class="text-center mb-12">
@@ -113,7 +113,7 @@
 
                                 <!-- Popular Products Section -->
                                 <section class="popular-products bg-neutral-100 py-16">
-                                    <div class="container">
+                                    <div class="l-container">
                                         <div class="text-center mb-12">
                                             <h2 class="text-3xl font-bold text-neutral-900 mb-4">Popular Products</h2>
                                             <p class="text-lg text-neutral-600">

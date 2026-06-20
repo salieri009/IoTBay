@@ -51,7 +51,7 @@
                                                     <t:base title="Shopping Cart - IoT Bay"
                                                         description="Review and manage your selected IoT products">
                                                         <main class="py-12 bg-neutral-50">
-                                                            <div class="container mx-auto px-4">
+                                                            <div class="l-container">
                                                                 <!-- Breadcrumb Navigation -->
                                                                 <nav aria-label="Breadcrumb" class="mb-8">
                                                                     <ol

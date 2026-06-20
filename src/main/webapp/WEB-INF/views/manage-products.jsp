@@ -3,10 +3,10 @@
         <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
             <%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
 
-                <t:base title="Manage Products" description="Manage product catalog and inventory">
+                <t:admin-base title="Manage Products" activeNav="products">
                     <!-- Page Header -->
-                    <section class="py-12 bg-gradient-to-br from-blue-50 via-white to-purple-50">
-                        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <section class="py-8 bg-white border-b-2 border-brand-primary">
+                        <div class="l-container">
                             <div class="max-w-6xl mx-auto">
                                 <div class="flex items-center justify-between">
                                     <div>
@@ -36,7 +36,7 @@
 
                     <!-- Products Grid -->
                     <section class="py-12">
-                        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="l-container">
                             <div class="max-w-6xl mx-auto">
                                 <!-- Filters and Search -->
                                 <div class="bg-white shadow rounded-lg p-6 mb-8">
@@ -67,10 +67,10 @@
                                                 <div
                                                     class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow duration-200 p-6 flex flex-col h-full">
                                                     <div class="flex items-start justify-between mb-4">
-                                                        <img src="${pageContext.request.contextPath}${product.imageUrl != null && !empty product.imageUrl ? product.imageUrl : '/images/default-product.png'}"
+                                                        <img src="${pageContext.request.contextPath}${product.imageUrl != null && !empty product.imageUrl ? product.imageUrl : '/images/default-product.svg'}"
                                                             alt="${product.name}"
                                                             class="w-16 h-16 rounded-lg object-cover bg-neutral-100"
-                                                            onerror="this.src='${pageContext.request.contextPath}/images/default-product.png'">
+                                                            onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/default-product.svg'">
 
                                                         <span
                                                             class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${product.stockQuantity > 0 ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">
@@ -138,4 +138,4 @@
                             </div>
                         </div>
                     </section>
-                </t:base>
+                </t:admin-base>

@@ -66,7 +66,7 @@
 
                                 <t:base title="Checkout - IoT Bay" description="Secure checkout and order review">
                                     <main class="py-12">
-                                        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+                                        <div class="l-container space-y-10">
                                             <!-- Breadcrumb Navigation -->
                                             <nav aria-label="Breadcrumb">
                                                 <ol class="flex flex-wrap items-center gap-2 text-sm text-neutral-600">
@@ -876,23 +876,23 @@
                                                                 </div>
 
                                                                 <!-- Place Order Button -->
-                                                                <jsp:include page="/components/atoms/button/button.jsp">
-                                                                    <jsp:param name="type" value="primary" />
-                                                                    <jsp:param name="size" value="large" />
-                                                                    <jsp:param name="fullWidth" value="true" />
-                                                                    <jsp:param name="htmlType" value="submit" />
-                                                                    <jsp:param name="text"
-                                                                        value="<span id='placeOrderText'>Place Order</span><span id='placeOrderLoading' class='hidden'><svg class='animate-spin h-5 w-5 inline ml-2' fill='none' viewBox='0 0 24 24' aria-hidden='true'><circle class='opacity-25' cx='12' cy='12' r='10' stroke='currentColor' stroke-width='4'></circle><path class='opacity-75' fill='currentColor' d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'></path></svg> Processing...</span>" />
-                                                                    <jsp:param name="attributes"
-                                                                        value="id='placeOrderBtn' form='checkoutForm'" />
-                                                                    <jsp:param name="ariaLabel" value="Place order" />
-                                                                </jsp:include>
+                                                                <button type="submit" id="placeOrderBtn" form="checkoutForm" aria-label="Place order"
+                                                                    class="w-full inline-flex items-center justify-center px-6 py-3 text-lg rounded-md font-medium transition-colors bg-brand-primary text-white hover:bg-brand-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary disabled:opacity-50 disabled:cursor-not-allowed">
+                                                                    <span id="placeOrderText">Place Order</span>
+                                                                    <span id="placeOrderLoading" class="hidden">
+                                                                        <svg class="animate-spin h-5 w-5 inline ml-2" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                                                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                                                        </svg>
+                                                                        Processing...
+                                                                    </span>
+                                                                </button>
 
                                                                 <!-- Back to Cart Link -->
                                                                 <div class="mt-4 text-center">
                                                                     <a href="${pageContext.request.contextPath}/cart.jsp"
                                                                         class="text-sm text-brand-primary hover:underline">
-                                                                        ??Back to Cart
+                                                                        &larr; Back to Cart
                                                                     </a>
                                                                 </div>
                                                             </div>
@@ -917,11 +917,11 @@
                                                                             <c:forEach var="item" items="${cartItems}">
                                                                                 <div
                                                                                     class="flex gap-3 p-3 bg-neutral-50 rounded-lg">
-                                                                                    <img src="${item.product.imageUrl != null && !empty item.product.imageUrl ? item.product.imageUrl : 'images/default-product.png'}"
+                                                                                    <img src="${item.product.imageUrl != null && !empty item.product.imageUrl ? item.product.imageUrl : 'images/default-product.svg'}"
                                                                                         alt="${item.product.name}"
                                                                                         class="w-16 h-16 object-cover rounded-md bg-neutral-200 flex-shrink-0"
                                                                                         loading="lazy"
-                                                                                        onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/default-product.png';">
+                                                                                        onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/default-product.svg';">
                                                                                     <div class="flex-1 min-w-0">
                                                                                         <h4
                                                                                             class="text-sm font-medium text-neutral-900 line-clamp-2 mb-1">
@@ -964,7 +964,7 @@
                                                                                     id="shippingCost">
                                                                                     <c:choose>
                                                                                         <c:when
-                                                                                            test="${totalAmount >= 50}">
+                                                                                            test="${subtotal >= 50}">
                                                                                             <span
                                                                                                 class="text-success">Free</span>
                                                                                         </c:when>
@@ -974,12 +974,12 @@
                                                                                     </c:choose>
                                                                                 </dd>
                                                                             </div>
-                                                                            <c:if test="${totalAmount < 50}">
+                                                                            <c:if test="${subtotal < 50}">
                                                                                 <div
                                                                                     class="text-xs text-neutral-500 italic">
                                                                                     Add &#36;
                                                                                     <fmt:formatNumber
-                                                                                        value="${50 - totalAmount}"
+                                                                                        value="${50 - subtotal}"
                                                                                         pattern="#,##0.00" /> more for
                                                                                     free shipping
                                                                                 </div>
@@ -1226,7 +1226,7 @@
                                             };
 
                                             const shippingCost = shippingCosts[method] || 15.00;
-                                            const subtotal = parseFloat('${totalAmount}') || 0;
+                                            const subtotal = parseFloat('${subtotal}') || 0;
                                             const tax = subtotal * 0.1;
                                             const total = subtotal + tax + shippingCost;
 

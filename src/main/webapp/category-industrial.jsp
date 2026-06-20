@@ -31,7 +31,7 @@
 
                                         <!-- Hero Section -->
                                         <section class="hero">
-                                            <div class="container">
+                                            <div class="l-container">
                                                 <div class="hero__content">
                                                     <h1 class="hero__title">Industrial IoT Solutions</h1>
                                                     <p class="hero__subtitle">
@@ -70,7 +70,7 @@
                                         </section>
 
                                         <!-- Main Content -->
-                                        <main class="container py-16">
+                                        <main class="l-container py-16">
                                             <!-- Breadcrumb -->
                                             <nav class="mb-8">
                                                 <ol class="flex items-center gap-2 text-sm text-neutral-600">
@@ -315,7 +315,7 @@
 
                                             <!-- Products Grid Section (Section 1.1 - Hierarchical Product Information) -->
                                             <section id="products" class="py-8">
-                                                <div class="container">
+                                                <div class="l-container">
                                                     <!-- Skeleton Loading State (Section 3.2) -->
                                                     <div id="products-skeleton" class="product-grid hidden">
                                                         <c:forEach begin="1" end="8" varStatus="loop">
@@ -351,10 +351,10 @@
                                                                         role="article" aria-label="Product: ${p.name}">
                                                                         <div class="product-card__image-container">
                                                                             <img class="product-card__image"
-                                                                                src="${p.imageUrl != null && !empty p.imageUrl ? p.imageUrl : 'images/default-product.png'}"
+                                                                                src="${p.imageUrl != null && !empty p.imageUrl ? p.imageUrl : 'images/default-product.svg'}"
                                                                                 alt="${p.name}" loading="lazy"
                                                                                 width="300" height="300"
-                                                                                onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/default-product.png';" />
+                                                                                onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/default-product.svg';" />
                                                                             <!-- Stock Badge (Visibility of System Status - Nielsen's Heuristic 1) -->
                                                                             <c:if
                                                                                 test="${p.stockQuantity > 0 && p.stockQuantity < 5}">
@@ -404,14 +404,10 @@
                                                                                         <c:choose>
                                                                                             <c:when
                                                                                                 test="${p.stockQuantity > 0}">
-                                                                                                <span
-                                                                                                    class="text-success text-sm">??In
-                                                                                                    Stock</span>
+                                                                                                <span class="text-success text-sm">In Stock</span>
                                                                                             </c:when>
                                                                                             <c:otherwise>
-                                                                                                <span
-                                                                                                    class="text-error text-sm">??Out
-                                                                                                    of Stock</span>
+                                                                                                <span class="text-error text-sm">Out of Stock</span>
                                                                                             </c:otherwise>
                                                                                         </c:choose>
                                                                                     </div>

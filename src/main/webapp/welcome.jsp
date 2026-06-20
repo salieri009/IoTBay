@@ -75,9 +75,9 @@
     request.setAttribute("highlightLinkLabel", highlightLinkLabel);
 %>
 
-<t:base title="Welcome" description="Welcome to IoT Bay ??trusted IoT solutions, expert support, and deployment-ready hardware.">
+<t:base title="Welcome" description="Welcome to IoT Bay - trusted IoT solutions, expert support, and deployment-ready hardware.">
     <section class="py-16">
-        <div class="container space-y-12">
+        <div class="l-container space-y-12">
             <!-- Optimized for 1920x1080 -->
             <div class="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,340px)] xl:grid-cols-[minmax(0,1fr)_minmax(0,400px)] items-start">
                 <div class="rounded-2xl border border-neutral-200 bg-white shadow-sm p-10 space-y-8">

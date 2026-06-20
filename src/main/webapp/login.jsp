@@ -12,7 +12,7 @@
                 %>
 
                     <t:base title="Sign In - IoT Bay" description="Sign in to your IoT Bay account">
-                        <main class="min-h-screen flex items-center justify-center bg-neutral-50 py-12 px-4">
+                        <main class="min-h-screen flex items-center justify-center bg-gradient-to-br from-neutral-950 to-neutral-800 py-12 px-4">
                             <!-- Auth Card -->
                             <div class="w-full max-w-[440px]">
                                 <div class="bg-white rounded-2xl shadow-sm border border-neutral-200 p-6 md:p-10">
@@ -23,17 +23,8 @@
                                     </div>
 
                                     <c:if test="${not empty errorMessage}">
-                                        <div class="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-start gap-3"
-                                            role="alert">
-                                            <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor"
-                                                viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd"
-                                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                                                    clip-rule="evenodd"></path>
-                                            </svg>
-                                            <span>
-                                                <c:out value="${errorMessage}" />
-                                            </span>
+                                        <div class="alert alert--error mb-6" role="alert">
+                                            <c:out value="${errorMessage}" />
                                         </div>
                                     </c:if>
 

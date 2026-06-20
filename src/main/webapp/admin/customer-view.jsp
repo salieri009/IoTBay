@@ -12,9 +12,9 @@
    if (customer == null) { response.sendError(404); return; }
 %>
 
-<t:base title="Customer: <%= customer.getFirstName() %> <%= customer.getLastName() %> | IoT Bay">
-    <section class="py-12 bg-gradient-to-br from-blue-50 via-white to-purple-50">
-        <div class="container">
+<t:admin-base title="Customer: <%= customer.getFirstName() %> <%= customer.getLastName() %> | IoT Bay" activeNav="users">
+    <section class="py-8 bg-white border-b-2 border-brand-primary">
+        <div class="l-container">
             <div class="max-w-3xl mx-auto">
                 <a href="<c:url value='/admin/customer/'/>" class="text-neutral-500 hover:text-neutral-900 flex items-center gap-2 mb-4 text-sm">
                     &larr; Back to Customers
@@ -30,7 +30,7 @@
     </section>
 
     <section class="py-8">
-        <div class="container">
+        <div class="l-container">
             <div class="max-w-3xl mx-auto space-y-6">
 
                 <!-- Customer Details -->
@@ -102,4 +102,4 @@
             </div>
         </div>
     </section>
-</t:base>
+</t:admin-base>

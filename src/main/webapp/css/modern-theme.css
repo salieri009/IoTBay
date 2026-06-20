@@ -106,11 +106,11 @@
   --info-light: #e6f5ff;
   --info-dark: #0873cc;
 
-  /* === TYPOGRAPHY SYSTEM (Single Font Family) === */
-  /* Following KickoffLabs: Use ONE font family, vary with weight/size/style */
-  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-sans: var(--font-family);  /* Legacy support */
-  --font-mono: var(--font-family);  /* Use same font, style differently if needed */
+  /* === TYPOGRAPHY SYSTEM === */
+  --font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Syne', var(--font-family);
+  --font-sans: var(--font-family);
+  --font-mono: var(--font-family);
   
   --text-xs: 0.75rem;       /* 12px */
   --text-sm: 0.875rem;      /* 14px */
@@ -244,6 +244,28 @@
   --container-lg: 1024px;
   --container-xl: 1280px;
   --container-2xl: 1440px; /* Optimized for 1920x1080 desktop resolution */
+
+  /* === BACKWARD-COMPATIBILITY ALIASES === */
+  --border-radius: var(--radius-lg);
+  --border-radius-sm: var(--radius-md);
+  --border-radius-md: var(--radius-xl);
+  --border-radius-lg: var(--radius-2xl);
+  --border-radius-xl: var(--radius-3xl);
+  --border-radius-full: var(--radius-full);
+
+  --color-border: var(--neutral-200);
+  --color-surface: var(--neutral-0);
+  --color-primary: var(--color-cta);
+  --color-primary-light: var(--brand-primary-100);
+  --color-primary-dark: var(--color-cta-dark);
+  --color-text-primary: var(--neutral-900);
+  --color-text-secondary: var(--neutral-500);
+  --color-success-light: var(--success-light);
+  --color-success-dark: var(--success-dark);
+  --color-error-light: var(--error-light);
+  --color-error-dark: var(--error-dark);
+
+  --z-notification: var(--z-tooltip);
 }
 
 /* === DARK MODE SUPPORT === */

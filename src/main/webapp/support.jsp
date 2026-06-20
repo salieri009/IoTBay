@@ -4,7 +4,7 @@
 
 <t:base title="Help Center - IoT Bay" description="Get help and support for IoT Bay products and services">
     <main class="py-12">
-        <div class="container space-y-12">
+        <div class="l-container space-y-12">
             <!-- Hero Section -->
             <section class="text-center space-y-6">
                 <p class="inline-flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-wide text-neutral-500">

@@ -1,7 +1,7 @@
 <jsp:body>
     <!-- Page Header -->
-    <section class="py-12 bg-gradient-to-br from-blue-50 via-white to-purple-50">
-        <div class="container">
+    <section class="py-8 bg-white border-b-2 border-brand-primary">
+        <div class="l-container">
             <div class="max-w-6xl mx-auto">
                 <div class="flex items-center justify-between">
                     <div>
@@ -29,7 +29,7 @@
 
     <!-- Search and Filter -->
     <section class="py-12">
-        <div class="container">
+        <div class="l-container">
             <div class="max-w-6xl mx-auto">
                 <div class="card p-6 mb-8">
                     <div class="flex flex-col md:flex-row gap-4 items-center">

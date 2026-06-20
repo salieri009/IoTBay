@@ -65,10 +65,9 @@
       
       <%-- Clear Button (shown when input has value) --%>
       <button type="button"
-              class="search-form__clear"
+              class="search-form__clear hidden"
               id="${formId}Clear"
-              aria-label="Clear search"
-              style="display: none;">
+              aria-label="Clear search">
         <jsp:include page="/components/atoms/icon/icon.jsp">
           <jsp:param name="name" value="close" />
           <jsp:param name="size" value="small" />
@@ -97,7 +96,7 @@
          aria-live="polite">
       <div class="search-form__suggestions-header">
         <span class="search-form__suggestions-title">Suggestions</span>
-        <kbd class="search-form__keyboard-hint" aria-label="Use arrow keys to navigate">?�↓</kbd>
+        <kbd class="search-form__keyboard-hint" aria-label="Use arrow keys to navigate">?�↓</kbd>
       </div>
       <ul class="search-form__suggestions-list" role="list">
         <%-- Populated via JavaScript --%>

@@ -17,7 +17,7 @@
 <t:base title="Home" description="Your Premier IoT Device Store - Technical sophistication meets user-friendly design">
     
     <!-- 1. Hero Section (Standalone) -->
-    <section class="py-8 bg-white">
+    <section class="section bg-white">
         <div class="l-container">
             <jsp:include page="/components/organisms/hero-banner/hero-banner.jsp">
                 <jsp:param name="badgeText" value="New Arrivals" />
@@ -37,7 +37,7 @@
     <jsp:include page="/components/organisms/category-grid/category-grid.jsp" />
 
     <!-- 3. Featured Products -->
-    <section class="section-container section-container--white">
+    <section class="section bg-white">
         <div class="l-container">
             <div class="section-container__header">
                 <h2 class="section-container__title">Featured IoT Products</h2>
@@ -54,7 +54,7 @@
                  aria-live="polite" 
                  aria-label="Loading featured products">
                 <c:forEach begin="1" end="4" varStatus="loop">
-                    <div class="l-grid__col-12 l-grid__col-md-6 l-grid__col-lg-3">
+                    <div class="l-grid__col-12 l-grid__col-md-4 l-grid__col-lg-3">
                         <jsp:include page="/components/atoms/skeleton/skeleton.jsp">
                             <jsp:param name="type" value="card" />
                         </jsp:include>
@@ -72,7 +72,7 @@
                 <c:choose>
                     <c:when test="${featuredProducts != null && !empty featuredProducts}">
                         <c:forEach var="p" items="${featuredProducts}" end="3">
-                            <div class="l-grid__col-12 l-grid__col-md-6 l-grid__col-lg-3" 
+                            <div class="l-grid__col-12 l-grid__col-md-4 l-grid__col-lg-3" 
                                  data-product-id="${p.id}" 
                                  data-product-name="${p.name}"
                                  data-product-price="${p.price}"
@@ -89,7 +89,7 @@
                     </c:when>
                     <c:otherwise>
                         <!-- Fallback Featured Products -->
-                        <div class="l-grid__col-12 l-grid__col-md-6 l-grid__col-lg-3">
+                        <div class="l-grid__col-12 l-grid__col-md-4 l-grid__col-lg-3">
                             <div class="c-product-card">
                                 <jsp:useBean id="fallbackProduct" class="model.Product" />
                                 <jsp:setProperty name="fallbackProduct" property="id" value="1" />
@@ -104,7 +104,7 @@
                             </div>
                         </div>
                         
-                        <div class="l-grid__col-12 l-grid__col-md-6 l-grid__col-lg-3">
+                        <div class="l-grid__col-12 l-grid__col-md-4 l-grid__col-lg-3">
                             <div class="c-product-card">
                             <div class="product-card__image-container">
                                 <img src="${pageContext.request.contextPath}/images/sample2.png" 
@@ -113,7 +113,7 @@
                                      loading="lazy"
                                      width="300"
                                      height="300"
-                                     onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/default-product.png';" />
+                                     onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/default-product.svg';" />
                                 <span class="product-card__badge product-card__badge--success" aria-label="In stock">In Stock</span>
                             </div>
                             <div class="product-card__body">
@@ -128,7 +128,7 @@
                                     <div class="product-card__price-info">
                                         <div class="product-card__price">$89.00</div>
                                         <div class="product-card__stock-status">
-                                            <span class="text-success text-sm">??In Stock (8 available)</span>
+                                            <span class="text-success text-sm">In Stock (8 available)</span>
                                         </div>
                                     </div>
                                     <div class="product-card__actions">
@@ -140,7 +140,7 @@
                             </div>
                         </div>
                         
-                        <div class="l-grid__col-12 l-grid__col-md-6 l-grid__col-lg-3">
+                        <div class="l-grid__col-12 l-grid__col-md-4 l-grid__col-lg-3">
                             <div class="c-product-card">
                             <div class="product-card__image-container">
                                 <img src="${pageContext.request.contextPath}/images/sample3.png" 
@@ -149,7 +149,7 @@
                                      loading="lazy"
                                      width="300"
                                      height="300"
-                                     onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/default-product.png';" />
+                                     onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/default-product.svg';" />
                                 <span class="product-card__badge product-card__badge--success" aria-label="In stock">In Stock</span>
                             </div>
                             <div class="product-card__body">
@@ -164,7 +164,7 @@
                                     <div class="product-card__price-info">
                                         <div class="product-card__price">$299.00</div>
                                         <div class="product-card__stock-status">
-                                            <span class="text-success text-sm">??In Stock (12 available)</span>
+                                            <span class="text-success text-sm">In Stock (12 available)</span>
                                         </div>
                                     </div>
                                     <div class="product-card__actions">
@@ -176,7 +176,7 @@
                         </div>
                         </div>
                         
-                        <div class="l-grid__col-12 l-grid__col-md-6 l-grid__col-lg-3">
+                        <div class="l-grid__col-12 l-grid__col-md-4 l-grid__col-lg-3">
                             <div class="c-product-card">
                                 <div class="product-card__image-container">
                                     <img src="${pageContext.request.contextPath}/images/sample1.png" 
@@ -185,7 +185,7 @@
                                          loading="lazy"
                                          width="300"
                                          height="300"
-                                         onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/default-product.png';" />
+                                         onerror="this.onerror=null;this.src='${pageContext.request.contextPath}/images/default-product.svg';" />
                                 </div>
                                 <div class="product-card__body">
                                     <div class="product-card__header">

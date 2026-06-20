@@ -8,8 +8,8 @@
                     response.sendRedirect(request.getContextPath() + "/login.jsp" ); return; } boolean
                     isEdit=request.getAttribute("supplier") !=null; request.setAttribute("isEdit", isEdit); %>
 
-                    <t:base title="${isEdit ? 'Edit Supplier' : 'Add Supplier'}" customCSS="modern-theme.css">
-                        <section class="py-12 bg-gradient-to-br from-blue-50 via-white to-purple-50">
+                    <t:admin-base title="${isEdit ? 'Edit Supplier' : 'Add Supplier'}" activeNav="suppliers">
+                        <section class="py-8 bg-white border-b-2 border-brand-primary">
                             <div class="l-container">
                                 <div class="max-w-3xl mx-auto">
                                     <!-- Header -->
@@ -118,4 +118,4 @@
                                 </div>
                             </div>
                         </section>
-                    </t:base>
+                    </t:admin-base>

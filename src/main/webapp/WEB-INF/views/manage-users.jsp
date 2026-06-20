@@ -4,10 +4,10 @@
             <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
                 <%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
 
-                    <t:base title="Manage Users" description="Manage customer accounts and user permissions">
+                    <t:admin-base title="Manage Users" activeNav="users">
                         <!-- Page Header -->
-                        <section class="py-12 bg-gradient-to-br from-blue-50 via-white to-purple-50">
-                            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                        <section class="py-8 bg-white border-b-2 border-brand-primary">
+                            <div class="l-container">
                                 <div class="max-w-6xl mx-auto">
                                     <div class="flex items-center justify-between">
                                         <div>
@@ -38,7 +38,7 @@
 
                         <!-- Users Management -->
                         <section class="py-12">
-                            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                            <div class="l-container">
                                 <div class="max-w-6xl mx-auto">
                                     <!-- Filters and Search -->
                                     <form action="${pageContext.request.contextPath}/api/manage/users/" method="get"
@@ -228,4 +228,4 @@
                                 </div>
                             </div>
                         </section>
-                    </t:base>
+                    </t:admin-base>

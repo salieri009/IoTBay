@@ -17,8 +17,8 @@
 
 <t:base title="Payment History | IoT Bay" description="View and manage your payment records">
     <!-- Page Header -->
-    <section class="py-12 bg-gradient-to-br from-blue-50 via-white to-purple-50">
-        <div class="container">
+    <section class="py-8 bg-white border-b-2 border-brand-primary">
+        <div class="l-container">
             <div class="max-w-4xl mx-auto">
                 <a href="${pageContext.request.contextPath}/profile.jsp"
                     class="text-neutral-500 hover:text-neutral-900 flex items-center gap-2 mb-4 text-sm">
@@ -33,7 +33,7 @@
     </section>
 
     <section class="py-8">
-        <div class="container">
+        <div class="l-container">
             <div class="max-w-4xl mx-auto">
 
                 <!-- Error / Success Messages -->
@@ -138,7 +138,7 @@
                                                            class="btn btn--outline btn--sm">Edit</a>
                                                         <!-- Delete form -->
                                                         <form action="${pageContext.request.contextPath}/api/payment/delete" method="post"
-                                                              style="display:inline;"
+                                                              class="inline"
                                                               onsubmit="return confirm('Delete this payment record?');">
                                                             <input type="hidden" name="csrfToken" value="<%= csrfToken %>">
                                                             <input type="hidden" name="paymentId" value="${payment.id}">

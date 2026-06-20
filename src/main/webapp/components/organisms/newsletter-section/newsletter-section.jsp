@@ -28,8 +28,8 @@
     String buttonText = request.getParameter("buttonText") != null ? request.getParameter("buttonText") : "Subscribe";
 %>
 
-<section class="py-12 bg-gradient-to-r from-brand-primary-50 to-brand-secondary-50">
-    <div class="container">
+<section class="section--compact bg-gradient-to-r from-brand-primary-50 to-brand-secondary-50">
+    <div class="l-container">
         <div class="max-w-2xl mx-auto text-center">
             <h2 class="text-display-sm font-bold text-neutral-900 mb-4"><%= title %></h2>
             <p class="text-lg text-neutral-600 mb-6">

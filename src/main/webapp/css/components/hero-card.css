@@ -146,22 +146,42 @@
   border-color: rgba(255, 255, 255, 0.3);
 }
 
-/* Visual: 3D Floating Image */
+/* Visual: 3D Floating Image
+   Contained within the hero so it never clips/overflows the rounded card.
+   The parent .hero-card has overflow:hidden, so we keep the image inside the
+   right edge and let it scale down responsively instead of bleeding out. */
 .hero-card__visual {
   position: absolute;
-  right: -5%;
-  bottom: -10%;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  width: 45%;
+  max-width: 520px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 24px;
   z-index: 1;
   pointer-events: none;
 }
 
 .hero-card__image {
-  width: auto;
-  height: 400px;
-  max-width: 500px;
+  width: 100%;
+  height: auto;
+  max-height: 80%;
+  max-width: 100%;
   filter: drop-shadow(0 20px 40px rgba(0, 82, 204, 0.4));
   object-fit: contain;
+  object-position: center;
   animation: float 3s ease-in-out infinite;
+}
+
+/* Tablet/landscape: shrink the visual so it degrades gracefully before hiding */
+@media (max-width: 1279px) and (min-width: 1024px) {
+  .hero-card__visual {
+    width: 40%;
+    opacity: 0.85;
+  }
 }
 
 @media (max-width: 1023px) {

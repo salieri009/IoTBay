@@ -56,9 +56,6 @@
     <div id="aria-live-announcements" class="sr-only" aria-live="polite" aria-atomic="true" role="status"></div>
     <div id="aria-live-errors" class="sr-only" aria-live="assertive" aria-atomic="true" role="alert"></div>
 
-    <!-- Header Organism -->
-    <c:import url="/components/organisms/header/header.jsp" />
-
     <!-- Admin Layout Container -->
     <main class="admin-layout" id="main-content" role="main">
         
@@ -94,7 +91,12 @@
                    class="admin-nav-link ${activeNav == 'data' ? 'active' : ''}">
                     Data Management
                 </a>
-                <a href="<c:url value='/reports-dashboard'/>" 
+                <a href="<c:url value='/manage/orders'/>"
+                   class="admin-nav-link ${activeNav == 'orders' ? 'active' : ''}"
+                   ${activeNav == 'orders' ? 'aria-current="page"' : ''}>
+                    Order Management
+                </a>
+                <a href="<c:url value='/reports-dashboard'/>"
                    class="admin-nav-link ${activeNav == 'reports' ? 'active' : ''}">
                     Reports
                 </a>
@@ -117,9 +119,6 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
         </svg>
     </button>
-
-    <!-- Footer -->
-    <c:import url="/components/organisms/footer/footer.jsp" />
 
     <!-- Toast Notifications Container -->
     <div id="toast-container" class="fixed top-4 right-4 z-50 space-y-2" role="region" aria-label="Notifications"></div>

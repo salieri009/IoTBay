@@ -4,7 +4,7 @@
 
 <t:base title="Shipping Information - IoT Bay" description="Shipping options, delivery times, and tracking information for IoT Bay orders">
     <main class="py-12">
-        <div class="container space-y-12">
+        <div class="l-container space-y-12">
             <!-- Hero Section -->
             <section class="text-center space-y-6">
                 <p class="inline-flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-wide text-neutral-500">
@@ -118,15 +118,15 @@
                         </p>
                         <ul class="space-y-2 text-sm text-neutral-600">
                             <li class="flex items-start gap-2">
-                                <span class="text-brand-primary mt-1">??/span>
+                                <span class="text-brand-primary mt-1">&#10003;</span>
                                 <span>In-stock items: 1-2 business days</span>
                             </li>
                             <li class="flex items-start gap-2">
-                                <span class="text-brand-primary mt-1">??/span>
+                                <span class="text-brand-primary mt-1">&#10003;</span>
                                 <span>Backordered items: 5-10 business days</span>
                             </li>
                             <li class="flex items-start gap-2">
-                                <span class="text-brand-primary mt-1">??/span>
+                                <span class="text-brand-primary mt-1">&#10003;</span>
                                 <span>Custom orders: 2-3 weeks</span>
                             </li>
                         </ul>
@@ -140,15 +140,15 @@
                         </p>
                         <ul class="space-y-2 text-sm text-neutral-600">
                             <li class="flex items-start gap-2">
-                                <span class="text-brand-primary mt-1">??/span>
+                                <span class="text-brand-primary mt-1">&#10003;</span>
                                 <span>Real-time tracking updates</span>
                             </li>
                             <li class="flex items-start gap-2">
-                                <span class="text-brand-primary mt-1">??/span>
+                                <span class="text-brand-primary mt-1">&#10003;</span>
                                 <span>Full insurance coverage included</span>
                             </li>
                             <li class="flex items-start gap-2">
-                                <span class="text-brand-primary mt-1">??/span>
+                                <span class="text-brand-primary mt-1">&#10003;</span>
                                 <span>Email notifications at each stage</span>
                             </li>
                         </ul>
@@ -162,15 +162,15 @@
                         </p>
                         <ul class="space-y-2 text-sm text-neutral-600">
                             <li class="flex items-start gap-2">
-                                <span class="text-brand-primary mt-1">??/span>
+                                <span class="text-brand-primary mt-1">&#10003;</span>
                                 <span>International standard: 10-15 business days</span>
                             </li>
                             <li class="flex items-start gap-2">
-                                <span class="text-brand-primary mt-1">??/span>
+                                <span class="text-brand-primary mt-1">&#10003;</span>
                                 <span>International express: 5-7 business days</span>
                             </li>
                             <li class="flex items-start gap-2">
-                                <span class="text-brand-primary mt-1">??/span>
+                                <span class="text-brand-primary mt-1">&#10003;</span>
                                 <span>Customs fees are the customer's responsibility</span>
                             </li>
                         </ul>
@@ -184,15 +184,15 @@
                         </p>
                         <ul class="space-y-2 text-sm text-neutral-600">
                             <li class="flex items-start gap-2">
-                                <span class="text-brand-primary mt-1">??/span>
+                                <span class="text-brand-primary mt-1">&#10003;</span>
                                 <span>Damaged packages: Contact us within 48 hours</span>
                             </li>
                             <li class="flex items-start gap-2">
-                                <span class="text-brand-primary mt-1">??/span>
+                                <span class="text-brand-primary mt-1">&#10003;</span>
                                 <span>Lost packages: We'll investigate and reship if needed</span>
                             </li>
                             <li class="flex items-start gap-2">
-                                <span class="text-brand-primary mt-1">??/span>
+                                <span class="text-brand-primary mt-1">&#10003;</span>
                                 <span>Wrong address: Update your address before shipping</span>
                             </li>
                         </ul>
@@ -204,7 +204,7 @@
             <section class="rounded-2xl border border-brand-primary bg-brand-primary/5 p-8 text-center">
                 <h2 class="text-display-m font-bold text-neutral-900 mb-4">Free Standard Shipping</h2>
                 <p class="text-lg text-neutral-600 mb-6 max-w-2xl mx-auto">
-                    Orders over $100 qualify for free standard shipping. No code needed?”discount applies automatically at checkout.
+                    Orders over $100 qualify for free standard shipping. No code needed?ï¿½discount applies automatically at checkout.
                 </p>
                 <a href="/browse.jsp" class="btn btn--primary btn--lg">
                     Shop Now

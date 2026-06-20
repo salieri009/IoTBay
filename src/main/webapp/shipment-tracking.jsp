@@ -13,8 +13,8 @@
 <t:base title="Track Shipment | IoT Bay" description="Track your shipment status by tracking number">
 
     <!-- Page Header -->
-    <section class="py-12 bg-gradient-to-br from-blue-50 via-white to-purple-50">
-        <div class="container">
+    <section class="py-8 bg-white border-b-2 border-brand-primary">
+        <div class="l-container">
             <div class="max-w-3xl mx-auto">
                 <a href="${pageContext.request.contextPath}/shipment/list"
                    class="text-neutral-500 hover:text-neutral-900 flex items-center gap-2 mb-4 text-sm">
@@ -29,7 +29,7 @@
     </section>
 
     <section class="py-8">
-        <div class="container">
+        <div class="l-container">
             <div class="max-w-3xl mx-auto">
 
                 <!-- Tracking Search Form -->

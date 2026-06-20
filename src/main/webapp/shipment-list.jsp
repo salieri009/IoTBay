@@ -17,8 +17,8 @@
 
 <t:base title="Shipments | IoT Bay" description="View and manage your shipments">
     <!-- Page Header -->
-    <section class="py-12 bg-gradient-to-br from-blue-50 via-white to-purple-50">
-        <div class="container">
+    <section class="py-8 bg-white border-b-2 border-brand-primary">
+        <div class="l-container">
             <div class="max-w-5xl mx-auto">
                 <a href="${pageContext.request.contextPath}/orderList.jsp"
                     class="text-neutral-500 hover:text-neutral-900 flex items-center gap-2 mb-4 text-sm">
@@ -33,7 +33,7 @@
     </section>
 
     <section class="py-8">
-        <div class="container">
+        <div class="l-container">
             <div class="max-w-5xl mx-auto">
 
                 <!-- Success/Error Messages -->
@@ -172,7 +172,7 @@
                                                             <a href="${pageContext.request.contextPath}/shipment/form?shipmentId=${s.id}"
                                                                class="btn btn--outline btn--sm">Edit</a>
                                                             <form action="${pageContext.request.contextPath}/shipment/delete"
-                                                                  method="post" style="display:inline;"
+                                                                  method="post" class="inline"
                                                                   onsubmit="return confirm('Delete this shipment?');">
                                                                 <input type="hidden" name="csrfToken" value="<%= csrfToken %>">
                                                                 <input type="hidden" name="shipmentId" value="${s.id}">
