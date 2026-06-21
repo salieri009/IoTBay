@@ -188,6 +188,33 @@ public abstract class BaseE2ETest {
                 currentUrl().contains(fragment));
     }
 
+    /**
+     * Fail if the page is a server error. Covers BOTH Jetty's default error page
+     * (HTTP ERROR 500/404) AND this app's CUSTOM error page, which returns HTTP 200
+     * with friendly text — so a plain "HTTP ERROR 500" check would false-green on
+     * exactly the failures we care about. Use this in place of the old check.
+     */
+    protected void assertNoServerError() {
+        String src = pageSource();
+        assertFalse("Page shows Jetty 500 error. URL: " + currentUrl(),
+                src.contains("HTTP ERROR 500"));
+        assertFalse("Page shows Jetty 404 error. URL: " + currentUrl(),
+                src.contains("HTTP ERROR 404"));
+        assertFalse("Page shows the app's custom error page. URL: " + currentUrl(),
+                src.contains("Oops! Something went wrong")
+                        || src.contains("Development Error Information")
+                        || src.contains("experiencing some technical difficulties"));
+    }
+
+    /**
+     * Assert the page rendered the expected content AND is not an error page.
+     */
+    protected void assertRendered(String expectedFragment) {
+        assertNoServerError();
+        assertTrue("Expected page to contain '" + expectedFragment + "'. URL: " + currentUrl(),
+                pageSource().contains(expectedFragment));
+    }
+
     protected boolean isElementPresent(By locator) {
         return !driver.findElements(locator).isEmpty();
     }

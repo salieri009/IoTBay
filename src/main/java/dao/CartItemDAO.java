@@ -223,7 +223,7 @@ public class CartItemDAO {
     // UPDATE: Update cart item prices (for when product prices change)
     public void updateCartItemPrices(int userId) throws SQLException {
         String query = "UPDATE cart_items SET price = p.price, updated_at = ? " +
-                      "FROM product p WHERE cart_items.product_id = p.id AND cart_items.user_id = ?";
+                      "FROM products p WHERE cart_items.product_id = p.id AND cart_items.user_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setObject(1, LocalDateTime.now());
             statement.setInt(2, userId);
