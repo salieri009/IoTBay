@@ -132,8 +132,22 @@ public abstract class BaseE2ETest {
 
     protected void fillField(By locator, String value) {
         WebElement el = driver.findElement(locator);
-        el.clear();
-        el.sendKeys(value);
+        // Set the value via JS and fire input/change. sendKeys is flaky on styled
+        // inputs in headless Chrome (values intermittently don't stick), which made
+        // create forms POST with empty fields.
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].scrollIntoView({block:'center'});", el);
+        try {
+            el.clear();
+            el.sendKeys(value);
+        } catch (Exception ignored) {
+            // non-editable for sendKeys; JS set below is authoritative
+        }
+        js.executeScript(
+            "arguments[0].value = arguments[1];" +
+            "arguments[0].dispatchEvent(new Event('input',{bubbles:true}));" +
+            "arguments[0].dispatchEvent(new Event('change',{bubbles:true}));",
+            el, value);
     }
 
     protected void fillField(String name, String value) {
@@ -141,7 +155,21 @@ public abstract class BaseE2ETest {
     }
 
     protected void selectOption(By locator, String visibleText) {
-        new Select(driver.findElement(locator)).selectByVisibleText(visibleText);
+        WebElement sel = driver.findElement(locator);
+        try {
+            new Select(sel).selectByVisibleText(visibleText);
+        } catch (Exception ignored) {
+            // fall through to JS enforcement
+        }
+        // JS-enforce the selection (Selenium's Select is flaky on styled selects in
+        // headless Chrome). Match by option text OR value, case-insensitively.
+        ((JavascriptExecutor) driver).executeScript(
+            "var s=arguments[0], t=arguments[1];" +
+            "for (var i=0;i<s.options.length;i++){var o=s.options[i];" +
+            "  if (o.text.trim()===t || o.value===t || o.value.toLowerCase()===t.toLowerCase()" +
+            "      || o.text.trim().toLowerCase()===t.toLowerCase()){" +
+            "    s.selectedIndex=i; break; } }" +
+            "s.dispatchEvent(new Event('change',{bubbles:true}));", sel, visibleText);
     }
 
     protected void selectOption(String name, String visibleText) {

@@ -133,7 +133,7 @@ public class ManageUserController extends HttpServlet {
             String addressLine1 = request.getParameter("addressLine1"); // Optional
             String addressLine2 = request.getParameter("addressLine2"); // Optional
             String paymentMethod = request.getParameter("paymentMethod"); // Optional
-            String dob = utils.SecurityUtil.getValidatedStringParameter(request, "dateOfBirth", 20);
+            String dob = request.getParameter("dateOfBirth"); // Optional
             String role = utils.SecurityUtil.getValidatedStringParameter(request, "role", 20);
 
             // Sanitize inputs (except password)
@@ -171,23 +171,38 @@ public class ManageUserController extends HttpServlet {
                 return;
             }
 
-            // Validate profile data
-            String profileError = utils.ValidationUtil.validateRegisterUserProfile(
-                    firstName, lastName, phone != null ? phone : "",
-                    postalCode != null ? postalCode : "",
-                    addressLine1 != null ? addressLine1 : "");
-            if (profileError != null) {
-                utils.ErrorAction.handleValidationError(request, response, profileError,
+            // Validate names (required). Phone/postal code/address are OPTIONAL for an
+            // admin-created user, so they are not required here (only sanitized above);
+            // validate the address only when one was provided.
+            String nameError = utils.ValidationUtil.validateName(firstName, "First name");
+            if (nameError == null) {
+                nameError = utils.ValidationUtil.validateName(lastName, "Last name");
+            }
+            if (nameError == null && addressLine1 != null && !addressLine1.trim().isEmpty()) {
+                nameError = utils.ValidationUtil.validateAddress(addressLine1);
+            }
+            if (nameError != null) {
+                utils.ErrorAction.handleValidationError(request, response, nameError,
                         "ManageUserController.doPost");
                 return;
             }
 
-            // Validate date of birth
-            String dobError = utils.ValidationUtil.validateBirthDate(dob);
-            if (dobError != null) {
-                utils.ErrorAction.handleValidationError(request, response, dobError,
-                        "ManageUserController.doPost");
-                return;
+            // Validate date of birth (optional — only when provided)
+            java.time.LocalDate dobValue = null;
+            if (dob != null && !dob.trim().isEmpty()) {
+                String dobError = utils.ValidationUtil.validateBirthDate(dob);
+                if (dobError != null) {
+                    utils.ErrorAction.handleValidationError(request, response, dobError,
+                            "ManageUserController.doPost");
+                    return;
+                }
+                try {
+                    dobValue = java.time.LocalDate.parse(dob.trim());
+                } catch (java.time.format.DateTimeParseException e) {
+                    utils.ErrorAction.handleValidationError(request, response,
+                            "Invalid date of birth format", "ManageUserController.doPost");
+                    return;
+                }
             }
 
             // Validate role
@@ -225,7 +240,7 @@ public class ManageUserController extends HttpServlet {
                     postalCode,
                     addressLine1,
                     addressLine2,
-                    LocalDate.parse(dob),
+                    dobValue,
                     paymentMethod,
                     LocalDateTime.now(),
                     LocalDateTime.now(),

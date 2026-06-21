@@ -20,7 +20,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public void createUser(User user) throws SQLException {
-        String query = "INSERT INTO Users (email, password, firstName, lastName, phoneNumber, postalCode, addressLine1, addressLine2, dateOfBirth, paymentMethod, createdAt, updatedAt, role, isActive) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO Users (email, password, firstName, lastName, phoneNumber, postalCode, addressLine1, addressLine2, dateOfBirth, paymentMethod, createdAt, updatedAt, role, isActive, customerType, position) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = DIContainer.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             setUserParams(statement, user);
@@ -236,6 +236,8 @@ public class UserDAOImpl implements UserDAO {
         statement.setString(12, user.getUpdatedAt() != null ? user.getUpdatedAt().toString() : null);
         statement.setString(13, user.getRole());
         statement.setBoolean(14, user.isActive());
+        statement.setString(15, user.getCustomerType());
+        statement.setString(16, user.getPosition());
     }
 
     @Override
@@ -256,7 +258,7 @@ public class UserDAOImpl implements UserDAO {
         List<User> users = new ArrayList<>();
         StringBuilder query = new StringBuilder("SELECT * FROM Users WHERE 1=1");
         if (nameQuery != null && !nameQuery.trim().isEmpty()) {
-            query.append(" AND (firstName LIKE ? OR lastName LIKE ? OR (firstName || ' ' || lastName) LIKE ?)");
+            query.append(" AND (firstName LIKE ? OR lastName LIKE ? OR (firstName || ' ' || lastName) LIKE ? OR email LIKE ?)");
         }
         if (phoneQuery != null && !phoneQuery.trim().isEmpty()) {
             query.append(" AND phoneNumber LIKE ?");
@@ -269,6 +271,7 @@ public class UserDAOImpl implements UserDAO {
                 stmt.setString(idx++, like);
                 stmt.setString(idx++, like);
                 stmt.setString(idx++, like);
+                stmt.setString(idx++, like); // email
             }
             if (phoneQuery != null && !phoneQuery.trim().isEmpty()) {
                 stmt.setString(idx++, "%" + phoneQuery.trim() + "%");
@@ -377,7 +380,7 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public int bulkCreateUsers(List<User> users) throws SQLException {
         int successCount = 0;
-        String query = "INSERT INTO Users (email, password, firstName, lastName, phoneNumber, postalCode, addressLine1, addressLine2, dateOfBirth, paymentMethod, createdAt, updatedAt, role, isActive) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO Users (email, password, firstName, lastName, phoneNumber, postalCode, addressLine1, addressLine2, dateOfBirth, paymentMethod, createdAt, updatedAt, role, isActive, customerType, position) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = DIContainer.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             for (User user : users) {

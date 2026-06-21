@@ -48,7 +48,7 @@ public class F06_UserManagementTest extends BaseE2ETest {
                 isElementPresent(By.name("email")));
 
         String uniqueEmail = "e2e-user-" + java.util.UUID.randomUUID().toString().substring(0, 8) + "@test.com";
-        fillField("firstName", "E2E");
+        fillField("firstName", "Auto");
         fillField("lastName", "User");
         fillField("email", uniqueEmail);
         fillField("password", "TestPass@123");

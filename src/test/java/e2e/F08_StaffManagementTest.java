@@ -84,7 +84,7 @@ public class F08_StaffManagementTest extends BaseE2ETest {
         org.junit.Assume.assumeTrue("staff form must render", isElementPresent(By.name("email")));
 
         String uniqueEmail = "e2e-staff-sp-" + UUID.randomUUID().toString().substring(0, 8) + "@test.com";
-        fillField("firstName", "E2E");
+        fillField("firstName", "Auto");
         fillField("lastName", "Salesperson");
         fillField("email", uniqueEmail);
         fillField("password", "TestPass@123");
@@ -108,7 +108,7 @@ public class F08_StaffManagementTest extends BaseE2ETest {
         org.junit.Assume.assumeTrue("staff form must render", isElementPresent(By.name("email")));
 
         String uniqueEmail = "e2e-staff-mgr-" + UUID.randomUUID().toString().substring(0, 8) + "@test.com";
-        fillField("firstName", "E2E");
+        fillField("firstName", "Auto");
         fillField("lastName", "Manager");
         fillField("email", uniqueEmail);
         fillField("password", "TestPass@123");

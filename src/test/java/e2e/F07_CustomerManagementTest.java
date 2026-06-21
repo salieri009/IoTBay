@@ -89,7 +89,7 @@ public class F07_CustomerManagementTest extends BaseE2ETest {
         org.junit.Assume.assumeTrue("customer form must render", isElementPresent(By.name("email")));
 
         String uniqueEmail = "e2e-individual-" + UUID.randomUUID().toString().substring(0, 8) + "@test.com";
-        fillField("firstName", "E2E");
+        fillField("firstName", "Auto");
         fillField("lastName", "Individual");
         fillField("email", uniqueEmail);
         fillField("password", "TestPass@123");
@@ -114,7 +114,7 @@ public class F07_CustomerManagementTest extends BaseE2ETest {
         org.junit.Assume.assumeTrue("customer form must render", isElementPresent(By.name("email")));
 
         String uniqueEmail = "e2e-company-" + UUID.randomUUID().toString().substring(0, 8) + "@test.com";
-        fillField("firstName", "E2E");
+        fillField("firstName", "Auto");
         fillField("lastName", "Company");
         fillField("email", uniqueEmail);
         fillField("password", "TestPass@123");
