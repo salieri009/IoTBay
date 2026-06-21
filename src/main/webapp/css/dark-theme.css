@@ -137,3 +137,75 @@
   border: 3px solid var(--night-bg);
 }
 [data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: #5b6b85; }
+
+
+/* =====================================================================
+   6. Admin layout — the sidebar uses `background: var(--neutral-800)` which the
+   night-theme palette inversion flips to LIGHT (#f8fafc), leaving its white nav
+   text at ~1.05:1 (invisible). Force the admin chrome back to dark surfaces.
+   ===================================================================== */
+[data-theme="dark"] .admin-sidebar,
+[data-theme="dark"] .admin-sidebar-toggle {
+  background-color: var(--night-surface) !important;
+  border-color: var(--night-border) !important;
+}
+
+/* =====================================================================
+   7. WCAG AA — white text on the bright brand-primary (#0a95ff) is only 3.1:1.
+   Darken brand-primary surfaces (CTA buttons/badges) so white labels reach
+   >= 4.5:1, while keeping the blue brand feel.
+   ===================================================================== */
+[data-theme="dark"] .bg-brand-primary,
+[data-theme="dark"] .btn--primary {
+  background-color: #0a6fc5 !important; /* white text >= 4.9:1 */
+}
+[data-theme="dark"] .hover\:bg-brand-primary-dark:hover,
+[data-theme="dark"] .btn--primary:hover {
+  background-color: #0860ad !important;
+}
+
+/* Primary buttons: some .btn--primary use dark text — force white so the label
+   is consistent and meets AA (white on #0a6fc5 = 4.9:1). */
+[data-theme="dark"] .btn--primary,
+[data-theme="dark"] a.btn--primary,
+[data-theme="dark"] .bg-brand-primary.btn,
+[data-theme="dark"] .bg-brand-primary {
+  color: #ffffff !important;
+}
+
+/* Red action links/status (delete, inactive): #ef4444 on the dark surface is
+   only ~3.9:1 — use a lighter red (#f87171) for AA. */
+[data-theme="dark"] .text-red-600,
+[data-theme="dark"] .text-red-500,
+[data-theme="dark"] .text-error {
+  color: #f87171 !important;
+}
+
+/* Admin sidebar active/hover/header text uses var(--neutral-0) which inverts to
+   dark on the (now dark) sidebar — force white so it stays visible. */
+[data-theme="dark"] .admin-nav-link.active,
+[data-theme="dark"] .admin-nav-link:hover,
+[data-theme="dark"] .sidebar-header,
+[data-theme="dark"] .sidebar-title { color: #ffffff !important; }
+
+/* =====================================================================
+   8. Light tint alert/info boxes — `bg-*-50` tints (and semantic *-bg) are fixed
+   light colors the neutral inversion never touches, so they render as bright
+   boxes with now-invisible text. Convert to subtle dark tints + light text.
+   ===================================================================== */
+[data-theme="dark"] [class*="bg-brand-primary-50"],
+[data-theme="dark"] [class*="bg-blue-50"],
+[data-theme="dark"] [class*="bg-info-50"] { background-color: rgba(10,149,255,0.14) !important; }
+[data-theme="dark"] [class*="bg-green-50"],
+[data-theme="dark"] [class*="bg-success-50"] { background-color: rgba(34,197,94,0.14) !important; }
+[data-theme="dark"] [class*="bg-red-50"],
+[data-theme="dark"] [class*="bg-error-50"] { background-color: rgba(239,68,68,0.14) !important; }
+[data-theme="dark"] [class*="bg-amber-50"],
+[data-theme="dark"] [class*="bg-yellow-50"],
+[data-theme="dark"] [class*="bg-warning-50"] { background-color: rgba(245,158,11,0.14) !important; }
+/* Dark alert text (text-*-800) designed for light tints -> light for dark tints. */
+[data-theme="dark"] [class*="text-green-800"],
+[data-theme="dark"] [class*="text-red-800"],
+[data-theme="dark"] [class*="text-amber-800"],
+[data-theme="dark"] [class*="text-yellow-800"],
+[data-theme="dark"] [class*="text-blue-800"] { color: #e2e8f0 !important; }
