@@ -22,7 +22,7 @@
 
                             <c:set var="subtotal" value="${requestScope.subtotal}" />
                             <c:if test="${empty subtotal}">
-                                <c:set var="subtotal" value="0.0" />
+                                <c:set var="subtotal" value="${0.0}" />
                                 <c:forEach items="${cartItems}" var="item">
                                     <c:set var="subtotal" value="${subtotal + (item.product.price * item.quantity)}" />
                                 </c:forEach>

@@ -12,7 +12,8 @@
         return;
     }
     User user = (User) userObj;
-    String csrfToken = utils.SecurityUtil.generateCSRFToken(request);
+    // Exposed via EL (scriptlets are disallowed inside the scriptless <t:base> body).
+    pageContext.setAttribute("csrfToken", utils.SecurityUtil.generateCSRFToken(request));
 %>
 
 <t:base title="Payment History | IoT Bay" description="View and manage your payment records">
@@ -143,7 +144,7 @@
                                                         <form action="${pageContext.request.contextPath}/api/payment/delete" method="post"
                                                               class="inline"
                                                               onsubmit="return confirm('Delete this payment record?');">
-                                                            <input type="hidden" name="csrfToken" value="<%= csrfToken %>">
+                                                            <input type="hidden" name="csrfToken" value="${csrfToken}">
                                                             <input type="hidden" name="paymentId" value="${payment.id}">
                                                             <input type="hidden" name="_method" value="DELETE">
                                                             <button type="submit" class="btn btn--error btn--sm">Delete</button>

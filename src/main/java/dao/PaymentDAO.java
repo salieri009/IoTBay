@@ -139,12 +139,12 @@ public class PaymentDAO {
                     payment.setId(rs.getInt("id"));
                     payment.setUserId(rs.getInt("user_id"));
                     payment.setOrderId(rs.getInt("order_id"));
-                    payment.setPaymentDate(rs.getObject("payment_date", LocalDateTime.class));
+                    payment.setPaymentDate(parsePaymentDT(rs.getString("payment_date")));
                     payment.setAmount(rs.getBigDecimal("amount"));
                     payment.setPaymentMethod(rs.getString("payment_method"));
                     payment.setStatus(rs.getString("status"));
-                    payment.setCreatedAt(rs.getObject("created_at", LocalDateTime.class));
-                    payment.setUpdatedAt(rs.getObject("updated_at", LocalDateTime.class));
+                    payment.setCreatedAt(parsePaymentDT(rs.getString("created_at")));
+                    payment.setUpdatedAt(parsePaymentDT(rs.getString("updated_at")));
                     return payment;
                 }
             }
@@ -187,12 +187,12 @@ public class PaymentDAO {
                     payment.setId(rs.getInt("id"));
                     payment.setUserId(rs.getInt("user_id"));
                     payment.setOrderId(rs.getInt("order_id"));
-                    payment.setPaymentDate(rs.getObject("payment_date", LocalDateTime.class));
+                    payment.setPaymentDate(parsePaymentDT(rs.getString("payment_date")));
                     payment.setAmount(rs.getBigDecimal("amount"));
                     payment.setPaymentMethod(rs.getString("payment_method"));
                     payment.setStatus(rs.getString("status"));
-                    payment.setCreatedAt(rs.getObject("created_at", LocalDateTime.class));
-                    payment.setUpdatedAt(rs.getObject("updated_at", LocalDateTime.class));
+                    payment.setCreatedAt(parsePaymentDT(rs.getString("created_at")));
+                    payment.setUpdatedAt(parsePaymentDT(rs.getString("updated_at")));
                     payments.add(payment);
                 }
             }
@@ -214,12 +214,12 @@ public class PaymentDAO {
                     payment.setId(rs.getInt("id"));
                     payment.setUserId(rs.getInt("user_id"));
                     payment.setOrderId(rs.getInt("order_id"));
-                    payment.setPaymentDate(rs.getObject("payment_date", LocalDateTime.class));
+                    payment.setPaymentDate(parsePaymentDT(rs.getString("payment_date")));
                     payment.setAmount(rs.getBigDecimal("amount"));
                     payment.setPaymentMethod(rs.getString("payment_method"));
                     payment.setStatus(rs.getString("status"));
-                    payment.setCreatedAt(rs.getObject("created_at", LocalDateTime.class));
-                    payment.setUpdatedAt(rs.getObject("updated_at", LocalDateTime.class));
+                    payment.setCreatedAt(parsePaymentDT(rs.getString("created_at")));
+                    payment.setUpdatedAt(parsePaymentDT(rs.getString("updated_at")));
                     payments.add(payment);
                 }
             }
@@ -239,12 +239,12 @@ public class PaymentDAO {
                     payment.setId(rs.getInt("id"));
                     payment.setUserId(rs.getInt("user_id"));
                     payment.setOrderId(rs.getInt("order_id"));
-                    payment.setPaymentDate(rs.getObject("payment_date", LocalDateTime.class));
+                    payment.setPaymentDate(parsePaymentDT(rs.getString("payment_date")));
                     payment.setAmount(rs.getBigDecimal("amount"));
                     payment.setPaymentMethod(rs.getString("payment_method"));
                     payment.setStatus(rs.getString("status"));
-                    payment.setCreatedAt(rs.getObject("created_at", LocalDateTime.class));
-                    payment.setUpdatedAt(rs.getObject("updated_at", LocalDateTime.class));
+                    payment.setCreatedAt(parsePaymentDT(rs.getString("created_at")));
+                    payment.setUpdatedAt(parsePaymentDT(rs.getString("updated_at")));
                     payments.add(payment);
                 }
             }
@@ -264,16 +264,28 @@ public class PaymentDAO {
                     payment.setId(rs.getInt("id"));
                     payment.setUserId(rs.getInt("user_id"));
                     payment.setOrderId(rs.getInt("order_id"));
-                    payment.setPaymentDate(rs.getObject("payment_date", LocalDateTime.class));
+                    payment.setPaymentDate(parsePaymentDT(rs.getString("payment_date")));
                     payment.setAmount(rs.getBigDecimal("amount"));
                     payment.setPaymentMethod(rs.getString("payment_method"));
                     payment.setStatus(rs.getString("status"));
-                    payment.setCreatedAt(rs.getObject("created_at", LocalDateTime.class));
-                    payment.setUpdatedAt(rs.getObject("updated_at", LocalDateTime.class));
+                    payment.setCreatedAt(parsePaymentDT(rs.getString("created_at")));
+                    payment.setUpdatedAt(parsePaymentDT(rs.getString("updated_at")));
                     payments.add(payment);
                 }
             }
         }
         return payments;
     }
+
+    /** Flexible date/datetime parse: handles date-only, space- or T-separated,
+        ISO nanoseconds, and null. getObject(LocalDateTime.class) threw on some values. */
+    private static java.time.LocalDateTime parsePaymentDT(String value) {
+        if (value == null || value.trim().isEmpty()) return null;
+        String v = value.trim();
+        try {
+            if (v.length() <= 10) return java.time.LocalDate.parse(v).atStartOfDay();
+            return utils.DateTimeParser.parseLocalDateTime(v);
+        } catch (Exception e) { return null; }
+    }
+
 }
