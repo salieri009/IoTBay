@@ -22,7 +22,7 @@ public class ProductDAO implements dao.interfaces.ProductDAO {
 
     @Override
     public void createProduct(Product product) throws SQLException {
-        String query = "INSERT INTO product (category_id, name, description, price, stock_quantity, image_url, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO products (category_id, name, description, price, stock_quantity, image_url, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             statement.setInt(1, product.getCategoryId());
             statement.setString(2, product.getName());
@@ -46,7 +46,7 @@ public class ProductDAO implements dao.interfaces.ProductDAO {
 
     @Override
     public ArrayList<Product> getAllProducts() throws SQLException {
-        String query = "SELECT * FROM product ORDER BY created_at DESC";
+        String query = "SELECT * FROM products ORDER BY created_at DESC";
         ArrayList<Product> products = new ArrayList<>();
 
         try (PreparedStatement statement = connection.prepareStatement(query);
@@ -71,7 +71,7 @@ public class ProductDAO implements dao.interfaces.ProductDAO {
 
     @Override
     public Product getProductById(int id) throws SQLException {
-        String query = "SELECT * FROM product WHERE id = ?";
+        String query = "SELECT * FROM products WHERE id = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, id);
@@ -97,7 +97,7 @@ public class ProductDAO implements dao.interfaces.ProductDAO {
 
     @Override
     public ArrayList<Product> getProductsByName(String name) throws SQLException {
-        String query = "SELECT * FROM product WHERE name ILIKE ? ORDER BY name";
+        String query = "SELECT * FROM products WHERE name ILIKE ? ORDER BY name";
         ArrayList<Product> products = new ArrayList<>();
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -124,7 +124,7 @@ public class ProductDAO implements dao.interfaces.ProductDAO {
 
     @Override
     public ArrayList<Product> getProductsByCategoryId(int categoryId) throws SQLException {
-        String query = "SELECT * FROM product WHERE category_id = ? ORDER BY name";
+        String query = "SELECT * FROM products WHERE category_id = ? ORDER BY name";
         ArrayList<Product> products = new ArrayList<>();
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -151,7 +151,7 @@ public class ProductDAO implements dao.interfaces.ProductDAO {
 
     @Override
     public void updateProduct(int id, Product product) throws SQLException {
-        String query = "UPDATE product SET category_id = ?, name = ?, description = ?, price = ?, stock_quantity = ?, image_url = ?, updated_at = ? WHERE id = ?";
+        String query = "UPDATE products SET category_id = ?, name = ?, description = ?, price = ?, stock_quantity = ?, image_url = ?, updated_at = ? WHERE id = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, product.getCategoryId());
@@ -169,7 +169,7 @@ public class ProductDAO implements dao.interfaces.ProductDAO {
 
     @Override
     public void deleteProduct(int id) throws SQLException {
-        String query = "DELETE FROM product WHERE id = ?";
+        String query = "DELETE FROM products WHERE id = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, id);
@@ -179,7 +179,7 @@ public class ProductDAO implements dao.interfaces.ProductDAO {
 
     // Additional useful methods
     public ArrayList<Product> getAvailableProducts() throws SQLException {
-        String query = "SELECT * FROM product WHERE stock_quantity > 0 ORDER BY name";
+        String query = "SELECT * FROM products WHERE stock_quantity > 0 ORDER BY name";
         ArrayList<Product> products = new ArrayList<>();
 
         try (PreparedStatement statement = connection.prepareStatement(query);
@@ -203,7 +203,7 @@ public class ProductDAO implements dao.interfaces.ProductDAO {
     }
 
     public void updateStockQuantity(int productId, int newQuantity) throws SQLException {
-        String query = "UPDATE product SET stock_quantity = ?, updated_at = ? WHERE id = ?";
+        String query = "UPDATE products SET stock_quantity = ?, updated_at = ? WHERE id = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, newQuantity);
@@ -214,7 +214,7 @@ public class ProductDAO implements dao.interfaces.ProductDAO {
     }
 
     public void decreaseStock(int productId, int quantity) throws SQLException {
-        String query = "UPDATE product SET stock_quantity = stock_quantity - ?, updated_at = ? WHERE id = ? AND stock_quantity >= ?";
+        String query = "UPDATE products SET stock_quantity = stock_quantity - ?, updated_at = ? WHERE id = ? AND stock_quantity >= ?";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, quantity);
@@ -230,7 +230,7 @@ public class ProductDAO implements dao.interfaces.ProductDAO {
     }
 
     public void increaseStock(int productId, int quantity) throws SQLException {
-        String query = "UPDATE product SET stock_quantity = stock_quantity + ?, updated_at = ? WHERE id = ?";
+        String query = "UPDATE products SET stock_quantity = stock_quantity + ?, updated_at = ? WHERE id = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, quantity);
@@ -261,7 +261,7 @@ public class ProductDAO implements dao.interfaces.ProductDAO {
 
     public List<Product> searchProducts(String searchTerm, Integer categoryId, Double minPrice, Double maxPrice)
             throws SQLException {
-        StringBuilder query = new StringBuilder("SELECT * FROM product WHERE 1=1");
+        StringBuilder query = new StringBuilder("SELECT * FROM products WHERE 1=1");
         ArrayList<Object> parameters = new ArrayList<>();
 
         if (searchTerm != null && !searchTerm.trim().isEmpty()) {
@@ -317,7 +317,7 @@ public class ProductDAO implements dao.interfaces.ProductDAO {
     // Additional methods for ProductController
     public List<Product> searchProducts(String query, int limit, int offset) {
         List<Product> products = new ArrayList<>();
-        String sql = "SELECT * FROM product WHERE name ILIKE ? OR description ILIKE ? ORDER BY name LIMIT ? OFFSET ?";
+        String sql = "SELECT * FROM products WHERE name ILIKE ? OR description ILIKE ? ORDER BY name LIMIT ? OFFSET ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             String searchTerm = "%" + query + "%";
@@ -339,7 +339,7 @@ public class ProductDAO implements dao.interfaces.ProductDAO {
     }
 
     public int getSearchResultCount(String query) {
-        String sql = "SELECT COUNT(*) FROM product WHERE name ILIKE ? OR description ILIKE ?";
+        String sql = "SELECT COUNT(*) FROM products WHERE name ILIKE ? OR description ILIKE ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             String searchTerm = "%" + query + "%";
@@ -360,7 +360,7 @@ public class ProductDAO implements dao.interfaces.ProductDAO {
 
     public List<Product> getAllProducts(int limit, int offset) {
         List<Product> products = new ArrayList<>();
-        String sql = "SELECT * FROM product ORDER BY name LIMIT ? OFFSET ?";
+        String sql = "SELECT * FROM products ORDER BY name LIMIT ? OFFSET ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, limit);
@@ -379,7 +379,7 @@ public class ProductDAO implements dao.interfaces.ProductDAO {
     }
 
     public int getTotalProductCount() {
-        String sql = "SELECT COUNT(*) FROM product";
+        String sql = "SELECT COUNT(*) FROM products";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             try (ResultSet rs = stmt.executeQuery()) {
@@ -396,7 +396,7 @@ public class ProductDAO implements dao.interfaces.ProductDAO {
 
     public List<Product> getProductsByCategory(String category, int limit, int offset) {
         List<Product> products = new ArrayList<>();
-        String sql = "SELECT * FROM product WHERE category_id = (SELECT id FROM category WHERE name = ?) ORDER BY name LIMIT ? OFFSET ?";
+        String sql = "SELECT * FROM products WHERE category_id = (SELECT id FROM categories WHERE name = ?) ORDER BY name LIMIT ? OFFSET ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, category);
@@ -416,7 +416,7 @@ public class ProductDAO implements dao.interfaces.ProductDAO {
     }
 
     public int getProductCountByCategory(String category) {
-        String sql = "SELECT COUNT(*) FROM product WHERE category_id = (SELECT id FROM category WHERE name = ?)";
+        String sql = "SELECT COUNT(*) FROM products WHERE category_id = (SELECT id FROM categories WHERE name = ?)";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, category);
@@ -435,7 +435,7 @@ public class ProductDAO implements dao.interfaces.ProductDAO {
 
     public List<Product> getProductsByPriceRange(BigDecimal minPrice, BigDecimal maxPrice, int limit, int offset) {
         List<Product> products = new ArrayList<>();
-        StringBuilder sql = new StringBuilder("SELECT * FROM product WHERE 1=1");
+        StringBuilder sql = new StringBuilder("SELECT * FROM products WHERE 1=1");
 
         List<Object> params = new ArrayList<>();
 
@@ -471,7 +471,7 @@ public class ProductDAO implements dao.interfaces.ProductDAO {
     }
 
     public int getProductCountByPriceRange(BigDecimal minPrice, BigDecimal maxPrice) {
-        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM product WHERE 1=1");
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM products WHERE 1=1");
         List<Object> params = new ArrayList<>();
 
         if (minPrice != null) {
@@ -503,7 +503,7 @@ public class ProductDAO implements dao.interfaces.ProductDAO {
 
     public List<String> getAllCategories() {
         List<String> categories = new ArrayList<>();
-        String sql = "SELECT name FROM category ORDER BY name";
+        String sql = "SELECT name FROM categories ORDER BY name";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             try (ResultSet rs = stmt.executeQuery()) {
@@ -520,7 +520,7 @@ public class ProductDAO implements dao.interfaces.ProductDAO {
 
     public List<Product> getFeaturedProducts(int limit) {
         List<Product> products = new ArrayList<>();
-        String sql = "SELECT * FROM product WHERE stock_quantity > 0 ORDER BY created_at DESC LIMIT ?";
+        String sql = "SELECT * FROM products WHERE stock_quantity > 0 ORDER BY created_at DESC LIMIT ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, limit);

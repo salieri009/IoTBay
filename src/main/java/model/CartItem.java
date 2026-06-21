@@ -11,6 +11,9 @@ public class CartItem implements Serializable {
     private BigDecimal price; 
     private LocalDateTime addedAt;
     private LocalDateTime updatedAt;
+    // Optional joined product details, populated by the controller/service so the
+    // cart view can render name/description/image/stock via ${item.product.*}.
+    private Product product;
 
     // Default constructor
     public CartItem() {
@@ -126,6 +129,14 @@ public class CartItem implements Serializable {
     // Legacy method for backward compatibility
     public double getSubtotal(double price) {
         return price * quantity;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     @Override

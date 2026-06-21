@@ -39,12 +39,12 @@
 
                             <!-- Headline -->
                             <h1 class="hero-card__headline text-display-xl fade-in-left animation-delay-1">
-                                ${fn:escapeXml(param.title)}
+                                <c:out value="${param.title}" escapeXml="false" />
                             </h1>
 
                             <!-- Sub-headline -->
                             <p class="hero-card__subheadline text-body-lg fade-in-left animation-delay-2">
-                                ${fn:escapeXml(param.description)}
+                                <c:out value="${param.description}" escapeXml="false" />
                             </p>
 
                             <!-- CTA Group -->

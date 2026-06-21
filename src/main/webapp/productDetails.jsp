@@ -72,7 +72,7 @@
                                         <!-- Product Imagery -->
                                         <jsp:include page="/components/organisms/product-gallery/product-gallery.jsp">
                                             <jsp:param name="mainImageUrl"
-                                                value="${pageContext.request.contextPath}/${pd_image}" />
+                                                value="${pageContext.request.contextPath}/images/products/${pd_id}.png" />
                                             <jsp:param name="productName" value="${pd_name}" />
                                         </jsp:include>
 

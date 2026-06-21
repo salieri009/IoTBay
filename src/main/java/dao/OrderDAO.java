@@ -21,7 +21,7 @@ public class OrderDAO {
 
     // CREATE
     public int createOrder(Order order) throws SQLException {
-        String query = "INSERT INTO \"order\" (user_id, order_date, status, total_amount, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO orders (user_id, order_date, status, total_amount, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             statement.setInt(1, order.getUserId());
             statement.setObject(2, order.getOrderDate());
@@ -44,13 +44,13 @@ public class OrderDAO {
 
     // READ: Get order by ID
     public Order getOrderById(int orderId) throws SQLException {
-        String query = "SELECT order_id, user_id, order_date, status, total_amount, created_at, updated_at FROM \"order\" WHERE order_id = ?";
+        String query = "SELECT id, user_id, order_date, status, total_amount, created_at, updated_at FROM orders WHERE id = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, orderId);
             try (ResultSet rs = statement.executeQuery()) {
                 if (rs.next()) {
                     Order order = new Order();
-                    order.setId(rs.getInt("order_id"));
+                    order.setId(rs.getInt("id"));
                     order.setUserId(rs.getInt("user_id"));
                     order.setOrderDate(rs.getObject("order_date", LocalDateTime.class));
                     order.setStatus(rs.getString("status"));
@@ -66,14 +66,14 @@ public class OrderDAO {
 
     // READ: Get all orders by user ID
     public List<Order> getOrdersByUserId(int userId) throws SQLException {
-        String query = "SELECT order_id, user_id, order_date, status, total_amount, created_at, updated_at FROM \"order\" WHERE user_id = ? ORDER BY order_date DESC";
+        String query = "SELECT id, user_id, order_date, status, total_amount, created_at, updated_at FROM orders WHERE user_id = ? ORDER BY order_date DESC";
         List<Order> orders = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, userId);
             try (ResultSet rs = statement.executeQuery()) {
                 while (rs.next()) {
                     Order order = new Order();
-                    order.setId(rs.getInt("order_id"));
+                    order.setId(rs.getInt("id"));
                     order.setUserId(rs.getInt("user_id"));
                     order.setOrderDate(rs.getObject("order_date", LocalDateTime.class));
                     order.setStatus(rs.getString("status"));
@@ -89,7 +89,7 @@ public class OrderDAO {
 
     // UPDATE: Update order status and total amount
     public void updateOrder(Order order) throws SQLException {
-        String query = "UPDATE \"order\" SET order_date = ?, status = ?, total_amount = ?, updated_at = ? WHERE order_id = ?";
+        String query = "UPDATE orders SET order_date = ?, status = ?, total_amount = ?, updated_at = ? WHERE id = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setObject(1, order.getOrderDate());
             statement.setString(2, order.getStatus());
@@ -102,7 +102,7 @@ public class OrderDAO {
 
     // DELETE: Delete order by ID
     public void deleteOrder(int orderId) throws SQLException {
-        String query = "DELETE FROM \"order\" WHERE order_id = ?";
+        String query = "DELETE FROM orders WHERE id = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, orderId);
             statement.executeUpdate();
@@ -110,9 +110,9 @@ public class OrderDAO {
     }
 
     public List<Order> searchOrders(int userId, Integer orderId, String orderDate) throws SQLException {
-        String query = "SELECT order_id, user_id, order_date, status, total_amount, created_at, updated_at FROM \"order\" "
+        String query = "SELECT id, user_id, order_date, status, total_amount, created_at, updated_at FROM orders "
                     + "WHERE user_id = ? "
-                    + "AND (? IS NULL OR order_id = ?) "
+                    + "AND (? IS NULL OR id = ?) "
                     + "AND (? IS NULL OR date(replace(order_date, 'T', ' ')) = ?) "
                     + "ORDER BY order_date DESC";
 
@@ -140,7 +140,7 @@ public class OrderDAO {
             try (ResultSet rs = statement.executeQuery()) {
                 while (rs.next()) {
                     Order order = new Order();
-                    order.setId(rs.getInt("order_id"));
+                    order.setId(rs.getInt("id"));
                     order.setUserId(rs.getInt("user_id"));
                     order.setOrderDate(rs.getObject("order_date", LocalDateTime.class));
                     order.setStatus(rs.getString("status"));
@@ -157,14 +157,14 @@ public class OrderDAO {
 
     // GET orders by status
     public List<Order> getOrdersByStatus(String status) throws SQLException {
-        String query = "SELECT order_id, user_id, order_date, status, total_amount, created_at, updated_at FROM \"order\" WHERE status = ? ORDER BY order_date DESC";
+        String query = "SELECT id, user_id, order_date, status, total_amount, created_at, updated_at FROM orders WHERE status = ? ORDER BY order_date DESC";
         List<Order> orders = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, status);
             try (ResultSet rs = statement.executeQuery()) {
                 while (rs.next()) {
                     Order order = new Order();
-                    order.setId(rs.getInt("order_id"));
+                    order.setId(rs.getInt("id"));
                     order.setUserId(rs.getInt("user_id"));
                     order.setOrderDate(rs.getObject("order_date", LocalDateTime.class));
                     order.setStatus(rs.getString("status"));
@@ -180,13 +180,13 @@ public class OrderDAO {
 
     // GET all orders (admin function)
     public List<Order> getAllOrders() throws SQLException {
-        String query = "SELECT order_id, user_id, order_date, status, total_amount, created_at, updated_at FROM \"order\" ORDER BY order_date DESC";
+        String query = "SELECT id, user_id, order_date, status, total_amount, created_at, updated_at FROM orders ORDER BY order_date DESC";
         List<Order> orders = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             try (ResultSet rs = statement.executeQuery()) {
                 while (rs.next()) {
                     Order order = new Order();
-                    order.setId(rs.getInt("order_id"));
+                    order.setId(rs.getInt("id"));
                     order.setUserId(rs.getInt("user_id"));
                     order.setOrderDate(rs.getObject("order_date", LocalDateTime.class));
                     order.setStatus(rs.getString("status"));

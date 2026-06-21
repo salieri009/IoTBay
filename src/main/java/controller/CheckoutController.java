@@ -156,11 +156,14 @@ public class CheckoutController extends HttpServlet {
                 return;
             }
 
-            // Validate shipping information if provided
-            String shippingAddress = utils.SecurityUtil.getValidatedStringParameter(request, "shippingAddress", 200);
-            String shippingCity = utils.SecurityUtil.getValidatedStringParameter(request, "shippingCity", 100);
-            String shippingPostalCode = utils.SecurityUtil.getValidatedStringParameter(request, "shippingPostalCode", 10);
-            String shippingCountry = utils.SecurityUtil.getValidatedStringParameter(request, "shippingCountry", 100);
+            // Validate shipping information if provided.
+            // The checkout form posts these as address1/city/postalCode/country;
+            // fall back to shipping* names for API/non-form callers. Read leniently —
+            // the block below validates & sanitizes whatever is present.
+            String shippingAddress = firstNonBlankParam(request, "shippingAddress", "address1");
+            String shippingCity = firstNonBlankParam(request, "shippingCity", "city");
+            String shippingPostalCode = firstNonBlankParam(request, "shippingPostalCode", "postalCode");
+            String shippingCountry = firstNonBlankParam(request, "shippingCountry", "country");
             
             if (shippingAddress != null && !shippingAddress.trim().isEmpty()) {
                 // Validate shipping address
@@ -259,10 +262,12 @@ public class CheckoutController extends HttpServlet {
 
             int paymentId = paymentDAO.createPayment(payment);
 
-            // Store card details if provided (masked)
-            String cardNumber = utils.SecurityUtil.getValidatedStringParameter(request, "cardNumber", 20);
-            String expiryDate = utils.SecurityUtil.getValidatedStringParameter(request, "expiryDate", 10);
-            String cardHolderName = utils.SecurityUtil.getValidatedStringParameter(request, "cardHolderName", 100);
+            // Store card details if provided (masked). Card fields are optional —
+            // only meaningful for card payments — and the form names them
+            // cardholderName (lowercase h). Read leniently so PayPal/bank don't fail.
+            String cardNumber = firstNonBlankParam(request, "cardNumber");
+            String expiryDate = firstNonBlankParam(request, "expiryDate");
+            String cardHolderName = firstNonBlankParam(request, "cardHolderName", "cardholderName");
             if (cardNumber != null && !cardNumber.trim().isEmpty()) {
                 PaymentDetail detail = new PaymentDetail();
                 detail.setPaymentId(paymentId);
@@ -287,6 +292,17 @@ public class CheckoutController extends HttpServlet {
         } catch (Exception e) {
             utils.ErrorAction.handleServerError(request, response, e, "CheckoutController.doPost");
         }
+    }
+
+    /** Returns the first non-blank (trimmed) request parameter among names, else null. */
+    private static String firstNonBlankParam(HttpServletRequest request, String... names) {
+        for (String n : names) {
+            String v = request.getParameter(n);
+            if (v != null && !v.trim().isEmpty()) {
+                return v.trim();
+            }
+        }
+        return null;
     }
 
     private String maskCardNumber(String cardNumber) {

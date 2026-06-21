@@ -14,6 +14,9 @@ public class User implements Serializable {
     private String postalCode;
     private String addressLine1;
     private String addressLine2;
+    // No dedicated DB columns; used to pre-fill / collect shipping details at checkout.
+    private String city;
+    private String state;
     private String paymentMethod;
     // private String gender;
     // we don't need a gender field for e-commerce website
@@ -249,6 +252,22 @@ public class User implements Serializable {
 
     public String getAddressLine2() {
         return addressLine2;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 
     public void setPostalCode(String postalCode) {

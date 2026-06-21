@@ -15,11 +15,9 @@
                                     %>
 
                                         <%-- Logic refactored to JSTL/EL --%>
+                                            <%-- cartItems may be null or any List (incl. Collections.emptyList());
+                                                 c:forEach / `empty` handle both safely, so no jsp:useBean cast. --%>
                                             <c:set var="cartItems" value="${requestScope.cartItems}" />
-                                            <c:if test="${empty cartItems}">
-                                                <jsp:useBean id="cartItems" class="java.util.ArrayList"
-                                                    scope="request" />
-                                            </c:if>
 
                                             <%-- Calculate Totals --%>
                                                 <c:set var="subtotal" value="0.0" />
@@ -448,7 +446,7 @@
                                                                     'Content-Type': 'application/x-www-form-urlencoded',
                                                                     'X-CSRF-Token': csrfToken
                                                                 },
-                                                                body: `productId=${productId}&quantity=${newQuantity}&csrfToken=${csrfToken}`
+                                                                body: `productId=\${productId}&quantity=\${newQuantity}&csrfToken=\${csrfToken}`
                                                             })
                                                                 .then(response => {
                                                                     if (response.ok) {
@@ -485,13 +483,13 @@
 
                                                         function removeItem(event, itemId) {
                                                             event.preventDefault();
-                                                            const cartItem = document.querySelector(`[data-item-id="${itemId}"]`) ||
+                                                            const cartItem = document.querySelector(`[data-item-id="\${itemId}"]`) ||
                                                                 event.currentTarget.closest('.cart-item');
                                                             const productName = cartItem ? cartItem.querySelector('.cart-item-name')?.textContent.trim() : 'this item';
 
                                                             const productId = cartItem ? (cartItem.getAttribute('data-product-id') || itemId) : itemId;
 
-                                                            if (!confirm(`Remove "${productName}" from your cart?`)) {
+                                                            if (!confirm(`Remove "\${productName}" from your cart?`)) {
                                                                 return;
                                                             }
 
@@ -509,7 +507,7 @@
                                                                     'Content-Type': 'application/x-www-form-urlencoded',
                                                                     'X-CSRF-Token': csrfToken
                                                                 },
-                                                                body: `productId=${productId}&csrfToken=${csrfToken}`
+                                                                body: `productId=\${productId}&csrfToken=\${csrfToken}`
                                                             })
                                                                 .then(response => {
                                                                     if (response.ok) {
@@ -521,7 +519,7 @@
                                                                 })
                                                                 .then(data => {
                                                                     if (typeof showToast === 'function') {
-                                                                        showToast(`"${productName}" removed from cart`, 'success');
+                                                                        showToast(`"\${productName}" removed from cart`, 'success');
                                                                     }
                                                                     cartItem?.remove();
                                                                     if (data) {
@@ -580,7 +578,7 @@
                                                             }
                                                             if (shippingNoteEl) {
                                                                 if (data.freeShippingDelta && data.freeShippingDelta > 0) {
-                                                                    shippingNoteEl.textContent = `Add ${formatCurrency(data.freeShippingDelta)} more for free shipping`;
+                                                                    shippingNoteEl.textContent = `Add \${formatCurrency(data.freeShippingDelta)} more for free shipping`;
                                                                     shippingNoteEl.classList.remove('hidden');
                                                                 } else {
                                                                     shippingNoteEl.classList.add('hidden');
@@ -596,16 +594,16 @@
                                                                 summaryBadges.forEach((badge) => {
                                                                     const type = badge.getAttribute('data-cart-summary-badge');
                                                                     if (type === 'subtotal' && typeof data.subtotal !== 'undefined') {
-                                                                        badge.textContent = `Subtotal: ${formatCurrency(data.subtotal)}`;
+                                                                        badge.textContent = `Subtotal: \${formatCurrency(data.subtotal)}`;
                                                                     }
                                                                     if (type === 'total' && typeof data.total !== 'undefined') {
-                                                                        badge.textContent = `Estimated total: ${formatCurrency(data.total)}`;
+                                                                        badge.textContent = `Estimated total: \${formatCurrency(data.total)}`;
                                                                     }
                                                                 });
                                                             }
                                                             if (cartSummaryText) {
                                                                 const noun = data.totalItems === 1 ? 'item' : 'items';
-                                                                cartSummaryText.textContent = data.totalItems === 0 ? 'Your cart is currently empty.' : `${data.totalItems} ${noun} in your cart.`;
+                                                                cartSummaryText.textContent = data.totalItems === 0 ? 'Your cart is currently empty.' : `\${data.totalItems} \${noun} in your cart.`;
                                                             }
                                                         }
                                                     </script>

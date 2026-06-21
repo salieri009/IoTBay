@@ -73,6 +73,12 @@ public class DatabaseInitializer {
             createAccessLogsTable(connection);
             System.out.println("[DatabaseInitializer] Creating shipment table...");
             createShipmentTable(connection);
+            System.out.println("[DatabaseInitializer] Creating cart_items table...");
+            createCartItemsTable(connection);
+            System.out.println("[DatabaseInitializer] Creating payment tables...");
+            createPaymentTables(connection);
+            System.out.println("[DatabaseInitializer] Creating order_product table...");
+            createOrderProductTable(connection);
 
             // Seed additional tables
             System.out.println("[DatabaseInitializer] Seeding orders (plural table)...");
@@ -571,6 +577,74 @@ public class DatabaseInitializer {
         try (Statement stmt = connection.createStatement()) {
             stmt.execute(sql);
             logger.log(Level.INFO, "orders table created/verified");
+        }
+    }
+
+    /** Creates 'order_product' line-item table used by OrderProductDAO (was missing). */
+    private static void createOrderProductTable(Connection connection) throws SQLException {
+        String sql = "CREATE TABLE IF NOT EXISTS order_product (" +
+                "orderID INTEGER NOT NULL, " +
+                "productID INTEGER NOT NULL, " +
+                "quantity INTEGER NOT NULL DEFAULT 1, " +
+                "priceAtOrderTime REAL NOT NULL DEFAULT 0, " +
+                "PRIMARY KEY (orderID, productID), " +
+                "FOREIGN KEY (orderID) REFERENCES orders(id), " +
+                "FOREIGN KEY (productID) REFERENCES products(id)" +
+                ")";
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute(sql);
+            logger.log(Level.INFO, "order_product table created/verified");
+        }
+    }
+
+    /** Creates 'payment' and 'payment_detail' tables used by the checkout flow (were missing). */
+    private static void createPaymentTables(Connection connection) throws SQLException {
+        String payment = "CREATE TABLE IF NOT EXISTS payment (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "user_id INTEGER NOT NULL, " +
+                "order_id INTEGER, " +
+                "payment_date TEXT DEFAULT (datetime('now')), " +
+                "amount REAL NOT NULL DEFAULT 0, " +
+                "payment_method TEXT, " +
+                "status TEXT NOT NULL DEFAULT 'completed', " +
+                "created_at TEXT DEFAULT (datetime('now')), " +
+                "updated_at TEXT DEFAULT (datetime('now'))" +
+                ")";
+        String detail = "CREATE TABLE IF NOT EXISTS payment_detail (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "payment_id INTEGER, " +
+                "user_id INTEGER, " +
+                "card_holder_name TEXT, " +
+                "card_number TEXT, " +
+                "expiry_date TEXT, " +
+                "card_type TEXT, " +
+                "is_default INTEGER DEFAULT 0, " +
+                "created_at TEXT DEFAULT (datetime('now')), " +
+                "updated_at TEXT DEFAULT (datetime('now'))" +
+                ")";
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute(payment);
+            stmt.execute(detail);
+            logger.log(Level.INFO, "payment / payment_detail tables created/verified");
+        }
+    }
+
+    /** Creates 'cart_items' table used by CartItemDAOImpl (was previously missing). */
+    private static void createCartItemsTable(Connection connection) throws SQLException {
+        String sql = "CREATE TABLE IF NOT EXISTS cart_items (" +
+                "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "user_id INTEGER NOT NULL, " +
+                "product_id INTEGER NOT NULL, " +
+                "quantity INTEGER NOT NULL DEFAULT 1, " +
+                "price REAL NOT NULL DEFAULT 0, " +
+                "added_at TEXT DEFAULT (datetime('now')), " +
+                "updated_at TEXT DEFAULT (datetime('now')), " +
+                "FOREIGN KEY (user_id) REFERENCES Users(id), " +
+                "FOREIGN KEY (product_id) REFERENCES products(id)" +
+                ")";
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute(sql);
+            logger.log(Level.INFO, "cart_items table created/verified");
         }
     }
 

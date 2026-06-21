@@ -1145,7 +1145,7 @@
                                             if (cardType && value.length > 0) {
                                                 iconContainer?.classList.remove('hidden');
                                                 if (iconContainer) {
-                                                    iconContainer.innerHTML = `<span class="text-xs font-medium text-neutral-600">${cardType}</span>`;
+                                                    iconContainer.innerHTML = `<span class="text-xs font-medium text-neutral-600">\${cardType}</span>`;
                                                 }
                                             } else {
                                                 iconContainer?.classList.add('hidden');
@@ -1166,11 +1166,11 @@
                                             let value = input.value.replace(/\D/g, '');
                                             if (value.length > 0) {
                                                 if (value.length <= 3) {
-                                                    value = `(${value}`;
+                                                    value = `(\${value}`;
                                                 } else if (value.length <= 6) {
-                                                    value = `(${value.substring(0, 3)}) ${value.substring(3)}`;
+                                                    value = `(\${value.substring(0, 3)}) \${value.substring(3)}`;
                                                 } else {
-                                                    value = `(${value.substring(0, 3)}) ${value.substring(3, 6)}-${value.substring(6, 10)}`;
+                                                    value = `(\${value.substring(0, 3)}) \${value.substring(3, 6)}-\${value.substring(6, 10)}`;
                                                 }
                                             }
                                             input.value = value;
@@ -1234,11 +1234,11 @@
                                             const totalElement = document.getElementById('orderTotal');
 
                                             if (shippingElement) {
-                                                shippingElement.innerHTML = `$${shippingCost.toFixed(2)}`;
+                                                shippingElement.innerHTML = `$\${shippingCost.toFixed(2)}`;
                                             }
 
                                             if (totalElement) {
-                                                totalElement.textContent = `$${total.toFixed(2)}`;
+                                                totalElement.textContent = `$\${total.toFixed(2)}`;
                                             }
 
                                             // Update estimated delivery
@@ -1309,7 +1309,7 @@
                                             if (reviewAddress1) reviewAddress1.textContent = address1 || 'Address Line 1';
                                             if (reviewAddress2) reviewAddress2.textContent = address2;
                                             if (reviewCityState) {
-                                                reviewCityState.textContent = `${city || 'City'}, ${state || 'State'} ${postalCode || 'ZIP'}`;
+                                                reviewCityState.textContent = `\${city || 'City'}, \${state || 'State'} \${postalCode || 'ZIP'}`;
                                             }
                                             if (reviewCountry) {
                                                 const countryNames = {
@@ -1347,7 +1347,7 @@
                                             if (reviewAddress2) reviewAddress2.textContent = address2;
 
                                             const reviewCityState = document.getElementById('reviewCityState');
-                                            if (reviewCityState) reviewCityState.textContent = `${city}, ${state} ${postalCode}`;
+                                            if (reviewCityState) reviewCityState.textContent = `\${city}, \${state} \${postalCode}`;
 
                                             const reviewCountry = document.getElementById('reviewCountry');
                                             if (reviewCountry) reviewCountry.textContent = country;
@@ -1358,7 +1358,7 @@
                                             if (paymentReview) {
                                                 if (paymentMethod === 'credit') {
                                                     const last4 = document.getElementById('cardNumber')?.value.slice(-4) || 'xxxx';
-                                                    paymentReview.innerHTML = `<p>Credit/Debit Card ending in •••• ${last4}</p>`;
+                                                    paymentReview.innerHTML = `<p>Credit/Debit Card ending in •••• \${last4}</p>`;
                                                 } else if (paymentMethod === 'paypal') {
                                                     paymentReview.innerHTML = '<p>PayPal</p>';
                                                 } else if (paymentMethod === 'bank') {

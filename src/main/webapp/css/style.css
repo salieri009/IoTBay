@@ -7850,6 +7850,7 @@ tbody tr:hover {
 /* Dark mode root variables */
 [data-theme="dark"] {
   --neutral-0: #0f172a;
+  --neutral-25: #0b1220;
   --neutral-50: #1e293b;
   --neutral-100: #334155;
   --neutral-200: #475569;
@@ -7860,7 +7861,8 @@ tbody tr:hover {
   --neutral-700: #f1f5f9;
   --neutral-800: #f8fafc;
   --neutral-900: #ffffff;
-  
+  --neutral-950: #ffffff;
+
   --brand-primary: #60a5fa;
   --brand-primary-dark: #3b82f6;
   --brand-secondary: #34d399;

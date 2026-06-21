@@ -68,19 +68,24 @@ public class DIContainer {
         instances.put(clazz, instance);
     }
 
+    /**
+     * Returns a FRESH database connection on every call.
+     *
+     * DAOs wrap this in try-with-resources, which closes the connection when the
+     * method returns. A single shared static connection therefore caused a
+     * concurrency race: one request (e.g. the header's cart-count API) would
+     * close the shared connection while another (the /cart page query) was still
+     * using it, surfacing as "database connection closed". Handing out a new
+     * connection per call gives each try-with-resources its own connection to
+     * close, eliminating the race. The DB is file-backed (iotbay.db), so data
+     * persists across connections.
+     */
     public static Connection getConnection() {
         ensureInitialized();
         try {
-            if (connection == null || connection.isClosed()) {
-                synchronized (lock) {
-                    if (connection == null || connection.isClosed()) {
-                        connection = DBConnection.getConnection();
-                    }
-                }
-            }
+            return DBConnection.getConnection();
         } catch (SQLException | ClassNotFoundException e) {
-            throw new RuntimeException("Failed to refresh database connection", e);
+            throw new RuntimeException("Failed to open database connection", e);
         }
-        return connection;
     }
 }

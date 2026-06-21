@@ -8,10 +8,11 @@
 <%@ attribute name="customJS" required="false" rtexprvalue="true" %>
 
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="scroll-smooth" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
     <meta name="description" content="${description != null ? description : 'IoT Bay - Your Premier IoT Device Store'}">
     <meta name="keywords" content="IoT devices, smart home, sensors, electronics, technology">
     <meta name="author" content="IoT Bay">
@@ -45,18 +46,21 @@
                                 800: '#1e293b', 900: '#0f172a',
                             },
                         },
+                        // NIGHT THEME: neutral scale inverted so existing
+                        // utilities (bg-neutral-50, text-neutral-900, ...) render dark.
+                        // 50 = darkest app background, 900/950 = brightest text.
                         neutral: {
-                            50: '#f9fafb',
-                            100: '#f3f4f6',
-                            200: '#e5e7eb',
-                            300: '#d1d5db',
-                            400: '#9ca3af',
-                            500: '#6b7280',
-                            600: '#4b5563',
-                            700: '#374151',
-                            800: '#1f2937',
-                            900: '#111827',
-                            950: '#030712',
+                            50: '#0f172a',   // app background (darkest)
+                            100: '#1e293b',  // raised surface
+                            200: '#334155',  // borders / dividers
+                            300: '#475569',  // strong borders / disabled
+                            400: '#94a3b8',  // muted text (AA on dark)
+                            500: '#a3b1c6',  // secondary text
+                            600: '#cbd5e1',  // secondary/body text
+                            700: '#e2e8f0',  // body text
+                            800: '#f1f5f9',  // emphasized text
+                            900: '#f8fafc',  // headings (brightest)
+                            950: '#ffffff',
                         },
                         success: {
                             DEFAULT: '#22c55e',
@@ -95,6 +99,9 @@
         <link rel="stylesheet" href="<c:url value='/css/${customCSS}' />">
     </c:if>
 
+    <!-- Night theme overrides (must load AFTER style.css and any custom css) -->
+    <link rel="stylesheet" href="<c:url value='/css/dark-theme.css?v=20251220' />">
+
     <!-- Resource Hints for Performance (Section 3.4) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -107,11 +114,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
 
     <script>
-        (function() {
-            const theme = localStorage.getItem('theme') ||
-                         (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-            document.documentElement.setAttribute('data-theme', theme);
-        })();
+        // Night theme is the fixed default across the whole site.
+        document.documentElement.setAttribute('data-theme', 'dark');
     </script>
 </head>
 <body class="antialiased bg-neutral-50 text-neutral-900 min-h-screen flex flex-col">

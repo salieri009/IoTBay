@@ -9,10 +9,11 @@
 <%@ attribute name="activeNav" required="false" rtexprvalue="true" %>
 
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="scroll-smooth" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
     <meta name="description" content="${description != null ? description : 'IoT Bay Admin - Management Console'}">
     <meta name="robots" content="noindex, nofollow">
     <meta name="author" content="IoT Bay">
@@ -31,6 +32,9 @@
         <link rel="stylesheet" href="<c:url value='/css/${customCSS}' />">
     </c:if>
 
+    <!-- Night theme overrides (must load AFTER style.css/admin.css and custom css) -->
+    <link rel="stylesheet" href="<c:url value='/css/dark-theme.css?v=20251220' />">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -38,11 +42,8 @@
 
     <!-- Theme Script -->
     <script>
-        (function() {
-            const theme = localStorage.getItem('theme') ||
-                         (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-            document.documentElement.setAttribute('data-theme', theme);
-        })();
+        // Night theme is the fixed default across the whole site.
+        document.documentElement.setAttribute('data-theme', 'dark');
     </script>
 </head>
 <body class="antialiased">

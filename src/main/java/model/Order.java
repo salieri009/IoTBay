@@ -13,6 +13,9 @@ public class Order implements Serializable {
     private String paymentMethod;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    // Transient line items (product + quantity), populated by the controller for
+    // the order-history view. Defaults to empty so EL ${order.orderItems} is safe.
+    private java.util.List<CartItem> orderItems = new java.util.ArrayList<>();
 
     // Default constructor
     public Order() {
@@ -129,6 +132,14 @@ public class Order implements Serializable {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public java.util.List<CartItem> getOrderItems() {
+        return orderItems;
+    }
+
+    public void setOrderItems(java.util.List<CartItem> orderItems) {
+        this.orderItems = (orderItems != null) ? orderItems : new java.util.ArrayList<>();
     }
 
     public BigDecimal calculateTotal() {

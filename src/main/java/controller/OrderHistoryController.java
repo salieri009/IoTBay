@@ -86,6 +86,22 @@ public class OrderHistoryController extends HttpServlet {
 
                 response.getWriter().write(gson.toJson(json));
             } else {
+                // Populate each order's line items (product + quantity) for the
+                // history view's thumbnails / item summary (${order.orderItems}).
+                dao.OrderProductDAO orderProductDAO = new dao.OrderProductDAO(connection);
+                dao.ProductDAO productDAO = new dao.ProductDAO(connection);
+                for (Order o : orders) {
+                    java.util.List<model.CartItem> items = new java.util.ArrayList<>();
+                    for (model.OrderProduct op : orderProductDAO.getProductsByOrderId(o.getId())) {
+                        model.CartItem ci = new model.CartItem();
+                        ci.setProductId(op.getProductId());
+                        ci.setQuantity(op.getQuantity());
+                        ci.setProduct(productDAO.getProductById(op.getProductId()));
+                        items.add(ci);
+                    }
+                    o.setOrderItems(items);
+                }
+
                 // Return JSP view
                 request.setAttribute("orders", orders);
                 request.setAttribute("statusFilter", statusFilter);

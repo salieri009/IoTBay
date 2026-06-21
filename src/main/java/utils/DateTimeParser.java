@@ -21,7 +21,19 @@ public class DateTimeParser {
     }
 
     public static LocalDate parseLocalDate(String text) {
-        return text != null ? LocalDate.parse(text, DATE_FORMAT) : null;
+        if (text == null || text.trim().isEmpty()) {
+            return null;
+        }
+        // DB columns often store full datetimes ("2025-12-05 06:28:04" or
+        // "2025-12-05T06:28:04"). Take just the date portion so a date-only
+        // parse doesn't choke on the time component.
+        String trimmed = text.trim();
+        int sep = trimmed.indexOf(' ');
+        if (sep < 0) {
+            sep = trimmed.indexOf('T');
+        }
+        String datePart = sep > 0 ? trimmed.substring(0, sep) : trimmed;
+        return LocalDate.parse(datePart, DATE_FORMAT);
     }
 
     public static LocalDateTime parseLocalDateTime(String text) {

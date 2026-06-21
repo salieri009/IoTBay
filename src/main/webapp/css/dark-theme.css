@@ -1,0 +1,139 @@
+/* =====================================================================
+   IoTBay — Night Theme override layer
+   ---------------------------------------------------------------------
+   The site renders almost entirely with Tailwind (Play CDN) utility
+   classes that compile to LITERAL colors and therefore ignore CSS
+   variables. The fixed "night" theme is achieved in two ways:
+
+     1) base.tag inverts the `neutral` palette in the Tailwind config so
+        light-intent utilities (bg-neutral-50, text-neutral-900, ...)
+        automatically render dark.
+     2) This file patches the ABSOLUTE colors that inversion can't reach
+        (bg-white, gradients, the few dark-INTENT neutrals like
+        bg-neutral-900 that inversion would wrongly turn light, etc.).
+
+   Every rule is scoped with [data-theme="dark"] so it outranks Tailwind's
+   single-class utilities regardless of the CDN's runtime <style> order.
+   `data-theme="dark"` is always present (set in base.tag/admin-base.tag).
+   ===================================================================== */
+
+/* ---- Night palette tokens (single source for this layer) ---- */
+:root {
+  --night-bg:        #0f172a; /* app background (darkest)        */
+  --night-surface:   #1e293b; /* cards, header, footer, modals   */
+  --night-surface-2: #243044; /* raised/hover surface            */
+  --night-border:    #334155; /* borders, dividers               */
+  --night-border-2:  #475569; /* stronger borders                */
+  --night-text:      #e2e8f0; /* body text                       */
+  --night-heading:   #f8fafc; /* headings (brightest)            */
+  --night-muted:     #94a3b8; /* secondary / muted text (AA)     */
+  --night-link:      #60a5fa; /* links / inline CTA on dark      */
+}
+
+/* ---- Global baseline (safety net for pages not using body utils) ---- */
+[data-theme="dark"] body {
+  background-color: var(--night-bg);
+  color: var(--night-text);
+}
+
+/* =====================================================================
+   1. Surfaces — bg-white was the universal "card/panel" colour (253 uses)
+   ===================================================================== */
+[data-theme="dark"] .bg-white { background-color: var(--night-surface) !important; }
+
+/* Frosted / translucent white surfaces (sticky header, overlays) */
+[data-theme="dark"] .bg-white\/80 { background-color: rgba(30, 41, 59, 0.85) !important; }
+[data-theme="dark"] .bg-white\/90 { background-color: rgba(30, 41, 59, 0.92) !important; }
+/* .bg-white/10 is a subtle highlight on coloured backgrounds — leave as is */
+
+/* =====================================================================
+   2. Dark-INTENT neutrals — these sections were ALREADY dark in the old
+   light theme (footer, hero card). The palette inversion wrongly flips
+   them to light, so force them back to dark surfaces.
+   ===================================================================== */
+[data-theme="dark"] .bg-neutral-800 { background-color: var(--night-surface) !important; }
+[data-theme="dark"] .bg-neutral-900 { background-color: var(--night-bg) !important; }
+[data-theme="dark"] .bg-neutral-950 { background-color: #020617 !important; }
+
+[data-theme="dark"] .border-neutral-800 { border-color: var(--night-border) !important; }
+
+/* Gradients that were dark→dark (hero card background, etc.) */
+[data-theme="dark"] .from-neutral-900 {
+  --tw-gradient-from: #0f172a var(--tw-gradient-from-position);
+  --tw-gradient-to: rgb(15 23 42 / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+[data-theme="dark"] .from-neutral-950 {
+  --tw-gradient-from: #020617 var(--tw-gradient-from-position);
+  --tw-gradient-to: rgb(2 6 23 / 0) var(--tw-gradient-to-position);
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+}
+[data-theme="dark"] .to-neutral-800 { --tw-gradient-to: #1e293b var(--tw-gradient-to-position); }
+
+/* =====================================================================
+   3. Light-INTENT text on dark sections — inversion flips these to dark,
+   making them invisible. Keep them light/muted.
+   ===================================================================== */
+[data-theme="dark"] .text-neutral-200 { color: #e2e8f0 !important; }
+[data-theme="dark"] .text-neutral-300 { color: #cbd5e1 !important; }
+[data-theme="dark"] .text-gray-600   { color: var(--night-muted) !important; }
+
+/* =====================================================================
+   4. Form controls — inputs/selects/textarea readable on dark
+   ===================================================================== */
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea {
+  background-color: var(--night-surface);
+  border-color: var(--night-border);
+  color: var(--night-text);
+}
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder {
+  color: var(--night-muted);
+  opacity: 1;
+}
+[data-theme="dark"] input:focus,
+[data-theme="dark"] select:focus,
+[data-theme="dark"] textarea:focus {
+  border-color: var(--night-link);
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.25);
+  outline: none;
+}
+/* Inputs that explicitly carry .bg-white keep the surface, not pure white */
+[data-theme="dark"] input.bg-white,
+[data-theme="dark"] select.bg-white,
+[data-theme="dark"] textarea.bg-white { background-color: var(--night-surface) !important; }
+
+/* =====================================================================
+   5. Misc polish — dividers, shadows, links, selection, scrollbar
+   ===================================================================== */
+[data-theme="dark"] hr,
+[data-theme="dark"] .divide-neutral-200 > :not([hidden]) ~ :not([hidden]) {
+  border-color: var(--night-border);
+}
+
+/* Shadows read as near-black on a dark canvas; deepen them so elevation
+   is still perceptible. */
+[data-theme="dark"] .shadow-sm  { box-shadow: 0 1px 2px 0 rgba(0,0,0,0.45); }
+[data-theme="dark"] .shadow,
+[data-theme="dark"] .shadow-md  { box-shadow: 0 4px 8px -2px rgba(0,0,0,0.55); }
+[data-theme="dark"] .shadow-lg  { box-shadow: 0 12px 24px -6px rgba(0,0,0,0.6); }
+[data-theme="dark"] .shadow-xl  { box-shadow: 0 20px 40px -10px rgba(0,0,0,0.65); }
+
+[data-theme="dark"] ::selection {
+  background: rgba(96, 165, 250, 0.35);
+  color: #ffffff;
+}
+
+[data-theme="dark"] * {
+  scrollbar-color: var(--night-border-2) var(--night-bg);
+}
+[data-theme="dark"] ::-webkit-scrollbar { width: 12px; height: 12px; }
+[data-theme="dark"] ::-webkit-scrollbar-track { background: var(--night-bg); }
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: var(--night-border-2);
+  border-radius: 9999px;
+  border: 3px solid var(--night-bg);
+}
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover { background: #5b6b85; }

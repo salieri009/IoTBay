@@ -24,6 +24,10 @@
     String statusFilter = (String) request.getAttribute("statusFilter");
     String dateRange = (String) request.getAttribute("dateRange");
     String orderNumber = (String) request.getAttribute("orderNumber");
+
+    // CSRF token for cancel-order forms (scriptlets are disallowed inside the
+    // scriptless <t:base> body below, so expose it via EL instead).
+    pageContext.setAttribute("csrfToken", utils.SecurityUtil.generateCSRFToken(request));
 %>
 
 <t:base 
@@ -215,7 +219,7 @@
                                             </jsp:include>
                                             <!-- Cancel Order -->
                                             <form action="${pageContext.request.contextPath}/orderhistory" method="post" class="inline">
-                                                <input type="hidden" name="csrfToken" value="<%= utils.SecurityUtil.generateCSRFToken(request) %>">
+                                                <input type="hidden" name="csrfToken" value="${csrfToken}">
                                                 <input type="hidden" name="action" value="cancel">
                                                 <input type="hidden" name="orderId" value="${order.id}">
                                                 <button type="submit" class="btn btn--error"

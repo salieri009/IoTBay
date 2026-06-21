@@ -266,20 +266,21 @@ public class CartController extends HttpServlet {
             // Secure input validation using SecurityUtil
             int productId = utils.SecurityUtil.getValidatedIntParameter(request, "productId", 1, Integer.MAX_VALUE);
             int quantity = utils.SecurityUtil.getValidatedIntParameter(request, "quantity", 1, 100);
-            double price = utils.SecurityUtil.getValidatedDoubleParameter(request, "productPrice");
 
-            // Validate price range
-            if (price <= 0 || price > 1000000) {
-                utils.ErrorAction.handleValidationError(request, response,
-                        "Invalid price range", "CartController.handleFormSubmission");
-                return;
-            }
-
-            // Check product availability
+            // Check product availability — and derive the price SERVER-SIDE from the
+            // product record. Never trust a client-submitted price (the add-to-cart
+            // form intentionally does not send one).
             Product product = productDAO.getProductById(productId);
             if (product == null) {
                 utils.ErrorAction.handleValidationError(request, response,
                         "Product not found", "CartController.handleFormSubmission");
+                return;
+            }
+
+            double price = product.getPrice();
+            if (price <= 0 || price > 1000000) {
+                utils.ErrorAction.handleValidationError(request, response,
+                        "Invalid price range", "CartController.handleFormSubmission");
                 return;
             }
 
@@ -355,6 +356,13 @@ public class CartController extends HttpServlet {
                     cartItems = cartItemDAO.getCartItemsByUserId(userId);
                     if (cartItems == null) {
                         cartItems = Collections.emptyList();
+                    }
+                    // Enrich each cart item with its product so the cart view can
+                    // render ${item.product.name/description/imageUrl/stockQuantity}.
+                    for (CartItem item : cartItems) {
+                        if (item.getProduct() == null) {
+                            item.setProduct(productDAO.getProductById(item.getProductId()));
+                        }
                     }
                     cartTotal = cartItemDAO.getCartTotal(userId);
                     if (cartTotal == null) {
