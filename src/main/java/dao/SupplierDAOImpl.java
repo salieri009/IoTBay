@@ -572,6 +572,9 @@ public class SupplierDAOImpl implements SupplierDAO {
     }
 
     public int getProductCount(Integer supplierId) throws SQLException {
+        // The supplier<->product relationship isn't modelled (products has no
+        // supplier_id column), so this stat is 0. Guarded so the supplier view
+        // page doesn't crash with "no such column: supplier_id".
         String query = "SELECT COUNT(*) FROM products WHERE supplier_id = ?";
         try (Connection connection = DIContainer.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
@@ -581,6 +584,8 @@ public class SupplierDAOImpl implements SupplierDAO {
                     return rs.getInt(1);
                 }
             }
+        } catch (SQLException e) {
+            return 0; // column/relationship not present
         }
         return 0;
     }
@@ -595,6 +600,8 @@ public class SupplierDAOImpl implements SupplierDAO {
                     return rs.getInt(1);
                 }
             }
+        } catch (SQLException e) {
+            return 0; // column/relationship not present
         }
         return 0;
     }

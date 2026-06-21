@@ -136,7 +136,7 @@ public class F10_DataManagementTest extends BaseE2ETest {
         List<WebElement> submitBtns = driver.findElements(
                 By.cssSelector("form[action*='import'] [type='submit'], form[action*='import'] button[type='submit']"));
         if (!submitBtns.isEmpty()) {
-            submitBtns.get(0).click();
+            clickRobust(submitBtns.get(0));
             assertNoServerError();
             String src = pageSource();
             // The preview page should render the uploaded email + a Confirm Import action
@@ -162,14 +162,14 @@ public class F10_DataManagementTest extends BaseE2ETest {
         List<WebElement> submitBtns = driver.findElements(
                 By.cssSelector("form[action*='/import'] [type='submit'], form[action*='/import'] button[type='submit']"));
         if (!submitBtns.isEmpty()) {
-            submitBtns.get(0).click();
+            clickRobust(submitBtns.get(0));
             assertNoServerError();
 
             // Confirm the import
             List<WebElement> confirmBtns = driver.findElements(
                     By.cssSelector("form[action*='confirmImport'] [type='submit'], form[action*='confirmImport'] button[type='submit']"));
             if (!confirmBtns.isEmpty()) {
-                confirmBtns.get(0).click();
+                clickRobust(confirmBtns.get(0));
                 assertNoServerError();
                 assertTrue("Confirm import should report records imported",
                         pageSource().contains("imported") || pageSource().contains("record") ||
@@ -191,7 +191,7 @@ public class F10_DataManagementTest extends BaseE2ETest {
         List<WebElement> submitBtns = driver.findElements(
                 By.cssSelector("form[action*='/import'] [type='submit'], form[action*='/import'] button[type='submit']"));
         if (!submitBtns.isEmpty()) {
-            submitBtns.get(0).click();
+            clickRobust(submitBtns.get(0));
             assertNoServerError();
             String src = pageSource();
             assertTrue("Invalid CSV headers should produce an error message",
@@ -214,7 +214,7 @@ public class F10_DataManagementTest extends BaseE2ETest {
         List<WebElement> submitBtns = driver.findElements(
                 By.cssSelector("form[action*='/import'] [type='submit'], form[action*='/import'] button[type='submit']"));
         if (!submitBtns.isEmpty()) {
-            submitBtns.get(0).click();
+            clickRobust(submitBtns.get(0));
             assertNoServerError();
             assertTrue("Product import should show a preview",
                     pageSource().contains("E2E Test Product") || pageSource().contains("Preview"));

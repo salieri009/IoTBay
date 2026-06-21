@@ -158,7 +158,14 @@ public abstract class BaseE2ETest {
     }
 
     protected void clickSubmit() {
-        clickRobust(driver.findElement(By.cssSelector("[type='submit']")));
+        // Prefer a submit button inside the main content. The site header (in the
+        // <t:base>/<t:admin-base> layout) contains a search form whose submit button
+        // appears FIRST in the DOM — clicking it would navigate away instead of
+        // submitting the page's actual form.
+        java.util.List<WebElement> inMain = driver.findElements(By.cssSelector("main [type='submit']"));
+        WebElement btn = !inMain.isEmpty() ? inMain.get(0)
+                : driver.findElement(By.cssSelector("[type='submit']"));
+        clickRobust(btn);
     }
 
     /**

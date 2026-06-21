@@ -26,7 +26,7 @@ import model.PaymentDetail;
 import model.User;
 import utils.ValidationUtil;
 
-@WebServlet("/api/payment/*")
+@WebServlet({"/api/payment/*", "/payment/*"})
 public class PaymentController extends HttpServlet {
     private PaymentDAO paymentDAO;
     private PaymentDetailDAO paymentDetailDAO;
@@ -63,17 +63,25 @@ public class PaymentController extends HttpServlet {
         boolean isJsonRequest = acceptHeader != null && acceptHeader.contains("application/json");
 
         try {
-            if (pathInfo == null || pathInfo.equals("/")) {
+            if (pathInfo == null || pathInfo.equals("/") || pathInfo.equals("/list")) {
                 // List all payments for user
                 if (isJsonRequest) {
                     listPaymentsJson(response, user);
                 } else {
                     listPayments(request, response, user);
                 }
+            } else if (pathInfo.equals("/view") && request.getParameter("paymentId") != null) {
+                // View specific payment via query param: /payment/view?paymentId=1
+                int paymentId = Integer.parseInt(request.getParameter("paymentId"));
+                if (isJsonRequest) {
+                    viewPaymentJson(response, user, paymentId);
+                } else {
+                    viewPayment(request, response, user, paymentId);
+                }
             } else if (pathInfo.startsWith("/view/") || pathInfo.matches("/\\d+")) {
                 // View specific payment - support both /view/{id} and /{id}
-                String paymentIdStr = pathInfo.startsWith("/view/") 
-                    ? pathInfo.substring(6) 
+                String paymentIdStr = pathInfo.startsWith("/view/")
+                    ? pathInfo.substring(6)
                     : pathInfo.substring(1);
                 int paymentId = Integer.parseInt(paymentIdStr);
                 if (isJsonRequest) {
