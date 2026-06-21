@@ -235,4 +235,5 @@ src/main/webapp/components/layout/
 
 # Old React build artifacts (if any)
 src/main/webapp/manage/
-staff-dashboard/
+staff-dashboard/jetty-e2e*.log
+e2e-run*.log

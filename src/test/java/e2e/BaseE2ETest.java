@@ -158,7 +158,22 @@ public abstract class BaseE2ETest {
     }
 
     protected void clickSubmit() {
-        driver.findElement(By.cssSelector("[type='submit']")).click();
+        clickRobust(driver.findElement(By.cssSelector("[type='submit']")));
+    }
+
+    /**
+     * Click an element robustly: scroll it into view (the fixed/sticky header can
+     * overlap the bottom of long forms) and fall back to a JS click if the native
+     * click is intercepted. Prevents flaky ElementClickInterceptedException.
+     */
+    protected void clickRobust(WebElement el) {
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].scrollIntoView({block:'center'});", el);
+        try {
+            el.click();
+        } catch (ElementClickInterceptedException | StaleElementReferenceException e) {
+            js.executeScript("arguments[0].click();", el);
+        }
     }
 
     // ── Upload helper ────────────────────────────────────────────────────────
