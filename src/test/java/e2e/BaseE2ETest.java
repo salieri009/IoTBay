@@ -84,6 +84,19 @@ public abstract class BaseE2ETest {
         return driver.getPageSource();
     }
 
+    /**
+     * Fetches a URL's raw body via a same-origin XHR (carries the session cookie).
+     * Use for endpoints that trigger a file download (e.g. CSV export), where
+     * pageSource() would be empty because the browser downloads rather than renders.
+     */
+    protected String fetchText(String path) {
+        Object body = ((JavascriptExecutor) driver).executeScript(
+            "var xhr=new XMLHttpRequest(); xhr.open('GET', arguments[0], false);" +
+            "xhr.send(); return xhr.status + '\\n' + xhr.responseText;",
+            BASE_URL + path);
+        return body != null ? body.toString() : "";
+    }
+
     // ── Auth helpers ─────────────────────────────────────────────────────────
 
     /**
