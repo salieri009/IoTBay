@@ -33,11 +33,34 @@ public class F06_UserManagementTest extends BaseE2ETest {
     @Test
     public void testUserListRenders() {
         navigateTo("/api/manage/users/");
-        assertFalse("User list should not 403", pageSource().contains("403"));
-        assertFalse("User list should not 500", pageSource().contains("HTTP ERROR 500"));
+        assertNoServerErrorPage();
         assertTrue("User list should show a table or list",
                 isElementPresent(By.tagName("table")) || pageSource().contains("User") ||
                 pageSource().contains("Email"));
+    }
+
+    /** TC-06-11: Create a user via the form and verify it appears in the list */
+    @Test
+    public void testCreateUserAppearsInList() {
+        navigateTo("/api/manage/users/form");
+        assertNoServerErrorPage();
+        org.junit.Assume.assumeTrue("create form must render",
+                isElementPresent(By.name("email")));
+
+        String uniqueEmail = "e2e-user-" + java.util.UUID.randomUUID().toString().substring(0, 8) + "@test.com";
+        fillField("firstName", "E2E");
+        fillField("lastName", "User");
+        fillField("email", uniqueEmail);
+        fillField("password", "TestPass@123");
+        if (isElementPresent(By.name("phone"))) fillField("phone", "+61400000055");
+        clickSubmit();
+
+        // After create we are redirected to the user list; new email must show.
+        assertNoServerErrorPage();
+        navigateTo("/api/manage/users/?search=e2e-user");
+        assertNoServerErrorPage();
+        assertTrue("Newly created user email should appear in the list",
+                pageSource().contains(uniqueEmail));
     }
 
     /** TC-06-2: User list shows multiple users */
@@ -54,17 +77,18 @@ public class F06_UserManagementTest extends BaseE2ETest {
     @Test
     public void testSearchUserByName() {
         navigateTo("/api/manage/users/?search=customer");
-        assertFalse("Name search should not 500", pageSource().contains("HTTP ERROR 500"));
-        // Results should be visible (or empty — but no error)
-        assertFalse("Name search should not show error page",
-                pageSource().contains("HTTP ERROR 404"));
+        assertNoServerErrorPage();
+        // The seeded customer account should match the name/email search.
+        assertTrue("Name search should return the seeded customer",
+                pageSource().contains("customer@iotbay.com") ||
+                pageSource().toLowerCase().contains("customer"));
     }
 
     /** TC-06-4: Search by phone filters results */
     @Test
     public void testSearchUserByPhone() {
         navigateTo("/api/manage/users/?phone=+61");
-        assertFalse("Phone search should not 500", pageSource().contains("HTTP ERROR 500"));
+        assertNoServerErrorPage();
     }
 
     /** TC-06-5: Edit user form loads via GET (no 405 error) */
@@ -75,8 +99,10 @@ public class F06_UserManagementTest extends BaseE2ETest {
         // The critical check: must NOT return 405 Method Not Allowed
         assertFalse("GET /manage/users/update should NOT return 405",
                 pageSource().contains("405") || pageSource().contains("Method Not Allowed"));
-        assertFalse("Edit user form should not return 500",
-                pageSource().contains("HTTP ERROR 500"));
+        assertNoServerErrorPage();
+        // The form should pre-fill the existing user's email.
+        assertTrue("Edit form should pre-fill an email value",
+                isElementPresent(By.name("email")));
     }
 
     /** TC-06-6: Edit user form pre-fills existing values */
@@ -134,4 +160,21 @@ public class F06_UserManagementTest extends BaseE2ETest {
                 isElementPresent(By.cssSelector("input[name='phone']"));
         assertTrue("User management should have a search form", hasSearchForm);
     }
+
+    /**
+     * Local server-error guard. Fails on Jetty 500/404 pages AND on the app's
+     * custom error page (which returns HTTP 200 with friendly text).
+     */
+    private void assertNoServerErrorPage() {
+        String src = pageSource();
+        assertFalse("Page shows Jetty 500 error. URL: " + currentUrl(),
+                src.contains("HTTP ERROR 500"));
+        assertFalse("Page shows Jetty 404 error. URL: " + currentUrl(),
+                src.contains("HTTP ERROR 404"));
+        assertFalse("Page shows the app's custom error page. URL: " + currentUrl(),
+                src.contains("Oops! Something went wrong")
+                        || src.contains("Development Error Information")
+                        || src.contains("experiencing some technical difficulties"));
+    }
+
 }

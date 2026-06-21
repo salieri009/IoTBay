@@ -581,9 +581,23 @@ public class ShipmentController extends HttpServlet {
     }
 
     private void showShipmentForm(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws ServletException, IOException, SQLException {
 
         String orderId = request.getParameter("orderId");
+        String shipmentIdStr = request.getParameter("shipmentId");
+
+        // Edit mode: load the existing shipment so the form can pre-fill its fields.
+        if (shipmentIdStr != null && !shipmentIdStr.trim().isEmpty()) {
+            try {
+                int shipmentId = Integer.parseInt(shipmentIdStr.trim());
+                Shipment shipment = shipmentDAO.findById(shipmentId);
+                if (shipment != null) {
+                    request.setAttribute("shipment", shipment);
+                }
+            } catch (NumberFormatException ignored) {
+                // fall through to create mode
+            }
+        }
 
         if (orderId != null) {
             request.setAttribute("orderId", orderId);

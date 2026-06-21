@@ -121,12 +121,12 @@ public class UserDAOImpl implements UserDAO {
         connection.setAutoCommit(false);
         try {
             // Step 1: Restore stock for all active (non-cancelled) orders
-            String findActiveOrdersSql = "SELECT order_id FROM \"order\" WHERE user_id = ? AND status != 'cancelled'";
+            String findActiveOrdersSql = "SELECT id FROM orders WHERE user_id = ? AND status != 'cancelled'";
             try (PreparedStatement findOrdersStmt = connection.prepareStatement(findActiveOrdersSql)) {
                 findOrdersStmt.setInt(1, id);
                 try (ResultSet orderRs = findOrdersStmt.executeQuery()) {
                     while (orderRs.next()) {
-                        int orderId = orderRs.getInt("order_id");
+                        int orderId = orderRs.getInt("id");
                         String findItemsSql = "SELECT productID, quantity FROM order_product WHERE orderID = ?";
                         try (PreparedStatement findItemsStmt = connection.prepareStatement(findItemsSql)) {
                             findItemsStmt.setInt(1, orderId);
@@ -147,7 +147,7 @@ public class UserDAOImpl implements UserDAO {
                 }
             }
             // Step 2: Cancel all user's orders
-            String cancelOrdersSql = "UPDATE \"order\" SET status = 'cancelled' WHERE user_id = ?";
+            String cancelOrdersSql = "UPDATE orders SET status = 'cancelled' WHERE user_id = ?";
             try (PreparedStatement cancelStmt = connection.prepareStatement(cancelOrdersSql)) {
                 cancelStmt.setInt(1, id);
                 cancelStmt.executeUpdate();

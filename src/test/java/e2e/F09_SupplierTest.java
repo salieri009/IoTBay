@@ -29,13 +29,6 @@ public class F09_SupplierTest extends BaseE2ETest {
     }
 
     /** Fails if the page rendered a server error (HTTP 500 or custom error page). */
-    private void assertNoServerError() {
-        String src = pageSource();
-        assertFalse("Page should not 500", src.contains("HTTP ERROR 500"));
-        assertFalse("Page should not show custom error page",
-                src.contains("Oops! Something went wrong") ||
-                src.contains("Development Error Information"));
-    }
 
     // ── List page ─────────────────────────────────────────────────────────────
 

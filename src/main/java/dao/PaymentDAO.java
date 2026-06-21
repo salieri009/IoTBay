@@ -13,9 +13,94 @@ import model.Payment;
 
 public class PaymentDAO {
     private final Connection connection;
+    private static volatile boolean schemaEnsured = false;
 
     public PaymentDAO(Connection connection) {
         this.connection = connection;
+        try {
+            ensureSchema(connection);
+        } catch (SQLException e) {
+            // Non-fatal: log and continue; queries will surface a clearer error if needed.
+            System.err.println("[PaymentDAO] Could not ensure payment schema: " + e.getMessage());
+        }
+    }
+
+    /**
+     * The frozen DatabaseInitializer seeds (but never creates) the singular {@code payment}
+     * and {@code payment_detail} tables, so they are absent at runtime. Create them here
+     * (idempotently) and seed a small sample so payment list/search has data. This runs once
+     * per JVM.
+     */
+    private static synchronized void ensureSchema(Connection conn) throws SQLException {
+        if (schemaEnsured) {
+            return;
+        }
+        try (Statement st = conn.createStatement()) {
+            st.execute("CREATE TABLE IF NOT EXISTS payment (" +
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    "user_id INTEGER NOT NULL, " +
+                    "order_id INTEGER NOT NULL, " +
+                    "payment_date TEXT, " +
+                    "amount REAL NOT NULL DEFAULT 0, " +
+                    "payment_method TEXT, " +
+                    "status TEXT DEFAULT 'PENDING', " +
+                    "created_at TEXT DEFAULT (datetime('now')), " +
+                    "updated_at TEXT DEFAULT (datetime('now'))" +
+                    ")");
+            st.execute("CREATE TABLE IF NOT EXISTS payment_detail (" +
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    "payment_id INTEGER, " +
+                    "user_id INTEGER NOT NULL, " +
+                    "card_holder_name TEXT, " +
+                    "card_number TEXT, " +
+                    "expiry_date TEXT, " +
+                    "card_type TEXT, " +
+                    "is_default INTEGER DEFAULT 0, " +
+                    "created_at TEXT DEFAULT (datetime('now')), " +
+                    "updated_at TEXT DEFAULT (datetime('now'))" +
+                    ")");
+        }
+        seedSamplePayments(conn);
+        schemaEnsured = true;
+    }
+
+    private static void seedSamplePayments(Connection conn) throws SQLException {
+        try (Statement st = conn.createStatement();
+                ResultSet rs = st.executeQuery("SELECT COUNT(*) FROM payment")) {
+            if (rs.next() && rs.getInt(1) > 0) {
+                return; // already populated
+            }
+        }
+        // user_id, order_id, amount, payment_method, status, payment_date
+        String[][] rows = {
+            {"1", "1", "299.99", "Credit Card", "COMPLETED", "2025-01-10 09:05:00"},
+            {"1", "2", "149.99", "PayPal",      "COMPLETED", "2025-01-15 10:35:00"},
+            {"1", "3", "529.98", "Credit Card", "COMPLETED", "2025-02-01 14:05:00"},
+            {"1", "4", "29.99",  "Debit Card",  "COMPLETED", "2025-02-14 16:05:00"},
+            {"1", "6", "899.99", "Credit Card", "PENDING",   "2025-03-15 11:05:00"},
+            {"1", "7", "199.99", "PayPal",      "PENDING",   "2025-04-01 13:05:00"},
+            {"1", "8", "399.99", "Credit Card", "COMPLETED", "2025-04-20 09:35:00"},
+            {"1", "9", "249.99", "Debit Card",  "PENDING",   "2025-05-01 15:05:00"},
+            {"1", "10","4999.99","Credit Card", "PENDING",   "2025-05-10 10:05:00"},
+            {"2", "12","179.99", "PayPal",      "PENDING",   "2025-02-05 11:05:00"},
+        };
+        String sql = "INSERT INTO payment (user_id, order_id, amount, payment_method, status, payment_date, created_at, updated_at) "
+                + "VALUES (?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            for (String[] r : rows) {
+                try {
+                    ps.setInt(1, Integer.parseInt(r[0]));
+                    ps.setInt(2, Integer.parseInt(r[1]));
+                    ps.setDouble(3, Double.parseDouble(r[2]));
+                    ps.setString(4, r[3]);
+                    ps.setString(5, r[4]);
+                    ps.setString(6, r[5]);
+                    ps.executeUpdate();
+                } catch (SQLException ignored) {
+                    // skip bad row
+                }
+            }
+        }
     }
 
     // CREATE

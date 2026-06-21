@@ -143,7 +143,9 @@ public class UserProfileController extends HttpServlet {
                 addressLine2,
                 dateOfBirth,
                 paymentMethod,
-                sessionUser.getCreatedAt().toLocalDateTime(),
+                sessionUser.getCreatedAt() != null
+                    ? sessionUser.getCreatedAt().toLocalDateTime()
+                    : java.time.LocalDateTime.now(),
                 java.time.LocalDateTime.now(),
                 sessionUser.getRole(),
                 sessionUser.isActive()

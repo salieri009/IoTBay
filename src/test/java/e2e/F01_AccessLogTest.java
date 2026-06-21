@@ -49,11 +49,10 @@ public class F01_AccessLogTest extends BaseE2ETest {
     public void testAccessLogPageLoadsForCustomer() {
         loginAsCustomer();
         navigateTo("/api/accessLog");
-        // Should not show a 401/403 error
-        assertFalse("Should not show unauthorized error",
-                pageSource().contains("401") && pageSource().contains("403"));
+        // Must not be a server error (Jetty 500/404 OR custom 200 error page)
+        assertNoServerErrorPage();
         // Page should show access log table or heading
-        assertTrue("Access log page should contain 'Access Log' text or table",
+        assertTrue("Access log page should contain 'Access' text or table",
                 pageSource().contains("Access") || isElementPresent(By.tagName("table")));
     }
 
@@ -62,10 +61,35 @@ public class F01_AccessLogTest extends BaseE2ETest {
     public void testAccessLogPageLoadsForStaff() {
         loginAsStaff();
         navigateTo("/api/accessLog");
-        assertFalse("Should not show server error",
-                pageSource().contains("HTTP ERROR 500"));
+        assertNoServerErrorPage();
         assertTrue("Access log page should load",
                 pageSource().contains("Access") || isElementPresent(By.tagName("table")));
+    }
+
+    /** TC-01-7: A login event creates an access-log entry visible to the user */
+    @Test
+    public void testLoginCreatesAccessLogEntry() {
+        loginAsCustomer();              // generates a "logged in" access log row
+        navigateTo("/api/accessLog");
+        assertNoServerErrorPage();
+        boolean hasEntry = isElementPresent(By.cssSelector("table tbody tr")) ||
+                pageSource().toLowerCase().contains("logged in") ||
+                pageSource().toLowerCase().contains("login");
+        assertTrue("Access log should contain at least one entry after login", hasEntry);
+    }
+
+    /** TC-01-8: Date-range search on access logs does not error */
+    @Test
+    public void testAccessLogDateSearch() {
+        loginAsCustomer();
+        // Future end date should be rejected gracefully (validation), not a 500.
+        navigateTo("/api/accessLog?startDate=2020-01-01&endDate=2099-01-01");
+        assertNoServerErrorPage();
+        // Valid open-ended range exercises getAccessLogsByUserIdAndDateRange.
+        navigateTo("/api/accessLog?startDate=2020-01-01");
+        assertNoServerErrorPage();
+        assertTrue("Date-filtered access log page should still render",
+                pageSource().contains("Access") || isElementPresent(By.tagName("form")));
     }
 
     /** TC-01-5: Access log page has a date search form */
@@ -89,4 +113,21 @@ public class F01_AccessLogTest extends BaseE2ETest {
                 pageSource().contains("Access") || pageSource().contains("accessLog") ||
                 pageSource().contains("access-log"));
     }
+
+    /**
+     * Local server-error guard. Fails on Jetty 500/404 pages AND on the app's
+     * custom error page (which returns HTTP 200 with friendly text).
+     */
+    private void assertNoServerErrorPage() {
+        String src = pageSource();
+        assertFalse("Page shows Jetty 500 error. URL: " + currentUrl(),
+                src.contains("HTTP ERROR 500"));
+        assertFalse("Page shows Jetty 404 error. URL: " + currentUrl(),
+                src.contains("HTTP ERROR 404"));
+        assertFalse("Page shows the app's custom error page. URL: " + currentUrl(),
+                src.contains("Oops! Something went wrong")
+                        || src.contains("Development Error Information")
+                        || src.contains("experiencing some technical difficulties"));
+    }
+
 }

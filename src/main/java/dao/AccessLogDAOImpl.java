@@ -146,7 +146,7 @@ public class AccessLogDAOImpl implements AccessLogDAO {
 
     @Override
     public List<AccessLog> getAccessLogsByDateRange(LocalDate startDate, LocalDate endDate) throws SQLException {
-        String query = "SELECT id, user_id, action, timestamp, ip_address, user_agent " +
+        String query = "SELECT id, user_id, action, timestamp " +
                 "FROM access_logs WHERE DATE(timestamp) BETWEEN ? AND ? ORDER BY timestamp DESC";
 
         List<AccessLog> logs = new ArrayList<>();

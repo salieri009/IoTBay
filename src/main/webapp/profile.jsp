@@ -554,7 +554,7 @@
                                 }
 
                                 // Add active class to clicked nav link
-                                const activeLink = document.querySelector(`a[href="#${sectionId}"]`);
+                                const activeLink = document.querySelector(`a[href="#\${sectionId}"]`);
                                 if (activeLink) {
                                     activeLink.classList.add('active', 'bg-brand-primary-50', 'text-brand-primary');
                                     activeLink.classList.remove('text-neutral-600', 'hover:bg-neutral-50', 'hover:text-neutral-900');

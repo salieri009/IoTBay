@@ -31,14 +31,6 @@ public class F10_DataManagementTest extends BaseE2ETest {
         logout();
     }
 
-    private void assertNoServerError() {
-        String src = pageSource();
-        assertFalse("Page should not 500", src.contains("HTTP ERROR 500"));
-        assertFalse("Page should not 404", src.contains("HTTP ERROR 404"));
-        assertFalse("Page should not show custom error page",
-                src.contains("Oops! Something went wrong") ||
-                src.contains("Development Error Information"));
-    }
 
     /** Opens the data management dashboard via the page controller route. */
     private void openDashboard() {

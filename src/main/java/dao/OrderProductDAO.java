@@ -7,9 +7,36 @@ import java.util.List;
 
 public class OrderProductDAO {
     private final Connection connection;
+    private static volatile boolean tableEnsured = false;
 
     public OrderProductDAO(Connection connection) {
         this.connection = connection;
+        try {
+            ensureTable(connection);
+        } catch (SQLException e) {
+            System.err.println("[OrderProductDAO] Could not ensure order_product table: " + e.getMessage());
+        }
+    }
+
+    /**
+     * The frozen DatabaseInitializer never creates the {@code order_product} line-item table,
+     * so it is absent at runtime and every read/write throws "no such table". Create it
+     * idempotently (once per JVM) so checkout, order edit and order cancel (stock restore) work.
+     */
+    private static synchronized void ensureTable(Connection conn) throws SQLException {
+        if (tableEnsured) {
+            return;
+        }
+        try (Statement st = conn.createStatement()) {
+            st.execute("CREATE TABLE IF NOT EXISTS order_product (" +
+                    "orderID INTEGER NOT NULL, " +
+                    "productID INTEGER NOT NULL, " +
+                    "quantity INTEGER NOT NULL DEFAULT 1, " +
+                    "priceAtOrderTime REAL NOT NULL DEFAULT 0, " +
+                    "PRIMARY KEY (orderID, productID)" +
+                    ")");
+        }
+        tableEnsured = true;
     }
 
     // CREATE: Add product to an order

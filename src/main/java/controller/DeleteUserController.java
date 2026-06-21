@@ -62,6 +62,6 @@ public class DeleteUserController extends HttpServlet {
             return false;
 
         User user = (User) userObj;
-        return "staff".equalsIgnoreCase(user.getRole());
+        return "staff".equalsIgnoreCase(user.getRole()) || "admin".equalsIgnoreCase(user.getRole());
     }
 }
