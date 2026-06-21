@@ -29,7 +29,7 @@
                                         <form action="<c:url value='/admin/supplier/${isEdit ? " update" : "create"
                                             }' />" method="post">
                                         <c:if test="${not empty supplier}">
-                                            <input type="hidden" name="id" value="${supplier.id}">
+                                            <input type="hidden" name="supplierId" value="${supplier.id}">
                                         </c:if>
                                         <input type="hidden" name="csrfToken" value="${sessionScope.csrfToken}">
 

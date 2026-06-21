@@ -30,7 +30,7 @@
                                     <!-- Filters -->
                                     <div class="bg-white p-4 rounded-xl shadow-sm border border-neutral-200 mb-6">
                                         <form action="<c:url value='/admin/supplier/'/>" method="get"
-                                            class="flex gap-4 items-center">
+                                            class="flex gap-4 items-center mb-4">
                                             <select name="status" class="form-input w-auto"
                                                 onchange="this.form.submit()">
                                                 <option value="all" ${statusFilter=='all' ? 'selected' : '' }>All Status
@@ -40,6 +40,16 @@
                                                 <option value="inactive" ${statusFilter=='inactive' ? 'selected' : '' }>
                                                     Inactive</option>
                                             </select>
+                                        </form>
+                                        <!-- Search by contact name / company name -->
+                                        <form action="<c:url value='/admin/supplier/search'/>" method="get"
+                                            class="flex flex-wrap gap-3 items-center">
+                                            <input type="text" name="contactName" placeholder="Search contact name"
+                                                class="form-input w-auto" value="${param.contactName}">
+                                            <input type="text" name="companyName" placeholder="Search company name"
+                                                class="form-input w-auto" value="${param.companyName}">
+                                            <button type="submit" class="btn btn--primary">Search</button>
+                                            <a href="<c:url value='/admin/supplier/'/>" class="btn btn--outline">Clear</a>
                                         </form>
                                     </div>
 

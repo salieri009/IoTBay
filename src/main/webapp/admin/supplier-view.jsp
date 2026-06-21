@@ -22,9 +22,17 @@
                                             <div class="flex gap-3">
                                                 <a href="<c:url value='/admin/supplier/edit/${supplier.id}'/>"
                                                     class="btn btn--outline">Edit</a>
+                                                <form action="<c:url value='/admin/supplier/toggle-status'/>" method="post">
+                                                    <input type="hidden" name="supplierId" value="${supplier.id}">
+                                                    <input type="hidden" name="csrfToken"
+                                                        value="${sessionScope.csrfToken}">
+                                                    <button type="submit" class="btn btn--outline">
+                                                        ${supplier.active ? 'Deactivate' : 'Activate'}
+                                                    </button>
+                                                </form>
                                                 <form action="<c:url value='/admin/supplier/delete'/>" method="post"
                                                     onsubmit="return confirm('Are you sure you want to delete this supplier?');">
-                                                    <input type="hidden" name="id" value="${supplier.id}">
+                                                    <input type="hidden" name="supplierId" value="${supplier.id}">
                                                     <input type="hidden" name="csrfToken"
                                                         value="${sessionScope.csrfToken}">
                                                     <button type="submit" class="btn btn--danger">Delete</button>
