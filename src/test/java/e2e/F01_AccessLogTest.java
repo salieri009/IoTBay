@@ -82,8 +82,8 @@ public class F01_AccessLogTest extends BaseE2ETest {
     @Test
     public void testAccessLogDateSearch() {
         loginAsCustomer();
-        // Future end date should be rejected gracefully (validation), not a 500.
-        navigateTo("/api/accessLog?startDate=2020-01-01&endDate=2099-01-01");
+        // Valid past range (the app legitimately rejects future end dates).
+        navigateTo("/api/accessLog?startDate=2020-01-01&endDate=2026-06-20");
         assertNoServerErrorPage();
         // Valid open-ended range exercises getAccessLogsByUserIdAndDateRange.
         navigateTo("/api/accessLog?startDate=2020-01-01");

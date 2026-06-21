@@ -158,10 +158,26 @@ public abstract class BaseE2ETest {
     }
 
     protected void clickSubmit() {
-        // Prefer a submit button inside the main content. The site header (in the
-        // <t:base>/<t:admin-base> layout) contains a search form whose submit button
-        // appears FIRST in the DOM — clicking it would navigate away instead of
-        // submitting the page's actual form.
+        // Submit the page's create/action form directly. Every state-changing form
+        // in this app carries a hidden csrfToken; the site header's search form (GET)
+        // does not — so target the csrfToken form. force-submit (.submit()) avoids
+        // both the sticky-header click interception and the first-submit-button trap.
+        // Target the create/edit form precisely: it has BOTH a csrfToken hidden
+        // field AND an email/primary text input. List pages' per-row delete/toggle
+        // forms have a csrfToken but no email field, and the header search form has
+        // neither — so this never accidentally submits a destructive form.
+        Object submitted = ((JavascriptExecutor) driver).executeScript(
+            "var forms=[].slice.call(document.querySelectorAll('form'))" +
+            "  .filter(function(f){return f.querySelector('input[name=\"csrfToken\"]')" +
+            "    && (f.querySelector('input[name=\"email\"]') || f.querySelector('input[name=\"companyName\"]')" +
+            "        || f.querySelector('input[name=\"name\"]'));});" +
+            "if(!forms.length){return false;}" +
+            "forms.sort(function(a,b){return b.querySelectorAll('input,select,textarea').length" +
+            "  - a.querySelectorAll('input,select,textarea').length;});" +
+            "forms[0].submit(); return true;");
+        if (Boolean.TRUE.equals(submitted)) {
+            return;
+        }
         java.util.List<WebElement> inMain = driver.findElements(By.cssSelector("main [type='submit']"));
         WebElement btn = !inMain.isEmpty() ? inMain.get(0)
                 : driver.findElement(By.cssSelector("[type='submit']"));
