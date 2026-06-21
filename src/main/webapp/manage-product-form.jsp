@@ -15,9 +15,17 @@
     String pageTitle = isEditMode ? "Edit Product" : "Add New Product";
     String formAction = isEditMode ? request.getContextPath() + "/manage/products/update" : request.getContextPath() + "/api/manage/products";
     String submitLabel = isEditMode ? "Update Product" : "Create Product";
+    String headingPrefix = isEditMode ? "Edit" : "Add New";
+    // Expose values as page-scoped attributes so the scriptless tag body can use EL only.
+    request.setAttribute("csrfToken", csrfToken);
+    request.setAttribute("isEditMode", isEditMode);
+    request.setAttribute("pageTitle", pageTitle);
+    request.setAttribute("formAction", formAction);
+    request.setAttribute("submitLabel", submitLabel);
+    request.setAttribute("headingPrefix", headingPrefix);
 %>
 
-<t:base title="<%= pageTitle %> | IoT Bay">
+<t:base title="${pageTitle} | IoT Bay">
     <main class="flex-1">
         <section class="py-8 bg-white border-b-2 border-brand-primary">
             <div class="l-container">
@@ -28,64 +36,64 @@
                             &larr; Back to Products
                         </a>
                         <h1 class="text-display-md text-neutral-900">
-                            <%= isEditMode ? "Edit" : "Add New" %> <span
+                            ${headingPrefix} <span
                                 class="text-transparent bg-clip-text bg-gradient-to-r from-brand-primary to-brand-secondary">Product</span>
                         </h1>
                     </div>
 
                     <div class="bg-white p-8 rounded-xl shadow-sm border border-neutral-200">
-                        <% if (request.getAttribute("error") != null) { %>
+                        <c:if test="${not empty error}">
                             <div class="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800" role="alert">
-                                <strong>Error:</strong> <%= request.getAttribute("error") %>
+                                <strong>Error:</strong> <c:out value="${error}" />
                             </div>
-                        <% } %>
-                        <form action="<%= formAction %>" method="post">
-                            <input type="hidden" name="csrfToken" value="<%= csrfToken %>">
-                            <% if (isEditMode) { %>
-                                <input type="hidden" name="product_id" value="<%= editProduct.getId() %>">
-                                <input type="hidden" name="created_at" value="<%= editProduct.getCreatedAt() %>">
-                            <% } %>
+                        </c:if>
+                        <form action="${formAction}" method="post">
+                            <input type="hidden" name="csrfToken" value="${csrfToken}">
+                            <c:if test="${isEditMode}">
+                                <input type="hidden" name="product_id" value="${product.id}">
+                                <input type="hidden" name="created_at" value="${product.createdAt}">
+                            </c:if>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                                 <div class="col-span-2">
                                     <label class="block text-sm font-medium text-neutral-700 mb-1">Product Name *</label>
                                     <input type="text" name="name" required class="form-input w-full"
                                         placeholder="e.g. Smart Home Hub"
-                                        value="<%= isEditMode ? editProduct.getName() : "" %>">
+                                        value="${isEditMode ? product.name : ''}">
                                 </div>
 
                                 <div>
                                     <label class="block text-sm font-medium text-neutral-700 mb-1">Category ID *</label>
                                     <input type="number" name="categoryId" required min="1" class="form-input w-full"
                                         placeholder="1"
-                                        value="<%= isEditMode ? editProduct.getCategoryId() : "" %>">
+                                        value="${isEditMode ? product.categoryId : ''}">
                                 </div>
 
                                 <div>
                                     <label class="block text-sm font-medium text-neutral-700 mb-1">Price *</label>
                                     <input type="number" name="price" required step="0.01" min="0"
                                         class="form-input w-full" placeholder="99.99"
-                                        value="<%= isEditMode ? editProduct.getPrice() : "" %>">
+                                        value="${isEditMode ? product.price : ''}">
                                 </div>
 
                                 <div>
                                     <label class="block text-sm font-medium text-neutral-700 mb-1">Stock Quantity *</label>
                                     <input type="number" name="stockQuantity" required min="0" class="form-input w-full"
                                         placeholder="100"
-                                        value="<%= isEditMode ? editProduct.getStockQuantity() : "" %>">
+                                        value="${isEditMode ? product.stockQuantity : ''}">
                                 </div>
 
                                 <div class="col-span-2">
                                     <label class="block text-sm font-medium text-neutral-700 mb-1">Image URL</label>
                                     <input type="url" name="imageUrl" class="form-input w-full"
                                         placeholder="https://example.com/image.jpg"
-                                        value="<%= (isEditMode && editProduct.getImageUrl() != null) ? editProduct.getImageUrl() : "" %>">
+                                        value="${(isEditMode && product.imageUrl != null) ? product.imageUrl : ''}">
                                 </div>
 
                                 <div class="col-span-2">
                                     <label class="block text-sm font-medium text-neutral-700 mb-1">Description</label>
                                     <textarea name="description" rows="4" class="form-input w-full"
-                                        placeholder="Product description..."><%= (isEditMode && editProduct.getDescription() != null) ? editProduct.getDescription() : "" %></textarea>
+                                        placeholder="Product description...">${(isEditMode && product.description != null) ? product.description : ''}</textarea>
                                 </div>
                             </div>
 
@@ -93,7 +101,7 @@
                                 <a href="${pageContext.request.contextPath}/api/manage/products"
                                     class="btn btn--outline">Cancel</a>
                                 <button type="submit" class="btn btn--primary">
-                                    <%= submitLabel %>
+                                    ${submitLabel}
                                 </button>
                             </div>
                         </form>

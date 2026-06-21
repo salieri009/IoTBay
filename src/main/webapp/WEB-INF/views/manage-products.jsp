@@ -2,6 +2,7 @@
     <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
         <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
             <%@ taglib prefix="t" tagdir="/WEB-INF/tags/layout" %>
+            <% request.setAttribute("csrfToken", utils.SecurityUtil.generateCSRFToken(request)); %>
 
                 <t:admin-base title="Manage Products" activeNav="products">
                     <!-- Page Header -->
@@ -118,6 +119,17 @@
                                                             class="btn btn--primary btn--sm justify-center">
                                                             View
                                                         </a>
+                                                        <form action="${pageContext.request.contextPath}/manage/products/delete"
+                                                            method="post"
+                                                            onsubmit="return confirm('Delete this product?');"
+                                                            class="inline">
+                                                            <input type="hidden" name="csrfToken" value="${csrfToken}">
+                                                            <input type="hidden" name="id" value="${product.id}">
+                                                            <button type="submit"
+                                                                class="inline-flex justify-center items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                                                                Delete
+                                                            </button>
+                                                        </form>
                                                     </div>
                                                 </div>
                                             </c:forEach>

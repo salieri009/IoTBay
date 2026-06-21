@@ -121,12 +121,12 @@
 
             <!-- Search, Sort & View Controls -->
             <div class="flex flex-col gap-4 xl:flex-row xl:items-end">
-                <form action="${pageContext.request.contextPath}/browse.jsp" method="get" class="flex w-full flex-col gap-2 sm:flex-row">
+                <form action="${pageContext.request.contextPath}/browse" method="get" class="flex w-full flex-col gap-2 sm:flex-row">
                     <label for="productSearch" class="sr-only">Search products</label>
-                    <input 
-                        type="search" 
+                    <input
+                        type="search"
                         id="productSearch"
-                        name="keyword" 
+                        name="q"
                         value="${keyword != null ? keyword : ''}"
                         placeholder="Search products by name, SKU, or capability" 
                         class="form-input flex-1"

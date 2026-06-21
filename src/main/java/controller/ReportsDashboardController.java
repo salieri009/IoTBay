@@ -20,7 +20,7 @@ import dao.interfaces.UserDAO;
 import config.DIContainer;
 import model.User;
 
-@WebServlet("/reports-dashboard.jsp")
+@WebServlet({"/reports-dashboard", "/reports-dashboard.jsp"})
 public class ReportsDashboardController extends HttpServlet {
     private UserDAO userDAO;
     private ProductDAO productDAO;
