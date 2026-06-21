@@ -509,8 +509,33 @@ public class SupplierDAOImpl implements SupplierDAO {
                 rs.getString("website"),
                 rs.getString("supplier_type"),
                 rs.getBoolean("is_active"),
-                rs.getTimestamp("created_at") != null ? rs.getTimestamp("created_at").toLocalDateTime() : null,
-                rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime() : null);
+                parseFlexibleDT(rs.getString("created_at")),
+                parseFlexibleDT(rs.getString("updated_at")));
+    }
+
+    /**
+     * Parses created_at/updated_at robustly. App-created suppliers store these via
+     * setTimestamp() which SQLite persists as epoch millis (e.g. "1782029064891"),
+     * while seeded rows use "yyyy-MM-dd HH:mm:ss" — getTimestamp() threw on the
+     * epoch values, breaking the whole supplier list.
+     */
+    private static LocalDateTime parseFlexibleDT(String value) {
+        if (value == null || value.trim().isEmpty()) {
+            return null;
+        }
+        String v = value.trim();
+        try {
+            if (v.matches("\\d{11,}")) { // epoch millis
+                return java.time.Instant.ofEpochMilli(Long.parseLong(v))
+                        .atZone(java.time.ZoneId.systemDefault()).toLocalDateTime();
+            }
+            if (v.length() <= 10) {
+                return java.time.LocalDate.parse(v).atStartOfDay();
+            }
+            return utils.DateTimeParser.parseLocalDateTime(v);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     // Compatibility methods for controller
