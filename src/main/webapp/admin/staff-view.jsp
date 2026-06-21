@@ -32,7 +32,7 @@
     </section>
 
     <section class="py-8">
-        <div class="l-container">
+        <div class="container">
             <div class="max-w-3xl mx-auto space-y-6">
 
                 <!-- Staff Details -->
@@ -52,7 +52,7 @@
                             <dd class="text-sm font-medium text-neutral-900"><c:out value="${staffMember.phone}" default="—"/></dd>
                         </div>
                         <div>
-                            <dt class="text-xs font-medium uppercase tracking-wide text-neutral-500 mb-0.5">Position</dt>
+                            <dt class="text-sm text-neutral-500">Position</dt>
                             <dd>
                                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
                                     ${position}
@@ -60,7 +60,7 @@
                             </dd>
                         </div>
                         <div>
-                            <dt class="text-xs font-medium uppercase tracking-wide text-neutral-500 mb-0.5">Status</dt>
+                            <dt class="text-sm text-neutral-500">Status</dt>
                             <dd>
                                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${staffMember.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
                                     ${staffMember.active ? 'Active' : 'Inactive'}
@@ -72,7 +72,7 @@
                             <dd class="text-sm font-medium text-neutral-900"><c:out value="${staffMember.dateOfBirth}" default="—"/></dd>
                         </div>
                         <div>
-                            <dt class="text-xs font-medium uppercase tracking-wide text-neutral-500 mb-0.5">Address</dt>
+                            <dt class="text-sm text-neutral-500">Address</dt>
                             <dd class="text-sm font-medium text-neutral-900">
                                 <c:out value="${staffMember.addressLine1}"/>
                                 <c:out value="${staffMember.addressLine2}"/>
@@ -99,4 +99,4 @@
             </div>
         </div>
     </section>
-</t:admin-base>
+</t:base>

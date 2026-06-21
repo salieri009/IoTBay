@@ -10,7 +10,8 @@
         response.sendRedirect(request.getContextPath() + "/login.jsp");
         return;
     }
-    String csrfToken = utils.SecurityUtil.generateCSRFToken(request);
+    // Exposed via EL below — scriptlets are disallowed inside the scriptless <t:base> body.
+    pageContext.setAttribute("csrfToken", utils.SecurityUtil.generateCSRFToken(request));
 %>
 
 <t:base title="Edit Order | IoT Bay" description="Modify your pending order">
@@ -59,7 +60,7 @@
                             </div>
 
                             <form action="${pageContext.request.contextPath}/order/update" method="post">
-                                <input type="hidden" name="csrfToken" value="<%= csrfToken %>">
+                                <input type="hidden" name="csrfToken" value="${csrfToken}">
                                 <input type="hidden" name="orderId" value="${order.id}">
 
                                 <div class="divide-y divide-neutral-100">

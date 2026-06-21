@@ -133,7 +133,10 @@ public class OrderDAOImpl implements OrderDAO {
         order.setId(rs.getInt("id"));
         order.setUserId(rs.getInt("user_id"));
         order.setTotalAmount(rs.getBigDecimal("total_amount"));
-        order.setOrderDate(rs.getTimestamp("order_date"));
+        // Read as String + robust parse: sqlite-jdbc's getTimestamp() throws
+        // "Error parsing time stamp" on ISO-T / nanosecond values written by
+        // LocalDateTime.now() (e.g. "2026-06-21T02:57:18.604663300").
+        order.setOrderDate(utils.DateTimeParser.parseLocalDateTime(rs.getString("order_date")));
         order.setStatus(rs.getString("status"));
         order.setShippingAddress(rs.getString("shipping_address"));
         order.setPaymentMethod(rs.getString("payment_method"));

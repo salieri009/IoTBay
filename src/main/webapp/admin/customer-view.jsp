@@ -32,7 +32,7 @@
     </section>
 
     <section class="py-8">
-        <div class="l-container">
+        <div class="container">
             <div class="max-w-3xl mx-auto space-y-6">
 
                 <!-- Customer Details -->
@@ -52,7 +52,7 @@
                             <dd class="text-sm font-medium text-neutral-900"><c:out value="${customer.phone}" default="—"/></dd>
                         </div>
                         <div>
-                            <dt class="text-xs font-medium uppercase tracking-wide text-neutral-500 mb-0.5">Customer Type</dt>
+                            <dt class="text-sm text-neutral-500">Customer Type</dt>
                             <dd>
                                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${ctype == 'company' ? 'bg-blue-100 text-blue-800' : 'bg-neutral-100 text-neutral-700'}">
                                     ${ctype}
@@ -60,7 +60,7 @@
                             </dd>
                         </div>
                         <div>
-                            <dt class="text-xs font-medium uppercase tracking-wide text-neutral-500 mb-0.5">Status</dt>
+                            <dt class="text-sm text-neutral-500">Status</dt>
                             <dd>
                                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${customer.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
                                     ${customer.active ? 'Active' : 'Inactive'}
@@ -76,7 +76,7 @@
                             <dd class="text-sm font-medium text-neutral-900"><c:out value="${customer.postalCode}" default="—"/></dd>
                         </div>
                         <div>
-                            <dt class="text-xs font-medium uppercase tracking-wide text-neutral-500 mb-0.5">Address</dt>
+                            <dt class="text-sm text-neutral-500">Address</dt>
                             <dd class="text-sm font-medium text-neutral-900">
                                 <c:out value="${customer.addressLine1}"/>
                                 <c:out value="${customer.addressLine2}"/>
@@ -103,4 +103,4 @@
             </div>
         </div>
     </section>
-</t:admin-base>
+</t:base>
