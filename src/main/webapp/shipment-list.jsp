@@ -12,7 +12,8 @@
         return;
     }
     User user = (User) userObj;
-    String csrfToken = utils.SecurityUtil.generateCSRFToken(request);
+    // Exposed via EL (scriptlets are disallowed inside the scriptless <t:base> body).
+    pageContext.setAttribute("csrfToken", utils.SecurityUtil.generateCSRFToken(request));
 %>
 
 <t:base title="Shipments | IoT Bay" description="View and manage your shipments">
@@ -37,15 +38,12 @@
             <div class="max-w-5xl mx-auto">
 
                 <!-- Success/Error Messages -->
-                <%
-                    String successMsg = (String) session.getAttribute("successMessage");
-                    if (successMsg != null) {
-                        session.removeAttribute("successMessage");
-                %>
-                <div class="mb-6 rounded-lg border border-green-200 bg-green-50 p-4 text-sm text-green-800" role="alert">
-                    <%= successMsg %>
-                </div>
-                <% } %>
+                <c:if test="${not empty sessionScope.successMessage}">
+                    <div class="mb-6 rounded-lg border border-green-200 bg-green-50 p-4 text-sm text-green-800" role="alert">
+                        ${sessionScope.successMessage}
+                    </div>
+                    <c:remove var="successMessage" scope="session" />
+                </c:if>
                 <c:if test="${not empty error}">
                     <div class="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800" role="alert">
                         <strong>Error:</strong> <c:out value="${error}"/>
@@ -174,7 +172,7 @@
                                                             <form action="${pageContext.request.contextPath}/shipment/delete"
                                                                   method="post" class="inline"
                                                                   onsubmit="return confirm('Delete this shipment?');">
-                                                                <input type="hidden" name="csrfToken" value="<%= csrfToken %>">
+                                                                <input type="hidden" name="csrfToken" value="${csrfToken}">
                                                                 <input type="hidden" name="shipmentId" value="${s.id}">
                                                                 <button type="submit" class="btn btn--error btn--sm">Delete</button>
                                                             </form>

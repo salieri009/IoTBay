@@ -17,13 +17,34 @@ public class ShipmentDAO {
         s.setId(rs.getInt("shipment_id"));
         s.setOrderId(rs.getInt("order_id"));
         s.setAddressId(rs.getInt("address_id"));
-        s.setShippingDate(rs.getObject("shipping_date", LocalDateTime.class));
-        s.setDeliveryDate(rs.getObject("delivery_date", LocalDateTime.class));
+        s.setShippingDate(parseFlexible(rs.getString("shipping_date")));
+        s.setDeliveryDate(parseFlexible(rs.getString("delivery_date")));
         s.setShippingStatus(rs.getString("shipping_status"));
         s.setTrackingNumber(rs.getString("tracking_number"));
         s.setCarrier(rs.getString("carrier"));
         s.setNotes(rs.getString("notes"));
         return s;
+    }
+
+    /**
+     * Parses a stored date/datetime string into LocalDateTime. Handles date-only
+     * values ("2025-01-12" -> start of day), space- or T-separated datetimes, and
+     * null/blank. Reading these as getObject(LocalDateTime.class) threw on the
+     * date-only shipping_date values, erroring every shipment list render.
+     */
+    private static LocalDateTime parseFlexible(String value) {
+        if (value == null || value.trim().isEmpty()) {
+            return null;
+        }
+        String v = value.trim();
+        try {
+            if (v.length() <= 10) { // date only: yyyy-MM-dd
+                return java.time.LocalDate.parse(v).atStartOfDay();
+            }
+            return utils.DateTimeParser.parseLocalDateTime(v);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     // CREATE
