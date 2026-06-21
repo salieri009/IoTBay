@@ -206,10 +206,16 @@ public abstract class BaseE2ETest {
         if (Boolean.TRUE.equals(submitted)) {
             return;
         }
-        java.util.List<WebElement> inMain = driver.findElements(By.cssSelector("main [type='submit']"));
-        WebElement btn = !inMain.isEmpty() ? inMain.get(0)
-                : driver.findElement(By.cssSelector("[type='submit']"));
-        clickRobust(btn);
+        // Fallback: submit the first form inside main directly (e.g. a GET search
+        // form with no csrfToken and a <button> without an explicit type=submit).
+        java.util.List<WebElement> mainForms = driver.findElements(By.cssSelector("main form"));
+        if (!mainForms.isEmpty()) {
+            ((JavascriptExecutor) driver).executeScript(
+                "var f=arguments[0]; if (f.requestSubmit) { f.requestSubmit(); } else { f.submit(); }",
+                mainForms.get(0));
+            return;
+        }
+        clickRobust(driver.findElement(By.cssSelector("[type='submit']")));
     }
 
     /**
